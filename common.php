@@ -76,28 +76,6 @@ function wbh_verify_key($passed, $true, &$error, $show_error = 1) {
 	}
 }
 
-function wbh_make_user($email) {
-	$db = wh_set_db_link();
-	if (wbh_validate_email($email)) {
-		$sql = "insert into users (email, joined) VALUES ('".mres($email)."', now())";
-		$rows = wbh_mysqli( $sql) or wbh_db_error();
-		$key = wbh_gen_key(mysqli_insert_id ( $db ));
-		return wbh_get_user_by_email($email);
-	} else {
-		return false;
-	}
-}
-
-function wbh_validate_email($emailaddress) {
-	$pattern = '/^(?!(?:(?:\\x22?\\x5C[\\x00-\\x7E]\\x22?)|(?:\\x22?[^\\x5C\\x22]\\x22?)){255,})(?!(?:(?:\\x22?\\x5C[\\x00-\\x7E]\\x22?)|(?:\\x22?[^\\x5C\\x22]\\x22?)){65,}@)(?:(?:[\\x21\\x23-\\x27\\x2A\\x2B\\x2D\\x2F-\\x39\\x3D\\x3F\\x5E-\\x7E]+)|(?:\\x22(?:[\\x01-\\x08\\x0B\\x0C\\x0E-\\x1F\\x21\\x23-\\x5B\\x5D-\\x7F]|(?:\\x5C[\\x00-\\x7F]))*\\x22))(?:\\.(?:(?:[\\x21\\x23-\\x27\\x2A\\x2B\\x2D\\x2F-\\x39\\x3D\\x3F\\x5E-\\x7E]+)|(?:\\x22(?:[\\x01-\\x08\\x0B\\x0C\\x0E-\\x1F\\x21\\x23-\\x5B\\x5D-\\x7F]|(?:\\x5C[\\x00-\\x7F]))*\\x22)))*@(?:(?:(?!.*[^.]{64,})(?:(?:(?:xn--)?[a-z0-9]+(?:-+[a-z0-9]+)*\\.){1,126}){1,}(?:(?:[a-z][a-z0-9]*)|(?:(?:xn--)[a-z0-9]+))(?:-+[a-z0-9]+)*)|(?:\\[(?:(?:IPv6:(?:(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){7})|(?:(?!(?:.*[a-f0-9][:\\]]){7,})(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,5})?::(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,5})?)))|(?:(?:IPv6:(?:(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){5}:)|(?:(?!(?:.*[a-f0-9]:){5,})(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,3})?::(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,3}:)?)))?(?:(?:25[0-5])|(?:2[0-4][0-9])|(?:1[0-9]{2})|(?:[1-9]?[0-9]))(?:\\.(?:(?:25[0-5])|(?:2[0-4][0-9])|(?:1[0-9]{2})|(?:[1-9]?[0-9]))){3}))\\]))$/iD';
-
-	if (preg_match($pattern, $emailaddress) === 1) {
-		return true;
-	} else {
-		return false;
-	}
-}
-
 function wbh_gen_key($uid) {
 	$key = substr(md5(uniqid(mt_rand(), true)), 0, 16);
 	$sql = "update users set ukey = '".mres($key)."' where id = ".mres($uid);
@@ -123,6 +101,30 @@ function wbh_key_to_user($key) {
 	}
 	return false;
 }
+
+
+function wbh_make_user($email) {
+	$db = wh_set_db_link();
+	if (wbh_validate_email($email)) {
+		$sql = "insert into users (email, joined) VALUES ('".mres($email)."', now())";
+		$rows = wbh_mysqli( $sql) or wbh_db_error();
+		$key = wbh_gen_key(mysqli_insert_id ( $db ));
+		return wbh_get_user_by_email($email);
+	} else {
+		return false;
+	}
+}
+
+function wbh_validate_email($emailaddress) {
+	$pattern = '/^(?!(?:(?:\\x22?\\x5C[\\x00-\\x7E]\\x22?)|(?:\\x22?[^\\x5C\\x22]\\x22?)){255,})(?!(?:(?:\\x22?\\x5C[\\x00-\\x7E]\\x22?)|(?:\\x22?[^\\x5C\\x22]\\x22?)){65,}@)(?:(?:[\\x21\\x23-\\x27\\x2A\\x2B\\x2D\\x2F-\\x39\\x3D\\x3F\\x5E-\\x7E]+)|(?:\\x22(?:[\\x01-\\x08\\x0B\\x0C\\x0E-\\x1F\\x21\\x23-\\x5B\\x5D-\\x7F]|(?:\\x5C[\\x00-\\x7F]))*\\x22))(?:\\.(?:(?:[\\x21\\x23-\\x27\\x2A\\x2B\\x2D\\x2F-\\x39\\x3D\\x3F\\x5E-\\x7E]+)|(?:\\x22(?:[\\x01-\\x08\\x0B\\x0C\\x0E-\\x1F\\x21\\x23-\\x5B\\x5D-\\x7F]|(?:\\x5C[\\x00-\\x7F]))*\\x22)))*@(?:(?:(?!.*[^.]{64,})(?:(?:(?:xn--)?[a-z0-9]+(?:-+[a-z0-9]+)*\\.){1,126}){1,}(?:(?:[a-z][a-z0-9]*)|(?:(?:xn--)[a-z0-9]+))(?:-+[a-z0-9]+)*)|(?:\\[(?:(?:IPv6:(?:(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){7})|(?:(?!(?:.*[a-f0-9][:\\]]){7,})(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,5})?::(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,5})?)))|(?:(?:IPv6:(?:(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){5}:)|(?:(?!(?:.*[a-f0-9]:){5,})(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,3})?::(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,3}:)?)))?(?:(?:25[0-5])|(?:2[0-4][0-9])|(?:1[0-9]{2})|(?:[1-9]?[0-9]))(?:\\.(?:(?:25[0-5])|(?:2[0-4][0-9])|(?:1[0-9]{2})|(?:[1-9]?[0-9]))){3}))\\]))$/iD';
+
+	if (preg_match($pattern, $emailaddress) === 1) {
+		return true;
+	} else {
+		return false;
+	}
+}
+
 
 function wbh_get_trans_form() {
 	global $sc, $email;
@@ -154,7 +156,7 @@ $point
 
 ".wbh_email_footer();
 
-		return mail($u['email'], "Will Hines practices: use this to log in to site", $body, "From: ".WEBMASTER);
+		return mail($u['email'], "Log in to 'Will Hines practices'", $body, "From: ".WEBMASTER);
 }
 
 
@@ -262,6 +264,7 @@ function wbh_edit_user_form($u) {
 	global $sc, $ac;
 	$carriers = wbh_get_carriers_drop();
 	$body = '';
+	$body .= "<div class='row'><div class='col-md-4'>\n";
 	$body .= "<form action='$sc' method='post'>\n";
 	$body .= wbh_hidden('uid', $u['id']);
 	$body .= wbh_hidden('ac', 'updateu');
@@ -277,7 +280,7 @@ function wbh_edit_user_form($u) {
 	// phone validation
 	if ($ac == 'updateu' && $u['send_text'] == 1 && strlen($u['phone']) < 10) {
 		$help = null;
-		$error = 'Phone must be 10 digits';
+		$error = 'Phone must be 10 digits, no letters or spaces or dashes';
 	} else {
 		$help = '10 digit phone number';
 		$error = null;
@@ -286,6 +289,8 @@ function wbh_edit_user_form($u) {
 
 	$body .= wbh_submit();
 	$body .= "</form>\n";
+	$body .= "</div></div> <!-- end of col and row -->\n";
+	
 	return $body;
 }
 
@@ -324,7 +329,7 @@ function wbh_check_last_minuteness($wk) {
 	
 	/* 
 		there's two flags:
-			1) workshops have "sold_out_late" meaning the workshop was sold out within $late_hours of the start. We update this everytime the web site selects the row from the workshops table to either 1 or 0.
+			1) workshops have "sold_out_late" meaning the workshop was sold out within $late_hours of the start. We update this to 1 or 0 everytime the web site selects the workshop info from the db.
 			2) registrations have a "while_sold_out" flag. if it is set to 1, then you were enrolled in this workshop while it was sold out within $late_hours of its start. we also check this every time we select the workshop info. but this never gets set back to zero. 
 	*/ 
 			
@@ -521,6 +526,8 @@ function wbh_handle_enroll($wk, $u, $email, $confirm = true) {
 function wbh_enroll($wk, $u) {
 	$wid = $wk['id'];
 	$uid = $u['id'];
+	
+	// is this person already registered? then we do different things depending on current status
 	$sql = "select  * from registrations where workshop_id = ".mres($wid)." and user_id = ".mres($uid);
 	$rows = wbh_mysqli( $sql) or wbh_db_error();
 	while ($row = mysqli_fetch_assoc($rows)) {
@@ -550,6 +557,8 @@ function wbh_enroll($wk, $u) {
 				break;	
 		}
 	}
+	
+	// if we haven't returned, then there was no registration. make a new registration
 	if (($wk['enrolled']+$wk['invited']) < $wk['capacity'] && $wk['waiting'] == 0) {
 		$status = ENROLLED;
 	} else {
@@ -566,6 +575,8 @@ function wbh_enroll($wk, $u) {
 }
 
 
+// this checks for open spots, and makes sure invites have gone out to anyone on waiting list
+// i call this in places just to make sure i haven't neglected the waiting list
 function wbh_check_waiting($wk) {
 	$wk = wbh_get_workshop_info($wk['id']); // make sure it's up to date
 	$msg = '';
@@ -626,6 +637,7 @@ function wbh_get_students($wid, $status = ENROLLED) {
 	return $stds;
 }
 
+// internal function to sort by email field
 function wbh_sort_by_email($a, $b) {
     return strcasecmp($a["email"], $b["email"]);
 }

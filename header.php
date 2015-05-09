@@ -48,6 +48,7 @@ design quick-fixes taken from:
 
 h1, h2, h3 { 
     text-shadow: 1px 1px 1px #ccc;
+	font-weight: normal;
 }
 .page-header { 
     box-shadow: 0 0 1em 1em #ccc;
@@ -65,7 +66,7 @@ if ($sc == 'admin.php') {
 } else {
 	echo "<div class=\"jumbotron page-header\">";
 	echo "<h1><a href=\"{$sc}\">{$heading}</a></h1>\n";	
-	echo "<p>Greetings. This is a list of improv practices being taught or at least organized by Will Hines.  Log in below, then you can enroll.</p>";	
+	echo "<p>Greetings. This is a list of improv practices being taught or at least organized by Will Hines.".(wbh_logged_in() ? '' : " Log in below, then you can enroll.")."</p>";	
 	echo "</div>\n";
 }
 
