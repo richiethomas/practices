@@ -10,27 +10,20 @@
 function wbh_texty($key, $value = '', $label = null, $placeholder = null, $help = null, $error = null) {
 	$l = wbh_figure_label($label, $key);
 	
-	if ($error) {
-		$texty = "<div class='form-group has-error'>";
-	} else {
-		$texty = "<div class='form-group'>";
-	}
-	
+	$texty = wbh_form_start($error);		
 	$texty .= ($l ? "<label for='$key'>{$l}</label>" : '')."<input class='form-control' type='text' id=\"$key\" name=\"$key\" value=\"$value\" ".($placeholder ? "placeholder='$placeholder'" : '').">";
-	if ($error) {
-		$texty .= "<p class='help-block text-danger'>$error</p>";
-	}
-	if ($help) {
-		$texty .= "<p class='help-block'>$help</p>";
-	}
+	$texty .= wbh_form_help_block($help, $error);		
 	$texty .= "</div>\n";
 	
 	return $texty;
 }
 
-function wbh_textarea($key, $value = null, $label = null, $rows = 5, $cols = 40) {
+function wbh_textarea($key, $value = null, $label = null, $rows = 5, $cols = 40, $help = null, $error = null) {
 	$l = wbh_figure_label($label, $key);
-	return "<div class='form-group'><label for='{$key}'>{$l}</label> <textarea class='form-control' id='{$key}' name='{$key}' cols='{$cols}' rows='{$rows}'>{$value}</textarea></div>";	
+	$ta = wbh_form_start($error);
+	$ta .= "<label for='{$key}'>{$l}</label> <textarea class='form-control' id='{$key}' name='{$key}' cols='{$cols}' rows='{$rows}'>{$value}</textarea>";
+	$ta .= wbh_form_help_block($help, $error);		
+	$ta .= "</div>\n";	
 }
  
 function wbh_hidden($key, $value = '') {
@@ -44,12 +37,7 @@ function wbh_submit($value = 'Submit') {
 function wbh_drop($name, $opts, $selected = null, $label = null, $help = null, $error = null) {
 	$label = wbh_figure_label($label, $name);
 
-	if ($error) {
-		$select = "<div class='form-group has-error'>";
-	} else {
-		$select = "<div class='form-group'>";
-	}
-	
+	$select = wbh_form_start($error);	
 	$select .= "<label for='$name'>{$label}</label><select class='form-control' name='$name' id='$name'><option value=''></option>\n";
 	foreach ($opts as $key => $show) {
 		$select .= "<option value='$key'";
@@ -57,20 +45,16 @@ function wbh_drop($name, $opts, $selected = null, $label = null, $help = null, $
 		$select .= ">$show</option>\n";
 	}
 	$select .= "</select>";
-	if ($error) {
-		$select .= "<p class='help-block text-danger'>$error</p>";
-	}
-	if ($help) {
-		$select .= "<p class='help-block'>$help</p>";
-	}
-	
+	$select .= wbh_form_help_block($help, $error);		
 	$select .= "</div>\n";
 	return $select;
 }
 
-function wbh_multi_drop($name, $opts, $selected = null, $label = null, $size = 10) {
+function wbh_multi_drop($name, $opts, $selected = null, $label = null, $size = 10, $help = null, $error = null) {
 	$label = wbh_figure_label($label, $name);
-	$select = "<div class='form-group'><label for='$name'>{$label}</label><select size='$size' multiple class='form-control' name='{$name}".'[]'."' id='$name'><option value=''></option>\n";
+	
+	$select = wbh_form_start($error);	
+	$select = "<label for='$name'>{$label}</label><select size='$size' multiple class='form-control' name='{$name}".'[]'."' id='$name'><option value=''></option>\n";
 	foreach ($opts as $key => $show) {
 		$select .= "<option value=\"$key\"";
 		if (is_array($selected)) {
@@ -82,7 +66,10 @@ function wbh_multi_drop($name, $opts, $selected = null, $label = null, $size = 1
 		}
 		$select .= ">$show</option>\n";
 	}
-	$select .= "</select></div> ";
+	$select .= "</select>";
+	$select .= wbh_form_help_block($help, $error);	
+	$select .= "</div>";
+
 	return $select;
 }
 
@@ -117,6 +104,24 @@ function wbh_figure_label($label, $key, $colon = false) {
 	}	
 }
 
+// next two subs deal with error messages
+function wbh_form_start($error = null) {
+	if ($error) {
+		return "<div class='form-group has-error'>";
+	} else {
+		return "<div class='form-group'>";
+	}
+} 
+
+function wbh_form_help_block($help = null, $error = null) {
+	if ($error) {
+		return "<p class='help-block text-danger'>$error</p>";
+	}
+	if ($help) {
+		return "<p class='help-block'>$help</p>";
+	}
+	
+}
 
 function mres($thing) {
 	$db = wh_set_db_link();
