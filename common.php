@@ -673,12 +673,8 @@ function wbh_confirm_email($wk, $u, $st = ENROLLED) {
 		$message .= '<br><br>'.wbh_get_dropping_late_warning();
 	}
 	
-	$text = '';
-	if ($u['send_text']) {
-		$text = "More info: ".wbh_shorten_link($trans);
-	}
-	
 	switch ($st) {
+		case 'already':
 		case ENROLLED:
 			$sub = "ENROLLED: {$wk['showtitle']}";
 			$point = "You are ENROLLED in {$wk['showtitle']}.";
@@ -704,8 +700,14 @@ function wbh_confirm_email($wk, $u, $st = ENROLLED) {
 			break;
 		default:
 			$sub = "{$st}: {$wk['showtitle']}";
-			$point = "You are a status of '$st' for this practice:";
+			$point = "You are a status of '$st' for {$wk['showtitle']}";
 			break;
+	}
+
+	$text = '';
+	if ($u['send_text']) {
+		$textmsg = $point.' '.wbh_shorten_link($trans);
+		wbh_send_text($u, $textmsg);
 	}
 
 	$body = "You are: {$u['email']}
@@ -722,14 +724,20 @@ $call
 To see all practices you've taken, click here:
 {$trans}
 
-".wbh_email_footer();
-	
-	if ($text) {
-		// send the text
-	}
-	
+".wbh_email_footer();	
 	
 	return mail($u['email'], $sub, $body, "From: ".WEBMASTER);
+}
+
+
+function wbh_send_text($u, $msg) {
+	if (!$u['send_text'] || !$u['carrier_id'] || !$u['phone'] || strlen($u['phone']) < 10) {
+		return false;
+	}
+	$carriers = wbh_get_carriers();
+	$to = $u['phone'].'@'.$carriers[$u['carrier_id']]['email'];	
+	return mail($to, '', $msg, "From: ".WEBMASTER);
+	
 }
 
 
@@ -737,6 +745,9 @@ function wbh_shorten_link($link) {
 	
 	// bit.ly registered token is: 70cc52665d5f7df5eaeb2dcee5f1cdba14f5ec94
 	// under whines@gmail.com / meet1962
+	
+	//tempoary while working locally
+	//$link = preg_replace('/localhost:8888/', 'www.willhines.net', $link);
 	
 	$link = urlencode($link);
 	$response = file_get_contents("https://api-ssl.bitly.com/v3/shorten?access_token=70cc52665d5f7df5eaeb2dcee5f1cdba14f5ec94&longUrl={$link}&format=txt");
