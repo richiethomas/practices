@@ -3,7 +3,7 @@ $sc = "index.php";
 include 'db.php';
 include 'common.php';
 
-wbh_set_vars(array('ac', 'wid', 'uid', 'email', 'v', 'key', 'message', 'phone', 'carrier_id', 'send_text'));
+wbh_set_vars(array('ac', 'wid', 'uid', 'email', 'v', 'key', 'message', 'phone', 'carrier_id', 'send_text', 'newemail'));
 $key = wbh_current_key(); // checks for key in REQUEST and SESSION, not logged in otherwise
 $error = '';
 $message = '';
@@ -11,6 +11,7 @@ $message = '';
 if ($wid) {
 	$wk = wbh_get_workshop_info($wid);
 	wbh_check_waiting($wk);
+	if (!$v) { $v = 'view'; } // if we've passed in a workshop id, let's show it
 }
 
 if ($uid) {
@@ -24,6 +25,46 @@ if ($uid) {
 $body = '';
 $body = '';
 switch ($ac) {
+	
+	
+	case 'cemail':
+		if (!wbh_logged_in()) {
+			$error = 'You are not logged in! You have to be logged in to change your email.';
+			break;
+		}
+		if (!wbh_validate_email($newemail)) {
+			$error = 'You asked to change your email but the new email \'$newemail\' is not a valid email';
+			break;
+		}
+		$sql = "update users set new_email = '".mres($newemail)."' where id = ".mres($u['id']);
+		wbh_mysqli($sql) or wbh_db_error();
+		
+		$sub = 'email update at will hines practices';
+		$link = URL."index.php?key=$key&ac=concemail";
+		$ebody = "You requested to change what email you use at the Will Hines practices web site. Use the link below to do that:\n\n$link";
+		mail($newemail, $sub, $ebody, "From: ".WEBMASTER);
+		$message = "Okay, a link has been sent to the new email address ({$newemail}). Check your spam folder if you don't see it.";
+		
+		
+		break;	
+		
+	case 'concemail':
+		if (!wbh_logged_in()) {
+			$error = 'You are not logged in! You have to be logged in to change your email.';
+			break;
+		}
+		//actually change the email
+		$status = wbh_change_email($u['id'], $u['new_email']);
+		if ($status !== true) {
+			$error = $status;
+		} else {
+			$message = "Email changed from '{$u['email']}' to '{$u['new_email']}'";
+			$u = wbh_get_user_by_email($u['new_email']);
+			
+			// make session key equal to database key
+			$_SESSION['s_key'] = $key = $u['ukey'];
+		}
+		break;
 
 	case 'link':
 		// if a user exists for that email, get it
@@ -86,11 +127,16 @@ switch ($ac) {
 	case 'enroll':
 		if (wbh_logged_in()) {
 			$message = wbh_handle_enroll($wk, $u, $email);
+			if (!$u['send_text']) {
+				$message .= " You can get text notifications by <a href='$sc?v=text'>updating your text preferences</a>.";	
+			}
+			$v = 'view';
 		} else {
 			$error = "You must be logged in to enroll.";
 		}
 		break;
 		
+	// request a drop (still must be confirmed)
 	case 'drop':
 		if (!wbh_logged_in()) {
 			$error = 'You are not logged in! You have to be logged in to drop a workshop.';
@@ -100,7 +146,7 @@ switch ($ac) {
 		if ($u) {
 			if (wbh_verify_key($key, $u['ukey'], $error)) {
 								
-				$message = "Do you really want to drop '{$wk['title']}'? Then click <a class='btn btn-warning' href=\"$sc?ac=condrop&uid={$u['id']}&wid={$wid}\">drop</a>";
+				$message = "Do you really want to drop '{$wk['title']}'? Then click <a class='btn btn-warning' href=\"$sc?ac=condrop&uid={$u['id']}&wid={$wid}\">confirm drop</a>";
 				
 				$e = wbh_get_an_enrollment($wk, $u);
 				if ($e['while_soldout']) { 
@@ -110,6 +156,7 @@ switch ($ac) {
 		}
 		break;
 		
+	// confirm drop
 	case 'condrop':
 		if (!wbh_logged_in()) {
 			$error = 'You are not logged in! You have to be logged in to drop a workshop.';
@@ -122,6 +169,7 @@ switch ($ac) {
 		$message = "Dropped user ({$u['email']}) from practice '{$wk['title']}.'";
 		break;
 		
+	// reset the 'key'
 	case 'reset':
 		if (!wbh_logged_in()) {
 			$error = 'You are not logged in! You have to be logged in to get a new log in link.';
@@ -133,6 +181,7 @@ switch ($ac) {
 		wbh_logout($key, $u, $message);
 		break;
 
+	// update text preferences
 	case 'updateu':
 		if (!wbh_logged_in()) {
 			$error = 'You are not logged in! You have to be logged in to update your preferences.';
@@ -173,19 +222,38 @@ switch ($ac) {
 
 switch ($v) {
 	
-	case 'edit':
+	case 'text':
 		$body .= "<div class='row'><div class='col-md-12'>\n";
 		$body .= "<h2>Your settings</h2>\n";
 		if (wbh_logged_in()) {
 			$body .= "<h3>Text Notifications</h3>\n";
 			$body .= "<p>If you want notifications via text, check the box and set your phone info.</p>\n";			
-			$body .= wbh_edit_user_form($u);
+			$body .= wbh_edit_text_preferences($u);
+		} else {
+			$body .= "<p>You are not logged in! Go back to the <a href='$sc'>front page</a> and enter your email. We'll email you a link so you can log in.</p>\n";
+		}
+		$body .= "</div></div>\n";
 
+		break;
+	case 'edit':
+		$body .= "<div class='row'><div class='col-md-12'>\n";
+		$body .= "<h2>Your settings</h2>\n";
+		if (wbh_logged_in()) {
 			$body .= "<h3>New Email</h3>\n";
-			$body .= "<p>If you have a new email, enter it below. We will send a link to that new email. Click that link and we'll reset your account to have that email.</p>\n";
+			$body .= "<p>If you have a new email, enter it below. We will send a link to your new email. Click that link and we'll reset your account to use that email.</p>\n";
+			$body .= "<div class='row'><div class='col-md-4'>\n";
+			$body .= "<form action='$sc' method='post'>\n";
+			$body .= wbh_hidden('ac', 'cemail');
+			$body .= wbh_texty('newemail', null, 0, 'new email address');
+			$body .= wbh_submit('Change Email');
+			$body .= "</div></div> <!-- end of col and row -->\n";
+			
 
 			$body .= "<h3>Reset Your Link</h3>\n";
-			$body .= "<p>For the paranoid: This will log you out, generate a new key, and a send a link to your email. Click that link to log back in. Want to do that? If you don't even understand this then don't worry about it. <a class='btn btn-default' href='$sc?ac=reset'>Reset My Login Link</a></p>";
+			$body .= "<p>For the paranoid: This will log you out, generate a new key, and a send a link to your email. If you don't even understand this then don't worry about it. <a class='btn btn-primary' href='$sc?ac=reset'>Reset My Login Link</a></p>";
+			
+			$body .= "<h3>Never Mind</h3>\n";
+			$body .= "<p>Just <a href='$sc'>go back to the main page</a>.</p>";
 			
 			
 		} else {
@@ -194,27 +262,19 @@ switch ($v) {
 		$body .= "</div></div>\n";
 		break;
 	
-	case 'confirm':
-		$body .= "<div class='row'><div class='col-md-12'>\n";
-		$body .= "<p>Registered for:</p>\n";
-		$body .= wbh_get_workshop_info_tabled($wid);
-		$body .= "<p>Return to a <a href='$sc'>list of all upcoming practices</a>.</p>\n";
-		$body .= "</div></div> <!-- end of col and row -->\n";
-		break;
-
 	case 'view':
 		$body .= "<div class='row'><div class='col-md-12'>\n";
 		if (wbh_logged_in()) {
 			$e = wbh_get_an_enrollment($wk, $u);
 			switch ($e['status']) {
 				case ENROLLED:
-					$point = "You are ENROLLED in this practice. Would you like to <a class='btn btn-info' href='$sc?ac=drop&wid={$wk['id']}&uid={$u['id']}&key={$key}&v=view'>drop</a> it?";
+					$point = "You are ENROLLED in this practice. Would you like to <a class='btn btn-default' href='$sc?ac=drop&wid={$wk['id']}&uid={$u['id']}&key={$key}&v=view'>drop</a> it?";
 					break;
 				case WAITING:
 					$point = "You are spot number {$e['rank']} on the WAIT LIST for this practice.";
 					break;
 				case INVITED:
-					$point = "A spot opened up in this practice. Would you like to <a class='btn btn-info' href='$sc?ac=accept&wid={$wk['id']}&uid={$u['id']}&key={$key}&v=view'>accept</a> it, or <a class='btn btn-info' href='$sc?ac=decline&wid={$wk['id']}&uid={$u['id']}&key={$key}&v=view'>decline</a> it?";
+					$point = "A spot opened up in this practice. Would you like to <a class='btn btn-default' href='$sc?ac=accept&wid={$wk['id']}&uid={$u['id']}&key={$key}&v=view'>accept</a> it, or <a class='btn btn-default' href='$sc?ac=decline&wid={$wk['id']}&uid={$u['id']}&key={$key}&v=view'>decline</a> it?";
 					break;
 				case DROPPED:
 					$point = "You have dropped out of this practice.";
@@ -223,14 +283,12 @@ switch ($v) {
 					$point = "You are a status of '$st' for this practice:";
 					break;
 			}
-			if (!$ac) {
-				if ($wk['type'] == 'past') {
-					$point = "This workshop is IN THE PAST.";
-				}
-				$body .= "<p class='alert alert-info'>$point</p>\n";
+			if ($wk['type'] == 'past') {
+				$point = "This workshop is IN THE PAST.";
 			}
 			$body .= wbh_get_workshop_info_tabled($wid);
-			$body .= "<p>Return to a <a href='$sc?v=trans'>list of your practices</a>.</p>\n";
+			$body .= "<p class='alert alert-info'>$point</p>\n";
+			$body .= "<p>Return to a <a href='$sc'>the main page</a>.</p>\n";
 		
 		} else {
 			$body .= wbh_login_prompt();
@@ -243,7 +301,10 @@ switch ($v) {
 		$body .= "<div class='row'><div class='col-md-12'>\n";
 		if (wbh_logged_in()) {
 			$body .= "<h2>Welcome</h2>\n";
-			$body .= "<p>You are logged in as {$u['email']}! (You can <a href='$sc?v=edit'>edit your preferences</a> or <a href='$sc?ac=lo'>log out</a>)</p>";			
+			$body .= "<p>You are logged in as {$u['email']}! (You can <a href='$sc?v=edit'>change your email</a> or <a href='$sc?ac=lo'>log out</a>)</p>";			
+
+			$body .= "<p>".($u['send_text'] ? "You have signed up for text notfications. " : "Would you like text notifications?")." <a href='$sc?v=text'>Update your text preferences</a>.</p>\n";
+
 		} else {
 			$body .= "<h2>Log In</h2>\n";
 			$body .= "<p>You are not logged in. To log in, you don't need a password or a Facebook account but you do need an email account.</p>";
@@ -252,24 +313,24 @@ switch ($v) {
 		$body .= "</div></div> <!-- end of col and row -->\n";
 
 		$body .= "<div class='row'><div class='col-md-12'>\n";
-		$body .= "<h2>All Workshops</h2>\n"; 
+		$body .= "<h2>All Upcoming Workshops</h2>\n"; 
 		$body .= wbh_get_workshops_list(0);
 		$body .= "</div></div> <!-- end of col and row -->\n";
 		
 		$body .= "<div class='row'><div class='col-md-12'>";
-		$body .= "<h2>Your Workshops</h2>";
+		$body .= "<h2>Your Current/Past Workshops</h2>";
 		if (wbh_logged_in()) {
 			$body .= wbh_get_transcript_tabled($u);  
 		} else {
 			$body .= "<p>You're not logged in, so I can't list your workshops. Log in further up this page.</p>";
 		}
 		$body .= "</div></div> <!-- end of col and row -->\n";		
+		$body .= wbh_get_faq();
 		
 		break;
 }
 
 
-$body .= wbh_get_faq();
 
 $heading = 'improv practices';
 include 'header.php';

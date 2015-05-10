@@ -196,6 +196,7 @@ function wbh_find_students($needle = 'everyone') {
 
 function wbh_change_email($ouid, $newe) {
 	$news = wbh_get_user_by_email($newe); 
+	$olds = wbh_get_user_by_id($ouid);
 	if ($news) {
 		// new student exists, so merge into new
 		$sql = "select * from registrations where user_id = ".mres($ouid);
@@ -211,6 +212,11 @@ function wbh_change_email($ouid, $newe) {
 				wbh_mysqli($sql3) or wbh_db_error();
 			}
 		}
+		
+		// copy text preferences from old id
+		$sql = "update users set send_text = ".mres($olds['send_text']).", carrier_id = ".mres($olds['carrier_id']).", phone = '".mres($olds['phone'])."' where id = ".mres($news['id']);
+		wbh_mysqli($sql3) or wbh_db_error();
+		
 		wbh_delete_student($ouid);
 		return true;
 	} else {
@@ -260,7 +266,7 @@ function wbh_get_carriers_drop() {
 	return $cardrop;
 }
 
-function wbh_edit_user_form($u) {
+function wbh_edit_text_preferences($u) {
 	global $sc, $ac;
 	$carriers = wbh_get_carriers_drop();
 	$body = '';
@@ -287,7 +293,7 @@ function wbh_edit_user_form($u) {
 	}
 	$body .= wbh_texty('phone', $u['phone'], 'phone number', null, $help, $error);
 
-	$body .= wbh_submit();
+	$body .= wbh_submit('Update Text Preferences');
 	$body .= "</form>\n";
 	$body .= "</div></div> <!-- end of col and row -->\n";
 	
@@ -301,15 +307,12 @@ function wbh_get_workshop_info($id) {
 	$sql = "select w.*, l.place, l.lwhere from workshops w LEFT OUTER JOIN locations l on w.location_id = l.id where w.id = ".mres($id);
 	$rows = wbh_mysqli( $sql) or wbh_db_error();
 	while ($row = mysqli_fetch_assoc($rows)) {
-		$row['showstart'] = date('D M j - g:ia', strtotime($row['start']));
-		$row['showend'] = date('g:ia', strtotime($row['end']));
 		
-		$row['showtitle'] = "{$row['title']} - {$row['showstart']}-{$row['showend']}";
+		$row = wbh_format_workshop_startend($row);		
 		$row['enrolled'] = wbh_get_enrollments($id);
 		$row['invited'] = wbh_get_enrollments($id, INVITED);
 		$row['waiting'] = wbh_get_enrollments($id, WAITING);
 		$row['open'] = ($row['enrolled'] >= $row['capacity'] ? 0 : $row['capacity'] - $row['enrolled']);
-		$row['when'] = date('D M j, g:ia', strtotime($row['start'])).'-'.date('g:ia', strtotime($row['end']));
 		if (strtotime($row['start']) < strtotime('now')) { 
 			$row['type'] = 'past'; 
 		} elseif ($row['enrolled'] >= $row['capacity'] || $row['waiting'] > 0 || $row['invited'] > 0) { 
@@ -377,34 +380,26 @@ function wbh_get_workshops_dropdown($start = null, $end = null) {
 	$rows = wbh_mysqli( $sql) or wbh_db_error();
 	$workshops = array();
 	while ($row = mysqli_fetch_assoc($rows)) {
-		$row['showstart'] = date('D M j - g:ia', strtotime($row['start']));
-		$row['showend'] = date('g:ia', strtotime($row['end']));		
-		$workshops[$row['id']] = "{$row['title']} - {$row['showstart']}-{$row['showend']}";
+		$row = wbh_format_workshop_startend($row);
+		$workshops[$row['id']] = $row['showtitle'];
 	}
 	return $workshops;
 }
 
-function wbh_get_workshops_list_raw($start = null, $end = null) {
-	$sql = "select w.*, l.place, l.lwhere 
-	from workshops w LEFT OUTER JOIN locations l on w.location_id = l.id WHERE 1 = 1 ";
-	if ($start) {
-		$sql .= " and w.start >= '".date('Y-m-d H:i:s', strtotime($start))."'";
-	}
-	if ($end) {
-		$sql .= " and w.end <= '".date('Y-m-d H:i:s', strtotime($end))."'";
-	}
-	$sql .= " order by start desc";
-	$rows = wbh_mysqli( $sql) or wbh_db_error();
-	$workshops = array();
-	while ($row = mysqli_fetch_assoc($rows)) {
+// pass in the workshop row as it comes from the database table
+// add some columns with date / time stuff figured out
+function wbh_format_workshop_startend($row) {
+	if (date('Y', strtotime($row['start'])) != date('Y')) {
+		$row['showstart'] = date('D M j, Y - g:ia', strtotime($row['start']));
+	} else {
 		$row['showstart'] = date('D M j - g:ia', strtotime($row['start']));
-		$row['showend'] = date('g:ia', strtotime($row['end']));		
-		$row['showtitle'] = "{$row['title']} - {$row['showstart']}-{$row['showend']}";
-		$workshops[$row['id']] = $row;
 	}
-	return $workshops;
+	$row['showend'] = date('g:ia', strtotime($row['end']));
+	$row['showtitle'] = "{$row['title']} - {$row['showstart']}-{$row['showend']}";
+	$row['when'] = "{$row['showstart']}-{$row['showend']}";
+	
+	return $row;
 }
-
 
 function wbh_get_workshops_list($admin = 0) {
 	global $sc;
@@ -499,7 +494,8 @@ function wbh_handle_enroll($wk, $u, $email, $confirm = true) {
 		if (wbh_validate_email($email)) {
 			$u = wbh_make_user($email);
 		} else {
-			return "I think that is not a valid email.";
+			$error = "I think that is not a valid email.";
+			return false;
 		}
 	}
 	if (!$email) {
@@ -667,35 +663,40 @@ function wbh_confirm_email($wk, $u, $st = ENROLLED) {
 	}
 	$e = wbh_get_an_enrollment($wk, $u); 
 	$drop = URL."index.php?key=$key&ac=drop&wid={$wk['id']}";
-	$trans = URL."index.php?key=$key&v=view&wid={$wk['id']}";
-	$accept = URL."index.php?ac=accept&wid={$wk['id']}&key=$key&v=view";
-	$decline = URL."index.php?ac=decline&wid={$wk['id']}&key=$key&v=view";
+	$trans = URL."index.php?key=$key&wid={$wk['id']}";
+	$accept = URL."index.php?ac=accept&wid={$wk['id']}&key=$key";
+	$decline = URL."index.php?ac=decline&wid={$wk['id']}&key=$key";
 	$enroll = URL."index.php?key=$key&ac=enroll&wid={$wk['id']}";
 	$call = '';
-	
+		
 	if ($e['while_soldout']) { 
-		$message .= '<br><br>ALSO -- you are dropping out within {$late_hours} hours of the start and it either is sold out, or it very recently was. If no one takes your spot, I might ask you to pay anyway. If someone takes your spot, then no worries.';
+		$message .= '<br><br>'.wbh_get_dropping_late_warning();
+	}
+	
+	$text = '';
+	if ($u['send_text']) {
+		$text = "More info: ".wbh_shorten_url($trans);
 	}
 	
 	switch ($st) {
 		case ENROLLED:
 			$sub = "ENROLLED: {$wk['showtitle']}";
-			$point = "You are ENROLLED in this practice:";
-			$call = "To DROP OUT, click here:\n{$drop}";
+			$point = "You are ENROLLED in {$wk['showtitle']}.";
+			$call = "To DROP, click here:\n{$drop}";
 			break;
 		case WAITING:
 			$sub = "WAIT LIST: {$wk['showtitle']}";
-			$point = "You are spot number {$e['rank']} on the WAIT LIST for this practice:";
-			$call = "To DROP OUT, click here:\n{$drop}";
+			$point = "You are wait list spot {$e['rank']} for {$wk['showtitle']}:";
+			$call = "To DROP, click here:\n{$drop}";
 			break;
 		case INVITED:
 			$sub = "INVITED: {$wk['showtitle']}";
-			$point = "A spot opened up in this practice:";
+			$point = "A spot opened in {$wk['showtitle']}:";
 			$call = "To ACCEPT, click here:\n{$accept}\n\nTo DECLINE, click here:\n{$decline}";
 			break;
 		case DROPPED:
 			$sub = "DROPPED: {$wk['showtitle']}";
-			$point = "You have dropped out of this practice";
+			$point = "You have dropped out of {$wk['showtitle']}";
 			if ($e['while_soldout'] == 1) {
 				$point .= "\n".wbh_get_dropping_late_warning();
 			}
@@ -723,12 +724,33 @@ To see all practices you've taken, click here:
 
 ".wbh_email_footer();
 	
+	if ($text) {
+		// send the text
+	}
+	
+	
 	return mail($u['email'], $sub, $body, "From: ".WEBMASTER);
 }
 
-function wbh_get_dropping_late_warning() {
+
+function wbh_shorten_link($link) {
+	
+	// bit.ly registered token is: 70cc52665d5f7df5eaeb2dcee5f1cdba14f5ec94
+	// under whines@gmail.com / meet1962
+	
+	$link = urlencode($link);
+	$response = file_get_contents("https://api-ssl.bitly.com/v3/shorten?access_token=70cc52665d5f7df5eaeb2dcee5f1cdba14f5ec94&longUrl={$link}&format=txt");
+	return $response;
+	
+}
+
+function wbh_get_dropping_late_warning($text = false) {
 	global $late_hours;
-	return "LAST MINUTE DROP NOTICE: You are dropping out within {$late_hours} hours of the start of this workshop AND this workshop either is sold out, or it very recently was. If no one takes your spot, I might ask you to pay anyway. If someone takes your spot, then no worries.";
+	if ($text) {
+		return "NOTE: You are dropping last minute.";
+	} else {
+		return "LAST MINUTE DROP NOTICE: You are dropping out within {$late_hours} hours of the start of this workshop AND this workshop either is sold out, or it very recently was. If no one takes your spot, I might ask you to pay anyway.";
+	}
 	
 }
 
@@ -754,14 +776,14 @@ function wbh_get_transcript_tabled($u, $admin = false) {
 		} else {
 			$cl = 'warning';
 		}
-		$when = date('D M j, g:ia', strtotime($t['start'])).'-'.date('g:ia', strtotime($t['end']));
+
 		$body .= "<tr class='$cl'><td>";
 		if ($admin) {
 			$body .= "<a href=\"admin.php?wid={$t['workshop_id']}&v=ed\">{$t['title']}</a>";
 		} else {
 			$body .= $t['title'];
 		}
-		$body .= "</td><td>{$when}</td><td>{$t['place']}</td><td>";
+		$body .= "</td><td>{$wk['when']}</td><td>{$t['place']}</td><td>";
 		$body .= "{$t['status']}";
 		if ($t['status'] == WAITING) {
 			$body .= " (spot {$e['rank']})";
@@ -800,7 +822,9 @@ $faq
 
 Any other questions, let me know.
 
--Will Hines";
+-Will Hines
+HQ: 1948 Hillhurst Ave. Los Angeles, CA 90027
+";
 }
 
 function wbh_get_faq() {
