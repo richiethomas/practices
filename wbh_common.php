@@ -8,10 +8,10 @@
 
 
 function wbh_texty($key, $value = '', $label = null, $placeholder = null, $help = null, $error = null) {
-	$l = wbh_figure_label($label, $key);
+	$l = wbh_label($label, $key);
 	
 	$texty = wbh_form_start($error);		
-	$texty .= ($l ? "<label for='$key'>{$l}</label>" : '')."<input class='form-control' type='text' id=\"$key\" name=\"$key\" value=\"$value\" ".($placeholder ? "placeholder='$placeholder'" : '').">";
+	$texty .= "{$l}<input class='form-control' type='text' id=\"$key\" name=\"$key\" value=\"$value\" ".($placeholder ? "placeholder='$placeholder'" : '').">";
 	$texty .= wbh_form_help_block($help, $error);		
 	$texty .= "</div>\n";
 	
@@ -19,11 +19,12 @@ function wbh_texty($key, $value = '', $label = null, $placeholder = null, $help 
 }
 
 function wbh_textarea($key, $value = null, $label = null, $rows = 5, $cols = 40, $help = null, $error = null) {
-	$l = wbh_figure_label($label, $key);
+	$l = wbh_label($label, $key);
 	$ta = wbh_form_start($error);
-	$ta .= "<label for='{$key}'>{$l}</label> <textarea class='form-control' id='{$key}' name='{$key}' cols='{$cols}' rows='{$rows}'>{$value}</textarea>";
+	$ta .= "{$l} <textarea class='form-control' id='{$key}' name='{$key}' cols='{$cols}' rows='{$rows}'>{$value}</textarea>";
 	$ta .= wbh_form_help_block($help, $error);		
 	$ta .= "</div>\n";	
+	return $ta;
 }
  
 function wbh_hidden($key, $value = '') {
@@ -35,10 +36,10 @@ function wbh_submit($value = 'Submit') {
 }
 
 function wbh_drop($name, $opts, $selected = null, $label = null, $help = null, $error = null) {
-	$label = wbh_figure_label($label, $name);
+	$l = wbh_label($label, $name);
 
 	$select = wbh_form_start($error);	
-	$select .= "<label for='$name'>{$label}</label><select class='form-control' name='$name' id='$name'><option value=''></option>\n";
+	$select .= "{$l} <select class='form-control' name='$name' id='$name'><option value=''></option>\n";
 	foreach ($opts as $key => $show) {
 		$select .= "<option value='$key'";
 		if ($key == $selected) { $select .= " SELECTED "; } 
@@ -51,10 +52,10 @@ function wbh_drop($name, $opts, $selected = null, $label = null, $help = null, $
 }
 
 function wbh_multi_drop($name, $opts, $selected = null, $label = null, $size = 10, $help = null, $error = null) {
-	$label = wbh_figure_label($label, $name);
+	$l = wbh_label($label, $name);
 	
 	$select = wbh_form_start($error);	
-	$select = "<label for='$name'>{$label}</label><select size='$size' multiple class='form-control' name='{$name}".'[]'."' id='$name'><option value=''></option>\n";
+	$select .= "{$l} <select size='$size' multiple class='form-control' name='{$name}".'[]'."' id='$name'><option value=''></option>\n";
 	foreach ($opts as $key => $show) {
 		$select .= "<option value=\"$key\"";
 		if (is_array($selected)) {
@@ -94,6 +95,15 @@ function wbh_checkbox($name, $value, $label = null, $checked = false, $multiple 
 	  <input type=\"checkbox\" name=\"{$name}\" value=\"{$value}\" ".($checked ? 'checked' : '').">
 	  {$label}
 	</label></div>";
+}
+
+function wbh_label($label, $key, $colon = false) {
+	$l = wbh_figure_label($label, $key, $colon = false);
+	if ($l === 0) { 
+		return '';
+	} else {
+		return "<label for='{$key}'>{$l}</label>\n";
+	}
 }
 
 function wbh_figure_label($label, $key, $colon = false) {

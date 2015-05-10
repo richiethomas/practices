@@ -622,7 +622,7 @@ function wbh_change_status($wk, $u, $st = ENROLLED, $confirm = true) {
 
 
 function wbh_get_students($wid, $status = ENROLLED) {
-	$sql = "select u.id, u.email, r.status,  r.attended, u.ukey, r.registered, r.last_modified  from registrations r, users u where r.workshop_id = ".mres($wid);
+	$sql = "select u.*, r.status,  r.attended, r.registered, r.last_modified  from registrations r, users u where r.workshop_id = ".mres($wid);
 	if ($status) { $sql .= " and status = '".mres($status)."'"; }
 	$sql .= " and r.user_id = u.id order by last_modified";
 	$rows = wbh_mysqli( $sql) or wbh_db_error();
@@ -668,10 +668,12 @@ function wbh_confirm_email($wk, $u, $st = ENROLLED) {
 	$decline = URL."index.php?ac=decline&wid={$wk['id']}&key=$key";
 	$enroll = URL."index.php?key=$key&ac=enroll&wid={$wk['id']}";
 	$call = '';
+	$late = '';
 		
 	if ($e['while_soldout']) { 
 		$message .= '<br><br>'.wbh_get_dropping_late_warning();
 	}
+	
 	
 	switch ($st) {
 		case 'already':
@@ -694,7 +696,7 @@ function wbh_confirm_email($wk, $u, $st = ENROLLED) {
 			$sub = "DROPPED: {$wk['showtitle']}";
 			$point = "You have dropped out of {$wk['showtitle']}";
 			if ($e['while_soldout'] == 1) {
-				$point .= "\n".wbh_get_dropping_late_warning();
+				$late .= "\n".wbh_get_dropping_late_warning();
 			}
 			$call = "If you change your mind, re-enroll here:\n{$enroll}";
 			break;
@@ -712,7 +714,7 @@ function wbh_confirm_email($wk, $u, $st = ENROLLED) {
 
 	$body = "You are: {$u['email']}
 
-$point
+$point $late
 
 Title: {$wk['title']}
 When: {$wk['when']}
@@ -747,7 +749,7 @@ function wbh_shorten_link($link) {
 	// under whines@gmail.com / meet1962
 	
 	//tempoary while working locally
-	//$link = preg_replace('/localhost:8888/', 'www.willhines.net', $link);
+	$link = preg_replace('/localhost:8888/', 'www.willhines.net', $link);
 	
 	$link = urlencode($link);
 	$response = file_get_contents("https://api-ssl.bitly.com/v3/shorten?access_token=70cc52665d5f7df5eaeb2dcee5f1cdba14f5ec94&longUrl={$link}&format=txt");
@@ -755,13 +757,9 @@ function wbh_shorten_link($link) {
 	
 }
 
-function wbh_get_dropping_late_warning($text = false) {
+function wbh_get_dropping_late_warning() {
 	global $late_hours;
-	if ($text) {
-		return "NOTE: You are dropping last minute.";
-	} else {
-		return "LAST MINUTE DROP NOTICE: You are dropping out within {$late_hours} hours of the start of this workshop AND this workshop either is sold out, or it very recently was. If no one takes your spot, I might ask you to pay anyway.";
-	}
+	return "NOTE: You are dropping within {$late_hours} hours of the start, and there was a waiting list. If it's too short notice for someone to take your spot, I might ask you to pay anyway.";
 	
 }
 

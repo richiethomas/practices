@@ -11,7 +11,7 @@ if (!is_validated()) {
 	exit;
 }
 
-wbh_set_vars(array('ac', 'wid', 'uid', 'email', 'title', 'notes', 'start', 'end', 'active', 'lid', 'lplace', 'lwhere', 'cost', 'capacity', 'notes', 'st', 'v', 'con', 'note', 'subject', 'workshops', 'revenue', 'expenses', 'searchstart', 'searchend', 'lmod', 'needle', 'newe'));
+wbh_set_vars(array('ac', 'wid', 'uid', 'email', 'title', 'notes', 'start', 'end', 'active', 'lid', 'lplace', 'lwhere', 'cost', 'capacity', 'notes', 'st', 'v', 'con', 'note', 'subject', 'workshops', 'revenue', 'expenses', 'searchstart', 'searchend', 'lmod', 'needle', 'newe', 'sms'));
 
 if ($wid) {
 	$wk = wbh_get_workshop_info($wid);
@@ -119,6 +119,8 @@ switch ($ac) {
 		$sent = '';
 		$subject = preg_replace('/TITLE/', $wk['showtitle'], $subject);
 		$note = preg_replace('/TITLE/', $wk['showtitle'], $note);
+		$sms = preg_replace('/TITLE/', $wk['showtitle'], $sms);
+
 		foreach ($stds as $std) {
 			$key = wbh_get_key($std['id']);
 			$trans = URL."index.php?key=$key";
@@ -131,6 +133,9 @@ Where: {$wk['place']}
 When: {$wk['when']}";
 			mail($std['email'], $subject, $msg, 'From: '.WEBMASTER);
 			$sent .= "{$std['email']}, ";
+			
+			wbh_send_text($std, $sms); // routine will check if they want texts and have proper info
+			
 		}
 		$message = "Email '$subject' sent to $sent";
 		$v = 'em';
@@ -222,6 +227,7 @@ When: {$wk['when']}";
 			$note .= "There are currently people on the waiting list who might want to go. ";
 		}
 		$note .= " Okay, see you soon!";
+		$sms = "Reminder: '{$wk['showtitle']}' coming up.";
 		$st = ENROLLED;
 		break;
 
@@ -317,6 +323,7 @@ switch ($v) {
 		wbh_hidden('ac', 'sendmsg').
 		wbh_texty('subject', $subject).
 		wbh_textarea('note', $note).
+		wbh_textarea('sms', $sms, 'SMS version (text)').
 		wbh_drop('st', $status_opts, $st, 'To').
 		wbh_submit('send').
 		"</form></div>\n";
