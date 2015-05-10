@@ -675,7 +675,7 @@ function wbh_confirm_email($wk, $u, $st = ENROLLED) {
 	
 	$text = '';
 	if ($u['send_text']) {
-		$text = "More info: ".wbh_shorten_url($trans);
+		$text = "More info: ".wbh_shorten_link($trans);
 	}
 	
 	switch ($st) {
