@@ -1,0 +1,92 @@
+/*
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET time_zone = "+00:00";
+
+CREATE TABLE carriers (
+id int(11) NOT NULL,
+  network varchar(20) NOT NULL,
+  email varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+INSERT INTO carriers (id, network, email) VALUES
+(1, 'AT&T', 'txt.att.net'),
+(2, 'Verizon', 'vtext.com'),
+(3, 'Sprint', 'messaging.sprintpcs.com'),
+(4, 'T-Mobile', 'tmomail.net');
+
+CREATE TABLE locations (
+id int(11) NOT NULL,
+  place varchar(255) NOT NULL,
+  lwhere text NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+INSERT INTO locations (id, place, lwhere) VALUES
+(1, 'UCB Classes-NY (Old)', '145 West 30th Street, 4th Floor\r\nNY, NY'),
+(2, 'Simple Studios', '134 W 29th St\r\nNY, NY'),
+(3, 'UCB Classes-NY (New)', '520 8th Ave 9th Floor\r\nNY, NY'),
+(4, 'The Complex', '6476 Santa Monica Blvd, Los Angeles, CA 90038');
+
+CREATE TABLE registrations (
+id int(11) NOT NULL,
+  user_id int(11) NOT NULL,
+  workshop_id int(11) NOT NULL,
+  `status` enum('enrolled','waiting','dropped','invited') NOT NULL DEFAULT 'enrolled',
+  attended tinyint(4) NOT NULL DEFAULT '0',
+  registered datetime NOT NULL,
+  last_modified datetime NOT NULL,
+  while_soldout tinyint(4) NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+CREATE TABLE users (
+id int(11) NOT NULL,
+  email varchar(255) NOT NULL,
+  ukey varchar(255) NOT NULL,
+  send_text tinyint(1) NOT NULL,
+  carrier_id int(11) NOT NULL,
+  phone varchar(20) NOT NULL,
+  new_email varchar(255) NOT NULL,
+  joined datetime NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+CREATE TABLE workshops (
+id int(11) NOT NULL,
+  title varchar(255) NOT NULL,
+  `start` datetime NOT NULL,
+  `end` datetime NOT NULL,
+  cost int(11) NOT NULL,
+  capacity int(11) NOT NULL,
+  notes text NOT NULL,
+  revenue int(10) unsigned NOT NULL,
+  expenses int(10) unsigned NOT NULL,
+  location_id int(11) NOT NULL,
+  sold_out_late tinyint(4) NOT NULL DEFAULT '-1'
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+ALTER TABLE carriers
+ ADD PRIMARY KEY (id);
+
+ALTER TABLE locations
+ ADD PRIMARY KEY (id);
+
+ALTER TABLE registrations
+ ADD PRIMARY KEY (id);
+
+ALTER TABLE users
+ ADD PRIMARY KEY (id), ADD UNIQUE KEY email (email);
+
+ALTER TABLE workshops
+ ADD PRIMARY KEY (id);
+
+
+ALTER TABLE carriers
+MODIFY id int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE locations
+MODIFY id int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE registrations
+MODIFY id int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE users
+MODIFY id int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE workshops
+MODIFY id int(11) NOT NULL AUTO_INCREMENT;
+
+*/

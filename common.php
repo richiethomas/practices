@@ -885,52 +885,5 @@ function wbh_mysqli($sql) {
 	$rows = mysqli_query($db, $sql) or wbh_db_error();	
 	return $rows;
 }
-/*
-SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-SET time_zone = "+00:00";
 
-CREATE TABLE IF NOT EXISTS locations (
-  id int(11) NOT NULL AUTO_INCREMENT,
-  place varchar(255) NOT NULL,
-  lwhere text NOT NULL,
-  PRIMARY KEY (id)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1;
-
-CREATE TABLE IF NOT EXISTS registrations (
-  id int(11) NOT NULL AUTO_INCREMENT,
-  user_id int(11) NOT NULL,
-  workshop_id int(11) NOT NULL,
-  `status` enum('enrolled','waiting','dropped','invited') NOT NULL DEFAULT 'enrolled',
-  attended tinyint(4) NOT NULL DEFAULT '0',
-  registered datetime NOT NULL,
-  last_modified datetime NOT NULL,
-  while_soldout tinyint(4) NOT NULL,
-  PRIMARY KEY (id)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1;
-
-CREATE TABLE IF NOT EXISTS users (
-  id int(11) NOT NULL AUTO_INCREMENT,
-  email varchar(255) NOT NULL,
-  ukey varchar(255) NOT NULL,
-  joined datetime NOT NULL,
-  PRIMARY KEY (id),
-  UNIQUE KEY email (email)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1;
-
-CREATE TABLE IF NOT EXISTS workshops (
-  id int(11) NOT NULL AUTO_INCREMENT,
-  title varchar(255) NOT NULL,
-  `start` datetime NOT NULL,
-  `end` datetime NOT NULL,
-  cost int(11) NOT NULL,
-  capacity int(11) NOT NULL,
-  notes text NOT NULL,
-  revenue int(10) unsigned NOT NULL,
-  expenses int(10) unsigned NOT NULL,
-  location_id int(11) NOT NULL,
-  sold_out_late tinyint(4) NOT NULL DEFAULT '-1',
-  PRIMARY KEY (id)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1;
-
-*/
 
