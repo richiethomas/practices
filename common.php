@@ -6,7 +6,8 @@ include 'time_difference.php';
 
 define('DEBUG_MODE', false);
 define('URL', "http://{$_SERVER['HTTP_HOST']}/practices/");
-define('WEBMASTER', "whines@gmail.com");
+define('WEBMASTER', "will@willhines.net");
+ini_set('sendmail_from','will@willhines.net'); 
 
 define('ENROLLED', 'enrolled');
 define('WAITING', 'waiting');
@@ -710,7 +711,7 @@ function wbh_confirm_email($wk, $u, $st = ENROLLED) {
 
 	$text = '';
 	if ($u['send_text']) {
-		$textmsg = $point.' '.wbh_shorten_link($trans);
+		$textmsg = $point.' for more info: '.wbh_shorten_link($trans);
 		wbh_send_text($u, $textmsg);
 	}
 
@@ -740,8 +741,8 @@ function wbh_send_text($u, $msg) {
 	}
 	$carriers = wbh_get_carriers();
 	$to = $u['phone'].'@'.$carriers[$u['carrier_id']]['email'];	
-	return mail($to, '', $msg, "From: ".WEBMASTER);
-	
+	$mailed=  mail($to, '', $msg, "From: ".WEBMASTER);
+	return $mailed;
 }
 
 
@@ -751,8 +752,7 @@ function wbh_shorten_link($link) {
 	// under whines@gmail.com / meet1962
 	
 	//tempoary while working locally
-	//$link = preg_replace('/localhost:8888/', 'www.willhines.net', $link);
-	
+	$link = preg_replace('/localhost:8888/', 'www.willhines.net', $link);
 	$link = urlencode($link);
 	$response = file_get_contents("https://api-ssl.bitly.com/v3/shorten?access_token=70cc52665d5f7df5eaeb2dcee5f1cdba14f5ec94&longUrl={$link}&format=txt");
 	return $response;
