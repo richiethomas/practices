@@ -675,12 +675,14 @@ function wbh_confirm_email($wk, $u, $st = ENROLLED) {
 	}
 	
 	
+	$send_faq = false;
 	switch ($st) {
 		case 'already':
 		case ENROLLED:
 			$sub = "ENROLLED: {$wk['showtitle']}";
 			$point = "You are ENROLLED in {$wk['showtitle']}.";
 			$call = "To DROP, click here:\n{$drop}";
+			$send_faq = true;
 			break;
 		case WAITING:
 			$sub = "WAIT LIST: {$wk['showtitle']}";
@@ -726,7 +728,7 @@ $call
 To see all practices you've taken, click here:
 {$trans}
 
-".wbh_email_footer();	
+".wbh_email_footer($send_faq);	
 	
 	return mail($u['email'], $sub, $body, "From: ".WEBMASTER);
 }
@@ -822,9 +824,17 @@ function wbh_drop_session($wk, $u) {
 	return true;
 }
 
-function wbh_email_footer() {
-	return "Thanks!
+function wbh_email_footer($faq = false) {
 
+	$faqadd = '';
+	if ($faq) {
+		$faqadd = strip_tags(wbh_get_faq());
+	}
+	return "
+$faqadd
+		
+Thanks!
+		
 -Will Hines
 HQ: 1948 Hillhurst Ave. Los Angeles, CA 90027
 ";

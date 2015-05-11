@@ -222,6 +222,15 @@ switch ($ac) {
 
 switch ($v) {
 	
+	
+	case 'faq':
+	
+		$body .= "<div class='row'><div class='col-md-12'>\n";
+		$body .= wbh_get_faq();
+		$body .= "<p>Just <a href='$sc'>go back to the main page</a>.</p>";
+		$body .= "</div></div>\n";
+		break;	
+
 	case 'text':
 		$body .= "<div class='row'><div class='col-md-12'>\n";
 		$body .= "<h2>Your settings</h2>\n";
@@ -236,6 +245,8 @@ switch ($v) {
 		$body .= "</div></div>\n";
 
 		break;
+		
+		
 	case 'edit':
 		$body .= "<div class='row'><div class='col-md-12'>\n";
 		$body .= "<h2>Your settings</h2>\n";
@@ -325,8 +336,9 @@ switch ($v) {
 		} else {
 			$body .= "<p>You're not logged in, so I can't list your workshops. Log in further up this page.</p>";
 		}
+		$body .= "<h2>Questions</h2>\n";
+		$body .= "<p>Paying? Lateness? Levels? See <a href='$sc?v=faq'>questions</a>.</p>\n";
 		$body .= "</div></div> <!-- end of col and row -->\n";		
-		$body .= wbh_get_faq();
 		
 		break;
 }
