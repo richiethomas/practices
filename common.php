@@ -823,13 +823,7 @@ function wbh_drop_session($wk, $u) {
 }
 
 function wbh_email_footer() {
-	$faq = strip_tags(wbh_get_faq());
 	return "Thanks!
-Will
-
-$faq
-
-Any other questions, let me know.
 
 -Will Hines
 HQ: 1948 Hillhurst Ave. Los Angeles, CA 90027

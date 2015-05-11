@@ -216,7 +216,7 @@ switch ($ac) {
 			$message = 'Preferences updated!';
 		}
 
-		$v = 'default';
+		$v = 'text';
 		break;		
 }	
 
@@ -232,6 +232,7 @@ switch ($v) {
 		} else {
 			$body .= "<p>You are not logged in! Go back to the <a href='$sc'>front page</a> and enter your email. We'll email you a link so you can log in.</p>\n";
 		}
+		$body .= "<p>Just <a href='$sc'>go back to the main page</a>.</p>";
 		$body .= "</div></div>\n";
 
 		break;
