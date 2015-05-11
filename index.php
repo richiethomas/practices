@@ -196,7 +196,7 @@ switch ($ac) {
 	
 		// only validate data if they want texts, else who cares?
 		if ($send_text == 1) {
-			if (strlen($phone) < 10) {
+			if (strlen($phone) != 10) {
 				$error = 'Phone number must be ten digits.';
 			} 
 			if ($carrier_id == 0) {

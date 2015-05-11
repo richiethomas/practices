@@ -284,7 +284,7 @@ function wbh_edit_text_preferences($u) {
 	$body .= wbh_drop('carrier_id', $carriers, $u['carrier_id'], 'phone network', null, $error);
 
 	// phone validation
-	if ($ac == 'updateu' && $u['send_text'] == 1 && strlen($u['phone']) < 10) {
+	if ($ac == 'updateu' && $u['send_text'] == 1 && strlen($u['phone']) != 10) {
 		$help = null;
 		$error = 'Phone must be 10 digits, no letters or spaces or dashes';
 	} else {
@@ -735,7 +735,7 @@ To see all practices you've taken, click here:
 
 
 function wbh_send_text($u, $msg) {
-	if (!$u['send_text'] || !$u['carrier_id'] || !$u['phone'] || strlen($u['phone']) < 10) {
+	if (!$u['send_text'] || !$u['carrier_id'] || !$u['phone'] || strlen($u['phone']) != 10) {
 		return false;
 	}
 	$carriers = wbh_get_carriers();
