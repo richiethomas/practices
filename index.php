@@ -337,9 +337,12 @@ switch ($v) {
 			$body .= "<p>You're not logged in, so I can't list your workshops. Log in further up this page.</p>";
 		}
 		$body .= "<h2>Questions</h2>\n";
-		$body .= "<p>Paying? Lateness? Levels? See <a href='$sc?v=faq'>questions</a>.</p>\n";
-		$body .= "</div></div> <!-- end of col and row -->\n";		
+		$body .= "<p>Paying? Lateness? Levels? See <a href='$sc?v=faq'>questions</a>.</p>\n";		
+		$body .= "</div></div> <!-- end of col and row -->\n";	
 		
+		include 'mailchimp.php';
+			
+		$body .= "<br><br>\n";
 		break;
 }
 

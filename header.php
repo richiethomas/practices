@@ -32,7 +32,7 @@ design quick-fixes taken from:
 
 <script>
 	$( document ).ready(function() {
-	    $.backstretch("kirby_krackle.jpg");
+	    $.backstretch("bb4.jpg");
 	});
 </script>
 	
