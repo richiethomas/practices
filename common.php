@@ -815,7 +815,7 @@ function wbh_get_transcript_tabled($u, $admin = false) {
 		if ($t['status'] == WAITING) {
 			$body .= " (spot {$e['rank']})";
 		}
-		$body .= "</td><td><a href='index.php?v=view&wid={$t['workshop_id']}'>Other Actions</a></td></tr>\n";
+		$body .= "</td><td><a href='index.php?v=view&wid={$t['workshop_id']}'>More Info</a></td></tr>\n";
 	}
 	$body .= "</tbody></table>\n";
 	return $body;
