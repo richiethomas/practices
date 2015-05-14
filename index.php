@@ -128,7 +128,7 @@ switch ($ac) {
 		if (wbh_logged_in()) {
 			$message = wbh_handle_enroll($wk, $u, $email);
 			if (!$u['send_text']) {
-				$message .= " You can get text notifications by <a href='$sc?v=text'>updating your text preferences</a>.";	
+				$message .= " You can get text notifications by <a  class='btn btn-default' href='$sc?v=text'>updating your text preferences</a>.";	
 			}
 			$v = 'view';
 		} else {
@@ -283,13 +283,13 @@ switch ($v) {
 					$point = "You are ENROLLED in this practice. Would you like to <a class='btn btn-default' href='$sc?ac=drop&wid={$wk['id']}&uid={$u['id']}&key={$key}&v=view'>drop</a> it?";
 					break;
 				case WAITING:
-					$point = "You are spot number {$e['rank']} on the WAIT LIST for this practice.";
+					$point = "You are spot number {$e['rank']} on the WAIT LIST for this practice. Would you like to <a class='btn btn-default' href='$sc?ac=drop&wid={$wk['id']}&uid={$u['id']}&key={$key}&v=view'>drop</a> it?";
 					break;
 				case INVITED:
 					$point = "A spot opened up in this practice. Would you like to <a class='btn btn-default' href='$sc?ac=accept&wid={$wk['id']}&uid={$u['id']}&key={$key}&v=view'>accept</a> it, or <a class='btn btn-default' href='$sc?ac=decline&wid={$wk['id']}&uid={$u['id']}&key={$key}&v=view'>decline</a> it?";
 					break;
 				case DROPPED:
-					$point = "You have dropped out of this practice.";
+					$point = "You have dropped out of this practice. Would you like to <a class='btn btn-default'  href='$sc?ac=enroll&wk={$wk['id']}'>re-enroll</a>?";
 					break;
 				default:
 					$point = "You are a status of '$st' for this practice:";
@@ -315,7 +315,7 @@ switch ($v) {
 			$body .= "<h2>Welcome</h2>\n";
 			$body .= "<p>You are logged in as {$u['email']}! (You can <a href='$sc?v=edit'>change your email</a> or <a href='$sc?ac=lo'>log out</a>)</p>";			
 
-			$body .= "<p>".($u['send_text'] ? "You have signed up for text notfications. " : "Would you like text notifications?")." <a href='$sc?v=text'>Update your text preferences</a>.</p>\n";
+			$body .= "<p>".($u['send_text'] ? "You have signed up for text notfications. " : "Would you like text notifications?")." <a  class='btn btn-primary' href='$sc?v=text'>Update your text preferences</a>.</p>\n";
 
 		} else {
 			$body .= "<h2>Log In</h2>\n";

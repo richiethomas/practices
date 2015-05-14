@@ -502,11 +502,27 @@ function wbh_handle_enroll($wk, $u, $email, $confirm = true) {
 	if (!$email) {
 		$email = $u['email'];
 	}
+	$before = wbh_get_an_enrollment($wk, $u); // if they were already enrolled
 	$status = wbh_enroll($wk, $u);
+	$keyword = '';
 	if ($status == ENROLLED) {
-		$message = "'{$email}' has been enrolled in '{$wk['title']}'!";
+		if (!$before) {
+			$keyword = 'has been';
+		} elseif ($before['status'] == ENROLLED) {
+			$keyword = 'is still';
+		} else {
+			$keyword = 'is now';
+		}
+		$message = "'{$email}' $keyword enrolled in '{$wk['title']}'!";
 	} elseif ($status == WAITING) {
-		$message = "This practice is full. '{$email}' has been added to the waiting list.";
+		if (!$before) {
+			$keyword = 'has been added to';
+		} elseif ($before['status'] == WAITING) {
+			$keyword = 'is still on';
+		} else {
+			$keyword = 'is now on';
+		}		
+		$message = "This practice is full. '{$email}' $keyword the waiting list.";
 	} elseif ($status == 'already') {
 		$message = "'{$email}' has already been registered.";
 	} else {
