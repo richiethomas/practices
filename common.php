@@ -684,6 +684,7 @@ function wbh_confirm_email($wk, $u, $st = ENROLLED) {
 	$accept = URL."index.php?ac=accept&wid={$wk['id']}&key=$key";
 	$decline = URL."index.php?ac=decline&wid={$wk['id']}&key=$key";
 	$enroll = URL."index.php?key=$key&ac=enroll&wid={$wk['id']}";
+	$textpref = URL."index.php?key=$key&v=text";
 	$call = '';
 	$late = '';
 		
@@ -730,10 +731,16 @@ function wbh_confirm_email($wk, $u, $st = ENROLLED) {
 		$textmsg = $point.' for more info: '.wbh_shorten_link($trans);
 		wbh_send_text($u, $textmsg);
 	}
+	
+	$notifcations = '';
+	if (!$u['send_text']) {
+		$notifications = "\nWould you want to be notified via text? You can set text preferences:\n".$textpref;
+	}
 
 	$body = "You are: {$u['email']}
 
 $point $late
+$notifications
 
 Title: {$wk['title']}
 When: {$wk['when']}

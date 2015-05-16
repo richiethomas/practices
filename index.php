@@ -128,7 +128,7 @@ switch ($ac) {
 		if (wbh_logged_in()) {
 			$message = wbh_handle_enroll($wk, $u, $email);
 			if (!$u['send_text']) {
-				$message .= " You can get text notifications by <a  class='btn btn-default' href='$sc?v=text'>updating your text preferences</a>.";	
+				$message .= " Want notifications by text? <a  class='btn btn-default' href='$sc?v=text'>Set your text preferences</a>.";	
 			}
 			$v = 'view';
 		} else {
@@ -315,7 +315,7 @@ switch ($v) {
 			$body .= "<h2>Welcome</h2>\n";
 			$body .= "<p>You are logged in as {$u['email']}! (You can <a href='$sc?v=edit'>change your email</a> or <a href='$sc?ac=lo'>log out</a>)</p>";			
 
-			$body .= "<p>".($u['send_text'] ? "You have signed up for text notfications. " : "Would you like text notifications?")." <a  class='btn btn-primary' href='$sc?v=text'>Update your text preferences</a>.</p>\n";
+			$body .= "<p>".($u['send_text'] ? "You have signed up for text notfications. " : "Would you like text notifications?")." <a  class='btn btn-primary' href='$sc?v=text'>Get text notifications</a>.</p>\n";
 
 		} else {
 			$body .= "<h2>Log In</h2>\n";
