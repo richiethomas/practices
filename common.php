@@ -1,5 +1,5 @@
 <?php
-date_default_timezone_set ( 'America/New_York' );
+date_default_timezone_set ( 'America/Los_Angeles' );
 session_start();
 include 'wbh_common.php';
 include 'time_difference.php';
@@ -9,14 +9,12 @@ define('URL', "http://{$_SERVER['HTTP_HOST']}/practices/");
 define('WEBMASTER', "will@willhines.net");
 ini_set('sendmail_from','will@willhines.net'); 
 
-define('ENROLLED', 'enrolled');
-define('WAITING', 'waiting');
-define('DROPPED', 'dropped');
-define('INVITED', 'invited');
-$statuses = array(ENROLLED, WAITING, DROPPED, INVITED);
-$status_opts = array();
-foreach ($statuses as $thiss) { $status_opts[$thiss] = $thiss; }
-$status_opts['all'] = 0;
+$statuses = wbh_get_statuses();
+
+define('ENROLLED', wbh_find_status_by_value('enrolled'));
+define('WAITING', wbh_find_status_by_value('waiting'));
+define('DROPPED', wbh_find_status_by_value('dropped'));
+define('INVITED', wbh_find_status_by_value('invited'));
 
 $late_hours = '12';
 $carriers = array();
@@ -218,6 +216,11 @@ function wbh_change_email($ouid, $newe) {
 		$sql = "update users set send_text = ".mres($olds['send_text']).", carrier_id = ".mres($olds['carrier_id']).", phone = '".mres($olds['phone'])."' where id = ".mres($news['id']);
 		wbh_mysqli($sql3) or wbh_db_error();
 		
+		
+		// update records in change log
+		$sql = "udpate status_change_log set user_id = ".mres($news['id'])." where user_id = ".mres($olds['id']);
+		wbh_mysqli($sql) or wbh_db_error();
+		
 		wbh_delete_student($ouid);
 		return true;
 	} else {
@@ -238,8 +241,35 @@ function wbh_delete_student($uid = 0) {
 	wbh_mysqli($sql) or wbh_db_error();
 	$sql = "delete from users where id = ".mres($uid);
 	wbh_mysqli($sql) or wbh_db_error();
+	$sql = "delete from status_change_log where user_id = ".mres($uid);
+	wbh_mysqli($sql) or wbh_db_error();
 	return true;
 	
+}
+
+function wbh_get_statuses() {
+	global $statuses;
+	if (is_array($statuses) && count($statuses) > 0) {
+		return $statuses;
+	}
+	$statuses = array();
+	$sql = "select * from statuses order by id";
+	$rows = wbh_mysqli($sql) or wbh_db_error();
+	while ($row = mysqli_fetch_assoc($rows)) {
+		$statuses[$row['id']] = $row['status_name'];
+	}
+	return $statuses;
+	
+}
+
+function wbh_find_status_by_value($stname) {
+	$statuses = wbh_get_statuses();
+	foreach ($statuses as $status_id => $status_name) {
+		if ($status_name == $stname) {
+			return $status_id;
+		}
+	}
+	return false;
 }
 
 function wbh_get_carriers($update = 0) {
@@ -266,6 +296,7 @@ function wbh_get_carriers_drop() {
 	}
 	return $cardrop;
 }
+
 
 function wbh_edit_text_preferences($u) {
 	global $sc, $ac;
@@ -346,7 +377,7 @@ function wbh_check_last_minuteness($wk) {
 				$sql = 'update workshops set sold_out_late = 1 where id = '.mres($wk['id']);
 				wbh_mysqli( $sql) or wbh_db_error();
 				
-				$sql = "update registrations set while_soldout = 1 where workshop_id = ".mres($wk['id'])." and status = '".ENROLLED."'";
+				$sql = "update registrations set while_soldout = 1 where workshop_id = ".mres($wk['id'])." and status_id = '".ENROLLED."'";
 				wbh_mysqli( $sql) or wbh_db_error();
 				
 				$wk['sold_out_late'] = 1;
@@ -456,9 +487,30 @@ function wbh_get_workshops_list($admin = 0) {
 }
 
 
+function wbh_get_workshops_list_raw($start = null, $end = null) {
+	$sql = "select w.*, l.place, l.lwhere 
+	from workshops w LEFT OUTER JOIN locations l on w.location_id = l.id WHERE 1 = 1 ";
+	if ($start) {
+		$sql .= " and w.start >= '".date('Y-m-d H:i:s', strtotime($start))."'";
+	}
+	if ($end) {
+		$sql .= " and w.end <= '".date('Y-m-d H:i:s', strtotime($end))."'";
+	}
+	$sql .= " order by start desc";
+	$rows = wbh_mysqli( $sql) or wbh_db_error();
+	$workshops = array();
+	while ($row = mysqli_fetch_assoc($rows)) {
+		$row['showstart'] = date('D M j - g:ia', strtotime($row['start']));
+		$row['showend'] = date('g:ia', strtotime($row['end']));		
+		$row['showtitle'] = "{$row['title']} - {$row['showstart']}-{$row['showend']}";
+		$workshops[$row['id']] = $row;
+	}
+	return $workshops;
+}
+
 // registrations
-function wbh_get_enrollments($id, $status = ENROLLED) {
-	$sql = "select count(*) as total from registrations where workshop_id = ".mres($id)." and status = '".mres($status)."'";
+function wbh_get_enrollments($id, $status_id = ENROLLED) {
+	$sql = "select count(*) as total from registrations where workshop_id = ".mres($id)." and status_id = '".mres($status_id)."'";
 	$rows = wbh_mysqli( $sql) or wbh_db_error();
 	while ($row = mysqli_fetch_assoc($rows)) {
 		return $row['total'];
@@ -467,10 +519,11 @@ function wbh_get_enrollments($id, $status = ENROLLED) {
 }
 
 function wbh_get_an_enrollment($wk, $u) {
+	$statuses = wbh_get_statuses();
 	$sql = "select r.* from registrations r where r.workshop_id = ".mres($wk['id'])." and user_id = ".mres($u['id']);
 	$rows = wbh_mysqli( $sql) or wbh_db_error($sql);
 	while ($row = mysqli_fetch_assoc($rows)) {
-		$sql2 = "select r.* from registrations r where r.workshop_id = ".mres($wk['id'])." and r.status = '".mres($row['status'])."' order by last_modified";
+		$sql2 = "select r.* from registrations r where r.workshop_id = ".mres($wk['id'])." and r.status_id = '".mres($row['status_id'])."' order by last_modified";
 		$rows2 = wbh_mysqli( $sql2) or wbh_db_error();
 		$i = 1;
 		while ($row2 = mysqli_fetch_assoc($rows2)) {
@@ -480,6 +533,7 @@ function wbh_get_an_enrollment($wk, $u) {
 			$i++;
 		}
 		$row['rank'] = $i;
+		$row['status_name'] = $statuses[$row['status_id']];
 		return $row;
 	}
 	return false;
@@ -503,32 +557,32 @@ function wbh_handle_enroll($wk, $u, $email, $confirm = true) {
 		$email = $u['email'];
 	}
 	$before = wbh_get_an_enrollment($wk, $u); // if they were already enrolled
-	$status = wbh_enroll($wk, $u);
+	$status_id = wbh_enroll($wk, $u);
 	$keyword = '';
-	if ($status == ENROLLED) {
+	if ($status_id == ENROLLED) {
 		if (!$before) {
 			$keyword = 'has been';
-		} elseif ($before['status'] == ENROLLED) {
+		} elseif ($before['status_id'] == ENROLLED) {
 			$keyword = 'is still';
 		} else {
 			$keyword = 'is now';
 		}
 		$message = "'{$email}' $keyword enrolled in '{$wk['title']}'!";
-	} elseif ($status == WAITING) {
+	} elseif ($status_id == WAITING) {
 		if (!$before) {
 			$keyword = 'has been added to';
-		} elseif ($before['status'] == WAITING) {
+		} elseif ($before['status_id'] == WAITING) {
 			$keyword = 'is still on';
 		} else {
 			$keyword = 'is now on';
 		}		
 		$message = "This practice is full. '{$email}' $keyword the waiting list.";
-	} elseif ($status == 'already') {
+	} elseif ($status_id == 'already') {
 		$message = "'{$email}' has already been registered.";
 	} else {
-		$message = "Not sure what happened. Status message is: ".$status;
+		$message = "Not sure what happened. Tried to enroll and got this status id: ".$status_id;
 	}		
-	if ($confirm) { wbh_confirm_email($wk, $u, $status); }
+	if ($confirm) { wbh_confirm_email($wk, $u, $status_id); }
 	if (DEBUG_MODE) {
 		mail(WEBMASTER, $message, $message, "From: ".WEBMASTER);
 	}
@@ -544,7 +598,7 @@ function wbh_enroll($wk, $u) {
 	$sql = "select  * from registrations where workshop_id = ".mres($wid)." and user_id = ".mres($uid);
 	$rows = wbh_mysqli( $sql) or wbh_db_error();
 	while ($row = mysqli_fetch_assoc($rows)) {
-		switch($row['status']) {
+		switch($row['status_id']) {
 			case ENROLLED:
 				return 'already';
 				break;
@@ -573,18 +627,19 @@ function wbh_enroll($wk, $u) {
 	
 	// if we haven't returned, then there was no registration. make a new registration
 	if (($wk['enrolled']+$wk['invited']) < $wk['capacity'] && $wk['waiting'] == 0) {
-		$status = ENROLLED;
+		$status_id = ENROLLED;
 	} else {
-		$status = WAITING;
+		$status_id = WAITING;
 	}
 
-	$sql = sprintf("INSERT INTO registrations (workshop_id, user_id, status, registered, last_modified) VALUES (%u, %u, '%s', now(), now())",
+	$sql = sprintf("INSERT INTO registrations (workshop_id, user_id, status_id, registered, last_modified) VALUES (%u, %u, '%s', now(), now())",
 		mres($wid),
 		mres($uid),
-		mres($status));
+		mres($status_id));
 	wbh_mysqli( $sql) or wbh_db_error();
+	wbh_update_change_log($wk, $u, $status_id); 
 
-	return $status;
+	return $status_id;
 }
 
 
@@ -597,7 +652,7 @@ function wbh_check_waiting($wk) {
 		return 'Workshop is in the past';
 	}
 	while (($wk['enrolled']+$wk['invited']) < $wk['capacity'] && $wk['waiting'] > 0) {
-		$sql = "select * from registrations where workshop_id = ".mres($wk['id'])." and status = '".WAITING."' order by last_modified limit 1";
+		$sql = "select * from registrations where workshop_id = ".mres($wk['id'])." and status_id = '".WAITING."' order by last_modified limit 1";
 		$rows = wbh_mysqli( $sql) or wbh_db_error();
 		while ($row = mysqli_fetch_assoc($rows)) {
 			$u = wbh_get_user_by_id($row['user_id']);
@@ -610,7 +665,7 @@ function wbh_check_waiting($wk) {
 }
 
 function wbh_next_waiting($wk) {
-	$sql = "select * from registrations where workshop_id = ".mres($wk['id'])." and status = '".WAITING."' order by last_modified limit 1";
+	$sql = "select * from registrations where workshop_id = ".mres($wk['id'])." and status_id = '".WAITING."' order by last_modified limit 1";
 	$rows = wbh_mysqli( $sql) or wbh_db_error();
 	while ($row = mysqli_fetch_assoc($rows)) {
 		return wbh_get_user_by_id($row['user_id']);
@@ -625,22 +680,60 @@ function wbh_update_attendance($wid, $uid, $attended = 1) {
 	return "Updated user ($uid) workshop ($wid) to attended: $attended";
 }
 
-function wbh_change_status($wk, $u, $st = ENROLLED, $confirm = true) {
-	$sql = "update registrations set status = '".mres($st)."',  last_modified = now() where workshop_id = ".mres($wk['id'])." and user_id = ".mres($u['id']);
-	wbh_mysqli( $sql) or wbh_db_error();
-	if ($confirm) { wbh_confirm_email($wk, $u, $st); }
-	$return_msg = "Updated user ({$u['email']}) to status '$st' for {$wk['showtitle']}.";
-	if (DEBUG_MODE) {
-		mail(WEBMASTER, "{$u['email']} now '{$st}' for '{$wk['showtitle']}'", $return_msg, "From: ".WEBMASTER);
+function wbh_change_status($wk, $u, $status_id = ENROLLED, $confirm = true) {
+	
+	$e = wbh_get_an_enrollment($wk, $u);
+	$statuses = wbh_get_statuses();
+	if ($e['status_id'] != $status_id) {
+		$sql = "update registrations set status_id = '".mres($status_id)."',  last_modified = now() where workshop_id = ".mres($wk['id'])." and user_id = ".mres($u['id']);
+		wbh_mysqli( $sql) or wbh_db_error();
+		wbh_update_change_log($wk, $u, $status_id);	
 	}
 	
+	if ($confirm) { wbh_confirm_email($wk, $u, $status_id); }
+	$return_msg = "Updated user ({$u['email']}) to status '{$statuses[$status_id]}' for {$wk['showtitle']}.";
+	if (DEBUG_MODE) {
+		mail(WEBMASTER, "{$u['email']} now '{$statuses['status_id']}' for '{$wk['showtitle']}'", $return_msg, "From: ".WEBMASTER);
+	}
+
+		
 	return $return_msg;
 }
 
+function wbh_update_change_log($wk, $u, $status_id) {
+	if (!$wk['id'] || !$u['id'] || !$status_id) {
+		return false;
+	}
+	$sql = sprintf("insert into status_change_log (workshop_id, user_id, status_id) VALUES (%u, %u, %u)",
+	mres ($wk['id']),
+	mres ($u['id']),
+	mres ($status_id));
+	wbh_mysqli($sql) or wbh_db_error();
+	return false;
+}
 
-function wbh_get_students($wid, $status = ENROLLED) {
-	$sql = "select u.*, r.status,  r.attended, r.registered, r.last_modified  from registrations r, users u where r.workshop_id = ".mres($wid);
-	if ($status) { $sql .= " and status = '".mres($status)."'"; }
+function wbh_get_status_change_log($wk) {
+	if (!$wk['id']) {
+		return false;
+	}
+	$sql = "select s.*, u.email, st.status_name from status_change_log s, users u, statuses st where workshop_id = ".mres($wk['id'])." and s.user_id = u.id and s.status_id = st.id order by happened";
+	print_r($sql);
+	$rows = wbh_mysqli($sql) or wbh_db_error();
+	$log = '';
+	while ($row = mysqli_fetch_assoc($rows)) {
+		$log .= "<tr><td>{$row['email']}</td><td>{$row['status_name']}</td><td><small>".date('j-M-y g:Ia', strtotime($row['happened']))."</small></td></tr>\n";
+	}
+	if (!$log) {
+		$log = 'No recorded updates.';
+	} else {
+		$log = "<table class='table'>$log</table>\n";
+	}
+	return $log;
+}
+
+function wbh_get_students($wid, $status_id = ENROLLED) {
+	$sql = "select u.*, r.status_id,  r.attended, r.registered, r.last_modified  from registrations r, users u where r.workshop_id = ".mres($wid);
+	if ($status_id) { $sql .= " and status_id = '".mres($status_id)."'"; }
 	$sql .= " and r.user_id = u.id order by last_modified";
 	$rows = wbh_mysqli( $sql) or wbh_db_error();
 	$stds = array();
@@ -655,9 +748,9 @@ function wbh_sort_by_email($a, $b) {
     return strcasecmp($a["email"], $b["email"]);
 }
 
-function wbh_list_students($wid, $status = ENROLLED) {
+function wbh_list_students($wid, $status_id = ENROLLED) {
 	global $sc;
-	$stds = wbh_get_students($wid, $status);
+	$stds = wbh_get_students($wid, $status_id);
 	$body = '';
 	$es = '';
 	foreach ($stds as $uid => $s) {
@@ -672,7 +765,8 @@ function wbh_list_students($wid, $status = ENROLLED) {
 	return $body;
 }
 
-function wbh_confirm_email($wk, $u, $st = ENROLLED) {
+function wbh_confirm_email($wk, $u, $status_id = ENROLLED) {
+	$statuses = wbh_get_statuses();
 	if (!isset($u['key']) || !$u['key']) {
 		$key = wbh_get_key($u['id']);
 	} else {
@@ -694,7 +788,7 @@ function wbh_confirm_email($wk, $u, $st = ENROLLED) {
 	
 	
 	$send_faq = false;
-	switch ($st) {
+	switch ($status_id) {
 		case 'already':
 		case ENROLLED:
 			$sub = "ENROLLED: {$wk['showtitle']}";
@@ -721,8 +815,8 @@ function wbh_confirm_email($wk, $u, $st = ENROLLED) {
 			$call = "If you change your mind, re-enroll here:\n{$enroll}";
 			break;
 		default:
-			$sub = "{$st}: {$wk['showtitle']}";
-			$point = "You are a status of '$st' for {$wk['showtitle']}";
+			$sub = "{$statuses[$status_id]}: {$wk['showtitle']}";
+			$point = "You are a status of '{$statuses[$status_id]}' for {$wk['showtitle']}";
 			break;
 	}
 
@@ -805,7 +899,7 @@ function wbh_get_transcript_tabled($u, $admin = false) {
 		$e = wbh_get_an_enrollment($wk, $u); 
 		if ($wk['type'] == 'past') {
 			$cl = 'muted';
-		} elseif ($t['status'] == ENROLLED) {
+		} elseif ($t['status_id'] == ENROLLED) {
 			$cl = 'success';
 		} else {
 			$cl = 'warning';
@@ -818,8 +912,8 @@ function wbh_get_transcript_tabled($u, $admin = false) {
 			$body .= $t['title'];
 		}
 		$body .= "</td><td>{$wk['when']}</td><td>{$t['place']}</td><td>";
-		$body .= "{$t['status']}";
-		if ($t['status'] == WAITING) {
+		$body .= "{$statuses[$t['status_id']]}";
+		if ($t['status_id'] == WAITING) {
 			$body .= " (spot {$e['rank']})";
 		}
 		$body .= "</td><td><a href='index.php?v=view&wid={$t['workshop_id']}'>More Info</a></td></tr>\n";
@@ -829,10 +923,12 @@ function wbh_get_transcript_tabled($u, $admin = false) {
 }
 
 function wbh_get_transcript($u) {
+	$statuses = wbh_get_statuses();
 	$sql = "select * from registrations r, workshops w, locations l where r.workshop_id = w.id and w.location_id = l.id and r.user_id = ".mres($u['id'])." order by w.start desc";
 	$rows = wbh_mysqli( $sql) or wbh_db_error();
 	$transcripts = array();
 	while ($row = mysqli_fetch_assoc($rows)) {
+		$row['status_name'] = $statuses[$row['status_id']];
 		$transcripts[] = $row;
 	}
 	return $transcripts;

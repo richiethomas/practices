@@ -89,4 +89,56 @@ MODIFY id int(11) NOT NULL AUTO_INCREMENT;
 ALTER TABLE workshops
 MODIFY id int(11) NOT NULL AUTO_INCREMENT;
 
+define('ENROLLED', 'enrolled');
+define('WAITING', 'waiting');
+define('DROPPED', 'dropped');
+define('INVITED', 'invited');
+
+CREATE TABLE statuses (
+id int(11) NOT NULL,
+  status_name varchar(15) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+INSERT INTO statuses (id, status_name) VALUES
+(1, 'enrolled'),
+(2, 'waiting'),
+(3, 'dropped'),
+(4, 'invited');
+
+ALTER TABLE statuses
+ ADD PRIMARY KEY (id);
+
+ALTER TABLE `registrations` ADD `status_id` INT NOT NULL AFTER `status`;
+
+
+update registrations set status_id = 1 where status = 'enrolled'
+
+
+
+update registrations r set status_id = s.id where 
+
+  UPDATE registrations a JOIN statuses b 
+   ON a.status = b.status_name 
+   SET a.status_id = b.id;
+   
+   
+CREATE TABLE status_change_log (
+id int(11) NOT NULL,
+  workshop_id int(11) NOT NULL,
+  user_id int(11) NOT NULL,
+  status_id int(11) NOT NULL,
+  `when` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indexes for table status_change_log
+--
+ALTER TABLE status_change_log
+ ADD PRIMARY KEY (id);   
+
+
 */

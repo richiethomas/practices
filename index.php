@@ -54,9 +54,9 @@ switch ($ac) {
 			break;
 		}
 		//actually change the email
-		$status = wbh_change_email($u['id'], $u['new_email']);
-		if ($status !== true) {
-			$error = $status;
+		$result = wbh_change_email($u['id'], $u['new_email']);
+		if ($result !== true) {
+			$error = $result;
 		} else {
 			$message = "Email changed from '{$u['email']}' to '{$u['new_email']}'";
 			$u = wbh_get_user_by_email($u['new_email']);
@@ -99,8 +99,8 @@ switch ($ac) {
 			break;
 		}
 		$e = wbh_get_an_enrollment($wk, $u);
-		if ($e['status'] == INVITED) {
-			wbh_change_status($wk, $u, 'enrolled', 1);
+		if ($e['status_id'] == INVITED) {
+			wbh_change_status($wk, $u, ENROLLED, 1);
 			wbh_check_waiting($wk);
 			$message = "You are now enrolled in '{$wk['showtitle']}'!";
 		} else {
@@ -115,8 +115,8 @@ switch ($ac) {
 		}
 	
 		$e = wbh_get_an_enrollment($wk, $u);
-		if ($e['status'] == INVITED) {
-			wbh_change_status($wk, $u, 'dropped', 1);
+		if ($e['status_id'] == INVITED) {
+			wbh_change_status($wk, $u, DROPPED, 1);
 			wbh_check_waiting($wk);
 			$message = "You have dropped out of the waiting list for '{$wk['showtitle']}'.";
 		} else {
@@ -163,7 +163,7 @@ switch ($ac) {
 			break;
 		}
 	
-		$message = wbh_change_status($wk, $u, 'dropped', 1);
+		$message = wbh_change_status($wk, $u, DROPPED, 1);
 		$wk =  wbh_get_workshop_info($wk['id']);
 		wbh_check_waiting($wk);
 		$message = "Dropped user ({$u['email']}) from practice '{$wk['title']}.'";
@@ -278,7 +278,7 @@ switch ($v) {
 		$body .= "<div class='row'><div class='col-md-12'>\n";
 		if (wbh_logged_in()) {
 			$e = wbh_get_an_enrollment($wk, $u);
-			switch ($e['status']) {
+			switch ($e['status_id']) {
 				case ENROLLED:
 					$point = "You are ENROLLED in this practice. Would you like to <a class='btn btn-default' href='$sc?ac=drop&wid={$wk['id']}&uid={$u['id']}&key={$key}&v=view'>drop</a> it?";
 					break;
@@ -292,7 +292,7 @@ switch ($v) {
 					$point = "You have dropped out of this practice. Would you like to <a class='btn btn-default'  href='$sc?ac=enroll&wk={$wk['id']}'>re-enroll</a>?";
 					break;
 				default:
-					$point = "You are a status of '$st' for this practice:";
+					$point = "You are a status id of '{$e['status_id']}' (I don't know what that is) for this practice:";
 					break;
 			}
 			if ($wk['type'] == 'past') {

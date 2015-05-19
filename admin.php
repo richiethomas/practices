@@ -34,9 +34,9 @@ switch ($ac) {
  
  	case 'changeemail':
 		if ($uid) {
-			$status = wbh_change_email($uid, $newe);
-			if ($status !== true) {
-				$error = $status;
+			$result = wbh_change_email($uid, $newe);
+			if ($result !== true) {
+				$error = $result;
 			} else {
 				$message = "Email changed from '{$u['email']}' to '$newe'";
 				$u = wbh_get_user_by_email($newe);
@@ -228,7 +228,7 @@ When: {$wk['when']}";
 		}
 		$note .= " Okay, see you soon!";
 		$sms = "Reminder: '{$wk['showtitle']}' coming up.";
-		$st = ENROLLED;
+		$st = ENROLLED; // pre-populating the status drop in 'send message' form
 		break;
 
 	case 'rev':
@@ -274,16 +274,20 @@ switch ($v) {
 		
 		//show enrollment totals at top
 		$stats = array();
-		foreach ($statuses as $s) {
-			$stats[$s] = count(wbh_get_students($wid, $s));
+		foreach ($statuses as $stid => $status_name) {
+			$stats[$stid] = count(wbh_get_students($wid, $stid));
 		}
 		$body .= "<p>totals: (".implode(" / ", array_values($stats)).")<p>\n";
 		
 		// list students for each status
-		foreach ($statuses as $s) {
-			$body .= "<h4>{$s} (".$stats[$s].")</h4>\n";
-			$body .= wbh_list_students($wid, $s);
+		foreach ($statuses as $stid => $status_name) {
+			$body .= "<h4>{$status_name} (".$stats[$stid].")</h4>\n";
+			$body .= wbh_list_students($wid, $stid);
 		}
+		
+		$body .= "<h2>Change Log</h2>\n";
+		$body .= wbh_get_status_change_log($wk);
+		
 		$body .= "</div>"; // end of column
 		
 		//session column
@@ -329,14 +333,14 @@ switch ($v) {
 		"</form></div>\n";
 		
 		$body .= "<div id='emaillists'>\n";
-		foreach ($status_opts as $st_label => $sts) {
-			$stds = wbh_get_students($wid, $sts);
+		foreach ($statuses as $stid => $status_name) {
+			$stds = wbh_get_students($wid, $stid);
 			$es = '';
 			foreach ($stds as $as) {
 				$es .= "{$as['email']}\n";
 			}
-			$body .= "<h3>{$st_label} (".count($stds).")</h3>\n";
-			$body .= wbh_textarea($sts, $es, 0);
+			$body .= "<h3>{$status_name} (".count($stds).")</h3>\n";
+			$body .= wbh_textarea($status_name, $es, 0);
 		}
 		$body .= "</div>\n";
 		$body .= "</div></div>\n";
@@ -353,10 +357,11 @@ switch ($v) {
 	
 		if (is_array($workshops)) {
 			$body .= "<div id='emaillists'>\n";
-			foreach ($status_opts as $st_label => $sts) {
+			$statuses[0] = 'all';
+			foreach ($statuses as $stid => $status_name) {
 				$students = array();
 				foreach ($workshops as $workshop_id) {
-					$stds = wbh_get_students($workshop_id, $sts);
+					$stds = wbh_get_students($workshop_id, $stid);
 					foreach ($stds as $as) {
 						$students[] = $as['email'];
 					}
@@ -367,8 +372,8 @@ switch ($v) {
 				foreach ($students as $semail) {
 					$es .= "{$semail}\n";
 				}
-				$body .= "<h3>{$st_label} (".count($students).")</h3>\n";
-				$body .= wbh_textarea($sts, $es, 0);
+				$body .= "<h3>{$status_name} (".count($students).")</h3>\n";
+				$body .= wbh_textarea($status_name, $es, 0);
 			}
 			$body .= "</div>\n";
 		}
@@ -380,12 +385,12 @@ switch ($v) {
 		$e = wbh_get_an_enrollment($wk, $u);
 		$body .= "<div class='row'><div class='col-md-4'><h2><a href='$sc?v=ed&wid={$wid}'>{$wk['showtitle']}</a></h2>".
 		"<p>Email: {$u['email']}</p>
-		<p>Status: {$e['status']}</p>";
+		<p>Status: {$e['status_name']}</p>";
 		$body .= "<form action ='$sc' method='post'>".
 		wbh_hidden('wid', $wk['id']).
 		wbh_hidden('uid', $u['id']).
 		wbh_hidden('ac', 'cs').
-		wbh_drop('st', $status_opts, $e['status'], 'to status').
+		wbh_drop('st', $statuses, $e['status_id'], 'to status').
 		wbh_drop('con', array('1' => 'confirm', '0' => 'don\'t'), 0, 'confirm').
 		wbh_submit('update').
 		"<a class='btn btn-warning' href='$sc?v=ed&wid={$wid}'>cancel</a>".
@@ -409,9 +414,9 @@ switch ($v) {
 		$body .= "<form action='$sc' method='post'>".
 		wbh_hidden('wid', $wk['id']).
 		wbh_hidden('ac', 'at');
-		foreach ($statuses as $sts) {
-			$body .= "<h3>$sts</h3>\n";
-			$stds = wbh_get_students($wid, $sts);
+		foreach ($statuses as $stid => $status_name) {
+			$body .= "<h3>{$status_name}</h3>\n";
+			$stds = wbh_get_students($wid, $stid);
 			foreach ($stds as $as) {
 				$body .= "<p>".wbh_checkbox('users', $as['id'], $as['email'], $as['attended'], true).'</p>';
 			}
