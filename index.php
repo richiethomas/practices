@@ -187,35 +187,10 @@ switch ($ac) {
 			$error = 'You are not logged in! You have to be logged in to update your preferences.';
 			break;
 		}
-
-		$phone = preg_replace('/\D/', '', $phone); // just numbers for phone
-	
 		$u['carrier_id'] = $carrier_id;
 		$u['phone'] = $phone;
 		$u['send_text'] = $send_text;
-	
-		// only validate data if they want texts, else who cares?
-		if ($send_text == 1) {
-			if (strlen($phone) != 10) {
-				$error = 'Phone number must be ten digits.';
-			} 
-			if ($carrier_id == 0) {
-				$error = 'You must pick a carrier if you want text updates.';
-			}
-		}
-	
-		// update user info
-		if (!$error) {
-			$sql = sprintf("update users set send_text = %u, phone = '%s', carrier_id = %u where id = %u",
-			mres($send_text),
-			mres($phone),
-			mres($carrier_id),
-			mres($u['id']));
-			wbh_mysqli($sql) or wbh_db_error();
-			$u = wbh_get_user_by_id($u['id']);
-			$message = 'Preferences updated!';
-		}
-
+		wbh_update_text_preferences($u, $message, $error); // function will update all of those arguments
 		$v = 'text';
 		break;		
 }	

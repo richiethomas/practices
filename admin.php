@@ -11,7 +11,7 @@ if (!is_validated()) {
 	exit;
 }
 
-wbh_set_vars(array('ac', 'wid', 'uid', 'email', 'title', 'notes', 'start', 'end', 'active', 'lid', 'lplace', 'lwhere', 'cost', 'capacity', 'notes', 'st', 'v', 'con', 'note', 'subject', 'workshops', 'revenue', 'expenses', 'searchstart', 'searchend', 'lmod', 'needle', 'newe', 'sms'));
+wbh_set_vars(array('ac', 'wid', 'uid', 'email', 'title', 'notes', 'start', 'end', 'active', 'lid', 'lplace', 'lwhere', 'cost', 'capacity', 'notes', 'st', 'v', 'con', 'note', 'subject', 'workshops', 'revenue', 'expenses', 'searchstart', 'searchend', 'lmod', 'needle', 'newe', 'sms', 'phone', 'carrier_id', 'send_text'));
 
 if ($wid) {
 	$wk = wbh_get_workshop_info($wid);
@@ -246,6 +246,16 @@ When: {$wk['when']}";
 		}
 		$v = 'rev';
 		break;
+		
+	case 'updateu':
+		$u['carrier_id'] = $carrier_id;
+		$u['phone'] = $phone;
+		$u['send_text'] = $send_text;
+		wbh_update_text_preferences($u, $message, $error); // function will update all of those arguments
+		$phone = $u['phone']; // sometimes gets updated
+		$v = 'astd';
+		break;		
+	
 }
 
 function wbh_update_workshop_col($wid, $colname, $value) {
@@ -506,14 +516,19 @@ switch ($v) {
 				$body .= "<p>Back to <a href='$sc?v=ed&wid={$wid}'>{$wk['showtitle']}</a></p>\n";
 				$breadcrumb .= "&wid={$wid}";
 			}
+			$body .= "<h3>Transcripts</h3>\n";
 			$body .= wbh_get_transcript_tabled($u, true);	
 			
+			$body .= "<h3>Change Email</h3>\n";
 			$body .= "<form action='$sc' method='post'>\n".
 				wbh_texty('newe', $newe, 'change email to:').
 				wbh_hidden('ac', 'changeemail').
 				wbh_hidden('uid', $u['id']).
 				wbh_submit('change email').
 				"</form>\n";
+			
+			$body .= "<h3>Text Preferences</h3>\n";
+			$body .= wbh_edit_text_preferences($u);
 
 			$body .= "<p>or</p><p><a class='btn btn-danger' href='$sc?ac=delstudent&uid={$u['id']}&v=astd{$breadcrumb}'>remove this student</a></p>\n";
 
