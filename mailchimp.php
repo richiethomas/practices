@@ -4,7 +4,8 @@ $body .=<<<MAILCHIMP
 <!-- Begin MailChimp Signup Form -->
 <div id="mc_embed_signup">
 <form action="//willhines.us8.list-manage.com/subscribe/post?u=881f841fbb8bf66576e6e66cf&amp;id=a74fad76eb" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="form-inline" target="_blank" novalidate>
-	<h2>Find out about future practices</h2>
+	<h2>Join The Mailing List</h2>
+	<h4>to find out about future workshops</h4>
 	<label for="mce-EMAIL">Your email 
 </label>
 	<input type="email" value="" name="EMAIL" class="form-control required email" id="mce-EMAIL" style="width:250px">
