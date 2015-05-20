@@ -105,7 +105,7 @@ id int(11) NOT NULL,
 --
 
 CREATE TABLE workshops (
-id int(11) NOT NULL,
+  id int(11) NOT NULL AUTO_INCREMENT,
   title varchar(255) NOT NULL,
   `start` datetime NOT NULL,
   `end` datetime NOT NULL,
@@ -115,8 +115,10 @@ id int(11) NOT NULL,
   revenue int(10) unsigned NOT NULL,
   expenses int(10) unsigned NOT NULL,
   location_id int(11) NOT NULL,
-  sold_out_late tinyint(4) NOT NULL DEFAULT '-1'
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+  sold_out_late tinyint(4) NOT NULL DEFAULT '-1',
+  when_public datetime NOT NULL,
+  PRIMARY KEY (id)
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1;
 
 --
 -- Indexes for dumped tables
@@ -229,4 +231,6 @@ INSERT INTO `statuses` (`id`, `status_name`) VALUES
 (2, 'waiting'),
 (3, 'dropped'),
 (4, 'invited');
+
+
 

@@ -11,7 +11,7 @@ if (!is_validated()) {
 	exit;
 }
 
-wbh_set_vars(array('ac', 'wid', 'uid', 'email', 'title', 'notes', 'start', 'end', 'active', 'lid', 'lplace', 'lwhere', 'cost', 'capacity', 'notes', 'st', 'v', 'con', 'note', 'subject', 'workshops', 'revenue', 'expenses', 'searchstart', 'searchend', 'lmod', 'needle', 'newe', 'sms', 'phone', 'carrier_id', 'send_text'));
+wbh_set_vars(array('ac', 'wid', 'uid', 'email', 'title', 'notes', 'start', 'end', 'active', 'lid', 'lplace', 'lwhere', 'cost', 'capacity', 'notes', 'st', 'v', 'con', 'note', 'subject', 'workshops', 'revenue', 'expenses', 'searchstart', 'searchend', 'lmod', 'needle', 'newe', 'sms', 'phone', 'carrier_id', 'send_text', 'when_public'));
 
 if ($wid) {
 	$wk = wbh_get_workshop_info($wid);
@@ -178,7 +178,7 @@ When: {$wk['when']}";
 	case 'up':
 	
 		$sql = sprintf("update workshops
-		set title = '%s', start = '%s', end = '%s', cost = %u, capacity = %u, location_id = %u, notes = '%s', revenue = %u, expenses = %u
+		set title = '%s', start = '%s', end = '%s', cost = %u, capacity = %u, location_id = %u, notes = '%s', revenue = %u, expenses = %u, when_public = '%s'
 		where id = %u",
 			mres($title),
 			mres(date('Y-m-d H:i:s', strtotime($start))),
@@ -189,6 +189,7 @@ When: {$wk['when']}";
 			mres($notes),
 			mres($revenue),
 			mres($expenses),
+			mres(date('Y-m-d H:i:s', strtotime($when_public))),
 			mres($wid));
 		wbh_mysqli($sql) or wbh_db_error();
 		$wk = wbh_get_workshop_info($wid);
@@ -196,8 +197,8 @@ When: {$wk['when']}";
 		break;
 		
 	case 'ad':
-		$sql = sprintf("insert into workshops (title, start, end, cost, capacity, location_id, notes, revenue, expenses)
-		VALUES ('%s', '%s', '%s', '%u', '%u', '%u', '%s', %u, %u)",
+		$sql = sprintf("insert into workshops (title, start, end, cost, capacity, location_id, notes, revenue, expenses, when_public)
+		VALUES ('%s', '%s', '%s', '%u', '%u', '%u', '%s', %u, %u, '%s')",
 			mres($title),
 			mres(date('Y-m-d H:i:s', strtotime($start))),
 			mres(date('Y-m-d H:i:s', strtotime($end))),
@@ -206,7 +207,8 @@ When: {$wk['when']}";
 			mres($lid),
 			mres($notes),
 			mres($revenue),
-			mres($expenses));
+			mres($expenses),
+			mres(date('Y-m-d H:i:s', strtotime($when_public))));
 		wbh_mysqli($sql) or wbh_db_error();
 		$wid = mysqli_insert_id($db);
 		$wk = wbh_get_workshop_info($wid);
@@ -567,7 +569,8 @@ function wbh_empty_workshop() {
 		'capacity' => '',
 		'notes' => '',
 		'revenue' => '',
-		'expenses' => ''
+		'expenses' => '',
+		'when_public' => ''
 	);
 }
 
@@ -580,7 +583,8 @@ function wbh_workshop_fields($wk) {
 	wbh_texty('capacity', $wk['capacity']).
 	wbh_textarea('notes', $wk['notes']).
 	wbh_texty('revenue', $wk['revenue']).
-	wbh_texty('expenses', $wk['expenses']);
+	wbh_texty('expenses', $wk['expenses']).
+	wbh_texty('when_public', $wk['when_public'], 'When Public');
 }
 
 $heading = "practices: admin";

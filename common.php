@@ -375,6 +375,9 @@ function wbh_get_workshop_info($id) {
 	$rows = wbh_mysqli( $sql) or wbh_db_error();
 	while ($row = mysqli_fetch_assoc($rows)) {
 		
+		if ($row['when_public'] == 0 ) {
+			$row['when_public'] = '';
+		}
 		$row = wbh_format_workshop_startend($row);		
 		$row['enrolled'] = wbh_get_enrollments($id);
 		$row['invited'] = wbh_get_enrollments($id, INVITED);
@@ -488,6 +491,11 @@ function wbh_get_workshops_list($admin = 0) {
 		$wk = wbh_get_workshop_info($row['id']);
 
 		if ($wk['type'] == 'past' && !$admin) { continue; }
+		if (strtotime($wk['when_public']) > time() && !$admin) {
+			continue;
+		}
+			
+			
 		$i++;
 		
 		if ($wk['type'] == 'soldout') {
@@ -752,7 +760,6 @@ function wbh_get_status_change_log($wk) {
 		return false;
 	}
 	$sql = "select s.*, u.email, st.status_name from status_change_log s, users u, statuses st where workshop_id = ".mres($wk['id'])." and s.user_id = u.id and s.status_id = st.id order by happened";
-	print_r($sql);
 	$rows = wbh_mysqli($sql) or wbh_db_error();
 	$log = '';
 	while ($row = mysqli_fetch_assoc($rows)) {
