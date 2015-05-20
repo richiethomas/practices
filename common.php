@@ -494,7 +494,11 @@ function wbh_get_workshops_list($admin = 0) {
 		if (strtotime($wk['when_public']) > time() && !$admin) {
 			continue;
 		}
-			
+		
+		$public = '';
+		if ($admin && $wk['when_public']) {
+			$public = "<br><small>Public: ".date('D M j - g:ia', strtotime($wk['when_public']))."</small>\n";
+		}	
 			
 		$i++;
 		
@@ -507,10 +511,13 @@ function wbh_get_workshops_list($admin = 0) {
 		} else  {
 			$cl = '';
 		}
+		
+		
+		
 		$body .= "<tr class='$cl'>";
 		$titlelink = ($admin ? "<a href='$sc?wid={$row['id']}&v=ed'>{$wk['title']}</a>" : $wk['title']);
 		$body .= "<td>{$titlelink}".($wk['notes'] ? "<p class='small text-muted'>{$wk['notes']}</p>" : '')."</td>
-		<td>{$wk['when']}</td>
+		<td>{$wk['when']}{$public}</td>
 		<td>{$wk['place']}</td>
 		<td>{$wk['cost']}</td>
 		<td>".number_format($wk['open'], 0)." of ".number_format($wk['capacity'], 0).",<br> ".number_format($wk['waiting']+$wk['invited'])." waiting</td>
