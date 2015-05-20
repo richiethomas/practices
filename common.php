@@ -687,6 +687,7 @@ function wbh_enroll($wk, $u) {
 		mres($uid),
 		mres($status_id));
 	wbh_mysqli( $sql) or wbh_db_error();
+	
 	wbh_update_change_log($wk, $u, $status_id); 
 
 	return $status_id;
@@ -754,23 +755,31 @@ function wbh_update_change_log($wk, $u, $status_id) {
 	if (!$wk['id'] || !$u['id'] || !$status_id) {
 		return false;
 	}
-	$sql = sprintf("insert into status_change_log (workshop_id, user_id, status_id) VALUES (%u, %u, %u)",
+	$sql = sprintf("insert into status_change_log (workshop_id, user_id, status_id, happened) VALUES (%u, %u, %u, '%s')",
 	mres ($wk['id']),
 	mres ($u['id']),
-	mres ($status_id));
+	mres ($status_id),
+	date('Y-m-d H:i:s', time()));
 	wbh_mysqli($sql) or wbh_db_error();
-	return false;
+	return true;
 }
 
-function wbh_get_status_change_log($wk) {
-	if (!$wk['id']) {
-		return false;
+function wbh_get_status_change_log($wk = null) {
+
+	$sql = "select s.*, u.email, st.status_name, wk.title from status_change_log s, users u, statuses st, workshops wk where";
+	if ($wk['id']) { 
+		$sql .= " workshop_id = ".mres($wk['id'])." and "; 
 	}
-	$sql = "select s.*, u.email, st.status_name from status_change_log s, users u, statuses st where workshop_id = ".mres($wk['id'])." and s.user_id = u.id and s.status_id = st.id order by happened";
+	$sql .= " s.workshop_id = wk.id and s.user_id = u.id and s.status_id = st.id order by happened desc";
+
 	$rows = wbh_mysqli($sql) or wbh_db_error();
 	$log = '';
 	while ($row = mysqli_fetch_assoc($rows)) {
-		$log .= "<tr><td>{$row['email']}</td><td>{$row['status_name']}</td><td><small>".date('j-M-y g:Ia', strtotime($row['happened']))."</small></td></tr>\n";
+		$wkname = '';
+		if (!$wk['id']) {
+			$wkname = "<a href='$sc?v=ed&wid={$row['workshop_id']}'>{$row['title']}</a></td><td>";
+		}
+		$log .= "<tr><td>{$row['email']}</td><td>$wkname{$row['status_name']}</td><td><small>".date('j-M-y g:ia', strtotime($row['happened']))."</small></td></tr>\n";
 	}
 	if (!$log) {
 		$log = 'No recorded updates.';
@@ -934,6 +943,7 @@ function wbh_get_dropping_late_warning() {
 
 function wbh_get_transcript_tabled($u, $admin = false) {
 	global $key;
+	$statuses = wbh_get_statuses();
 	$transcripts = wbh_get_transcript($u);
 	if (count($transcripts) == 0) {
 		return "<p>You have not taken any practices! Which is fine, but that's why this list is empty.</p>\n";

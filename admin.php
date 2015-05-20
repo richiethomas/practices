@@ -507,6 +507,13 @@ switch ($v) {
 			$body .= "</div></div>\n";
 			break;
 			
+			case 'allchange':
+			$body .= "<h2>Change Log</h2>\n";
+			$body .= "<a class='btn btn-default' href='$sc'>back to front page</a>";
+			$body .= wbh_get_status_change_log();
+			
+			break;
+			
 		case 'astd':
 			$body .= "<div class='row'><div class='col-md-12'><h2>Transcript for {$u['email']}</h2>\n"; 
 			$breadcrumb = '';
@@ -544,6 +551,7 @@ switch ($v) {
 			<a class='btn btn-default' href='$sc?v=gemail'>get emails</a> 
 			<a class='btn btn-default' href='$sc?v=rev'>revenues</a>
 			<a class='btn btn-default' href='$sc?v=search'>find students</a>
+			<a class='btn btn-default' href='$sc?v=allchange'>change log</a>
 
 			</p>\n";
 		$body .= "<h2>All Practices</h2>";

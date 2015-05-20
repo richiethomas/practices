@@ -1,210 +1,150 @@
 -- phpMyAdmin SQL Dump
--- version 4.2.10
+-- version 4.0.10.7
 -- http://www.phpmyadmin.net
 --
--- Host: localhost:8889
--- Generation Time: May 19, 2015 at 02:58 AM
--- Server version: 5.5.38
--- PHP Version: 5.6.2
+-- Host: localhost
+-- Generation Time: May 20, 2015 at 04:08 PM
+-- Server version: 5.5.42-cll
+-- PHP Version: 5.4.23
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
 
 --
--- Database: 'whines_workshops'
+-- Database: `whines_workshops`
 --
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table 'carriers'
+-- Table structure for table `carriers`
 --
 
-CREATE TABLE carriers (
-id int(11) NOT NULL,
-  network varchar(20) NOT NULL,
-  email varchar(255) NOT NULL
+CREATE TABLE `carriers` (
+  `id` int(11) NOT NULL,
+  `network` varchar(20) NOT NULL,
+  `email` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table 'locations'
+-- Table structure for table `locations`
 --
 
-CREATE TABLE locations (
-id int(11) NOT NULL,
-  place varchar(255) NOT NULL,
-  lwhere text NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
-
--- --------------------------------------------------------
-
---
--- Table structure for table 'registrations'
---
-
-CREATE TABLE registrations (
-id int(11) NOT NULL,
-  user_id int(11) NOT NULL,
-  workshop_id int(11) NOT NULL,
-  `status` enum('enrolled','waiting','dropped','invited') NOT NULL DEFAULT 'enrolled',
-  status_id int(11) NOT NULL,
-  attended tinyint(4) NOT NULL DEFAULT '0',
-  registered datetime NOT NULL,
-  last_modified datetime NOT NULL,
-  while_soldout tinyint(4) NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
-
--- --------------------------------------------------------
-
---
--- Table structure for table 'statuses'
---
-
-CREATE TABLE statuses (
-id int(11) NOT NULL,
-  status_name varchar(15) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
--- --------------------------------------------------------
-
---
--- Table structure for table 'status_change_log'
---
-
-CREATE TABLE status_change_log (
-id int(11) NOT NULL,
-  workshop_id int(11) NOT NULL,
-  user_id int(11) NOT NULL,
-  status_id int(11) NOT NULL,
-  happened timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
--- --------------------------------------------------------
-
---
--- Table structure for table 'users'
---
-
-CREATE TABLE users (
-id int(11) NOT NULL,
-  email varchar(255) NOT NULL,
-  ukey varchar(255) NOT NULL,
-  send_text tinyint(1) NOT NULL,
-  carrier_id int(11) NOT NULL,
-  phone varchar(20) NOT NULL,
-  new_email varchar(255) NOT NULL,
-  joined datetime NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
-
--- --------------------------------------------------------
-
---
--- Table structure for table 'workshops'
---
-
-CREATE TABLE workshops (
-  id int(11) NOT NULL AUTO_INCREMENT,
-  title varchar(255) NOT NULL,
-  `start` datetime NOT NULL,
-  `end` datetime NOT NULL,
-  cost int(11) NOT NULL,
-  capacity int(11) NOT NULL,
-  notes text NOT NULL,
-  revenue int(10) unsigned NOT NULL,
-  expenses int(10) unsigned NOT NULL,
-  location_id int(11) NOT NULL,
-  sold_out_late tinyint(4) NOT NULL DEFAULT '-1',
-  when_public datetime NOT NULL,
-  PRIMARY KEY (id)
+CREATE TABLE `locations` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `place` varchar(255) NOT NULL,
+  `lwhere` text NOT NULL,
+  PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1;
 
+-- --------------------------------------------------------
+
 --
--- Indexes for dumped tables
+-- Table structure for table `registrations`
+--
+
+CREATE TABLE `registrations` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) NOT NULL,
+  `workshop_id` int(11) NOT NULL,
+  `status_id` int(11) NOT NULL,
+  `attended` tinyint(4) NOT NULL DEFAULT '0',
+  `registered` datetime NOT NULL,
+  `last_modified` datetime NOT NULL,
+  `while_soldout` tinyint(4) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `statuses`
+--
+
+CREATE TABLE `statuses` (
+  `id` int(11) NOT NULL,
+  `status_name` varchar(15) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `status_change_log`
+--
+
+CREATE TABLE `status_change_log` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `workshop_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `status_id` int(11) NOT NULL,
+  `happened` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `users`
+--
+
+CREATE TABLE `users` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `email` varchar(255) NOT NULL,
+  `ukey` varchar(255) NOT NULL,
+  `send_text` tinyint(1) NOT NULL,
+  `carrier_id` int(11) NOT NULL,
+  `phone` varchar(20) NOT NULL,
+  `new_email` varchar(255) NOT NULL,
+  `joined` datetime NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `email` (`email`)
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `workshops`
+--
+
+CREATE TABLE `workshops` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `title` varchar(255) NOT NULL,
+  `start` datetime NOT NULL,
+  `end` datetime NOT NULL,
+  `cost` int(11) NOT NULL,
+  `capacity` int(11) NOT NULL,
+  `notes` text NOT NULL,
+  `revenue` int(10) unsigned NOT NULL,
+  `expenses` int(10) unsigned NOT NULL,
+  `location_id` int(11) NOT NULL,
+  `sold_out_late` tinyint(4) NOT NULL DEFAULT '-1',
+  `when_public` datetime NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1;
+
+
+-- phpMyAdmin SQL Dump
+-- version 4.0.10.7
+-- http://www.phpmyadmin.net
+--
+-- Host: localhost
+-- Generation Time: May 20, 2015 at 04:08 PM
+-- Server version: 5.5.42-cll
+-- PHP Version: 5.4.23
+
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET time_zone = "+00:00";
+
+--
+-- Database: `whines_workshops`
 --
 
 --
--- Indexes for table carriers
+-- Dumping data for table `carriers`
 --
-ALTER TABLE carriers
- ADD PRIMARY KEY (id);
-
---
--- Indexes for table locations
---
-ALTER TABLE locations
- ADD PRIMARY KEY (id);
-
---
--- Indexes for table registrations
---
-ALTER TABLE registrations
- ADD PRIMARY KEY (id);
-
---
--- Indexes for table statuses
---
-ALTER TABLE statuses
- ADD PRIMARY KEY (id);
-
---
--- Indexes for table status_change_log
---
-ALTER TABLE status_change_log
- ADD PRIMARY KEY (id);
-
---
--- Indexes for table users
---
-ALTER TABLE users
- ADD PRIMARY KEY (id), ADD UNIQUE KEY email (email);
-
---
--- Indexes for table workshops
---
-ALTER TABLE workshops
- ADD PRIMARY KEY (id);
-
---
--- AUTO_INCREMENT for dumped tables
---
-
---
--- AUTO_INCREMENT for table carriers
---
-ALTER TABLE carriers
-MODIFY id int(11) NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT for table locations
---
-ALTER TABLE locations
-MODIFY id int(11) NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT for table registrations
---
-ALTER TABLE registrations
-MODIFY id int(11) NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT for table statuses
---
-ALTER TABLE statuses
-MODIFY id int(11) NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT for table status_change_log
---
-ALTER TABLE status_change_log
-MODIFY id int(11) NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT for table users
---
-ALTER TABLE users
-MODIFY id int(11) NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT for table workshops
---
-ALTER TABLE workshops
-MODIFY id int(11) NOT NULL AUTO_INCREMENT;
 
 INSERT INTO `carriers` (`id`, `network`, `email`) VALUES
 (1, 'AT&T', 'txt.att.net'),
@@ -231,6 +171,4 @@ INSERT INTO `statuses` (`id`, `status_name`) VALUES
 (2, 'waiting'),
 (3, 'dropped'),
 (4, 'invited');
-
-
 
