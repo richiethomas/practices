@@ -4,6 +4,8 @@ include 'db.php';
 include 'common.php';
 
 wbh_set_vars(array('ac', 'wid', 'uid', 'email', 'v', 'key', 'message', 'phone', 'carrier_id', 'send_text', 'newemail'));
+
+
 $key = wbh_current_key(); // checks for key in REQUEST and SESSION, not logged in otherwise
 $error = '';
 $message = '';
@@ -285,19 +287,19 @@ switch ($v) {
 			
 	default:
 	
-		$body .= "<div class='row'><div class='col-md-12'>\n";
+		$body .= "<div class='row'><div class='col-md-8'><div id='login_prompt' class='well'>\n";
 		if (wbh_logged_in()) {
 			$body .= "<h2>Welcome</h2>\n";
 			$body .= "<p>You are logged in as {$u['email']}! (You can <a href='$sc?v=edit'>change your email</a> or <a href='$sc?ac=lo'>log out</a>)</p>";			
 
-			$body .= "<p>".($u['send_text'] ? "You have signed up for text notfications. " : "Would you like text notifications?")." <a  class='btn btn-primary' href='$sc?v=text'>Get text notifications</a>.</p>\n";
+			$body .= "<p>".($u['send_text'] ? "You have signed up for text notfications. " : "Would you like text notifications?")." <a  class='btn btn-primary' href='$sc?v=text'>Set your text preferences</a>.</p>\n";
 
 		} else {
 			$body .= "<h2>Log In</h2>\n";
 			$body .= "<p>You are not logged in. To log in, you don't need a password or a Facebook account but you do need an email account.</p>";
 			$body .= wbh_login_prompt();
 		}
-		$body .= "</div></div> <!-- end of col and row -->\n";
+		$body .= "</div></div></div>\n"; // end of log in prompt div, and its column and row
 
 		$body .= "<div class='row'><div class='col-md-12'>\n";
 		$body .= "<h2>All Upcoming Workshops</h2>\n"; 

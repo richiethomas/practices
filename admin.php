@@ -340,7 +340,7 @@ switch ($v) {
 		wbh_texty('subject', $subject).
 		wbh_textarea('note', $note).
 		wbh_textarea('sms', $sms, 'SMS version (text)').
-		wbh_drop('st', $status_opts, $st, 'To').
+		wbh_drop('st', $statuses, $st, 'To').
 		wbh_submit('send').
 		"</form></div>\n";
 		

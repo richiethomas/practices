@@ -746,8 +746,7 @@ function wbh_change_status($wk, $u, $status_id = ENROLLED, $confirm = true) {
 	if (DEBUG_MODE) {
 		mail(WEBMASTER, "{$u['email']} now '{$statuses['status_id']}' for '{$wk['showtitle']}'", $return_msg, "From: ".WEBMASTER);
 	}
-
-		
+	
 	return $return_msg;
 }
 
@@ -766,8 +765,9 @@ function wbh_update_change_log($wk, $u, $status_id) {
 
 function wbh_get_status_change_log($wk = null) {
 
-	$sql = "select s.*, u.email, st.status_name, wk.title from status_change_log s, users u, statuses st, workshops wk where";
-	if ($wk['id']) { 
+	global $sc;
+	$sql = "select s.*, u.email, st.status_name, wk.title, wk.start, wk.end from status_change_log s, users u, statuses st, workshops wk where";
+	if ($wk) { 
 		$sql .= " workshop_id = ".mres($wk['id'])." and "; 
 	}
 	$sql .= " s.workshop_id = wk.id and s.user_id = u.id and s.status_id = st.id order by happened desc";
@@ -775,9 +775,14 @@ function wbh_get_status_change_log($wk = null) {
 	$rows = wbh_mysqli($sql) or wbh_db_error();
 	$log = '';
 	while ($row = mysqli_fetch_assoc($rows)) {
+		$row = wbh_format_workshop_startend($row);
 		$wkname = '';
-		if (!$wk['id']) {
-			$wkname = "<a href='$sc?v=ed&wid={$row['workshop_id']}'>{$row['title']}</a></td><td>";
+		if (!$wk) {
+			// skip old ones for the global change log
+			if (strtotime($row['start']) < strtotime("24 hours ago")) {
+				continue;
+			}
+			$wkname = "<a href='$sc?v=ed&wid={$row['workshop_id']}'>{$row['title']}</a><br><small>{$row['showstart']}</small></td><td>";
 		}
 		$log .= "<tr><td>{$row['email']}</td><td>$wkname{$row['status_name']}</td><td><small>".date('j-M-y g:ia', strtotime($row['happened']))."</small></td></tr>\n";
 	}
