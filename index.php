@@ -213,7 +213,7 @@ switch ($v) {
 		$body .= "<h2>Your settings</h2>\n";
 		if (wbh_logged_in()) {
 			$body .= "<h3>Text Notifications</h3>\n";
-			$body .= "<p>If you want notifications via text, check the box and set your phone info.</p>\n";			
+			$body .= "<p>If you want notifications via text, check the box and set your phone info.</p>\n";
 			$body .= wbh_edit_text_preferences($u);
 		} else {
 			$body .= "<p>You are not logged in! Go back to the <a href='$sc'>front page</a> and enter your email. We'll email you a link so you can log in.</p>\n";

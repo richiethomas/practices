@@ -105,7 +105,7 @@ function wbh_key_to_user($key) {
 function wbh_make_user($email) {
 	$db = wh_set_db_link();
 	if (wbh_validate_email($email)) {
-		$sql = "insert into users (email, joined) VALUES ('".mres($email)."', now())";
+		$sql = "insert into users (email, joined) VALUES ('".mres($email)."', '".date("Y-m-d H:i:s")."')";
 		$rows = wbh_mysqli( $sql) or wbh_db_error();
 		$key = wbh_gen_key(mysqli_insert_id ( $db ));
 		return wbh_get_user_by_email($email);
@@ -682,7 +682,7 @@ function wbh_enroll($wk, $u) {
 		$status_id = WAITING;
 	}
 
-	$sql = sprintf("INSERT INTO registrations (workshop_id, user_id, status_id, registered, last_modified) VALUES (%u, %u, '%s', now(), now())",
+	$sql = sprintf("INSERT INTO registrations (workshop_id, user_id, status_id, registered, last_modified) VALUES (%u, %u, '%s', '".date("Y-m-d H:i:s")."', '".date("Y-m-d H:i:s")."')",
 		mres($wid),
 		mres($uid),
 		mres($status_id));
@@ -736,7 +736,7 @@ function wbh_change_status($wk, $u, $status_id = ENROLLED, $confirm = true) {
 	$e = wbh_get_an_enrollment($wk, $u);
 	$statuses = wbh_get_statuses();
 	if ($e['status_id'] != $status_id) {
-		$sql = "update registrations set status_id = '".mres($status_id)."',  last_modified = now() where workshop_id = ".mres($wk['id'])." and user_id = ".mres($u['id']);
+		$sql = "update registrations set status_id = '".mres($status_id)."',  last_modified = '".date("Y-m-d H:i:s")."' where workshop_id = ".mres($wk['id'])." and user_id = ".mres($u['id']);
 		wbh_mysqli( $sql) or wbh_db_error();
 		wbh_update_change_log($wk, $u, $status_id);	
 	}
