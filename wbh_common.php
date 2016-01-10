@@ -78,13 +78,13 @@ function wbh_multi_drop($name, $opts, $selected = null, $label = null, $size = 1
 function wbh_radio($name, $opts, $selection = null) {
 	$b = '';
 	$i = 1;
-	$b = "<div class='radio-inline'>";
+	$b = "<div class='form-group'><div class='radio-inline'>";
 	foreach ($opts as $key => $label) {
 		$ch = ($key == $selection && !is_null($selection) ? 'checked' : '');
-		$b .= '<label for="'.$name.'"><input class="form-control" type="radio" id="'.$name.'" name="'.$name.'" id="radio'.$i.'" value="'.$key.'" '.$ch.'> '.$label.'</label> ';
+		$b .= '<label class="radio-inline"><input class="form-control" type="radio" id="'.$name.'" name="'.$name.'" id="radio'.$i.'" value="'.$key.'" '.$ch.'> '.$label."</label>\n";
 		$i++;
 	}
-	$b .= "</div>\n";
+	$b .= "</div></div>\n";
 	return $b;
 }
 

@@ -5,7 +5,7 @@ $body .=<<<MAILCHIMP
 <div id="mc_embed_signup">
 <form action="//willhines.us8.list-manage.com/subscribe/post?u=881f841fbb8bf66576e6e66cf&amp;id=a74fad76eb" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="form-inline" target="_blank" novalidate>
 	<h2>Join The Mailing List</h2>
-	<h4>to find out about future workshops</h4>
+	<p>If you want emails when I put up new workshops, use this form to join the mailing list. This is separate from taking a workshop, because I run the mailing list using a different site (MailChimp).</p>
 	<label for="mce-EMAIL">Your email 
 </label>
 	<input type="email" value="" name="EMAIL" class="form-control required email" id="mce-EMAIL" style="width:250px">

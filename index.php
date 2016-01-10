@@ -213,7 +213,7 @@ switch ($v) {
 		$body .= "<h2>Your settings</h2>\n";
 		if (wbh_logged_in()) {
 			$body .= "<h3>Text Notifications</h3>\n";
-			$body .= "<p>If you want notifications via text, check the box and set your phone info.</p>\n";
+			$body .= "<p>If you want notifications via text, check the box and set your phone info.</p>\n";			
 			$body .= wbh_edit_text_preferences($u);
 		} else {
 			$body .= "<p>You are not logged in! Go back to the <a href='$sc'>front page</a> and enter your email. We'll email you a link so you can log in.</p>\n";
@@ -287,7 +287,11 @@ switch ($v) {
 			
 	default:
 	
-		$body .= "<div class='row'><div class='col-md-8'><div id='login_prompt' class='well'>\n";
+		$body .= "<div class='row'><div class='col-md-12'><div id='login_prompt' class='well'>\n";
+	
+		
+		
+		
 		if (wbh_logged_in()) {
 			$body .= "<h2>Welcome</h2>\n";
 			$body .= "<p>You are logged in as {$u['email']}! (You can <a href='$sc?v=edit'>change your email</a> or <a href='$sc?ac=lo'>log out</a>)</p>";			
@@ -295,10 +299,11 @@ switch ($v) {
 			$body .= "<p>".($u['send_text'] ? "You have signed up for text notfications. " : "Would you like text notifications?")." <a  class='btn btn-primary' href='$sc?v=text'>Set your text preferences</a>.</p>\n";
 
 		} else {
-			$body .= "<h2>Log In</h2>\n";
-			$body .= "<p>You are not logged in. To log in, you don't need a password or a Facebook account but you do need an email account.</p>";
+			$body .= "<h2>Log In To This Site</h2>\n";
+			$body .= "<p>To sign up for a workshop, you must log in. You don't need a password or a Facebook account but you do need an email account. This is separate from the mailing list.</p>";
 			$body .= wbh_login_prompt();
 		}
+		include 'mailchimp.php';
 		$body .= "</div></div></div>\n"; // end of log in prompt div, and its column and row
 
 		$body .= "<div class='row'><div class='col-md-12'>\n";
@@ -317,7 +322,6 @@ switch ($v) {
 		$body .= "<p>Paying? Lateness? Levels? See <a href='$sc?v=faq'>questions</a>.</p>\n";		
 		$body .= "</div></div> <!-- end of col and row -->\n";	
 		
-		include 'mailchimp.php';
 			
 		$body .= "<br><br>\n";
 		break;

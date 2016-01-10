@@ -168,14 +168,19 @@ function wbh_logged_in() {
 	}
 }
 
-function wbh_find_students($needle = 'everyone') {
+function wbh_find_students($needle = 'everyone', $sort = 'n') {
+	
+	if ($sort != 'n' && $sort != 't' && $sort != 'd') {
+		$sort = 'n';
+	}
+	$order_by = array('n' => 'a.email', 't' => 'classes desc', 'd' => 'a.joined desc');
 	
 	$where = '';
 	if ($needle != 'everyone') {
 		$where = "where a.email like '%".mres($needle)."%'";
 	}
 	
-	$sql = "SELECT a.id, a.email, COUNT(b.id) AS 'classes' 
+	$sql = "SELECT a.id, a.email, COUNT(b.id) AS 'classes', a.joined  
 	FROM 
 		users a 
 	   LEFT JOIN
@@ -183,7 +188,7 @@ function wbh_find_students($needle = 'everyone') {
 	   ON a.id = b.user_id
 	   $where
 	group by a.email
-	order by a.email";
+	order by ".$order_by[$sort];
 	
 	$rows = wbh_mysqli( $sql) or wbh_db_error();
 	$stds = array();
@@ -435,6 +440,7 @@ function wbh_get_workshop_info_tabled($id) {
 	return "<table class=\"table table-striped\">
 		<tbody>
 		<tr><td>Title:</td><td>{$wk['title']}</tr>
+		<tr><td>Description:</td><td>{$wk['notes']}</td></tr>
 		<tr><td>When:</td><td>{$wk['when']}</tr>
 		<tr><td>Where:</td><td>{$wk['place']} {$wk['lwhere']}</tr>
 		<tr><td>Cost:</td><td>{$wk['cost']}</td></tr>
@@ -456,15 +462,41 @@ function wbh_get_workshops_dropdown($start = null, $end = null) {
 	return $workshops;
 }
 
+function wbh_friendly_time($time_string) {
+	$ts = strtotime($time_string);
+	$minutes = date('i', $ts);
+	if ($minutes == 0) {
+		return date('ga', $ts);
+	} else {
+		return date('g:ia', $ts);
+	}
+}
+
+function wbh_friendly_date($time_string) {
+	$now_doy = date('z'); // day of year
+	$wk_doy = date('z', $ts); // workshop day of year
+	
+	if ($wk_doy - $now_doy < 7) {
+		return date('L', strtotime($time_string)); // Monday, Tuesday, Wednesday
+	} elseif (date('Y', strtotime($time_string)) != date('Y')) {  
+		return date('D M j, Y', strtotime($time_string));
+	} else {
+		return date('D M j', strtotime($time_string));
+	}
+}	
+	
+	
+
 // pass in the workshop row as it comes from the database table
 // add some columns with date / time stuff figured out
-function wbh_format_workshop_startend($row) {
+function wbh_format_workshop_startend($row) {	
 	if (date('Y', strtotime($row['start'])) != date('Y')) {
 		$row['showstart'] = date('D M j, Y - g:ia', strtotime($row['start']));
 	} else {
 		$row['showstart'] = date('D M j - g:ia', strtotime($row['start']));
 	}
-	$row['showend'] = date('g:ia', strtotime($row['end']));
+	$row['showend'] = wbh_friendly_time($row['end']);
+	$row['friendly_when'] = wbh_friendly_date($row['start']).' '.wbh_friendly_time($row['start']);
 	$row['showtitle'] = "{$row['title']} - {$row['showstart']}-{$row['showend']}";
 	$row['when'] = "{$row['showstart']}-{$row['showend']}";
 	
@@ -900,6 +932,7 @@ $point $late
 $notifications
 
 Title: {$wk['title']}
+Description: {$wk['notes']}
 When: {$wk['when']}
 Where: {$wk['place']} {$wk['lwhere']}
 Cost: {$wk['cost']}

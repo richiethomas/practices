@@ -11,7 +11,7 @@ if (!is_validated()) {
 	exit;
 }
 
-wbh_set_vars(array('ac', 'wid', 'uid', 'email', 'title', 'notes', 'start', 'end', 'active', 'lid', 'lplace', 'lwhere', 'cost', 'capacity', 'notes', 'st', 'v', 'con', 'note', 'subject', 'workshops', 'revenue', 'expenses', 'searchstart', 'searchend', 'lmod', 'needle', 'newe', 'sms', 'phone', 'carrier_id', 'send_text', 'when_public'));
+wbh_set_vars(array('ac', 'wid', 'uid', 'email', 'title', 'notes', 'start', 'end', 'active', 'lid', 'lplace', 'lwhere', 'cost', 'capacity', 'notes', 'st', 'v', 'con', 'note', 'subject', 'workshops', 'revenue', 'expenses', 'searchstart', 'searchend', 'lmod', 'needle', 'newe', 'sms', 'phone', 'carrier_id', 'send_text', 'when_public', 'sort'));
 
 if ($wid) {
 	$wk = wbh_get_workshop_info($wid);
@@ -217,19 +217,20 @@ When: {$wk['when']}";
 		
 		
 	case 'remind':
-		$subject = "REMINDER: {$wk['showtitle']}";
+	//{$wk['friendly_when']}
+		$subject = "REMINDER: workshop {$wk['friendly_when']} at {$wk['place']}";
 		$note = "Hey! You're enrolled in this workshop. ";
 		if ($wk['type'] == 'past') {
 			$note .= "Actually, it looks like this workshop is in the past, which means this reminder was probably sent in error. But since I'm just a computer, then maybe there's something going on that I don't quite grasp. At any rate, this is a reminder. ";
 		} else {
-			$note .= "It's coming up in ".wbh_get_date_diff( time(), $wk['start'])."! ";
+			$note .= "It starts ".wbh_nicetime($wk['start']).".";
 		}
 		$note .=" If you think you're not going to make it, that's fine but use the link below to drop out. ";
 		if ($wk['waiting'] > 0) {
 			$note .= "There are currently people on the waiting list who might want to go. ";
 		}
 		$note .= " Okay, see you soon!";
-		$sms = "Reminder: '{$wk['showtitle']}' coming up.";
+		$sms = "Reminder: workshop {$wk['friendly_when']} at {$wk['place']}";
 		$st = ENROLLED; // pre-populating the status drop in 'send message' form
 		break;
 
@@ -478,10 +479,16 @@ switch ($v) {
 			$body .= "<div class='row'><div class='col-md-12'><h2>Find Students</h2>\n"; 
 			
 
+			$search_opts = array('n' => 'by name', 't' => 'by total classes', 'd' => 'by date registered');
+			if ($sort != 'n' && $sort != 't' && $sort != 'd') {
+				$sort = 'n';
+			}
+			
 			$body .= "<form action ='$sc' method='post'>".
 			wbh_hidden('v', 'search').
 			wbh_texty('needle', $needle, 'Enter an email or part of an email:').
-			wbh_submit('search').
+			wbh_radio('sort', $search_opts, $sort).
+			'<div class="clearfix">'.wbh_submit('search').'</div>'.
 			"</form>\n";
 			$body .= "<p>Or click this button to list <a class='btn btn-default' href='$sc?v=search&needle=everyone'>all students</a> ";
 			if ($needle == 'everyone') {
@@ -491,13 +498,13 @@ switch ($v) {
 						
 			if ($needle) {
 				$body .= "<h3>Matches for '$needle'</h3>\n";
-				$all = wbh_find_students($needle);
+				$all = wbh_find_students($needle, $sort);
 				if (count($all) == 0) {
 					$body .= "<p>No matches!</p>";
 				} else {
 					$body .= "<ul>\n";
 					foreach ($all as $s) {
-						$body .= "<li><a href=\"{$sc}?v=astd&uid={$s['id']}&needle={$needle}\">{$s['email']}</a> ({$s['classes']})</li>\n";
+						$body .= "<li><a href=\"{$sc}?v=astd&uid={$s['id']}&needle={$needle}\">{$s['email']}</a> ({$s['classes']}) ".($needle == 'everyone' ? date ('Y M j, g:ia', strtotime($s['joined'])) : '')."</li>\n";
 					}
 					$body .= "</ul>\n";
 				}
@@ -525,6 +532,12 @@ switch ($v) {
 				$body .= "<p>Back to <a href='$sc?v=ed&wid={$wid}'>{$wk['showtitle']}</a></p>\n";
 				$breadcrumb .= "&wid={$wid}";
 			}
+			
+			$key = wbh_get_key($u['id']);
+			$trans = URL."index.php?key=$key";
+			
+			$body .= "<p><a href='$trans'>Log in as {$u['email']}</a></p>\n";
+			
 			$body .= "<h3>Transcripts</h3>\n";
 			$body .= wbh_get_transcript_tabled($u, true);	
 			
