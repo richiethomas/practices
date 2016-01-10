@@ -474,7 +474,7 @@ function wbh_friendly_time($time_string) {
 
 function wbh_friendly_date($time_string) {
 	$now_doy = date('z'); // day of year
-	$wk_doy = date('z', $ts); // workshop day of year
+	$wk_doy = date('z', strtotime($time_string)); // workshop day of year
 	
 	if ($wk_doy - $now_doy < 7) {
 		return date('L', strtotime($time_string)); // Monday, Tuesday, Wednesday
@@ -889,6 +889,9 @@ function wbh_confirm_email($wk, $u, $status_id = ENROLLED) {
 			$sub = "ENROLLED: {$wk['showtitle']}";
 			$point = "You are ENROLLED in {$wk['showtitle']}.";
 			$call = "To DROP, click here:\n{$drop}";
+			if ($wk['cost'] > 0) {
+				$call .= "\n\nPay in person or venmo. On the day of the workshop is fine. Venmo link:\nhttp://venmo.com/willhines?txn=pay&share=friends&amount={$wk['cost']}&note=improv%20workshop";
+			}
 			$send_faq = true;
 			break;
 		case WAITING:
@@ -938,9 +941,6 @@ Where: {$wk['place']} {$wk['lwhere']}
 Cost: {$wk['cost']}
 
 $call
-
-To see all practices you've taken, click here:
-{$trans}
 
 ".wbh_email_footer($send_faq);	
 	
@@ -1058,23 +1058,24 @@ HQ: 1948 Hillhurst Ave. Los Angeles, CA 90027
 
 function wbh_get_faq() {
 	
-	return "<h2>Questions</h2>
-	<dl>
-	<dt>Can I drop out?</dt>
-	<dd>Yes, use the link in your confirmation email to go to the web site, where you can drop out.</dd>
+return "<h2>Questions</h2>
+<dl>
+<dt>Can I drop out?</dt>
+<dd>Yes, use the link in your confirmation email to go to the web site, where you can drop out.</dd>
 
-	<dt>If there is a cost, how should I pay?</dt>
-	<dd>In cash, at the practice. Or Venmo it to me - whines ATSIGN gmail.com</dd>
+<dt>If there is a cost, how should I pay?</dt>
+<dd>In cash, at the practice. Or Venmo it to whines@gmail.com
+Venmo link: http://venmo.com/willhines?txn=pay&share=friends&note=improv%20workshop</dd>
 
-	<dt>What if I'm on a waiting list?</dt>
-	<dd>You'll get an email if a spot opens up.</dd>
+<dt>What if I'm on a waiting list?</dt>
+<dd>You'll get an email the moment a spot opens up, with a link to ACCEPT or DECLINE.</dd>
 
-	<dt>What's the late policy? Or the policy on leaving early?</dt>
-	<dd>Arriving late or leaving early is fine. If you're late I might ask you to wait to join in until I say so.</dd>
+<dt>What's the late policy? Or the policy on leaving early?</dt>
+<dd>Arriving late or leaving early is fine. If you're late I might ask you to wait to join in until I say so.</dd>
 
-	<dt>What levels?</dt>
-	<dd>Anyone can sign up. The description may recommend a level but I won't enforce it.</dd>
-	</dl>";
+<dt>What levels?</dt>
+<dd>Anyone can sign up. The description may recommend a level but I won't enforce it.</dd>
+</dl>";
 }
 
 // locations

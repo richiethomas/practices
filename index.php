@@ -307,6 +307,11 @@ switch ($v) {
 		$body .= "</div></div></div>\n"; // end of log in prompt div, and its column and row
 
 		$body .= "<div class='row'><div class='col-md-12'>\n";
+		$body .= "<h2>Paying</h2>\n"; 
+		$body .= "<p>Pay in person or with <a href=\"http://venmo.com/willhines?txn=pay&share=friends&amount=25&note=improv%20workshop\">venmo</a> (click that link or pay to <a href=\"http://venmo.com/willhines?txn=pay&share=friends&amount=25&note=improv%20workshop\">whines@gmail.com</a>). On the day of the workshop is fine.</p>\n";
+		$body .= "</div></div> <!-- end of col and row -->\n";
+
+		$body .= "<div class='row'><div class='col-md-12'>\n";
 		$body .= "<h2>All Upcoming Workshops</h2>\n"; 
 		$body .= wbh_get_workshops_list(0);
 		$body .= "</div></div> <!-- end of col and row -->\n";
