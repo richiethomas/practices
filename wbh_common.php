@@ -5,6 +5,7 @@
 // 1.31 - minor fixes 4/2/14
 // 1.4 - adding smart urls functions
 // 1.5 - error messages for texty, drop 5/2015
+// 1.5.1 - tweaking wbh_radio 1/2016
 
 
 function wbh_texty($key, $value = '', $label = null, $placeholder = null, $help = null, $error = null) {
