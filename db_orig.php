@@ -8,7 +8,7 @@ $webmaster = 'whines@gmail.com';
 function wh_set_db_link() {
 	global $db;
 	if (!$db) {
-		$db = mysqli_connect('localhost', 'whines_workshops', 'meet1962', 'whines_workshops');
+		//$db = mysqli_connect(servername ('localhost'), username, password, database name);
 		if (!$db) {
 		    die('Connect Error: ' . mysqli_connect_error());
 		}
