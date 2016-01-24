@@ -974,7 +974,7 @@ function wbh_shorten_link($link) {
 
 function wbh_get_dropping_late_warning() {
 	global $late_hours;
-	return "NOTE: You are dropping within {$late_hours} hours of the start, and there was a waiting list. If it's too short notice for someone to take your spot, I might ask you to pay anyway.";
+	return "NOTE: You are dropping within {$late_hours} hours of the start, and there was a waiting list. If I can't get someoen to take your spot, I might ask you to pay anyway.";
 	
 }
 
