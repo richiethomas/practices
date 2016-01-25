@@ -48,10 +48,15 @@ function wbh_current_key() {
 	global $key;
 	if (isset($_REQUEST['key']) && $_REQUEST['key']) {
 		$key = $_REQUEST['key'];
-		$_SESSION['s_key'] = $key;
-	} elseif (isset($_SESSION['s_key']) and $_SESSION['s_key']) {
+	} elseif (isset($_SESSION['s_key']) && $_SESSION['s_key']) {
 		$key = $_SESSION['s_key'];
+	} elseif (isset($_COOKIE['c_key']) && $_COOKIE['c_key']) {
+		$key = $_COOKIE['c_key'];
 	}
+
+	// remember it
+	$_SESSION['s_key'] = $key;
+	setcookie('c_key', $key, time() + 31449600); // a year!
 	return $key;
 }
 
@@ -477,7 +482,7 @@ function wbh_friendly_date($time_string) {
 	$wk_doy = date('z', strtotime($time_string)); // workshop day of year
 	
 	if ($wk_doy - $now_doy < 7) {
-		return date('L', strtotime($time_string)); // Monday, Tuesday, Wednesday
+		return date('l', strtotime($time_string)); // Monday, Tuesday, Wednesday
 	} elseif (date('Y', strtotime($time_string)) != date('Y')) {  
 		return date('D M j, Y', strtotime($time_string));
 	} else {

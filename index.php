@@ -6,7 +6,7 @@ include 'common.php';
 wbh_set_vars(array('ac', 'wid', 'uid', 'email', 'v', 'key', 'message', 'phone', 'carrier_id', 'send_text', 'newemail'));
 
 
-$key = wbh_current_key(); // checks for key in REQUEST and SESSION, not logged in otherwise
+$key = wbh_current_key(); // checks for key in REQUEST and SESSION and COOKIE, not logged in otherwise
 $error = '';
 $message = '';
 
