@@ -1069,8 +1069,8 @@ return "<h2>Questions</h2>
 <dd>Yes, use the link in your confirmation email to go to the web site, where you can drop out.</dd>
 
 <dt>If there is a cost, how should I pay?</dt>
-<dd>In cash, at the practice. Or Venmo it to whines@gmail.com
-Venmo link: http://venmo.com/willhines?txn=pay&share=friends&note=improv%20workshop</dd>
+<dd>In cash, at the practice. Or Venmo it to Will Hines (whines@gmail.com)
+Venmo link: <a href='http://venmo.com/willhines?txn=pay&share=friends&note=improv%20workshop'>http://venmo.com/willhines?txn=pay&share=friends&note=improv%20workshop</a></dd>
 
 <dt>What if I'm on a waiting list?</dt>
 <dd>You'll get an email the moment a spot opens up, with a link to ACCEPT or DECLINE.</dd>

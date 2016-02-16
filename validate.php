@@ -18,7 +18,7 @@ function get_submitted_password() {
 	if (isset($_POST['talentPass102']) && $_POST['talentPass102'])
 	{
 	  $_SESSION['s_talentPass102'] = $_POST['talentPass102'];
-	  setcookie('c_talentPass102', $_POST['talentPass102'], 60*60*24*7*52);
+	  setcookie('c_talentPass102', $_POST['talentPass102'], time() + 60*60*24*7);
 	} elseif (isset($_COOKIE['c_talentPass102']) && $_COOKIE['c_talentPass102']) {
   	  $_SESSION['s_talentPass102'] = $_POST['talentPass102'] = $_COOKIE['c_talentPass102'];
 	}
