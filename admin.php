@@ -93,8 +93,8 @@ switch ($ac) {
 	case 'at':
 		$v = 'at';
 		$users = $_REQUEST['users'];
-		foreach ($statuses as $sts) {
-			$stds = wbh_get_students($wid, $sts);
+		foreach ($statuses as $sid => $sts) {
+			$stds = wbh_get_students($wid, $sid);
 			foreach ($stds as $as) {
 				if (is_array($users) && in_array($as['id'], $users)) {
 					wbh_update_attendance($wid, $as['id'], 1);
