@@ -539,7 +539,9 @@ function wbh_get_workshops_list($admin = 0) {
 			
 		$i++;
 		
-		if ($wk['type'] == 'soldout') {
+		if (date('z', strtotime($wk['start'])) == date('z')) {
+			$cl = 'info';
+		} elseif ($wk['type'] == 'soldout') {
 			$cl = 'error';
 		} elseif ($wk['type'] == 'open') {
 			$cl = 'success';
@@ -548,8 +550,6 @@ function wbh_get_workshops_list($admin = 0) {
 		} else  {
 			$cl = '';
 		}
-		
-		
 		
 		$body .= "<tr class='$cl'>";
 		$titlelink = ($admin ? "<a href='$sc?wid={$row['id']}&v=ed'>{$wk['title']}</a>" : $wk['title']);
