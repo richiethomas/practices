@@ -374,9 +374,11 @@ switch ($v) {
 			foreach ($statuses as $stid => $status_name) {
 				$students = array();
 				foreach ($workshops as $workshop_id) {
-					$stds = wbh_get_students($workshop_id, $stid);
-					foreach ($stds as $as) {
-						$students[] = $as['email'];
+					if ($workshop_id) {
+						$stds = wbh_get_students($workshop_id, $stid);
+						foreach ($stds as $as) {
+							$students[] = $as['email'];
+						}
 					}
 				}
 				$students = array_unique($students);
