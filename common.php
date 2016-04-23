@@ -16,7 +16,7 @@ define('WAITING', wbh_find_status_by_value('waiting'));
 define('DROPPED', wbh_find_status_by_value('dropped'));
 define('INVITED', wbh_find_status_by_value('invited'));
 
-$late_hours = '12';
+$late_hours = '18';
 $carriers = array();
 
 // users
@@ -802,7 +802,7 @@ function wbh_update_change_log($wk, $u, $status_id) {
 
 function wbh_get_status_change_log($wk = null) {
 
-	global $sc;
+	global $sc, $late_hours;
 	$sql = "select s.*, u.email, st.status_name, wk.title, wk.start, wk.end from status_change_log s, users u, statuses st, workshops wk where";
 	if ($wk) { 
 		$sql .= " workshop_id = ".mres($wk['id'])." and "; 
@@ -811,6 +811,13 @@ function wbh_get_status_change_log($wk = null) {
 
 	$rows = wbh_mysqli($sql) or wbh_db_error();
 	$log = '';
+
+	if ($wk) {
+		$log = "<tr><th>user</th><th>status</th><th>changed / last enrolled</th></tr>\n";
+	} else {
+		$log = "<tr><th>user</th><th>workshop</th><th>status</th><th>changed / last enrolled</th></tr>\n";
+	}
+
 	while ($row = mysqli_fetch_assoc($rows)) {
 		$row = wbh_format_workshop_startend($row);
 		$wkname = '';
@@ -821,7 +828,23 @@ function wbh_get_status_change_log($wk = null) {
 			}
 			$wkname = "<a href='$sc?v=ed&wid={$row['workshop_id']}'>{$row['title']}</a><br><small>{$row['showstart']}</small></td><td>";
 		}
-		$log .= "<tr><td>{$row['email']}</td><td>$wkname{$row['status_name']}</td><td><small>".date('j-M-y g:ia', strtotime($row['happened']))."</small></td></tr>\n";
+		$last_enrolled = wbh_get_last_enrolled($row['workshop_id'], $row['user_id']);
+		$row_class = '';
+		if ($row['status_id'] == DROPPED && $last_enrolled) {
+			
+			$hours_before = round((strtotime($row['start']) - strtotime($row['happened'])) / 3600);
+			
+			$last_enrolled = "/<br>".date('j-M-y g:ia', strtotime($last_enrolled))." ($hours_before)";
+			if ($hours_before < $late_hours) {
+				$row_class = 'danger';
+			}
+		} else {
+			$last_enrolled = "<td>&nbsp;</td>";
+		}
+
+		$log .= "<tr class='$row_class'><td>{$row['email']}</td><td>$wkname {$row['status_name']}</td><td><small>".date('j-M-y g:ia', strtotime($row['happened']))."$last_enrolled</small></td>\n";
+		$log .= "</tr>\n";
+		
 	}
 	if (!$log) {
 		$log = 'No recorded updates.';
@@ -838,9 +861,23 @@ function wbh_get_students($wid, $status_id = ENROLLED) {
 	$rows = wbh_mysqli( $sql) or wbh_db_error();
 	$stds = array();
 	while ($row = mysqli_fetch_assoc($rows)) {
+		$row['last_enrolled'] = wbh_get_last_enrolled($wid, $row['id']);
 		$stds[$row['id']] = $row;
 	}
 	return $stds;
+}
+
+
+function wbh_get_last_enrolled($wid = 0, $uid = 0) {
+	$sql = "select * from  status_change_log scl where workshop_id = ".mres($wid)." and user_id = ".mres($uid)." order by happened desc";
+	
+	$rows = wbh_mysqli($sql) or wbh_db_error();
+	while ($row = mysqli_fetch_assoc($rows)) {
+		if ($row['status_id'] == ENROLLED) {
+			return $row['happened'];
+		}
+	}
+	return false;
 }
 
 // internal function to sort by email field
@@ -855,7 +892,7 @@ function wbh_list_students($wid, $status_id = ENROLLED) {
 	$es = '';
 	foreach ($stds as $uid => $s) {
 		$s['ukey'] = wbh_check_key($s['ukey'], $uid);
-		$body .= "<div class='row'><div class='col-md-6'><a href='admin.php?v=astd&uid={$s['id']}&wid={$wid}'>{$s['email']}</a> ".($s['attended'] ? '(attended)' : '')."<small>".date('M j g:ia', strtotime($s['last_modified']))."</small></div>".
+		$body .= "<div class='row'><div class='col-md-6'><a href='admin.php?v=astd&uid={$s['id']}&wid={$wid}'>{$s['email']}</a> <small>".date('M j g:ia', strtotime($s['last_modified']))."</small></div>".
 		"<div class='col-md-6'>
 		<a class='btn btn-primary' href='$sc?v=cs&wid={$wid}&uid={$uid}'>change status</a> <a class='btn btn-danger' href='$sc?v=rem&uid={$uid}&wid={$wid}'>remove</a></div>".
 		"</div>\n";
