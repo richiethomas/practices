@@ -183,9 +183,11 @@ function wbh_find_students($needle = 'everyone', $sort = 'n') {
 	$where = '';
 	if ($needle != 'everyone') {
 		$where = "where a.email like '%".mres($needle)."%'";
+		$where .= " or a.phone like '%".mres($needle)."%'";
+		
 	}
 	
-	$sql = "SELECT a.id, a.email, COUNT(b.id) AS 'classes', a.joined  
+	$sql = "SELECT a.id, a.email, a.phone, COUNT(b.id) AS 'classes', a.joined  
 	FROM 
 		users a 
 	   LEFT JOIN

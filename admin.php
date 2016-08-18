@@ -506,7 +506,7 @@ switch ($v) {
 				} else {
 					$body .= "<ul>\n";
 					foreach ($all as $s) {
-						$body .= "<li><a href=\"{$sc}?v=astd&uid={$s['id']}&needle={$needle}\">{$s['email']}</a> ({$s['classes']}) ".($needle == 'everyone' ? date ('Y M j, g:ia', strtotime($s['joined'])) : '')."</li>\n";
+						$body .= "<li><a href=\"{$sc}?v=astd&uid={$s['id']}&needle={$needle}\">{$s['email']}</a> ".($s['phone'] ? ", {$s['phone']}" : '')." ({$s['classes']}) ".($needle == 'everyone' ? date ('Y M j, g:ia', strtotime($s['joined'])) : '')."</li>\n";
 					}
 					$body .= "</ul>\n";
 				}
