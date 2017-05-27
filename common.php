@@ -1,5 +1,5 @@
 <?php
-date_default_timezone_set ( 'America/Los_Angeles' );
+date_default_timezone_set ( 'America/New_York' );
 session_start();
 include 'wbh_common.php';
 include 'time_difference.php';

@@ -300,7 +300,7 @@ switch ($v) {
 
 		} else {
 			$body .= "<h2>Log In To This Site</h2>\n";
-			$body .= "<p>To sign up for a workshop, you must log in. You don't need a password or a Facebook account but you do need an email account. This is separate from the mailing list.</p>";
+			$body .= "<p>To sign up for a workshop, you must log in. You don't need a password or a Facebook account but you do need an email account.</p>";
 			$body .= wbh_login_prompt();
 		}
 		include 'mailchimp.php';
@@ -324,7 +324,7 @@ switch ($v) {
 			$body .= "<p>You're not logged in, so I can't list your workshops. Log in further up this page.</p>";
 		}
 		$body .= "<h2>Questions</h2>\n";
-		$body .= "<p>Paying? Lateness? Levels? See <a href='$sc?v=faq'>questions</a>.</p>\n";		
+		$body .= "<p>You can be late. You can leave early. Pre-reqs are not enforced. For more, see <a href='$sc?v=faq'>common questions</a>.</p>\n";		
 		$body .= "</div></div> <!-- end of col and row -->\n";	
 		
 			
@@ -347,7 +347,6 @@ function wbh_login_prompt() {
 
 function wbh_logout(&$key, &$u, &$message) {
 	unset($_SESSION['s_key']);
-	setcookie('c_key', '', time() - 3600); //expire the cookie
 	$key = '';
 	$u = null;
 	$message = 'You are logged out!';
