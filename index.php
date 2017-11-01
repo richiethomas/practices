@@ -300,16 +300,33 @@ switch ($v) {
 
 		} else {
 			$body .= "<h2>Log In To This Site</h2>\n";
-			$body .= "<p>To sign up for a workshop, you must log in. You don't need a password or a Facebook account but you do need an email account.</p>";
+			$body .= "<p>First you must log in. We do that via email.</p>";
 			$body .= wbh_login_prompt();
 		}
-		include 'mailchimp.php';
+		//include 'mailchimp.php';
 		$body .= "</div></div></div>\n"; // end of log in prompt div, and its column and row
 
 		$body .= "<div class='row'><div class='col-md-12'>\n";
 		$body .= "<h2>Paying</h2>\n"; 
 		$body .= "<p>Pay in person or with <a href=\"http://venmo.com/willhines?txn=pay&share=friends&amount=25&note=improv%20workshop\">venmo</a> (click that link or pay to <a href=\"http://venmo.com/willhines?txn=pay&share=friends&amount=25&note=improv%20workshop\">whines@gmail.com</a>). On the day of the workshop is fine.</p>\n";
 		$body .= "</div></div> <!-- end of col and row -->\n";
+
+		$body .= "<div class='row'><div class='col-md-12'>\n";
+		$body .= "<h2>No late drops!</h2>\n"; 
+		$body .= "<p>Dropping out the night before or the morning of is very not cool! You were holding a spot and then you didn't use it! Please don't do it! If you do, I might ask you to pay which is gonna be weird for both of us.</p>\n";
+		$body .= "</div></div> <!-- end of col and row -->\n";
+
+
+		$body .= "<div class='row'><div class='col-md-12'>\n";
+		$body .= "<h2>Mailing list</h2>\n"; 
+		$body .= "<p>You are NOT automatically put on my mailing list for these workshops. If you WANT to be on that mailing list, <a href='http://eepurl.com/c6-T-H'>sign yourself up here</a>.</p>\n";
+		$body .= "</div></div> <!-- end of col and row -->\n";
+
+
+		$body .= "<h2>Questions</h2>\n";
+		$body .= "<p>You can be late. You can leave early. Pre-reqs are not enforced. For more, see <a href='$sc?v=faq'>common questions</a>.</p>\n";		
+		$body .= "</div></div> <!-- end of col and row -->\n";	
+
 
 		$body .= "<div class='row'><div class='col-md-12'>\n";
 		$body .= "<h2>All Upcoming Workshops</h2>\n"; 
@@ -323,9 +340,6 @@ switch ($v) {
 		} else {
 			$body .= "<p>You're not logged in, so I can't list your workshops. Log in further up this page.</p>";
 		}
-		$body .= "<h2>Questions</h2>\n";
-		$body .= "<p>You can be late. You can leave early. Pre-reqs are not enforced. For more, see <a href='$sc?v=faq'>common questions</a>.</p>\n";		
-		$body .= "</div></div> <!-- end of col and row -->\n";	
 		
 			
 		$body .= "<br><br>\n";
@@ -342,7 +356,7 @@ echo $body;
 include 'footer.php';
 
 function wbh_login_prompt() {
-	return "<p>Submit your email with this form and we will email you a link to log in: " .wbh_get_trans_form()."</p>\n";
+	return "<p>Submit your email with this form and the site will email you a link to log in: " .wbh_get_trans_form()."</p>\n";
 }
 
 function wbh_logout(&$key, &$u, &$message) {

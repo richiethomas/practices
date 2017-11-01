@@ -1,5 +1,5 @@
 <?php
-date_default_timezone_set ( 'America/New_York' );
+date_default_timezone_set ( 'America/Los_Angeles' );
 session_start();
 include 'wbh_common.php';
 include 'time_difference.php';
@@ -944,8 +944,8 @@ function wbh_confirm_email($wk, $u, $status_id = ENROLLED) {
 			$call = "To DROP, click here:\n{$drop}";
 			break;
 		case INVITED:
-			$sub = "INVITED: {$wk['showtitle']}";
-			$point = "A spot opened in {$wk['showtitle']}:";
+			$sub = "INVITED: {$wk['showtitle']} -- PLEASE RESPOND";
+			$point = "PLEASE ANSWER. Other people may want this spot if you don't.\n\nA spot opened in {$wk['showtitle']}:";
 			$call = "To ACCEPT, click here:\n{$accept}\n\nTo DECLINE, click here:\n{$decline}";
 			break;
 		case DROPPED:
@@ -1018,7 +1018,7 @@ function wbh_shorten_link($link) {
 
 function wbh_get_dropping_late_warning() {
 	global $late_hours;
-	return "NOTE: You are dropping within {$late_hours} hours of the start, and there was a waiting list. If I can't get someoen to take your spot, I might ask you to pay anyway.";
+	return "NOTE: You are dropping within {$late_hours} hours of the start, and there was a waiting list. Is there a way you could find someone to take your spot?";
 	
 }
 
