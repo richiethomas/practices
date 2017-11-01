@@ -323,6 +323,7 @@ switch ($v) {
 		$body .= "</div></div> <!-- end of col and row -->\n";
 
 
+		$body .= "<div class='row'><div class='col-md-12'>\n";
 		$body .= "<h2>Questions</h2>\n";
 		$body .= "<p>You can be late. You can leave early. Pre-reqs are not enforced. For more, see <a href='$sc?v=faq'>common questions</a>.</p>\n";		
 		$body .= "</div></div> <!-- end of col and row -->\n";	
@@ -340,6 +341,7 @@ switch ($v) {
 		} else {
 			$body .= "<p>You're not logged in, so I can't list your workshops. Log in further up this page.</p>";
 		}
+		$body .= "</div></div> <!-- end of col and row -->\n";	
 		
 			
 		$body .= "<br><br>\n";
@@ -362,7 +364,8 @@ function wbh_login_prompt() {
 function wbh_logout(&$key, &$u, &$message) {
 	unset($_SESSION['s_key']);
     unset($_COOKIE['c_key']);
-    setcookie('c_key', null, -1, '/');
+    setcookie('c_key', null, -1);
+	//session_write_close();
 	
 	$key = '';
 	$u = null;

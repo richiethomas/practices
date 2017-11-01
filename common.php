@@ -47,10 +47,13 @@ function wbh_add_extra_user_info($row) {
 function wbh_current_key() {
 	global $key;
 	if (isset($_REQUEST['key']) && $_REQUEST['key']) {
+		//print_r($_REQEUST);
 		$key = $_REQUEST['key'];
 	} elseif (isset($_SESSION['s_key']) && $_SESSION['s_key']) {
+		//print_r($_SESSION);
 		$key = $_SESSION['s_key'];
 	} elseif (isset($_COOKIE['c_key']) && $_COOKIE['c_key']) {
+		//print_r($_COOKIE);
 		$key = $_COOKIE['c_key'];
 	}
 
