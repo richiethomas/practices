@@ -361,6 +361,9 @@ function wbh_login_prompt() {
 
 function wbh_logout(&$key, &$u, &$message) {
 	unset($_SESSION['s_key']);
+    unset($_COOKIE['c_key']);
+    setcookie('c_key', null, -1, '/');
+	
 	$key = '';
 	$u = null;
 	$message = 'You are logged out!';
