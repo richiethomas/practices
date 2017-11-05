@@ -1,7 +1,7 @@
 <?php
 date_default_timezone_set ( 'America/Los_Angeles' );
 session_start();
-include 'wbh_common.php';
+include 'wbh_webkit.php';
 include 'time_difference.php';
 
 include 'lib-users.php';

@@ -8,7 +8,7 @@ namespace Wbhkit;
 // 1.4 - adding smart urls functions
 // 1.5 - error messages for texty, drop 5/2015
 // 1.5.1 - tweaking radio 1/2016
-// 1.6 - moved mres out (to database util file) - 11/2017
+// 1.6 - removed 'mres', renamed file, added namespace - 11/2017
 
 
 function texty($key, $value = '', $label = null, $placeholder = null, $help = null, $error = null) {
