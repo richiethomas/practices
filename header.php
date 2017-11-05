@@ -67,7 +67,7 @@ if ($sc == 'admin.php') {
 	echo "<div class=\"jumbotron page-header\">";
 	echo "<h1><a href=\"{$sc}\">{$heading}</a></h1>\n";	
 	echo "<p>Greetings. This is a list of improv practices being taught or at least organized by Will Hines.";
-	//echo (wbh_logged_in() ? '' : " Log in below, then you can enroll.")."</p>";	
+	//echo (logged_in() ? '' : " Log in below, then you can enroll.")."</p>";	
 	echo "</div>\n";
 }
 

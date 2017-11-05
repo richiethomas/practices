@@ -17,7 +17,7 @@
  * @param integer $precision Optional precision 
  * @return string time difference
  */
-function wbh_get_date_diff( $time1, $time2, $precision = 2 ) {
+function get_date_diff( $time1, $time2, $precision = 2 ) {
 	// If not numeric then convert timestamps
 	if( !is_int( $time1 ) ) {
 		$time1 = strtotime( $time1 );
@@ -88,7 +88,7 @@ var_dump( get_date_diff( $t, $t2, 3 ) ); // string '1 month, 4 days, 5 hours' (l
 */
 
 
-function wbh_nicetime($date)
+function nicetime($date)
 {
     if(empty($date)) {
         return "No date provided";

@@ -1,5 +1,5 @@
 <?php
-
+namespace Validate;
 /////////////////////////////////////////////////////////////////////
 // make sure user is logged in
 // 2.0 - requires two lines in source script, one to include, one to invoke

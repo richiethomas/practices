@@ -1,45 +1,48 @@
 <?
+namespace Wbhkit;
+
 // version 1.1 - added checkbox, option to remove colon from label
 // 1.2 - added blank option to the top of all drop-downs
 // 1.3 - adapted for bootstrap 3RC1
 // 1.31 - minor fixes 4/2/14
 // 1.4 - adding smart urls functions
 // 1.5 - error messages for texty, drop 5/2015
-// 1.5.1 - tweaking wbh_radio 1/2016
+// 1.5.1 - tweaking radio 1/2016
+// 1.6 - moved mres out (to database util file) - 11/2017
 
 
-function wbh_texty($key, $value = '', $label = null, $placeholder = null, $help = null, $error = null) {
-	$l = wbh_label($label, $key);
+function texty($key, $value = '', $label = null, $placeholder = null, $help = null, $error = null) {
+	$l = label($label, $key);
 	
-	$texty = wbh_form_start($error);		
+	$texty = form_start($error);		
 	$texty .= "{$l}<input class='form-control' type='text' id=\"$key\" name=\"$key\" value=\"$value\" ".($placeholder ? "placeholder='$placeholder'" : '').">";
-	$texty .= wbh_form_help_block($help, $error);		
+	$texty .= form_help_block($help, $error);		
 	$texty .= "</div>\n";
 	
 	return $texty;
 }
 
-function wbh_textarea($key, $value = null, $label = null, $rows = 5, $cols = 40, $help = null, $error = null) {
-	$l = wbh_label($label, $key);
-	$ta = wbh_form_start($error);
+function textarea($key, $value = null, $label = null, $rows = 5, $cols = 40, $help = null, $error = null) {
+	$l = label($label, $key);
+	$ta = form_start($error);
 	$ta .= "{$l} <textarea class='form-control' id='{$key}' name='{$key}' cols='{$cols}' rows='{$rows}'>{$value}</textarea>";
-	$ta .= wbh_form_help_block($help, $error);		
+	$ta .= form_help_block($help, $error);		
 	$ta .= "</div>\n";	
 	return $ta;
 }
  
-function wbh_hidden($key, $value = '') {
+function hidden($key, $value = '') {
 	return "<input type='hidden' name='$key' value='$value'>\n";
 }
 
-function wbh_submit($value = 'Submit') {
+function submit($value = 'Submit') {
 	return "<button type=\"submit\" class=\"btn btn-primary\">{$value}</button>\n";
 }
 
-function wbh_drop($name, $opts, $selected = null, $label = null, $help = null, $error = null) {
-	$l = wbh_label($label, $name);
+function drop($name, $opts, $selected = null, $label = null, $help = null, $error = null) {
+	$l = label($label, $name);
 
-	$select = wbh_form_start($error);	
+	$select = form_start($error);	
 	$select .= "{$l} <select class='form-control' name='$name' id='$name'><option value=''></option>\n";
 	foreach ($opts as $key => $show) {
 		$select .= "<option value='$key'";
@@ -47,15 +50,15 @@ function wbh_drop($name, $opts, $selected = null, $label = null, $help = null, $
 		$select .= ">$show</option>\n";
 	}
 	$select .= "</select>";
-	$select .= wbh_form_help_block($help, $error);		
+	$select .= form_help_block($help, $error);		
 	$select .= "</div>\n";
 	return $select;
 }
 
-function wbh_multi_drop($name, $opts, $selected = null, $label = null, $size = 10, $help = null, $error = null) {
-	$l = wbh_label($label, $name);
+function multi_drop($name, $opts, $selected = null, $label = null, $size = 10, $help = null, $error = null) {
+	$l = label($label, $name);
 	
-	$select = wbh_form_start($error);	
+	$select = form_start($error);	
 	$select .= "{$l} <select size='$size' multiple class='form-control' name='{$name}".'[]'."' id='$name'><option value=''></option>\n";
 	foreach ($opts as $key => $show) {
 		$select .= "<option value=\"$key\"";
@@ -64,19 +67,19 @@ function wbh_multi_drop($name, $opts, $selected = null, $label = null, $size = 1
 				if ($key == $sel) { $select .= " SELECTED "; } 
 			}
 		} else {
-			if ($key == $sel) { $select .= " SELECTED "; } 
+			if ($key == $selected) { $select .= " SELECTED "; } 
 		}
 		$select .= ">$show</option>\n";
 	}
 	$select .= "</select>";
-	$select .= wbh_form_help_block($help, $error);	
+	$select .= form_help_block($help, $error);	
 	$select .= "</div>";
 
 	return $select;
 }
 
 
-function wbh_radio($name, $opts, $selection = null) {
+function radio($name, $opts, $selection = null) {
 	$b = '';
 	$i = 1;
 	$b = "<div class='form-group'><div class='radio-inline'>";
@@ -89,8 +92,8 @@ function wbh_radio($name, $opts, $selection = null) {
 	return $b;
 }
 
-function wbh_checkbox($name, $value, $label = null, $checked = false, $multiple = false) {
-	$label = wbh_figure_label($label, $name, false);
+function checkbox($name, $value, $label = null, $checked = false, $multiple = false) {
+	$label = figure_label($label, $name, false);
 	if ($multiple) { $name = "{$name}[]"; }
 	return "<div class='checkbox-inline'><label class=\"checkbox inline\">
 	  <input type=\"checkbox\" name=\"{$name}\" value=\"{$value}\" ".($checked ? 'checked' : '').">
@@ -98,8 +101,8 @@ function wbh_checkbox($name, $value, $label = null, $checked = false, $multiple 
 	</label></div>";
 }
 
-function wbh_label($label, $key, $colon = false) {
-	$l = wbh_figure_label($label, $key, $colon = false);
+function label($label, $key, $colon = false) {
+	$l = figure_label($label, $key, $colon = false);
 	if ($l === 0) { 
 		return '';
 	} else {
@@ -107,7 +110,7 @@ function wbh_label($label, $key, $colon = false) {
 	}
 }
 
-function wbh_figure_label($label, $key, $colon = false) {
+function figure_label($label, $key, $colon = false) {
 	if ($label === 0) { 
 		return '';
 	} else {
@@ -116,7 +119,7 @@ function wbh_figure_label($label, $key, $colon = false) {
 }
 
 // next two subs deal with error messages
-function wbh_form_start($error = null) {
+function form_start($error = null) {
 	if ($error) {
 		return "<div class='form-group has-error'>";
 	} else {
@@ -124,7 +127,7 @@ function wbh_form_start($error = null) {
 	}
 } 
 
-function wbh_form_help_block($help = null, $error = null) {
+function form_help_block($help = null, $error = null) {
 	if ($error) {
 		return "<p class='help-block text-danger'>$error</p>";
 	}
@@ -134,19 +137,14 @@ function wbh_form_help_block($help = null, $error = null) {
 	
 }
 
-function mres($thing) {
-	$db = wh_set_db_link();
-	return mysqli_real_escape_string($db, $thing);
-}
-
-function wbh_set_vars($vars) {
+function set_vars($vars) {
 	foreach ($vars as $va) {
 		global $$va;
 		$$va = isset($_REQUEST[$va]) ? $_REQUEST[$va] : '';
 	}
 }
 
-function wbh_query_to_array($rows) {
+function query_to_array($rows) {
 	$numfields = mysql_num_fields($rows);
 
 	for ($x = 0;  $x < $numfields; $x++) {

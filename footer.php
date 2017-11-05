@@ -3,7 +3,7 @@
 //print_r($_SESSION);
 //print_r($u);
 //print_r($key);
-session_close();
+session_write_close();
 	
 	
 ?>

@@ -1,9 +1,15 @@
 <?php
+namespace Database;
 
 $db = '';
 wh_set_db_link();
 $webmaster = 'whines@gmail.com';
 
+function mysqli($sql) {
+	$db = wh_set_db_link();
+	$rows = mysqli_query($db, $sql) or db_error();	
+	return $rows;
+}
 
 function wh_set_db_link() {
 	global $db;
@@ -16,7 +22,7 @@ function wh_set_db_link() {
 	return $db;
 }
 
-function wbh_db_error($extra_info = null) {
+function db_error($extra_info = null) {
 	wh_db_error($extra_info);
 }
 function wh_db_error($extra_info = null) {
@@ -29,3 +35,9 @@ function wh_db_error($extra_info = null) {
 	}
 	
 }
+
+function mres($thing) {
+	$db = \Database\wh_set_db_link();
+	return mysqli_real_escape_string($db, $thing);
+}
+
