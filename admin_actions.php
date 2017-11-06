@@ -68,9 +68,9 @@ switch ($ac) {
 			$stds = Enrollments\get_students($wid, $sid);
 			foreach ($stds as $as) {
 				if (is_array($users) && in_array($as['id'], $users)) {
-					update_attendance($wid, $as['id'], 1);
+					Enrollments\update_attendance($wid, $as['id'], 1);
 				} else {
-					update_attendance($wid, $as['id'], 0);
+					Enrollments\update_attendance($wid, $as['id'], 0);
 				}
 			}
 		}		

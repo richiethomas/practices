@@ -27,10 +27,10 @@
 echo "<div class=\"container\">\n";
 
 if ($sc == 'admin.php') {
-	echo "<h1 class=\"display-1\"><a href=\"{$sc}\">{$heading}</a></h1>\n";
+	echo "<h1 class=\"display-3\"><a href=\"{$sc}\">{$heading}</a></h1>\n";
 } else {
 	echo "<div class=\"jumbotron\">";
-	echo "<h1 class=\"display-1\"><a href=\"{$sc}\">{$heading}</a></h1>\n";	
+	echo "<h1 class=\"display-3\"><a href=\"{$sc}\">{$heading}</a></h1>\n";	
 	echo "<p class=\"lead\">Greetings. This is a list of improv practices being taught or at least organized by Will Hines.";
 	//echo (logged_in() ? '' : " Log in below, then you can enroll.")."</p>";	
 	echo "</div>\n";

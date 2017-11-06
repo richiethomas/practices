@@ -149,6 +149,8 @@ switch ($v) {
 			$body .= "<p>".($u['send_text'] ? "You have signed up for text notfications. " : "Would you like text notifications?")." <a  class='btn btn-primary' href='$sc?v=text'>Set your text preferences</a>.</p>\n";
 			
 			if (!$u['display_name']) {
+				$body .= "<p>&nbsp;</p>\n";
+				$body .= "<p>Would you mind entering a real human name? It's helpful to see who is signed up. Your email isn't shown, just this name.</p>\n";
 				$body .= Users\edit_display_name($u);
 			}
 			
@@ -168,7 +170,7 @@ switch ($v) {
 
 		$body .= "<div class='row'><div class='col'>\n";
 		$body .= "<h2>No late drops!</h2>\n"; 
-		$body .= "<p>Dropping out the night before or the morning of is very not cool! You were holding a spot and then you didn't use it! Please don't do it! If you do, I might ask you to pay which is gonna be weird for both of us.</p>\n";
+		$body .= "<p>Dropping out the night before or the morning of is not cool! You were holding a spot and then you didn't use it! Please don't do it! If you do, can you try to get a replacement? If not, I might ask you to pay which is gonna be weird for both of us.</p>\n";
 		$body .= "</div></div> <!-- end of col and row -->\n";
 
 

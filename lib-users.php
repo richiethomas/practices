@@ -350,8 +350,8 @@ function edit_display_name($u) {
 	$body .= "<form class='form-inline' action='$sc' method='post'>\n";
 	$body .= \Wbhkit\hidden('uid', $u['id']);
 	$body .= \Wbhkit\hidden('ac', 'updatedn');
-	$body .= \Wbhkit\texty('display_name', $u['display_name'], 'Real name (we show who is registered)', 'Jane Doe');
-	$body .= \Wbhkit\submit('Update Real Human Name');
+	$body .= \Wbhkit\texty('display_name', $u['display_name'], 'Human Name', 'Jane Doe');
+	$body .= \Wbhkit\submit('Update Human Name');
 	$body .= "</form>\n";
 	$body .= "</div></div> <!-- end of col and row -->\n";
 	
