@@ -105,9 +105,9 @@ switch ($v) {
 					break;
 				default:
 				
-					$point = "You are currnetly not in the practice listed below. ".
+					$point = "You are not currenty signed up for the practice listed below. ".
 						($wk['type'] == 'soldout' 
-						? "It is currently full. Want to <a class='btn btn-primary' href='$enroll_link'>join the wait list</a>?"
+						? "It is full. Want to <a class='btn btn-primary' href='$enroll_link'>join the wait list</a>?"
 						: "Want to <a class='btn btn-primary' href='$enroll_link'>enroll</a>?");
 				
 					break;

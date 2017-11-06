@@ -76,6 +76,7 @@ function get_workshop_info_tabled($wk) {
 	}
 	$known = count($snames);
 	
+	$names_list = '';
 	if ($known) {
 		natcasesort($snames);
 		$names_list = implode("<br>", $snames);
