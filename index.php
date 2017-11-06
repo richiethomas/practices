@@ -202,14 +202,14 @@ switch ($v) {
 	
 	case 'faq':
 	
-		$body .= "<div class='row'><div class='col-md-12'>\n";
+		$body .= "<div class='row'><div class='col'>\n";
 		$body .= Emails\get_faq();
 		$body .= "<p>Just <a href='$sc'>go back to the main page</a>.</p>";
 		$body .= "</div></div>\n";
 		break;	
 
 	case 'text':
-		$body .= "<div class='row'><div class='col-md-12'>\n";
+		$body .= "<div class='row'><div class='col'>\n";
 		$body .= "<h2>Your settings</h2>\n";
 		if (Users\logged_in()) {
 			$body .= "<h3>Text Notifications</h3>\n";
@@ -225,7 +225,7 @@ switch ($v) {
 		
 		
 	case 'edit':
-		$body .= "<div class='row'><div class='col-md-12'>\n";
+		$body .= "<div class='row'><div class='col'>\n";
 		$body .= "<h2>Your settings</h2>\n";
 		if (Users\logged_in()) {
 			$body .= "<h3>New Email</h3>\n";
@@ -252,7 +252,7 @@ switch ($v) {
 		break;
 	
 	case 'view':
-		$body .= "<div class='row'><div class='col-md-12'>\n";
+		$body .= "<div class='row'><div class='col'>\n";
 		if (Users\logged_in()) {
 			$e = Enrollments\get_an_enrollment($wk, $u);
 			switch ($e['status_id']) {
@@ -306,35 +306,35 @@ switch ($v) {
 		//include 'mailchimp.php';
 		$body .= "</div></div></div>\n"; // end of log in prompt div, and its column and row
 
-		$body .= "<div class='row'><div class='col-md-12'>\n";
+		$body .= "<div class='row'><div class='col'>\n";
 		$body .= "<h2>Paying</h2>\n"; 
 		$body .= "<p>Pay in person or with <a href=\"http://venmo.com/willhines?txn=pay&share=friends&amount=25&note=improv%20workshop\">venmo</a> (click that link or pay to <a href=\"http://venmo.com/willhines?txn=pay&share=friends&amount=25&note=improv%20workshop\">whines@gmail.com</a>). On the day of the workshop is fine.</p>\n";
 		$body .= "</div></div> <!-- end of col and row -->\n";
 
-		$body .= "<div class='row'><div class='col-md-12'>\n";
+		$body .= "<div class='row'><div class='col'>\n";
 		$body .= "<h2>No late drops!</h2>\n"; 
 		$body .= "<p>Dropping out the night before or the morning of is very not cool! You were holding a spot and then you didn't use it! Please don't do it! If you do, I might ask you to pay which is gonna be weird for both of us.</p>\n";
 		$body .= "</div></div> <!-- end of col and row -->\n";
 
 
-		$body .= "<div class='row'><div class='col-md-12'>\n";
+		$body .= "<div class='row'><div class='col'>\n";
 		$body .= "<h2>Mailing list</h2>\n"; 
 		$body .= "<p>You are NOT automatically put on my mailing list for these workshops. If you WANT to be on that mailing list, <a href='http://eepurl.com/c6-T-H'>sign yourself up here</a>.</p>\n";
 		$body .= "</div></div> <!-- end of col and row -->\n";
 
 
-		$body .= "<div class='row'><div class='col-md-12'>\n";
+		$body .= "<div class='row'><div class='col'>\n";
 		$body .= "<h2>Questions</h2>\n";
 		$body .= "<p>You can be late. You can leave early. Pre-reqs are not enforced. For more, see <a href='$sc?v=faq'>common questions</a>.</p>\n";		
 		$body .= "</div></div> <!-- end of col and row -->\n";	
 
 
-		$body .= "<div class='row'><div class='col-md-12'>\n";
+		$body .= "<div class='row'><div class='col'>\n";
 		$body .= "<h2>All Upcoming Workshops</h2>\n"; 
 		$body .= Workshops\get_workshops_list(0);
 		$body .= "</div></div> <!-- end of col and row -->\n";
 		
-		$body .= "<div class='row'><div class='col-md-12'>";
+		$body .= "<div class='row'><div class='col'>";
 		$body .= "<h2>Your Current/Past Workshops</h2>";
 		if (Users\logged_in()) {
 			$body .= Enrollments\get_transcript_tabled($u);  

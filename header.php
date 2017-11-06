@@ -1,60 +1,25 @@
 <?php $heading = isset($heading) ? $heading: 'will hines practices'; ?>
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-	
-<!--
-
-design quick-fixes taken from:
-	http://24ways.org/2012/how-to-make-your-site-look-half-decent/
-	and
-	http://designshack.net/articles/css/10-great-google-font-combinations-you-can-copy/	
-	Readable Theme from http://bootswatch.com/
-	
--->	
 	<title><?=$heading?></title>
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 	
 	<!-- Latest compiled and minified CSS -->
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
-
-	<!-- Optional theme -->
-	<!--link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css"-->
-	<link rel="stylesheet" href="bootstrap.readable.min.css">
-
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
 
 	<!-- Latest compiled and minified JavaScript -->
-	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
-	
-	<!-- jquery -->
-	<script src="//code.jquery.com/jquery-1.11.2.min.js"></script>
-	<script src="backstretch.js"></script>
+	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>	
 
-<script>
-	$( document ).ready(function() {
-	    $.backstretch("bb4.jpg");
-	});
-</script>
-	
-	
 <style>
 .row {
 	margin-bottom: 40px;
 }
-
-.container {	
-	background: url(cream_dust_transparent.png) repeat 0;
-}
-
-h1, h2, h3 { 
-    text-shadow: 1px 1px 1px #ccc;
-	font-weight: normal;
-}
-.page-header { 
-    box-shadow: 0 0 1em 1em #ccc;
-}
-
 </style>
+
 </head>
 <body>
 	
@@ -62,11 +27,11 @@ h1, h2, h3 {
 echo "<div class=\"container\">\n";
 
 if ($sc == 'admin.php') {
-	echo "<h1><a href=\"{$sc}\">{$heading}</a></h1>\n";
+	echo "<h1 class=\"display-1\"><a href=\"{$sc}\">{$heading}</a></h1>\n";
 } else {
-	echo "<div class=\"jumbotron page-header\">";
-	echo "<h1><a href=\"{$sc}\">{$heading}</a></h1>\n";	
-	echo "<p>Greetings. This is a list of improv practices being taught or at least organized by Will Hines.";
+	echo "<div class=\"jumbotron\">";
+	echo "<h1 class=\"display-1\"><a href=\"{$sc}\">{$heading}</a></h1>\n";	
+	echo "<p class=\"lead\">Greetings. This is a list of improv practices being taught or at least organized by Will Hines.";
 	//echo (logged_in() ? '' : " Log in below, then you can enroll.")."</p>";	
 	echo "</div>\n";
 }

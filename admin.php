@@ -48,7 +48,7 @@ switch ($ac) {
 		break;
  
  	case 'zero':
-		$message = "Really remove students with zero workshops? <a class='btn btn-danger' href='$sc?ac=zeroconfirm'>yes remove</a> or <a class='btn btn-default' href='$sc?v=search&needle=everyone'>cancel</a>";
+		$message = "Really remove students with zero workshops? <a class='btn btn-danger' href='$sc?ac=zeroconfirm'>yes remove</a> or <a class='btn btn-primary' href='$sc?v=search&needle=everyone'>cancel</a>";
 		$v = 'search';
 		break;
 		
@@ -70,7 +70,7 @@ switch ($ac) {
 		break;	
 		
  	case 'delstudent':
-		$message = "Really delete '{$u['email']}'? <a class='btn btn-danger' href='$sc?ac=delstudentconfirm&uid={$u['id']}'>yes delete</a> or <a class='btn btn-default' href='$sc?v=search&needle=everyone'>cancel</a>";
+		$message = "Really delete '{$u['email']}'? <a class='btn btn-danger' href='$sc?ac=delstudentconfirm&uid={$u['id']}'>yes delete</a> or <a class='btn btn-primary' href='$sc?v=search&needle=everyone'>cancel</a>";
 		break;
 		
 	case 'delstudentconfirm':
@@ -276,7 +276,7 @@ switch ($v) {
 ";
 
 		// enrollment column
-		$body .= "<div class='col-md-7'><h2>Enrollment Info <small><br><a class='btn btn-default' href='$sc?v=em&wid={$wid}'>see emails</a> <a class='btn btn-default'  href='$sc?v=at&wid={$wid}'>attendance</a> <a class='btn btn-default'  href='$sc?v=ed&ac=cw&wid={$wid}'>check waiting</a></small></h2>\n";
+		$body .= "<div class='col-md-7'><h2>Enrollment Info <small><br><a class='btn btn-primary' href='$sc?v=em&wid={$wid}'>see emails</a> <a class='btn btn-primary'  href='$sc?v=at&wid={$wid}'>attendance</a> <a class='btn btn-primary'  href='$sc?v=ed&ac=cw&wid={$wid}'>check waiting</a></small></h2>\n";
 		
 		//show enrollment totals at top
 		$stats = array();
@@ -488,9 +488,9 @@ switch ($v) {
 			Wbhkit\radio('sort', $search_opts, $sort).
 			'<div class="clearfix">'.Wbhkit\submit('search').'</div>'.
 			"</form>\n";
-			$body .= "<p>Or click this button to list <a class='btn btn-default' href='$sc?v=search&needle=everyone'>all students</a> ";
+			$body .= "<p>Or click this button to list <a class='btn btn-primary' href='$sc?v=search&needle=everyone'>all students</a> ";
 			if ($needle == 'everyone') {
-				$body .= "<a class='btn btn-default' href='$sc?v=search&ac=zero'>remove the zeroes</a>";
+				$body .= "<a class='btn btn-primary' href='$sc?v=search&ac=zero'>remove the zeroes</a>";
 			}
 			$body .= "</p>\n";
 						
@@ -514,7 +514,7 @@ switch ($v) {
 			
 			case 'allchange':
 			$body .= "<h2>Change Log</h2>\n";
-			$body .= "<a class='btn btn-default' href='$sc'>back to front page</a>";
+			$body .= "<a class='btn btn-primary' href='$sc'>back to front page</a>";
 			$body .= Lookups\get_status_change_log();
 			
 			break;
@@ -558,11 +558,11 @@ switch ($v) {
 
 	
 		$body .= "<p>
-			<a class='btn btn-default' href='#add'>add a workshop</a> 
-			<a class='btn btn-default' href='$sc?v=gemail'>get emails</a> 
-			<a class='btn btn-default' href='$sc?v=rev'>revenues</a>
-			<a class='btn btn-default' href='$sc?v=search'>find students</a>
-			<a class='btn btn-default' href='$sc?v=allchange'>change log</a>
+			<a class='btn btn-primary' href='#add'>add a workshop</a> 
+			<a class='btn btn-primary' href='$sc?v=gemail'>get emails</a> 
+			<a class='btn btn-primary' href='$sc?v=rev'>revenues</a>
+			<a class='btn btn-primary' href='$sc?v=search'>find students</a>
+			<a class='btn btn-primary' href='$sc?v=allchange'>change log</a>
 
 			</p>\n";
 		$body .= "<h2>All Practices</h2>";

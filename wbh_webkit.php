@@ -9,14 +9,17 @@ namespace Wbhkit;
 // 1.5 - error messages for texty, drop 5/2015
 // 1.5.1 - tweaking radio 1/2016
 // 1.6 - removed 'mres', renamed file, added namespace - 11/2017
+// 2.0 - upgraded to bootstrap v4.0 - 11/2017
 
 
 function texty($key, $value = '', $label = null, $placeholder = null, $help = null, $error = null) {
 	$l = label($label, $key);
 	
 	$texty = form_start($error);		
-	$texty .= "{$l}<input class='form-control' type='text' id=\"$key\" name=\"$key\" value=\"$value\" ".($placeholder ? "placeholder='$placeholder'" : '').">";
-	$texty .= form_help_block($help, $error);		
+	$texty .= "{$l}<input class='form-control' type='text' id=\"$key\" name=\"$key\" value=\"$value\" ".($placeholder ? "placeholder='$placeholder'" : '');
+
+	$texty .= figure_aria_attribute($key, $help, $error);
+	$texty .= form_help_block($key, $help, $error);		
 	$texty .= "</div>\n";
 	
 	return $texty;
@@ -25,8 +28,10 @@ function texty($key, $value = '', $label = null, $placeholder = null, $help = nu
 function textarea($key, $value = null, $label = null, $rows = 5, $cols = 40, $help = null, $error = null) {
 	$l = label($label, $key);
 	$ta = form_start($error);
-	$ta .= "{$l} <textarea class='form-control' id='{$key}' name='{$key}' cols='{$cols}' rows='{$rows}'>{$value}</textarea>";
-	$ta .= form_help_block($help, $error);		
+	$ta .= "{$l} <textarea class='form-control' id='{$key}' name='{$key}' cols='{$cols}' rows='{$rows}'";
+	$ta .= figure_aria_attribute($key, $help, $error);
+	$ta .= "{$value}</textarea>";
+	$ta .= form_help_block($key, $help, $error);		
 	$ta .= "</div>\n";	
 	return $ta;
 }
@@ -43,14 +48,16 @@ function drop($name, $opts, $selected = null, $label = null, $help = null, $erro
 	$l = label($label, $name);
 
 	$select = form_start($error);	
-	$select .= "{$l} <select class='form-control' name='$name' id='$name'><option value=''></option>\n";
+	$select .= "{$l} <select class='form-control' name='$name' id='$name'";
+	$select .= figure_aria_attribute($key, $help, $error);
+	$select .= "<option value=''></option>\n";
 	foreach ($opts as $key => $show) {
 		$select .= "<option value='$key'";
 		if ($key == $selected) { $select .= " SELECTED "; } 
 		$select .= ">$show</option>\n";
 	}
 	$select .= "</select>";
-	$select .= form_help_block($help, $error);		
+	$select .= form_help_block($key, $help, $error);		
 	$select .= "</div>\n";
 	return $select;
 }
@@ -59,7 +66,9 @@ function multi_drop($name, $opts, $selected = null, $label = null, $size = 10, $
 	$l = label($label, $name);
 	
 	$select = form_start($error);	
-	$select .= "{$l} <select size='$size' multiple class='form-control' name='{$name}".'[]'."' id='$name'><option value=''></option>\n";
+	$select .= "{$l} <select size='$size' multiple class='form-control' name='{$name}".'[]'."' id='$name'";
+	$select .= figure_aria_attribute($key, $help, $error);
+	$select .= "<option value=''></option>\n";
 	foreach ($opts as $key => $show) {
 		$select .= "<option value=\"$key\"";
 		if (is_array($selected)) {
@@ -72,7 +81,7 @@ function multi_drop($name, $opts, $selected = null, $label = null, $size = 10, $
 		$select .= ">$show</option>\n";
 	}
 	$select .= "</select>";
-	$select .= form_help_block($help, $error);	
+	$select .= form_help_block($key, $help, $error);	
 	$select .= "</div>";
 
 	return $select;
@@ -80,23 +89,22 @@ function multi_drop($name, $opts, $selected = null, $label = null, $size = 10, $
 
 
 function radio($name, $opts, $selection = null) {
-	$b = '';
 	$i = 1;
-	$b = "<div class='form-group'><div class='radio-inline'>";
+	$b = "<div class='form-check form-check-inline'>";
 	foreach ($opts as $key => $label) {
 		$ch = ($key == $selection && !is_null($selection) ? 'checked' : '');
-		$b .= '<label class="radio-inline"><input class="form-control" type="radio" id="'.$name.'" name="'.$name.'" id="radio'.$i.'" value="'.$key.'" '.$ch.'> '.$label."</label>\n";
+		$b .= '<label class="form-check-label"><input class="form-check-input" type="radio" id="'.$name.'" name="'.$name.'" id="radio'.$i.'" value="'.$key.'" '.$ch.'> '.$label."</label>\n";
 		$i++;
 	}
-	$b .= "</div></div>\n";
+	$b .= "</div>\n";
 	return $b;
 }
 
 function checkbox($name, $value, $label = null, $checked = false, $multiple = false) {
 	$label = figure_label($label, $name, false);
 	if ($multiple) { $name = "{$name}[]"; }
-	return "<div class='checkbox-inline'><label class=\"checkbox inline\">
-	  <input type=\"checkbox\" name=\"{$name}\" value=\"{$value}\" ".($checked ? 'checked' : '').">
+	return "<div class='form-check form-check-inline'><label class=\"form-check-label\">
+	  <input class='form-check-input' type=\"checkbox\" name=\"{$name}\" value=\"{$value}\" ".($checked ? 'checked' : '').">
 	  {$label}
 	</label></div>";
 }
@@ -118,7 +126,7 @@ function figure_label($label, $key, $colon = false) {
 	}	
 }
 
-// next two subs deal with error messages
+// next four subs deal with error messages
 function form_start($error = null) {
 	if ($error) {
 		return "<div class='form-group has-error'>";
@@ -127,14 +135,26 @@ function form_start($error = null) {
 	}
 } 
 
-function form_help_block($help = null, $error = null) {
+function form_help_block($id, $help = null, $error = null) {
+	$id = figure_help_id($id);
 	if ($error) {
-		return "<p class='help-block text-danger'>$error</p>";
+		return "<small id='$id' class='form-text text-danger'>$error</small>";
 	}
 	if ($help) {
-		return "<p class='help-block'>$help</p>";
+		return "<small id ='$id' class='form-text text-muted'>$help</small>";
 	}
-	
+}
+
+function figure_help_id($key) {
+	return "{$key}HelpBlock";
+}
+
+function figure_aria_attribute($key, $help, $error) {
+	if ($help || $error) {
+		return "aria-describedby='".figure_help_id($key)."'>";
+	} else {
+		return ">";
+	}	
 }
 
 function set_vars($vars) {

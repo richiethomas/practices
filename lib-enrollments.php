@@ -321,18 +321,25 @@ function get_transcript_tabled($u, $admin = false) {
 	}
 
 	$body = '';
-	$body .= "<table class='table table-striped'><thead><tr><th>Title</th><th>When</th><th>Where</th><th>Status</th><th>Action</th></tr></thead>\n";
+	$body .= "<table class='table table-striped'><thead>
+		<tr>
+			<th scope=\"col\">Title</th>
+			<th scope=\"col\">When</th>
+			<th scope=\"col\">Where</th>
+			<th scope=\"col\">Status</th>
+			<th scope=\"col\">Action</th>
+		</tr></thead>\n";
 	$body .= "<tbody>";
 	
 	foreach ($transcripts as $t) {
 		$wk = \Workshops\get_workshop_info($t['workshop_id']);
 		$e = get_an_enrollment($wk, $u); 
 		if ($wk['type'] == 'past') {
-			$cl = 'muted';
+			$cl = 'light';
 		} elseif ($t['status_id'] == ENROLLED) {
 			$cl = 'success';
 		} else {
-			$cl = 'warning';
+			$cl = 'danger';
 		}
 
 		$body .= "<tr class='$cl'><td>";

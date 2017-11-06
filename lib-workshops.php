@@ -68,13 +68,13 @@ function get_workshop_info_tabled($id) {
 	$wk = get_workshop_info($id);
 	return "<table class=\"table table-striped\">
 		<tbody>
-		<tr><td>Title:</td><td>{$wk['title']}</tr>
-		<tr><td>Description:</td><td>{$wk['notes']}</td></tr>
-		<tr><td>When:</td><td>{$wk['when']}</tr>
-		<tr><td>Where:</td><td>{$wk['place']} {$wk['lwhere']}</tr>
-		<tr><td>Cost:</td><td>{$wk['cost']}</td></tr>
-		<tr><td>Open Spots:</td><td>{$wk['open']} (of {$wk['capacity']})</td></tr>
-		<tr><td>Waiting:</td><td>".($wk['waiting']+$wk['invited'])."</td></tr>
+		<tr><td scope=\"row\">Title:</td><td>{$wk['title']}</tr>
+		<tr><td scope=\"row\">Description:</td><td>{$wk['notes']}</td></tr>
+		<tr><td scope=\"row\">When:</td><td>{$wk['when']}</tr>
+		<tr><td scope=\"row\">Where:</td><td>{$wk['place']} {$wk['lwhere']}</tr>
+		<tr><td scope=\"row\">Cost:</td><td>{$wk['cost']}</td></tr>
+		<tr><td scope=\"row\">Open Spots:</td><td>{$wk['open']} (of {$wk['capacity']})</td></tr>
+		<tr><td scope=\"row\">Waiting:</td><td>".($wk['waiting']+$wk['invited'])."</td></tr>
 		</tbody>
 		</table>";
 }
@@ -139,12 +139,12 @@ function get_workshops_list($admin = 0) {
 	$sql .= $admin ? " order by start desc" : " order by start asc";
 	$rows = \Database\mysqli( $sql) or \Database\db_error();
 	$body = "<table class='table table-striped'><thead><tr>
-		<th width='500'>Title</th>
-		<th>When</th>
-		<th>Where</th>
-		<th>Cost</th>
-		<th>Spots</th>
-		<th>Action</th>
+		<th width='500' scope=\"col\">Title</th>
+		<th scope=\"col\">When</th>
+		<th scope=\"col\">Where</th>
+		<th scope=\"col\">Cost</th>
+		<th scope=\"col\">Spots</th>
+		<th scope=\"col\">Action</th>
 		</tr></thead><tbody>\n";
 
 	$i = 0;
@@ -166,11 +166,11 @@ function get_workshops_list($admin = 0) {
 		if (date('z', strtotime($wk['start'])) == date('z')) {
 			$cl = 'info';
 		} elseif ($wk['type'] == 'soldout') {
-			$cl = 'error';
+			$cl = 'danger';
 		} elseif ($wk['type'] == 'open') {
 			$cl = 'success';
 		} elseif ($wk['type'] == 'past') {
-			$cl = 'muted';
+			$cl = 'light';
 		} else  {
 			$cl = '';
 		}
