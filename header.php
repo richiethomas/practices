@@ -16,7 +16,7 @@
 
 <style>
 .row {
-	margin-bottom: 40px;
+	margin-bottom: 3rem;
 }
 </style>
 
@@ -39,10 +39,10 @@ if ($sc == 'admin.php') {
 
 
 if (isset($error) && $error) {
-	echo "<div class='alert alert-danger'>$error</div>\n";
+	echo "<div class='alert alert-danger' role='alert'>$error</div>\n";
 }
 if (isset($message) && $message) {
-	echo "<div class='alert alert-success'>$message</div>\n";
+	echo "<div class='alert alert-success' role='alert'>$message</div>\n";
 }
 
 ?>		

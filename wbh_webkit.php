@@ -49,7 +49,7 @@ function drop($name, $opts, $selected = null, $label = null, $help = null, $erro
 
 	$select = form_start($error);	
 	$select .= "{$l} <select class='form-control' name='$name' id='$name'";
-	$select .= figure_aria_attribute($key, $help, $error);
+	$select .= figure_aria_attribute($name, $help, $error);
 	$select .= "<option value=''></option>\n";
 	foreach ($opts as $key => $show) {
 		$select .= "<option value='$key'";
@@ -67,7 +67,7 @@ function multi_drop($name, $opts, $selected = null, $label = null, $size = 10, $
 	
 	$select = form_start($error);	
 	$select .= "{$l} <select size='$size' multiple class='form-control' name='{$name}".'[]'."' id='$name'";
-	$select .= figure_aria_attribute($key, $help, $error);
+	$select .= figure_aria_attribute($name, $help, $error);
 	$select .= "<option value=''></option>\n";
 	foreach ($opts as $key => $show) {
 		$select .= "<option value=\"$key\"";
