@@ -185,6 +185,12 @@ switch ($v) {
 		$body .= "<p>You can be late. You can leave early. Pre-reqs are not enforced. For more, see <a href='$sc?v=faq'>common questions</a>.</p>\n";		
 		$body .= "</div></div> <!-- end of col and row -->\n";	
 
+		$body .= "<div class='row'><div class='col'>\n";
+		$body .= "<h2>Problem With the Web Site?</h2>\n";
+		$body .= "<p>Email Will Hines. His email is w.hines@gmail.com</p>\n";		
+		$body .= "</div></div> <!-- end of col and row -->\n";	
+
+
 
 		$body .= "<div class='row'><div class='col'>\n";
 		$body .= "<h2>All Upcoming Workshops</h2>\n"; 
