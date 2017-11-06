@@ -212,7 +212,7 @@ function update_change_log($wk, $u, $status_id) {
 function get_status_change_log($wk = null) {
 
 	global $sc, $late_hours;
-	$sql = "select s.*, u.email, st.status_name, wk.title, wk.start, wk.end from status_change_log s, users u, statuses st, workshops wk where";
+	$sql = "select s.*, u.email, u.display_name, st.status_name, wk.title, wk.start, wk.end from status_change_log s, users u, statuses st, workshops wk where";
 	if ($wk) { 
 		$sql .= " workshop_id = ".\Database\mres($wk['id'])." and "; 
 	}
@@ -229,6 +229,7 @@ function get_status_change_log($wk = null) {
 
 	while ($row = mysqli_fetch_assoc($rows)) {
 		$row = \Workshops\format_workshop_startend($row);
+		$row = \Users\set_nice_name($row);
 		$wkname = '';
 		if (!$wk) {
 			// skip old ones for the global change log
@@ -251,7 +252,7 @@ function get_status_change_log($wk = null) {
 			$last_enrolled = "<td>&nbsp;</td>";
 		}
 
-		$log .= "<tr class='$row_class'><td>{$row['email']}</td><td>$wkname {$row['status_name']}</td><td><small>".date('j-M-y g:ia', strtotime($row['happened']))."$last_enrolled</small></td>\n";
+		$log .= "<tr class='$row_class'><td>{$row['nice_name']}</td><td>$wkname {$row['status_name']}</td><td><small>".date('j-M-y g:ia', strtotime($row['happened']))."$last_enrolled</small></td>\n";
 		$log .= "</tr>\n";
 		
 	}
@@ -271,6 +272,7 @@ function get_students($wid, $status_id = ENROLLED) {
 	$stds = array();
 	while ($row = mysqli_fetch_assoc($rows)) {
 		$row['last_enrolled'] = get_last_enrolled($wid, $row['id']);
+		$row = \Users\set_nice_name($row);
 		$stds[$row['id']] = $row;
 	}
 	return $stds;
@@ -289,24 +291,16 @@ function get_last_enrolled($wid = 0, $uid = 0) {
 	return false;
 }
 
-// internal function to sort by email field
-function sort_by_email($a, $b) {
-    return strcasecmp($a["email"], $b["email"]);
-}
-
 function list_students($wid, $status_id = ENROLLED) {
 	global $sc;
 	$stds = get_students($wid, $status_id);
 	$body = '';
-	$es = '';
 	foreach ($stds as $uid => $s) {
 		$s['ukey'] = \Users\check_key($s['ukey'], $uid);
-		$body .= "<div class='row'><div class='col-md-6'><a href='admin.php?v=astd&uid={$s['id']}&wid={$wid}'>{$s['email']}</a> <small>".date('M j g:ia', strtotime($s['last_modified']))."</small></div>".
+		$body .= "<div class='row'><div class='col-md-6'><a href='admin.php?v=astd&uid={$s['id']}&wid={$wid}'>{$s['nice_name']}</a> <small>".date('M j g:ia', strtotime($s['last_modified']))."</small></div>".
 		"<div class='col-md-6'>
 		<a class='btn btn-primary' href='$sc?v=cs&wid={$wid}&uid={$uid}'>change status</a> <a class='btn btn-danger' href='$sc?v=rem&uid={$uid}&wid={$wid}'>remove</a></div>".
 		"</div>\n";
-		//$body .= "<div class='row'>&nbsp;</div>\n";
-		$es .= "{$s['email']}\n";
 	}
 	return $body;
 }
@@ -353,7 +347,7 @@ function get_transcript_tabled($u, $admin = false) {
 		if ($t['status_id'] == WAITING) {
 			$body .= " (spot {$e['rank']})";
 		}
-		$body .= "</td><td><a href='index.php?v=view&wid={$t['workshop_id']}'>More Info</a></td></tr>\n";
+		$body .= "</td><td><a href='index.php?v=winfo&wid={$t['workshop_id']}'>More Info</a></td></tr>\n";
 	}
 	$body .= "</tbody></table>\n";
 	return $body;

@@ -23,6 +23,16 @@ function get_user_by_id($id) {
 function add_extra_user_info($row) {	
 	// expecting variable $row which is a row of table 'user'
 	$row['ukey'] = check_key($row['ukey'], $row['id']);
+	return set_nice_name($row);
+}
+
+
+function set_nice_name($row) {
+	if ($row['display_name']) {
+		$row['nice_name'] = "{$row['display_name']} ({$row['email']})"; 		
+	} else {
+		$row['nice_name'] = $row['email'];
+	}
 	return $row;
 }
 
@@ -57,7 +67,7 @@ function verify_key($passed, $true, &$error, $show_error = 1) {
 	global $u;
 	if ($passed != $true) {
 		if ($show_error) {
-			$error = "Hmmm. I can't verify that you are who you say you are. Want me to email you a fresh link? ".get_trans_form();
+			$error = "Hmmm. I can't verify that you are who you say you are. Try logging in below.";
 		}
 		return false;
 	} else {
@@ -114,12 +124,13 @@ function validate_email($emailaddress) {
 	}
 }
 
-
-function get_trans_form() {
+function login_prompt() {
 	global $sc, $email;
-	return "<form class='form-inline' action='$sc' method='post'>\n".
+	return "<p>Submit your name and email and the site will email you a link to log in:</p>
+	<form action='$sc' method='post'>\n".
 	\Wbhkit\hidden('ac', 'link').
-	\Wbhkit\texty('email', $email, 0, 'Email').
+	\Wbhkit\texty('display_name', '', 'Real Name', 'Jane Doe', 'We list who is registered in the workshop description.').		
+	\Wbhkit\texty('email', $email, 'Email', 'something@something.com', 'We send a log in link to this address.').
 	\Wbhkit\submit('log in').
 	"</form>";
 }
@@ -130,7 +141,7 @@ function email_link($u) {
 		}
 		$key = get_key($u['id']);
 		$trans = URL."index.php?key=$key";
-		$transcripts = \Databaseet_transcript($u);
+		$transcripts = \Enrollments\get_transcripts($u);
 
 		if (count($transcripts) == 0) {
 			$point = "Use this link to log in:";
@@ -147,7 +158,6 @@ $point
 
 		return mail($u['email'], "Log in to 'Will Hines practices'", $body, "From: ".WEBMASTER);
 }
-
 
 function logged_in() {
 	global $u, $key;
@@ -185,7 +195,7 @@ function find_students($needle = 'everyone', $sort = 'n') {
 		
 	}
 	
-	$sql = "SELECT a.id, a.email, a.phone, COUNT(b.id) AS 'classes', a.joined  
+	$sql = "SELECT a.id, a.email, a.display_name, a.phone, COUNT(b.id) AS 'classes', a.joined  
 	FROM 
 		users a 
 	   LEFT JOIN
@@ -198,6 +208,7 @@ function find_students($needle = 'everyone', $sort = 'n') {
 	$rows = \Database\mysqli( $sql) or \Database\db_error();
 	$stds = array();
 	while ($row = mysqli_fetch_assoc($rows)) {
+		$row = set_nice_name($row);
 		$stds[$row['id']] = $row;
 	}
 	return $stds;
@@ -327,6 +338,38 @@ function update_text_preferences(&$u,  &$message, &$error) {
 		\Database\mysqli($sql) or \Database\db_error();
 		$u = get_user_by_id($u['id']); // updated so the form is correctly populated on refill
 		$message = 'Preferences updated!';
+		return true;
+	}
+
+}
+
+function edit_display_name($u) {
+	global $sc, $ac;
+	$body = '';
+	$body .= "<div class='row'><div class='col'>\n";
+	$body .= "<form class='form-inline' action='$sc' method='post'>\n";
+	$body .= \Wbhkit\hidden('uid', $u['id']);
+	$body .= \Wbhkit\hidden('ac', 'updatedn');
+	$body .= \Wbhkit\texty('display_name', $u['display_name'], 'Real name (we show who is registered)', 'Jane Doe');
+	$body .= \Wbhkit\submit('Update Real Human Name');
+	$body .= "</form>\n";
+	$body .= "</div></div> <!-- end of col and row -->\n";
+	
+	return $body;
+}
+
+function update_display_name(&$u,  &$message, &$error) {
+
+	// update user info
+	if ($error) {
+		return false;
+	} else {
+		$sql = sprintf("update users set display_name = '%s' where id = %u",
+		\Database\mres($u['display_name']),
+		\Database\mres($u['id']));		
+		\Database\mysqli($sql) or \Database\db_error();
+		$u = get_user_by_id($u['id']); // updated so the form is correctly populated on refill
+		$message = 'Display name updated!';
 		return true;
 	}
 

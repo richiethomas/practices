@@ -64,8 +64,27 @@ function check_last_minuteness($wk) {
 }
 
 
-function get_workshop_info_tabled($id) {
-	$wk = get_workshop_info($id);
+function get_workshop_info_tabled($wk) {
+	
+	$stds = \Enrollments\get_students($wk['id']);
+
+	$snames = array();
+	foreach ($stds as $s) {
+		if ($s['display_name']) {
+			$snames[] = $s['display_name'];
+		}
+	}
+	$known = count($snames);
+	
+	if ($known) {
+		natcasesort($snames);
+		$names_list = implode("<br>", $snames);
+		if ($known < $wk['enrolled']) {
+			$names_list .= "<br>plus ".($wk['enrolled']-$known)." more.";
+		}
+		$names_list = "<tr><td scope=\"row\">Currently Registered:</td><td>{$names_list}</td></tr>";
+	}
+	
 	return "<table class=\"table table-striped\">
 		<tbody>
 		<tr><td scope=\"row\">Title:</td><td>{$wk['title']}</tr>
@@ -75,6 +94,8 @@ function get_workshop_info_tabled($id) {
 		<tr><td scope=\"row\">Cost:</td><td>{$wk['cost']}</td></tr>
 		<tr><td scope=\"row\">Open Spots:</td><td>{$wk['open']} (of {$wk['capacity']})</td></tr>
 		<tr><td scope=\"row\">Waiting:</td><td>".($wk['waiting']+$wk['invited'])."</td></tr>
+		$names_list
+		
 		</tbody>
 		</table>";
 }
@@ -176,7 +197,10 @@ function get_workshops_list($admin = 0) {
 		}
 		
 		$body .= "<tr class='$cl'>";
-		$titlelink = ($admin ? "<a href='$sc?wid={$row['id']}&v=ed'>{$wk['title']}</a>" : $wk['title']);
+		$titlelink = ($admin 
+			? "<a href='$sc?wid={$row['id']}&v=ed'>{$wk['title']}</a>"
+			: "<a href='$sc?wid={$row['id']}&v=winfo'>{$wk['title']}</a>");
+			
 		$body .= "<td>{$titlelink}".($wk['notes'] ? "<p class='small text-muted'>{$wk['notes']}</p>" : '')."</td>
 		<td>{$wk['when']}{$public}</td>
 		<td>{$wk['place']}</td>
@@ -187,7 +211,7 @@ function get_workshops_list($admin = 0) {
 			$body .= "<td><a href=\"$sc?wid={$row['id']}\">Clone</a></td></tr>\n";
 		} else {
 			$call = ($wk['type'] == 'soldout' ? 'Join Wait List' : 'Enroll');
-			$body .= "<td><a href=\"{$sc}?wid={$row['id']}&ac=enroll\">{$call}</a></td></tr>\n";
+			$body .= "<td><a href=\"{$sc}?wid={$row['id']}&v=winfo\">{$call}</a></td></tr>\n";
 		}
 	}
 	if (!$i) {

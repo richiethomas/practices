@@ -16,7 +16,7 @@ function texty($key, $value = '', $label = null, $placeholder = null, $help = nu
 	$l = label($label, $key);
 	
 	$texty = form_start($error);		
-	$texty .= "{$l}<input class='form-control' type='text' id=\"$key\" name=\"$key\" value=\"$value\" ".($placeholder ? "placeholder='$placeholder'" : '');
+	$texty .= "{$l}<input class='form-control mx-md-1' type='text' id=\"$key\" name=\"$key\" value=\"$value\" ".($placeholder ? "placeholder='$placeholder'" : '');
 
 	$texty .= figure_aria_attribute($key, $help, $error);
 	$texty .= form_help_block($key, $help, $error);		
