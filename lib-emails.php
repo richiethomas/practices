@@ -4,6 +4,7 @@ namespace Emails;
 
 
 function confirm_email($wk, $u, $status_id = ENROLLED) {
+		
 	$statuses = \Lookups\get_statuses();
 	if (!isset($u['key']) || !$u['key']) {
 		$key = \Users\get_key($u['id']);
@@ -19,6 +20,7 @@ function confirm_email($wk, $u, $status_id = ENROLLED) {
 	$textpref = URL."index.php?key=$key&v=text";
 	$call = '';
 	$late = '';
+	$textpoint = '';
 		
 	if ($e['while_soldout']) { 
 		$message .= '<br><br>'.get_dropping_late_warning();
@@ -31,6 +33,7 @@ function confirm_email($wk, $u, $status_id = ENROLLED) {
 		case ENROLLED:
 			$sub = "ENROLLED: {$wk['showtitle']}";
 			$point = "You are ENROLLED in {$wk['showtitle']}.";
+			$textpoint = $point." For more info: ";
 			$call = "To DROP, click here:\n{$drop}";
 			if ($wk['cost'] > 0) {
 				$call .= "\n\nPay in person or venmo. On the day of the workshop is fine. Venmo link:\nhttp://venmo.com/willhines?txn=pay&share=friends&amount={$wk['cost']}&note=improv%20workshop";
@@ -40,16 +43,19 @@ function confirm_email($wk, $u, $status_id = ENROLLED) {
 		case WAITING:
 			$sub = "WAIT LIST: {$wk['showtitle']}";
 			$point = "You are wait list spot {$e['rank']} for {$wk['showtitle']}:";
+			$textpoint = $point." For more info: ";
 			$call = "To DROP, click here:\n{$drop}";
 			break;
 		case INVITED:
 			$sub = "INVITED: {$wk['showtitle']} -- PLEASE RESPOND";
-			$point = "PLEASE ANSWER. Other people may want this spot if you don't.\n\nA spot opened in {$wk['showtitle']}:";
+			$point = "A spot opened up in ({$wk['showtitle']}.";
+			$textpoint = $point." Plz ACCEPT or DECLINE here: ";
 			$call = "To ACCEPT, click here:\n{$accept}\n\nTo DECLINE, click here:\n{$decline}";
 			break;
 		case DROPPED:
 			$sub = "DROPPED: {$wk['showtitle']}";
 			$point = "You have dropped out of {$wk['showtitle']}";
+			$textpoint = $point." For more info: ";
 			if ($e['while_soldout'] == 1) {
 				$late .= "\n".get_dropping_late_warning();
 			}
@@ -58,12 +64,14 @@ function confirm_email($wk, $u, $status_id = ENROLLED) {
 		default:
 			$sub = "{$statuses[$status_id]}: {$wk['showtitle']}";
 			$point = "You are a status of '{$statuses[$status_id]}' for {$wk['showtitle']}";
+			$textpoint = $point." Go here for more info: ";
 			break;
 	}
 
 	$text = '';
 	if ($u['send_text']) {
-		$textmsg = $point.' for more info: '.shorten_link($trans);
+		$last_bitly = shorten_link($trans);
+		$textmsg = $textpoint.' '.$last_bitly;
 		send_text($u, $textmsg);
 	}
 	
@@ -72,10 +80,11 @@ function confirm_email($wk, $u, $status_id = ENROLLED) {
 		$notifications = "\nWould you want to be notified via text? You can set text preferences:\n".$textpref;
 	}
 
-	$body = "You are: {$u['email']}
+	$body = "$point $late
 
-$point $late
-$notifications
+$call
+
+Full info:
 
 Title: {$wk['title']}
 Description: {$wk['notes']}
@@ -83,7 +92,7 @@ When: {$wk['when']}
 Where: {$wk['place']} {$wk['lwhere']}
 Cost: {$wk['cost']}
 
-$call
+$notifications
 
 ".email_footer($send_faq);	
 	
@@ -104,13 +113,23 @@ function send_text($u, $msg) {
 
 function shorten_link($link) {
 	
-	// bit.ly registered token is: 70cc52665d5f7df5eaeb2dcee5f1cdba14f5ec94
+	// bit.ly registered token is: 5d58679014e86b8b31cd124ed31185fa799980e7
 	// under whines@gmail.com / meet1962
 	
 	//tempoary while working locally
+	//return $link;
 	$link = preg_replace('/localhost:8888/', 'www.willhines.net', $link);
 	$link = urlencode($link);
-	$response = file_get_contents("https://api-ssl.bitly.com/v3/shorten?access_token=70cc52665d5f7df5eaeb2dcee5f1cdba14f5ec94&longUrl={$link}&format=txt");
+	$to_bitly = "https://api-ssl.bitly.com/v3/shorten?access_token=5d58679014e86b8b31cd124ed31185fa799980e7&longUrl={$link}&format=txt";
+	//$response = file_get_contents($to_bitly); // would rather do this than curl
+	
+	$ch = curl_init();
+	curl_setopt($ch, CURLOPT_URL, $to_bitly);
+	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+	curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false); // bad, hard to fix
+   	$response = curl_exec($ch);
+	curl_close($ch);	
+	
 	return $response;
 	
 }

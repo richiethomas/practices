@@ -178,7 +178,7 @@ function update_attendance($wid, $uid, $attended = 1) {
 }
 
 function change_status($wk, $u, $status_id = ENROLLED, $confirm = true) {
-	
+		
 	$e = get_an_enrollment($wk, $u);
 	$statuses = \Lookups\get_statuses();
 	if ($e['status_id'] != $status_id) {

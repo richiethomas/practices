@@ -2,7 +2,6 @@
 
 switch ($ac) {
  
- 
  	case 'changeemail':
 		if ($uid) {
 			$result = Users\change_email($uid, $newe);
