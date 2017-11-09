@@ -37,7 +37,8 @@ function check_last_minuteness($wk) {
 	/* 
 		there's two flags:
 			1) workshops have "sold_out_late" meaning the workshop was sold out within $late_hours of the start. We update this to 1 or 0 everytime the web site selects the workshop info from the db.
-			2) registrations have a "while_sold_out" flag. if it is set to 1, then you were enrolled in this workshop while it was sold out within $late_hours of its start. we also check this every time we select the workshop info. but this never gets set back to zero. 
+			2) registrations have a "while_sold_out" flag. if it is set to 1, then you were enrolled in this workshop while it was sold_out_late (i.e. sold out within $late_hours of its start). we also check this every time we select the workshop info. but this never gets set back to zero. 
+			If a "while sold out" person drops, that's not cool. They held a spot during a sold out time close to the start of the workshop.
 	*/ 
 			
 	global $late_hours;

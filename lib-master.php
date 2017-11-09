@@ -1,4 +1,8 @@
 <?php
+/*
+using Bootstrap 4.0
+tested on PHP 7.0.15
+*/
 date_default_timezone_set ( 'America/Los_Angeles' );
 session_start();
 include 'wbh_webkit.php';
@@ -22,7 +26,7 @@ define('WAITING', Lookups\find_status_by_value('waiting'));
 define('DROPPED', Lookups\find_status_by_value('dropped'));
 define('INVITED', Lookups\find_status_by_value('invited'));
 
-$late_hours = '18';
+$late_hours = '24';
 $carriers = array();
 
 

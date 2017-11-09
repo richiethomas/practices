@@ -161,15 +161,6 @@ function check_waiting($wk) {
 	return "No invites sent.";
 }
 
-function next_waiting($wk) {
-	$sql = "select * from registrations where workshop_id = ".\Database\mres($wk['id'])." and status_id = '".WAITING."' order by last_modified limit 1";
-	$rows = \Database\mysqli( $sql) or \Database\db_error();
-	while ($row = mysqli_fetch_assoc($rows)) {
-		return get_user_by_id($row['user_id']);
-	}
-	return false;
-}
-
 function update_attendance($wid, $uid, $attended = 1) {
 	$sql = "update registrations set attended = ".\Database\mres($attended)." where workshop_id = ".\Database\mres($wid)." and user_id = ".\Database\mres($uid);
 	//echo "$sql<br>\n";
