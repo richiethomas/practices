@@ -121,8 +121,15 @@ function shorten_link($link) {
 	$link = preg_replace('/localhost:8888/', 'www.willhines.net', $link);
 	$link = urlencode($link);
 	$to_bitly = "https://api-ssl.bitly.com/v3/shorten?access_token=5d58679014e86b8b31cd124ed31185fa799980e7&longUrl={$link}&format=txt";
-	//$response = file_get_contents($to_bitly); // would rather do this than curl
-	
+
+	/*
+	try {
+		$response = file_get_contents($to_bitly); // would rather do this than curl
+	} catch (Exception $e) {
+		print_r($e);
+	}
+	*/
+
 	$ch = curl_init();
 	curl_setopt($ch, CURLOPT_URL, $to_bitly);
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -130,6 +137,7 @@ function shorten_link($link) {
    	$response = curl_exec($ch);
 	curl_close($ch);	
 	
+	//echo "Response: $response<br>\n";
 	return $response;
 	
 }
