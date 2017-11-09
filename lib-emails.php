@@ -21,6 +21,7 @@ function confirm_email($wk, $u, $status_id = ENROLLED) {
 	$call = '';
 	$late = '';
 	$textpoint = '';
+	$notifications = '';
 		
 	if ($e['while_soldout']) { 
 		$message .= '<br><br>'.get_dropping_late_warning();
@@ -122,13 +123,7 @@ function shorten_link($link) {
 	$link = urlencode($link);
 	$to_bitly = "https://api-ssl.bitly.com/v3/shorten?access_token=5d58679014e86b8b31cd124ed31185fa799980e7&longUrl={$link}&format=txt";
 
-	/*
-	try {
-		$response = file_get_contents($to_bitly); // would rather do this than curl
-	} catch (Exception $e) {
-		print_r($e);
-	}
-	*/
+	//$response = file_get_contents($to_bitly); // would rather do this than curl
 
 	$ch = curl_init();
 	curl_setopt($ch, CURLOPT_URL, $to_bitly);
