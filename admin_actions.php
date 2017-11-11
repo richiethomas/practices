@@ -167,6 +167,12 @@ When: {$wk['when']}";
 		break;
 		
 	case 'ad':
+	
+		if (!$title) {
+			$error = 'Must include a title for new workshop.';
+			break;
+		}
+	
 		$sql = sprintf("insert into workshops (title, start, end, cost, capacity, location_id, notes, revenue, expenses, when_public)
 		VALUES ('%s', '%s', '%s', '%u', '%u', '%u', '%s', %u, %u, '%s')",
 			Database\mres($title),

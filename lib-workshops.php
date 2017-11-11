@@ -161,8 +161,11 @@ function get_workshops_list($admin = 0) {
 	from workshops w LEFT OUTER JOIN locations l on w.location_id = l.id ';
 	$sql .= $admin ? " order by start desc" : " order by start asc";
 	$rows = \Database\mysqli( $sql) or \Database\db_error();
+	
+	
+	
 	$body = "<table class='table table-striped'><thead><tr>
-		<th width='500' scope=\"col\">Title</th>
+		<th class='workshop-name' scope=\"col\">Title</th>
 		<th scope=\"col\">When</th>
 		<th scope=\"col\">Where</th>
 		<th scope=\"col\">Cost</th>

@@ -117,13 +117,11 @@ function shorten_link($link) {
 	// bit.ly registered token is: 5d58679014e86b8b31cd124ed31185fa799980e7
 	// under whines@gmail.com / meet1962
 	
-	//tempoary while working locally
-	//return $link;
 	$link = preg_replace('/localhost:8888/', 'www.willhines.net', $link);
 	$link = urlencode($link);
 	$to_bitly = "https://api-ssl.bitly.com/v3/shorten?access_token=5d58679014e86b8b31cd124ed31185fa799980e7&longUrl={$link}&format=txt";
 
-	//$response = file_get_contents($to_bitly); // would rather do this than curl
+	//$response = file_get_contents($to_bitly); // would rather do this than curl but i can't get it to work
 
 	$ch = curl_init();
 	curl_setopt($ch, CURLOPT_URL, $to_bitly);

@@ -308,7 +308,7 @@ function get_transcript_tabled($u, $admin = false) {
 	$body = '';
 	$body .= "<table class='table table-striped'><thead>
 		<tr>
-			<th scope=\"col\">Title</th>
+			<th class='workshop-name' scope=\"col\">Title</th>
 			<th scope=\"col\">When</th>
 			<th scope=\"col\">Where</th>
 			<th scope=\"col\">Status</th>

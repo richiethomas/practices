@@ -18,6 +18,11 @@
 .row {
 	margin-bottom: 3rem;
 }
+
+table th.workshop-name {
+	width: 500px;
+}
+
 </style>
 
 </head>

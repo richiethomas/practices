@@ -50,7 +50,7 @@ function drop($name, $opts, $selected = null, $label = null, $help = null, $erro
 	$select = form_start($error);	
 	$select .= "{$l} <select class='form-control' name='$name' id='$name'";
 	$select .= figure_aria_attribute($name, $help, $error);
-	$select .= "<option value=''></option>\n";
+	$select .= "<option label=' ' value=''></option>\n";
 	foreach ($opts as $key => $show) {
 		$select .= "<option value='$key'";
 		if ($key == $selected) { $select .= " SELECTED "; } 
@@ -68,7 +68,7 @@ function multi_drop($name, $opts, $selected = null, $label = null, $size = 10, $
 	$select = form_start($error);	
 	$select .= "{$l} <select size='$size' multiple class='form-control' name='{$name}".'[]'."' id='$name'";
 	$select .= figure_aria_attribute($name, $help, $error);
-	$select .= "<option value=''></option>\n";
+	$select .= "<option label=' ' value=''></option>\n";
 	foreach ($opts as $key => $show) {
 		$select .= "<option value=\"$key\"";
 		if (is_array($selected)) {
@@ -151,7 +151,7 @@ function figure_help_id($key) {
 
 function figure_aria_attribute($key, $help, $error) {
 	if ($help || $error) {
-		return "aria-describedby='".figure_help_id($key)."'>";
+		return " aria-describedby='".figure_help_id($key)."'>";
 	} else {
 		return ">";
 	}	

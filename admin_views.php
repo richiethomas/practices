@@ -310,7 +310,7 @@ switch ($v) {
 		$body .= "<h2>All Practices</h2>";
 		$body .= Workshops\get_workshops_list(1);
 		
-		$body .= "<a name='add'></a><div class='row'><div class='col-md-3'><form action='$sc' method='post'>
+		$body .= "<a id='add'></a><div class='row'><div class='col-md-3'><form action='$sc' method='post'>
 			<fieldset name=\"session_add\"><legend>Add Session</legend>".
 			Wbhkit\hidden('ac', 'ad').
 			Workshops\workshop_fields($wk).
