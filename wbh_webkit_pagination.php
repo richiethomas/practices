@@ -33,7 +33,6 @@ class Paginator {
 
 		$this->_limit   = $limit;
 		$this->_page    = $page;
-
 		$results = array();
 		if ( $this->_page == 'all' ) {
 			$query      = $this->_query;
