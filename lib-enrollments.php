@@ -297,14 +297,14 @@ function list_students($wid, $status_id = ENROLLED) {
 }
 
 
-function get_transcript_tabled($u, $admin = false, $page = 1, $limit = 10) {
+function get_transcript_tabled($u, $admin = false, $page = 1) {
 	global $key;
 	$statuses = \Lookups\get_statuses();
 
 	$sql = "select * from registrations r, workshops w, locations l where r.workshop_id = w.id and w.location_id = l.id and r.user_id = ".\Database\mres($u['id'])." order by w.start desc";
 
 	$paginator  = new \Paginator( \Database\wh_set_db_link(), $sql );
-	$rows = $paginator->getData($limit, $page);	
+	$rows = $paginator->getData($page);	
 	
 	if (count($rows->data) == 0) {
 		return "<p>You have not taken any practices! Which is fine, but that's why this list is empty.</p>\n";

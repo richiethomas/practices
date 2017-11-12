@@ -1,5 +1,12 @@
 <?php	
 	
+/*
+* the "createLinks" method builds the parameter "limit" into each link
+* but the rest of my code (the other files) ignores it and does not specify a limit
+* thus leaving limit to be the default as hard-coded below
+* 
+* in the future, I could/might make the limit parameter a thing that works
+*/	
 class Paginator {
 
 	private $_conn;
@@ -19,7 +26,7 @@ class Paginator {
 
 	}
 
-	public function getData( $limit = 10, $page = 1 ) {
+	public function getData( $page = 1, $limit = 10) {
 
 		if (!$limit) { $limit = 10; }
 		if (!$page) { $page = 1; }
@@ -27,7 +34,8 @@ class Paginator {
 		$this->_limit   = $limit;
 		$this->_page    = $page;
 
-		if ( $this->_limit == 'all' ) {
+		$results = array();
+		if ( $this->_page == 'all' ) {
 			$query      = $this->_query;
 		} else {
 			$query      = $this->_query . " LIMIT " . ( ( $this->_page - 1 ) * $this->_limit ) . ", {$this->_limit}";
@@ -47,8 +55,8 @@ class Paginator {
 	}		
 
 
-	public function createLinks( $links = 5, $aria_label = 'search results' ) {
-		if ( $this->_limit == 'all'  || $this->_total < $this->_limit) {
+	public function createLinks( $links = 7, $aria_label = 'search results' ) {
+		if ( $this->_total < $this->_limit) {
 			return '';
 		}
 
@@ -57,28 +65,31 @@ class Paginator {
 		$start      = ( ( $this->_page - $links ) > 0 ) ? $this->_page - $links : 1;
 		$end        = ( ( $this->_page + $links ) < $last ) ? $this->_page + $links : $last;
 
-		$html       = '<nav aria-label="{$aria_label}"><ul class="pagination">';
+		$html       = '<nav aria-label="{$aria_label}"><ul class="pagination">'."\n";
 
 		$class      = ( $this->_page == 1 ) ? "disabled" : "";
-		$html       .= '<li class="page-item '.$class.'"><a class="page-link" href="?limit=' . $this->_limit . '&page=' . ( $this->_page - 1 ) . '">&laquo;</a></li>';
+		$html       .= '<li class="page-item '.$class.'"><a class="page-link" href="?limit=' . $this->_limit . '&page=' . ( $this->_page - 1 ) . '">&laquo;</a></li>'."\n";
 
 		if ( $start > 1 ) {
-			$html   .= '<li class="page-item"><a class="page-link" href="?limit=' . $this->_limit . '&page=1">1</a></li>';
-			$html   .= '<li class="page-item disabled"><span>...</span></li>';
+			$html   .= '<li class="page-item"><a class="page-link" href="?limit=' . $this->_limit . '&page=1">1</a></li>'."\n";
+			$html   .= '<li class="page-item disabled"><span>...</span></li>'."\n";
 		}
 
 		for ( $i = $start ; $i <= $end; $i++ ) {
 			$class  = ( $this->_page == $i ) ? "active" : "";
-			$html   .= '<li class="page-item '.$class.'"><a class="page-link" href="?limit=' . $this->_limit . '&page=' . $i . '">' . $i . '</a></li>';
+			$html   .= '<li class="page-item '.$class.'"><a class="page-link" href="?limit=' . $this->_limit . '&page=' . $i . '">' . $i . '</a></li>'."\n";
 		}
 
 		if ( $end < $last ) {
-			$html   .= '<li class="disabled"><span>...</span></li>';
-			$html   .= '<li class="page-item"><a class="page-link" href="?limit=' . $this->_limit . '&page=' . $last . '">' . $last . '</a></li>';
+			$html   .= '<li class="disabled"><span>...</span></li>'."\n";
+			$html   .= '<li class="page-item"><a class="page-link" href="?limit=' . $this->_limit . '&page=' . $last . '">' . $last . '</a></li>'."\n";
 		}
 
 		$class      = ( $this->_page == $last ) ? "disabled" : "";
-		$html       .= '<li class="page-item '.$class.'"><a class="page-link" href="?limit=' . $this->_limit . '&page=' . ( $this->_page + 1 ) . '">&raquo;</a></li>';
+		$html       .= '<li class="page-item '.$class.'"><a class="page-link" href="?limit=' . $this->_limit . '&page=' . ( $this->_page + 1 ) . '">&raquo;</a></li>'."\n";
+		
+		$class      = ( $this->_page == 'all') ? "active" : "";
+		$html .= '<li class="page-item '.$class.'"><a class="page-link" href="?page=all">all</a></li>';
 
 		$html       .= '</ul></nav>';
 

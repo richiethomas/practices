@@ -3,7 +3,7 @@ $sc = "index.php";
 include 'db.php';
 include 'lib-master.php';
 
-Wbhkit\set_vars(array('ac', 'wid', 'uid', 'email', 'v', 'key', 'message', 'phone', 'carrier_id', 'send_text', 'newemail', 'display_name'));
+Wbhkit\set_vars(array('ac', 'wid', 'uid', 'email', 'v', 'key', 'message', 'phone', 'carrier_id', 'send_text', 'newemail', 'display_name', 'page'));
 
 
 $key = Users\current_key(); // checks for key in REQUEST and SESSION and COOKIE, not logged in otherwise
