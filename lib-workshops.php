@@ -155,7 +155,7 @@ function format_workshop_startend($row) {
 	return $row;
 }
 
-function get_workshops_list($admin = 0, $page = 1, $limit = 10) {
+function get_workshops_list($admin = 0, $page = 1) {
 	
 	
 	global $sc;
@@ -170,7 +170,7 @@ function get_workshops_list($admin = 0, $page = 1, $limit = 10) {
 		
 	$paginator  = new \Paginator( \Database\wh_set_db_link(), $sql );
 	
-	$rows = $paginator->getData($limit, $page);
+	$rows = $paginator->getData($page);
 	
 	$body = $paginator->createLinks();
 	$body .= "<table class='table table-striped'><thead><tr>
