@@ -6,6 +6,8 @@ tested on PHP 7.0.15
 date_default_timezone_set ( 'America/Los_Angeles' );
 session_start();
 include 'wbh_webkit.php';
+include 'wbh_webkit_pagination.php';
+
 include 'time_difference.php';
 
 include 'lib-users.php';

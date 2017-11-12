@@ -107,7 +107,7 @@ function make_user($email) {
 	if (validate_email($email)) {
 		$sql = "insert into users (email, joined) VALUES ('".\Database\mres($email)."', '".date("Y-m-d H:i:s")."')";
 		$rows = \Database\mysqli( $sql) or \Database\db_error();
-		$key = gen_key(mysqli_insert_id ( $db ));
+		$key = gen_key($db->insert_id);
 		return get_user_by_email($email);
 	} else {
 		return false;
@@ -139,19 +139,8 @@ function email_link($u) {
 		if (!isset($u['id'])) {
 			return false;
 		}
-		$key = get_key($u['id']);
-		$trans = URL."index.php?key=$key";
-		$transcripts = \Enrollments\get_transcripts($u);
-
-		if (count($transcripts) == 0) {
-			$point = "Use this link to log in:";
-		} else {
-			$point = "You have taken ".count($transcripts)." practices. Click below to go to the site:";
-		}
-
-		$body = "You are: {$u['email']}
-
-$point
+		$trans = URL."index.php?key=".get_key($u['id']);
+		$body = "Use this link to log in:
 {$trans}
 
 ".\Emails\email_footer();

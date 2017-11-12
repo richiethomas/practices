@@ -276,7 +276,7 @@ switch ($v) {
 			$body .= "<p><a href='$trans'>Log in as {$u['email']}</a></p>\n";
 			
 			$body .= "<h3>Transcripts</h3>\n";
-			$body .= Enrollments\get_transcript_tabled($u, true);	
+			$body .= Enrollments\get_transcript_tabled($u, true, $page, $limit);	
 			
 			$body .= "<h3>Change Email</h3>\n";
 			$body .= "<form action='$sc' method='post'>\n".
@@ -308,7 +308,8 @@ switch ($v) {
 
 			</p>\n";
 		$body .= "<h2>All Practices</h2>";
-		$body .= Workshops\get_workshops_list(1);
+		
+		$body .= Workshops\get_workshops_list(1, $page, $limit);
 		
 		$body .= "<a id='add'></a><div class='row'><div class='col-md-3'><form action='$sc' method='post'>
 			<fieldset name=\"session_add\"><legend>Add Session</legend>".

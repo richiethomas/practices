@@ -5,6 +5,7 @@ namespace Validate;
 // 2.0 - requires two lines in source script, one to include, one to invoke
 //     - had a redirect after validating so you're not going to first actual page
 //     - off a form submission
+// 2.1 - updated HTML for bootstrap 4, added namespace
 /////////////////////////////////////////////////////////////////////
 
 //session_start();
@@ -65,7 +66,7 @@ function validate_user() {
       <label for="talentPass102">Password:</label>
 	  <input class="form-control" type="password" name="talentPass102">
   	</div>
-      <button type="submit" class="btn btn-default">Submit</button>
+      <button type="submit" class="btn btn-primary">Submit</button>
 	  <input type="hidden" name="validating" value="true">
 	  <input type="hidden" name="query" value="{$_SERVER['QUERY_STRING']}">
     </form>

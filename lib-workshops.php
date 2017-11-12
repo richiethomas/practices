@@ -155,16 +155,25 @@ function format_workshop_startend($row) {
 	return $row;
 }
 
-function get_workshops_list($admin = 0) {
+function get_workshops_list($admin = 0, $page = 1, $limit = 10) {
+	
+	
 	global $sc;
 	$sql = 'select w.*, l.place, l.lwhere 
 	from workshops w LEFT OUTER JOIN locations l on w.location_id = l.id ';
-	$sql .= $admin ? " order by start desc" : " order by start asc";
-	$rows = \Database\mysqli( $sql) or \Database\db_error();
+	if ($admin) {
+		$sql .= " order by start desc";
+	} else {
+		$mysqlnow = date("Y-m-d H:i:s");
+		$sql .= "where when_public > '$mysqlnow' and start > '$mysqlnow' order by start asc";
+	}
+		
+	$paginator  = new \Paginator( \Database\wh_set_db_link(), $sql );
 	
+	$rows = $paginator->getData($limit, $page);
 	
-	
-	$body = "<table class='table table-striped'><thead><tr>
+	$body = $paginator->createLinks();
+	$body .= "<table class='table table-striped'><thead><tr>
 		<th class='workshop-name' scope=\"col\">Title</th>
 		<th scope=\"col\">When</th>
 		<th scope=\"col\">Where</th>
@@ -173,56 +182,53 @@ function get_workshops_list($admin = 0) {
 		<th scope=\"col\">Action</th>
 		</tr></thead><tbody>\n";
 
-	$i = 0;
-	while($row = mysqli_fetch_assoc($rows)) {
-		$wk = get_workshop_info($row['id']);
 
-		if ($wk['type'] == 'past' && !$admin) { continue; }
-		if (strtotime($wk['when_public']) > time() && !$admin) {
-			continue;
-		}
+	if ($rows->total > 0) {
 		
-		$public = '';
-		if ($admin && $wk['when_public']) {
-			$public = "<br><small>Public: ".date('D M j - g:ia', strtotime($wk['when_public']))."</small>\n";
-		}	
+		for( $i = 0; $i < count( $rows->data ); $i++ ) {
+			$row = $rows->data[$i];
+			$wk = get_workshop_info($row['id']);
+		
+			$public = '';
+			if ($admin && $wk['when_public']) {
+				$public = "<br><small>Public: ".date('D M j - g:ia', strtotime($wk['when_public']))."</small>\n";
+			}	
+					
+			if (date('z', strtotime($wk['start'])) == date('z')) { // today
+				$cl = 'info'; 
+			} elseif ($wk['type'] == 'soldout') {
+				$cl = 'danger';
+			} elseif ($wk['type'] == 'open') {
+				$cl = 'success';
+			} elseif ($wk['type'] == 'past') {
+				$cl = 'light';
+			} else  {
+				$cl = '';
+			}
+		
+			$body .= "<tr class='$cl'>";
+			$titlelink = ($admin 
+				? "<a href='$sc?wid={$row['id']}&v=ed'>{$wk['title']}</a>"
+				: "<a href='$sc?wid={$row['id']}&v=winfo'>{$wk['title']}</a>");
 			
-		$i++;
-		
-		if (date('z', strtotime($wk['start'])) == date('z')) {
-			$cl = 'info';
-		} elseif ($wk['type'] == 'soldout') {
-			$cl = 'danger';
-		} elseif ($wk['type'] == 'open') {
-			$cl = 'success';
-		} elseif ($wk['type'] == 'past') {
-			$cl = 'light';
-		} else  {
-			$cl = '';
+			$body .= "<td>{$titlelink}".($wk['notes'] ? "<p class='small text-muted'>{$wk['notes']}</p>" : '')."</td>
+			<td>{$wk['when']}{$public}</td>
+			<td>{$wk['place']}</td>
+			<td>{$wk['cost']}</td>
+			<td>".number_format($wk['open'], 0)." of ".number_format($wk['capacity'], 0).",<br> ".number_format($wk['waiting']+$wk['invited'])." waiting</td>
+	";
+			if ($admin) {
+				$body .= "<td><a href=\"$sc?wid={$row['id']}\">Clone</a></td></tr>\n";
+			} else {
+				$call = ($wk['type'] == 'soldout' ? 'Join Wait List' : 'Enroll');
+				$body .= "<td><a href=\"{$sc}?wid={$row['id']}&v=winfo\">{$call}</a></td></tr>\n";
+			}
 		}
-		
-		$body .= "<tr class='$cl'>";
-		$titlelink = ($admin 
-			? "<a href='$sc?wid={$row['id']}&v=ed'>{$wk['title']}</a>"
-			: "<a href='$sc?wid={$row['id']}&v=winfo'>{$wk['title']}</a>");
-			
-		$body .= "<td>{$titlelink}".($wk['notes'] ? "<p class='small text-muted'>{$wk['notes']}</p>" : '')."</td>
-		<td>{$wk['when']}{$public}</td>
-		<td>{$wk['place']}</td>
-		<td>{$wk['cost']}</td>
-		<td>".number_format($wk['open'], 0)." of ".number_format($wk['capacity'], 0).",<br> ".number_format($wk['waiting']+$wk['invited'])." waiting</td>
-";
-		if ($admin) {
-			$body .= "<td><a href=\"$sc?wid={$row['id']}\">Clone</a></td></tr>\n";
-		} else {
-			$call = ($wk['type'] == 'soldout' ? 'Join Wait List' : 'Enroll');
-			$body .= "<td><a href=\"{$sc}?wid={$row['id']}&v=winfo\">{$call}</a></td></tr>\n";
-		}
-	}
-	if (!$i) {
-		return "<p>No upcoming workshops!</p>\n";
+	} else {
+		return "<p>No upcoming workshops!</p>\n";	// this skips $body variable contents	
 	}
 	$body .= "</tbody></table>\n";
+	$body .= $paginator->createLinks();
 	return $body;
 }
 

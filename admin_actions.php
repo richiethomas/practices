@@ -186,7 +186,7 @@ When: {$wk['when']}";
 			Database\mres($expenses),
 			Database\mres(date('Y-m-d H:i:s', strtotime($when_public))));
 		Database\mysqli($sql) or Database\db_error();
-		$wid = mysqli_insert_id($db);
+		$wid = $db->insert_id;
 		$wk = Workshops\get_workshop_info($wid);
 		$message = "Added practice ({$title})";
 		break;

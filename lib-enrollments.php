@@ -297,15 +297,20 @@ function list_students($wid, $status_id = ENROLLED) {
 }
 
 
-function get_transcript_tabled($u, $admin = false) {
+function get_transcript_tabled($u, $admin = false, $page = 1, $limit = 10) {
 	global $key;
 	$statuses = \Lookups\get_statuses();
-	$transcripts = get_transcripts($u);
-	if (count($transcripts) == 0) {
+
+	$sql = "select * from registrations r, workshops w, locations l where r.workshop_id = w.id and w.location_id = l.id and r.user_id = ".\Database\mres($u['id'])." order by w.start desc";
+
+	$paginator  = new \Paginator( \Database\wh_set_db_link(), $sql );
+	$rows = $paginator->getData($limit, $page);	
+	
+	if (count($rows->data) == 0) {
 		return "<p>You have not taken any practices! Which is fine, but that's why this list is empty.</p>\n";
 	}
 
-	$body = '';
+	$body = $paginator->createLinks();
 	$body .= "<table class='table table-striped'><thead>
 		<tr>
 			<th class='workshop-name' scope=\"col\">Title</th>
@@ -316,9 +321,8 @@ function get_transcript_tabled($u, $admin = false) {
 		</tr></thead>\n";
 	$body .= "<tbody>";
 	
-	foreach ($transcripts as $t) {
+	foreach ($rows->data as $t) {
 		$wk = \Workshops\get_workshop_info($t['workshop_id']);
-		$e = get_an_enrollment($wk, $u); 
 		if ($wk['type'] == 'past') {
 			$cl = 'light';
 		} elseif ($t['status_id'] == ENROLLED) {
@@ -329,32 +333,23 @@ function get_transcript_tabled($u, $admin = false) {
 
 		$body .= "<tr class='$cl'><td>";
 		if ($admin) {
-			$body .= "<a href=\"admin.php?wid={$t['workshop_id']}&v=ed\">{$t['title']}</a>";
+			$body .= "<a href=\"?wid={$t['workshop_id']}&v=ed\">{$t['title']}</a>";
 		} else {
-			$body .= $t['title'];
+			$body .= "<a href=\"?wid={$t['workshop_id']}&v=winfo\">{$t['title']}</a>";
 		}
 		$body .= "</td><td>{$wk['when']}</td><td>{$t['place']}</td><td>";
 		$body .= "{$statuses[$t['status_id']]}";
 		if ($t['status_id'] == WAITING) {
+			$e = get_an_enrollment($wk, $u); 
 			$body .= " (spot {$e['rank']})";
 		}
 		$body .= "</td><td><a href='index.php?v=winfo&wid={$t['workshop_id']}'>More Info</a></td></tr>\n";
 	}
 	$body .= "</tbody></table>\n";
+	$body .= $paginator->createLinks();
 	return $body;
 }
 
-function get_transcripts($u) {
-	$statuses = \Lookups\get_statuses();
-	$sql = "select * from registrations r, workshops w, locations l where r.workshop_id = w.id and w.location_id = l.id and r.user_id = ".\Database\mres($u['id'])." order by w.start desc";
-	$rows = \Database\mysqli( $sql) or \Database\db_error();
-	$transcripts = array();
-	while ($row = mysqli_fetch_assoc($rows)) {
-		$row['status_name'] = $statuses[$row['status_id']];
-		$transcripts[] = $row;
-	}
-	return $transcripts;
-}
 
 function drop_session($wk, $u) {
 	$sql = sprintf('delete from registrations where workshop_id = %u and user_id = %u',

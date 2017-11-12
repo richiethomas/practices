@@ -200,7 +200,7 @@ switch ($v) {
 		$body .= "<div class='row'><div class='col'>";
 		$body .= "<h2>Your Current/Past Workshops</h2>";
 		if (Users\logged_in()) {
-			$body .= Enrollments\get_transcript_tabled($u);  
+			$body .= Enrollments\get_transcript_tabled($u, 0, $page, $limit);  
 		} else {
 			$body .= "<p>You're not logged in, so I can't list your workshops. Log in further up this page.</p>";
 		}

@@ -11,7 +11,8 @@ if (!Validate\is_validated()) {
 	exit;
 }
 
-Wbhkit\set_vars(array('ac', 'wid', 'uid', 'email', 'title', 'notes', 'start', 'end', 'active', 'lid', 'lplace', 'lwhere', 'cost', 'capacity', 'notes', 'st', 'v', 'con', 'note', 'subject', 'workshops', 'revenue', 'expenses', 'searchstart', 'searchend', 'lmod', 'needle', 'newe', 'sms', 'phone', 'carrier_id', 'send_text', 'when_public', 'sort', 'display_name'));
+Wbhkit\set_vars(array('ac', 'wid', 'uid', 'email', 'title', 'notes', 'start', 'end', 'active', 'lid', 'lplace', 'lwhere', 'cost', 'capacity', 'notes', 'st', 'v', 'con', 'note', 'subject', 'workshops', 'revenue', 'expenses', 'searchstart', 'searchend', 'lmod', 'needle', 'newe', 'sms', 'phone', 'carrier_id', 'send_text', 'when_public', 'sort', 'display_name', 'page', 'limit'));
+
 
 if ($wid) {
 	$wk = Workshops\get_workshop_info($wid);
@@ -33,5 +34,5 @@ include 'admin_views.php';
 
 $heading = "practices: admin";
 include 'header.php';
- echo $body;
+echo $body;
 include 'footer.php';
