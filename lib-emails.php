@@ -17,7 +17,7 @@ function confirm_email($wk, $u, $status_id = ENROLLED) {
 	$accept = URL."index.php?ac=accept&wid={$wk['id']}&key=$key";
 	$decline = URL."index.php?ac=decline&wid={$wk['id']}&key=$key";
 	$enroll = URL."index.php?key=$key&ac=enroll&wid={$wk['id']}";
-	$textpref = URL."index.php?key=$key&v=text";
+	$textpref = URL."index.php?key=$key";
 	$call = '';
 	$late = '';
 	$textpoint = '';

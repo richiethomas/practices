@@ -126,13 +126,15 @@ function validate_email($emailaddress) {
 
 function login_prompt() {
 	global $sc, $email;
-	return "<p>Submit your name and email and the site will email you a link to log in:</p>
+	$f = "<p>Submit your name and email and the site will email you a link to log in:</p>
 	<form action='$sc' method='post'>\n".
 	\Wbhkit\hidden('ac', 'link').
 	\Wbhkit\texty('display_name', '', 'Real Name', 'Jane Doe', 'We list who is registered in the workshop description.').		
 	\Wbhkit\texty('email', $email, 'Email', 'something@something.com', 'We send a log in link to this address.').
-	\Wbhkit\submit('log in').
+	\Wbhkit\submit('Log In').
 	"</form>";
+	
+	return $f;
 }
 
 function email_link($u) {
@@ -159,10 +161,12 @@ function logged_in() {
 
 
 function logout(&$key, &$u, &$message) {
+	
+	$key = Users\gen_key($u['id']); // change the key
+	
 	unset($_SESSION['s_key']);
     unset($_COOKIE['c_key']);
     setcookie('c_key', null, -1);
-	//session_write_close();
 	
 	$key = '';
 	$u = null;
@@ -201,6 +205,20 @@ function find_students($needle = 'everyone', $sort = 'n') {
 		$stds[$row['id']] = $row;
 	}
 	return $stds;
+}
+
+// user id is here for admin side 
+// even though user side does not need it
+function edit_change_email($u) {
+	global $sc;
+	$body = '';
+	$body .= "<form class='form-inline' action='$sc' method='post'>\n";
+	$body .= \Wbhkit\hidden('ac', 'cemail');
+	$body .= \Wbhkit\hidden('uid', $u['id']);
+	$body .= \Wbhkit\texty('newemail', null, 0, 'new email address');
+	$body .= \Wbhkit\submit('Change Email');
+	$body .= "</form>";
+	return $body;	
 }
 
 function change_email($ouid, $newe) {
@@ -265,7 +283,7 @@ function edit_text_preferences($u) {
 	global $sc, $ac;
 	$carriers = \Lookups\get_carriers_drop();
 	$body = '';
-	$body .= "<div class='row'><div class='col-md-4'>\n";
+	$body .= "<div class='row'><div class='col'>\n";
 	$body .= "<form action='$sc' method='post'>\n";
 	$body .= \Wbhkit\hidden('uid', $u['id']);
 	$body .= \Wbhkit\hidden('ac', 'updateu');
@@ -335,14 +353,12 @@ function update_text_preferences(&$u,  &$message, &$error) {
 function edit_display_name($u) {
 	global $sc, $ac;
 	$body = '';
-	$body .= "<div class='row'><div class='col'>\n";
 	$body .= "<form class='form-inline' action='$sc' method='post'>\n";
 	$body .= \Wbhkit\hidden('uid', $u['id']);
 	$body .= \Wbhkit\hidden('ac', 'updatedn');
-	$body .= \Wbhkit\texty('display_name', $u['display_name'], 'Human Name', 'Jane Doe');
+	$body .= \Wbhkit\texty('display_name', $u['display_name'], 0, 'Jane Doe');
 	$body .= \Wbhkit\submit('Update Human Name');
 	$body .= "</form>\n";
-	$body .= "</div></div> <!-- end of col and row -->\n";
 	
 	return $body;
 }

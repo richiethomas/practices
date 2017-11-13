@@ -90,7 +90,7 @@ class Paginator {
 		$class      = ( $this->_page == 'all') ? "active" : "";
 		$html .= '<li class="page-item '.$class.'"><a class="page-link" href="?page=all">all</a></li>';
 
-		$html       .= '</ul></nav>';
+		$html       .= '</ul></nav>'."\n";
 
 		return $html;
 	}

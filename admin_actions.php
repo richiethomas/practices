@@ -2,14 +2,14 @@
 
 switch ($ac) {
  
- 	case 'changeemail':
+ 	case 'cemail':
 		if ($uid) {
-			$result = Users\change_email($uid, $newe);
+			$result = Users\change_email($uid, $newemail);
 			if ($result !== true) {
 				$error = $result;
 			} else {
-				$message = "Email changed from '{$u['email']}' to '$newe'";
-				$u = Users\get_user_by_email($newe);
+				$message = "Email changed from '{$u['email']}' to '$newemail'";
+				$u = Users\get_user_by_email($newemail);
 			}
 		} else {
 			$error = "Can't change email because there's no value for the user.";

@@ -150,18 +150,6 @@ switch ($ac) {
 		$message = "Dropped user ({$u['email']}) from practice '{$wk['title']}.'";
 		break;
 		
-	// reset the 'key'
-	case 'reset':
-		if (!Users\logged_in()) {
-			$error = 'You are not logged in! You have to be logged in to get a new log in link.';
-			break;
-		}
-		$key = Users\gen_key($u['id']); // change the key
-		$u = Users\get_user_by_id($u['id']); // update user variable to include new key
-		Users\email_link($u); // send new log in link to email
-		Users\logout($key, $u, $message);
-		break;
-
 	// update text preferences
 	case 'updateu':
 		if (!Users\logged_in()) {

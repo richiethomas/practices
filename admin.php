@@ -11,7 +11,7 @@ if (!Validate\is_validated()) {
 	exit;
 }
 
-Wbhkit\set_vars(array('ac', 'wid', 'uid', 'email', 'title', 'notes', 'start', 'end', 'active', 'lid', 'lplace', 'lwhere', 'cost', 'capacity', 'notes', 'st', 'v', 'con', 'note', 'subject', 'workshops', 'revenue', 'expenses', 'searchstart', 'searchend', 'lmod', 'needle', 'newe', 'sms', 'phone', 'carrier_id', 'send_text', 'when_public', 'sort', 'display_name', 'page'));
+Wbhkit\set_vars(array('ac', 'wid', 'uid', 'email', 'title', 'notes', 'start', 'end', 'active', 'lid', 'lplace', 'lwhere', 'cost', 'capacity', 'notes', 'st', 'v', 'con', 'note', 'subject', 'workshops', 'revenue', 'expenses', 'searchstart', 'searchend', 'lmod', 'needle', 'newemail', 'sms', 'phone', 'carrier_id', 'send_text', 'when_public', 'sort', 'display_name', 'page'));
 
 
 if ($wid) {

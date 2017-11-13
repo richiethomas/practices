@@ -15,10 +15,6 @@
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>	
 
 <style>
-.row {
-	margin-bottom: 3rem;
-}
-
 table th.workshop-name {
 	width: 500px;
 }
@@ -32,22 +28,29 @@ table th.workshop-name {
 echo "<div class=\"container\">\n";
 
 if ($sc == 'admin.php') {
-	echo "<h1 class=\"display-3\"><a href=\"{$sc}\">{$heading}</a></h1>\n";
+	echo "<h1 class=\"display-2\"><a href=\"{$sc}\">{$heading}</a></h1>\n";
 } else {
 	echo "<div class=\"jumbotron\">";
-	echo "<h1 class=\"display-3\"><a href=\"{$sc}\">{$heading}</a></h1>\n";	
-	echo "<p class=\"lead\">Greetings. This is a list of improv practices being taught or at least organized by Will Hines.";
-	//echo (logged_in() ? '' : " Log in below, then you can enroll.")."</p>";	
+	echo "<h1 class=\"display-2\"><a href=\"{$sc}\">{$heading}</a></h1>\n";	
+	echo "<p class=\"lead\">Greetings. This is a list of improv practices taught by Will Hines.";
 	echo "</div>\n";
 }
 
 
 
 if (isset($error) && $error) {
-	echo "<div class='alert alert-danger' role='alert'>$error</div>\n";
+	echo "<div class='alert alert-danger' role='alert'>
+		$error
+	<button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\">
+	    <span aria-hidden=\"true\">&times;</span>
+	  </button></div>\n";
 }
 if (isset($message) && $message) {
-	echo "<div class='alert alert-success' role='alert'>$message</div>\n";
+	echo "<div class='alert alert-success' role='alert'>
+		$message
+	<button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\">
+	    <span aria-hidden=\"true\">&times;</span>
+	  </button></div>\n";
 }
 
 ?>		

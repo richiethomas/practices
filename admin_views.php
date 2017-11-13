@@ -279,6 +279,7 @@ switch ($v) {
 			$body .= Enrollments\get_transcript_tabled($u, true, $page);	
 			
 			$body .= "<h3>Change Email</h3>\n";
+			$body .= Users\edit_change_email();
 			$body .= "<form action='$sc' method='post'>\n".
 				Wbhkit\texty('newe', $newe, 'change email to:').
 				Wbhkit\hidden('ac', 'changeemail').

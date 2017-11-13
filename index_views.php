@@ -9,79 +9,6 @@ switch ($v) {
 		$body .= "<p>Just <a href='$sc'>go back to the main page</a>.</p>";
 		$body .= "</div></div>\n";
 		break;	
-
-	case 'text':
-		$body .= "<div class='row'><div class='col'>\n";
-		$body .= "<h2>Your settings</h2>\n";
-		if (Users\logged_in()) {
-			$body .= "<h3>Text Notifications</h3>\n";
-			$body .= "<p>If you want notifications via text, check the box and set your phone info.</p>\n";			
-			$body .= Users\edit_text_preferences($u);
-		} else {
-			$body .= "<p>You are not logged in! Go back to the <a href='$sc'>front page</a> and enter your email. We'll email you a link so you can log in.</p>\n";
-		}
-		$body .= "<p>Just <a href='$sc'>go back to the main page</a>.</p>";
-		$body .= "</div></div>\n";
-
-		break;
-	
-	case 'editdn':
-		$body .= "<div class='row'><div class='col'>\n";
-		$body .= "<h2>Set Your Display Name</h2>\n";
-		if (Users\logged_in()) {
-			$body .= "<div class='row'><div class='col'>\n";
-			$body .= "<h3>Update Display Name</h3>\n";
-			$body .= "<p>This is the name we will show when we list who is in the practice.</p>\n";
-			$body .= Users\edit_display_name();
-			$body .= "</div></div> <!-- end of col and row -->\n";
-			$body .= "<div class='row'><div class='col'>\n";
-			$body .= "<p>Just <a href='$sc'>go back to the main page</a>.</p>";
-			$body .= "</div></div> <!-- end of col and row -->\n";
-		} else {
-			$body .= "<p>You are not logged in! Go back to the <a href='$sc'>front page</a> and enter your email. We'll email you a link so you can log in.</p>\n";
-		}
-		$body .= "</div></div>\n";
-				
-	case 'edit':
-		$body .= "<div class='row'><div class='col'>\n";
-		$body .= "<h2>Your settings</h2>\n";
-		if (Users\logged_in()) {
-
-
-			$body .= "<div class='row'><div class='col'>\n";
-			$body .= "<h3>Update Display Name</h3>\n";
-			$body .= "<p>This is the name we will show when we list who is in the practice.</p>\n";
-			$body .= Users\edit_display_name($u);
-			$body .= "</div></div> <!-- end of col and row -->\n";
-
-
-			$body .= "<div class='row'><div class='col'>\n";
-			$body .= "<h3>New Email</h3>\n";
-			$body .= "<p>If you have a new email, enter it below. We will send a link to your new email. Click that link and we'll reset your account to use that email.</p>\n";
-			$body .= "<form action='$sc' method='post'>\n";
-			$body .= Wbhkit\hidden('ac', 'cemail');
-			$body .= Wbhkit\texty('newemail', null, 0, 'new email address');
-			$body .= Wbhkit\submit('Change Email');
-			$body .= "</form>";
-			$body .= "</div></div> <!-- end of col and row -->\n";
-			
-
-			$body .= "<div class='row'><div class='col'>\n";
-			$body .= "<h3>Reset Your Link</h3>\n";
-			$body .= "<p>For the paranoid: This will log you out, generate a new key, and a send a link to your email. If you don't even understand this then don't worry about it. <a class='btn btn-primary' href='$sc?ac=reset'>Reset My Login Link</a></p>";
-			$body .= "</div></div> <!-- end of col and row -->\n";
-			
-			$body .= "<div class='row'><div class='col'>\n";
-			$body .= "<h3>Never Mind</h3>\n";
-			$body .= "<p>Just <a href='$sc'>go back to the main page</a>.</p>";
-			$body .= "</div></div> <!-- end of col and row -->\n";
-			
-			
-		} else {
-			$body .= "<p>You are not logged in! Go back to the <a href='$sc'>front page</a> and enter your email. We'll email you a link so you can log in.</p>\n";
-		}
-		$body .= "</div></div>\n";
-		break;
 	
 	case 'winfo':
 		$body .= "<div class='row'><div class='col'>\n";
@@ -128,76 +55,158 @@ switch ($v) {
 			
 	default:
 	
-		$body .= "<div class='row'><div class='col-md-12'><div id='login_prompt' class='card'>
+	
+		if (Users\logged_in() && !$u['display_name']) {
+			$body .= '
+				<div class="alert alert-info" role="alert">
+				<p>Would you mind entering a real human name? It\'s helpful for people to see who is signed up. Your email isn\'t shown, just this name.</p>
+			'.Users\edit_display_name($u).'
+				</div>';
+		}
+		
+	
+		$body .= "<div class='row mb-md-4'><div class='col-md-12'><div id='login_prompt' class='card'>
 			<div class='card-body'>\n";
 	
-		
-		
-		
 		if (Users\logged_in()) {
+			
 			$body .= "<h2 class='card-title'>Welcome";
 			if ($u['display_name']) {
 				$body .= ", {$u['display_name']}";
 			}
 			$body .="</h2>\n";
-			$body .= "<p>You are logged in as ".
+			$body .= "<p>You are logged in as <strong>".
 				($u['display_name'] 
 				? "{$u['display_name']} ({$u['email']})"
 				: "{$u['email']}").
-			"! (You can <a href='$sc?v=edit'>change your name and email</a> or <a href='$sc?ac=lo'>log out</a>)</p>";		
+			"</strong></p>";
+			
+			$body .= '
+				  <button type="button" class="btn btn-info" data-toggle="modal" data-target="#nameEmailModal">update name and email</button>
+				  <button type="button" class="btn btn-info" data-toggle="modal" data-target="#textModal">update text notifications</button>				  
+				  <a href="'.$sc.'?ac=lo" class="btn btn-info">log out</a>
+				  
+
+				  <div class="modal fade" id="textModal" tabindex="-1" role="dialog" aria-labelledby="textModalLabel" aria-hidden="true">
+				    <div class="modal-dialog" role="document">
+				      <div class="modal-content">
+				        <div class="modal-header">
+				          <h5 class="modal-title" id="exampleModalLabel">Text Notifications</h5>
+				          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+				            <span aria-hidden="true">&times;</span>
+				          </button>
+				        </div>
+				        <div class="modal-body">';
 						
-			$body .= "<p>".($u['send_text'] ? "You have signed up for text notfications. " : "Would you like text notifications?")." <a  class='btn btn-primary' href='$sc?v=text'>Set your text preferences</a>.</p>\n";
-			
-			if (!$u['display_name']) {
-				$body .= "<p>&nbsp;</p>\n";
-				$body .= "<p>Would you mind entering a real human name? It's helpful to see who is signed up. Your email isn't shown, just this name.</p>\n";
-				$body .= Users\edit_display_name($u);
-			}
-			
+					$body .= Users\edit_text_preferences($u);
+
+				      $body .= '</div>
+				        <div class="modal-footer">
+				          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+				        </div>
+				      </div>
+				    </div>
+				  </div>
+
+				  
+				  <div class="modal fade" id="nameEmailModal" tabindex="-1" role="dialog" aria-labelledby="nameEmailModalLabel" aria-hidden="true">
+				    <div class="modal-dialog" role="document">
+				      <div class="modal-content">
+				        <div class="modal-header">
+				          <h5 class="modal-title" id="exampleModalLabel">Name and Email</h5>
+				          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+				            <span aria-hidden="true">&times;</span>
+				          </button>
+				        </div>
+						
+				        <div class="modal-body">';
+						$body .= "<div class='row mb-md-4'><div class='col'>\n";
+						$body .= "<p>You can update your real name here.</p>\n";
+						$body .= Users\edit_display_name($u);
+						$body .= "</div></div> <!-- end of col and row -->\n";
+
+						$body .= "<div class='row mb-md-4'><div class='col'>\n";
+						$body .= "<p>To change your email, enter the new one below. We will email a login link there.</p>\n";
+						$body .= Users\edit_change_email($u);
+						$body .= "</div></div> <!-- end of col and row -->\n";	
+				          
+				        $body .= '</div>
+					        <div class="modal-footer">
+					          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+					        </div>
+				      </div>
+				    </div>
+				  </div>';
 
 		} else {
 			$body .= "<h2 class='card-title'>Log In To This Site</h2>\n";
 			$body .= "<p>First you must log in. We do that via email.</p>";
 			$body .= Users\login_prompt();
 		}
-		//include 'mailchimp.php';
 		$body .= "</div></div></div></div>\n"; // end two card divs, then column, then row
 
-		$body .= "<div class='row'><div class='col'>\n";
-		$body .= "<h2>Paying</h2>\n"; 
-		$body .= "<p>Pay in person or with <a href=\"http://venmo.com/willhines?txn=pay&share=friends&amount=25&note=improv%20workshop\">venmo</a> (click that link or pay to <a href=\"http://venmo.com/willhines?txn=pay&share=friends&amount=25&note=improv%20workshop\">whines@gmail.com</a>). On the day of the workshop is fine.</p>\n";
-		$body .= "</div></div> <!-- end of col and row -->\n";
 
-		$body .= "<div class='row'><div class='col'>\n";
-		$body .= "<h2>No late drops!</h2>\n"; 
-		$body .= "<p>Dropping out the night before or the morning of is not cool! You were holding a spot and then you didn't use it! Please don't do it! If you do, can you try to get a replacement? If not, I might ask you to pay which is gonna be weird for both of us.</p>\n";
-		$body .= "</div></div> <!-- end of col and row -->\n";
+		// common info
+		$body .= "
+			<div class=\"row justify-content-center mb-md-4\">
+		
+			<div class=\"col col-4\">
+			<div class=\"card text-center\">
+		      <div class=\"card-body\">
+		        <h2 class=\"card-title\">Paying</h2>
+		        <p class=\"card-text\">Pay in person or with Venmo to whines@gmail.com. On the day of the workshop is fine.</p>
+		        <a href=\"http://venmo.com/willhines?txn=pay&share=friends&amount=25&note=improv%20workshop\" class=\"\">Venmo whines@gmail.com</a>
+		      </div> <!-- end of card body -->
+		    </div> <!-- end of card -->
+		</div> <!-- end of col -->
+
+		<div class=\"col col-4\">
+		<div class=\"card text-center\">
+		      <div class=\"card-body\">
+		        <h2 class=\"card-title\">No Late Drops!</h2>
+		        <p class=\"card-text\">Dropping out the night before or the morning of is not cool! If you have to drop, can you get a replacement?</p>
+		      </div> <!-- end of card body -->
+		    </div> <!-- end of card -->
+		</div> <!-- end of col -->
+		
+		</div> <!-- end of row -->
+		
+		
+		<div class=\"row justify-content-center mb-md-4\">
+			
+			<div class=\"col col-4\">
+			<div class=\"card text-center\">
+			      <div class=\"card-body\">
+			        <h2 class=\"card-title\">Mailing List</h2>
+			        <p class=\"card-text\">You are NOT automatically put on my mailing list for these workshops. If you WANT to be on that mailing list, sign up right here.</p>
+			        <a href=\"http://eepurl.com/c6-T-H\" class=\"\">Join Mailing List</a>
+			      </div> <!-- end of card body -->
+			    </div> <!-- end of card -->
+			</div> <!-- end of col -->
+			
+			
+			<div class=\"col col-4\">
+			<div class=\"card text-center\">
+			      <div class=\"card-body\">
+			        <h2 class=\"card-title\">Common Questions</h2>
+			        <p class=\"card-text\">You can be late. You can leave early. Pre-reqs are not enforced. Click below to see other common questions. Or else email Will Hines at w.hines@gmail.com</p>
+			        <a href=\"$sc?v=faq\" class=\"\">More Common Questions</a>
+			      </div> <!-- end of card body -->
+			    </div> <!-- end of card -->
+			</div> <!-- end of col -->
+
+			</div> <!-- end of row -->";
 
 
-		$body .= "<div class='row'><div class='col'>\n";
-		$body .= "<h2>Mailing list</h2>\n"; 
-		$body .= "<p>You are NOT automatically put on my mailing list for these workshops. If you WANT to be on that mailing list, <a href='http://eepurl.com/c6-T-H'>sign yourself up here</a>.</p>\n";
-		$body .= "</div></div> <!-- end of col and row -->\n";
-
-
-		$body .= "<div class='row'><div class='col'>\n";
-		$body .= "<h2>Questions</h2>\n";
-		$body .= "<p>You can be late. You can leave early. Pre-reqs are not enforced. For more, see <a href='$sc?v=faq'>common questions</a>.</p>\n";		
-		$body .= "</div></div> <!-- end of col and row -->\n";	
-
-		$body .= "<div class='row'><div class='col'>\n";
-		$body .= "<h2>Problem With the Web Site?</h2>\n";
-		$body .= "<p>Email Will Hines. His email is w.hines@gmail.com</p>\n";		
-		$body .= "</div></div> <!-- end of col and row -->\n";	
-
-
-
-		$body .= "<div class='row'><div class='col'>\n";
-		$body .= "<h2>All Upcoming Workshops</h2>\n"; 
+			// upcoming workshops
+		$body .= "<div class='row mb-md-4'><div class='col'>\n";
+		$body .= "<h2>Enroll In A Workshop</h2>\n"; 
 		$body .= Workshops\get_workshops_list(0);
 		$body .= "</div></div> <!-- end of col and row -->\n";
 		
-		$body .= "<div class='row'><div class='col'>";
+		
+		// past workshops
+		$body .= "<div class='row mb-md-4'><div class='col'>";
 		$body .= "<h2>Your Current/Past Workshops</h2>";
 		if (Users\logged_in()) {
 			$body .= Enrollments\get_transcript_tabled($u, 0, $page);  
@@ -206,7 +215,6 @@ switch ($v) {
 		}
 		$body .= "</div></div> <!-- end of col and row -->\n";	
 		
-			
 		$body .= "<br><br>\n";
 		break;
 }
