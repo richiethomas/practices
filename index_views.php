@@ -121,12 +121,10 @@ switch ($v) {
 						
 				        <div class="modal-body">';
 						$body .= "<div class='row mb-md-4'><div class='col'>\n";
-						$body .= "<p>You can update your real name here.</p>\n";
 						$body .= Users\edit_display_name($u);
 						$body .= "</div></div> <!-- end of col and row -->\n";
 
 						$body .= "<div class='row mb-md-4'><div class='col'>\n";
-						$body .= "<p>To change your email, enter the new one below. We will email a login link there.</p>\n";
 						$body .= Users\edit_change_email($u);
 						$body .= "</div></div> <!-- end of col and row -->\n";	
 				          

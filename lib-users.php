@@ -162,7 +162,7 @@ function logged_in() {
 
 function logout(&$key, &$u, &$message) {
 	
-	$key = Users\gen_key($u['id']); // change the key
+	$key = gen_key($u['id']); // change the key
 	
 	unset($_SESSION['s_key']);
     unset($_COOKIE['c_key']);
@@ -212,10 +212,10 @@ function find_students($needle = 'everyone', $sort = 'n') {
 function edit_change_email($u) {
 	global $sc;
 	$body = '';
-	$body .= "<form class='form-inline' action='$sc' method='post'>\n";
+	$body .= "<form action='$sc' method='post'>\n";
 	$body .= \Wbhkit\hidden('ac', 'cemail');
 	$body .= \Wbhkit\hidden('uid', $u['id']);
-	$body .= \Wbhkit\texty('newemail', null, 0, 'new email address');
+	$body .= \Wbhkit\texty('newemail', null, 'New email', 'someone@somewhere.com', 'We will email a login link to this address');
 	$body .= \Wbhkit\submit('Change Email');
 	$body .= "</form>";
 	return $body;	
@@ -353,11 +353,11 @@ function update_text_preferences(&$u,  &$message, &$error) {
 function edit_display_name($u) {
 	global $sc, $ac;
 	$body = '';
-	$body .= "<form class='form-inline' action='$sc' method='post'>\n";
+	$body .= "<form action='$sc' method='post'>\n";
 	$body .= \Wbhkit\hidden('uid', $u['id']);
 	$body .= \Wbhkit\hidden('ac', 'updatedn');
-	$body .= \Wbhkit\texty('display_name', $u['display_name'], 0, 'Jane Doe');
-	$body .= \Wbhkit\submit('Update Human Name');
+	$body .= \Wbhkit\texty('display_name', $u['display_name'], 'Real name', 'Jane Doe', 'We list who is registered in the workshop description.');
+	$body .= \Wbhkit\submit('Update Real Name');
 	$body .= "</form>\n";
 	
 	return $body;
