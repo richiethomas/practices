@@ -10,25 +10,30 @@ namespace Wbhkit;
 // 1.5.1 - tweaking radio 1/2016
 // 1.6 - removed 'mres', renamed file, added namespace - 11/2017
 // 2.0 - upgraded to bootstrap v4.0 - 11/2017
+// 2.1 - added html5 form validation - 11/2017
 
 
-function texty($key, $value = '', $label = null, $placeholder = null, $help = null, $error = null) {
-	$l = label($label, $key);
+function texty($key, $value = '', $label = null, $placeholder = null, $help = null, $error = null, $validation = null, $ttype = null) {
 	
-	$texty = form_start($error);		
-	$texty .= "{$l}<input class='form-control mx-md-1' type='text' id=\"$key\" name=\"$key\" value=\"$value\" ".($placeholder ? "placeholder='$placeholder'" : '');
+	if (!$ttype) { $ttype = 'text'; }
+	$l = label($label, $key);
+	$texty = form_element_start();		
+	$texty .= "{$l}<input class='form-control mx-md-1' type=\"{$ttype}\" id=\"$key\" name=\"$key\" value=\"$value\" ".($placeholder ? "placeholder='$placeholder'" : '');
 
-	$texty .= figure_aria_attribute($key, $help, $error);
+	if ($validation) { $texty .= $validation; }
+
+	$texty .= figure_aria_attribute($key, $help);
 	$texty .= form_help_block($key, $help, $error);		
 	$texty .= "</div>\n";
 	
 	return $texty;
 }
 
-function textarea($key, $value = null, $label = null, $rows = 5, $cols = 40, $help = null, $error = null) {
+function textarea($key, $value = null, $label = null, $rows = 5, $cols = 40, $help = null, $error = null, $validation = null) {
 	$l = label($label, $key);
-	$ta = form_start($error);
+	$ta = form_element_start();
 	$ta .= "{$l} <textarea class='form-control' id='{$key}' name='{$key}' cols='{$cols}' rows='{$rows}'";
+	if ($validation) { $ta .= $validation; }
 	$ta .= figure_aria_attribute($key, $help, $error);
 	$ta .= "{$value}</textarea>";
 	$ta .= form_help_block($key, $help, $error);		
@@ -44,11 +49,12 @@ function submit($value = 'Submit') {
 	return "<button type=\"submit\" class=\"btn btn-primary\">{$value}</button>\n";
 }
 
-function drop($name, $opts, $selected = null, $label = null, $help = null, $error = null) {
+function drop($name, $opts, $selected = null, $label = null, $help = null, $error = null, $validation = null) {
 	$l = label($label, $name);
 
-	$select = form_start($error);	
+	$select = form_element_start();	
 	$select .= "{$l} <select class='form-control' name='$name' id='$name'";
+	if ($validation) { $select .= $validation; }
 	$select .= figure_aria_attribute($name, $help, $error);
 	$select .= "<option label=' ' value=''></option>\n";
 	foreach ($opts as $key => $show) {
@@ -62,11 +68,12 @@ function drop($name, $opts, $selected = null, $label = null, $help = null, $erro
 	return $select;
 }
 
-function multi_drop($name, $opts, $selected = null, $label = null, $size = 10, $help = null, $error = null) {
+function multi_drop($name, $opts, $selected = null, $label = null, $size = 10, $help = null, $error = null, $validation = null) {
 	$l = label($label, $name);
 	
-	$select = form_start($error);	
+	$select = form_element_start();	
 	$select .= "{$l} <select size='$size' multiple class='form-control' name='{$name}".'[]'."' id='$name'";
+	if ($validation) { $select .= $validation; }
 	$select .= figure_aria_attribute($name, $help, $error);
 	$select .= "<option label=' ' value=''></option>\n";
 	foreach ($opts as $key => $show) {
@@ -127,29 +134,23 @@ function figure_label($label, $key, $colon = false) {
 }
 
 // next four subs deal with error messages
-function form_start($error = null) {
-	if ($error) {
-		return "<div class='form-group has-error'>";
-	} else {
-		return "<div class='form-group'>";
-	}
+function form_element_start() {
+	return "<div class='form-group'>";
 } 
 
 function form_help_block($id, $help = null, $error = null) {
 	$id = figure_help_id($id);
-	if ($error) {
-		return "<small id='$id' class='form-text text-danger'>$error</small>";
-	}
-	if ($help) {
-		return "<small id ='$id' class='form-text text-muted'>$help</small>";
-	}
+	$element = '';
+	if ($help) { $element = "<small id ='$id' class='form-text text-muted'>$help</small>"; }
+	if ($error) { $element .= "<div class='invalid-feedback'>{$error}</div>\n"; }
+	return $element;
 }
 
 function figure_help_id($key) {
 	return "{$key}HelpBlock";
 }
 
-function figure_aria_attribute($key, $help, $error) {
+function figure_aria_attribute($key, $help = null, $error = null) {
 	if ($help || $error) {
 		return " aria-describedby='".figure_help_id($key)."'>";
 	} else {
@@ -176,6 +177,29 @@ function query_to_array($rows) {
 		$grid[] = $r;
 	}
 	return $grid;
+}
+
+
+function form_validation_javascript($form_id) {
+	return "
+		<script>
+	// Example starter JavaScript for disabling form submissions if there are invalid fields
+	(function() {
+	  'use strict';
+
+	  window.addEventListener('load', function() {
+	    var form = document.getElementById('{$form_id}');
+	    form.addEventListener('submit', function(event) {
+	      if (form.checkValidity() === false) {
+	        event.preventDefault();
+	        event.stopPropagation();
+	      }
+	      form.classList.add('was-validated');
+	    }, false);
+	  }, false);
+	})();
+	</script>
+";
 }
 
 function parse_path() {

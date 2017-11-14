@@ -35,9 +35,10 @@ switch ($v) {
 		$body .= "</div>"; // end of column
 		
 		//session column
+		$body .= \Wbhkit\form_validation_javascript('wk_edit');
 		$body .= "<div class='col-md-5'>
 		<h2>Session Info</h2>
-		<form action='$sc' method='post'>
+		<form id='wk_edit' action='$sc' method='post' novalidate>
 		<fieldset name=\"session_edit\">".
 		Workshops\workshop_fields($wk).
 		Wbhkit\hidden('ac', 'up').
@@ -46,10 +47,12 @@ switch ($v) {
 		Wbhkit\submit('Update').
 		"<a href=\"{$sc}?wid={$wid}&ac=cdel&v=ed\">Delete This Practice</a>".
 		"</fieldset></form>\n";
+	
 		
-	$body .= "<h2>Add Student</h2><form class='form-inline' action='$sc' method='post'><fieldset name='new_student'>".
+	$body .= \Wbhkit\form_validation_javascript('add_student');
+	$body .= "<h2>Add Student</h2><form id='add_student' class='form-inline' action='$sc' method='post' novalidate><fieldset name='new_student'>".
 	Wbhkit\hidden('ac', 'enroll').
-	Wbhkit\texty('email', '', 0, 'email').
+	Wbhkit\texty('email', '', 0, 'email', null, 'Must be an email', 'required', 'email').
 	Wbhkit\radio('con', array('1' => 'confirm', '0' => 'don\'t'), '0').
 	Wbhkit\hidden('v', 'ed').
 	Wbhkit\hidden('wid', $wid).
@@ -279,9 +282,9 @@ switch ($v) {
 			$body .= Enrollments\get_transcript_tabled($u, true, $page);	
 			
 			$body .= "<h3>Change Email</h3>\n";
-			$body .= Users\edit_change_email();
+			$body .= Users\edit_change_email($u);
 			$body .= "<form action='$sc' method='post'>\n".
-				Wbhkit\texty('newe', $newe, 'change email to:').
+				Wbhkit\texty('newemail', $newemail, 'change email to:').
 				Wbhkit\hidden('ac', 'changeemail').
 				Wbhkit\hidden('uid', $u['id']).
 				Wbhkit\submit('change email').
@@ -312,7 +315,9 @@ switch ($v) {
 		
 		$body .= Workshops\get_workshops_list(1, $page);
 		
-		$body .= "<a id='add'></a><div class='row'><div class='col-md-3'><form action='$sc' method='post'>
+		$body .= \Wbhkit\form_validation_javascript('add_wk');
+		
+		$body .= "<a id='add'></a><div class='row'><div class='col-md-3'><form id='add_wk' action='$sc' method='post' novalidate>
 			<fieldset name=\"session_add\"><legend>Add Session</legend>".
 			Wbhkit\hidden('ac', 'ad').
 			Workshops\workshop_fields($wk).

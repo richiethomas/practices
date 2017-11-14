@@ -153,7 +153,7 @@ switch ($v) {
 		      <div class=\"card-body\">
 		        <h2 class=\"card-title\">Paying</h2>
 		        <p class=\"card-text\">Pay in person or with Venmo to whines@gmail.com. On the day of the workshop is fine.</p>
-		        <a href=\"http://venmo.com/willhines?txn=pay&share=friends&amount=25&note=improv%20workshop\" class=\"\">Venmo whines@gmail.com</a>
+		        <a href=\"http://venmo.com/willhines?txn=pay&share=friends&amount=25&note=improv%20workshop\"  class=\"btn btn-outline-primary\">Venmo whines@gmail.com</a>
 		      </div> <!-- end of card body -->
 		    </div> <!-- end of card -->
 		</div> <!-- end of col -->
@@ -177,7 +177,7 @@ switch ($v) {
 			      <div class=\"card-body\">
 			        <h2 class=\"card-title\">Mailing List</h2>
 			        <p class=\"card-text\">You are NOT automatically put on my mailing list for these workshops. If you WANT to be on that mailing list, sign up right here.</p>
-			        <a href=\"http://eepurl.com/c6-T-H\" class=\"\">Join Mailing List</a>
+			        <a href=\"http://eepurl.com/c6-T-H\" class=\"btn btn-outline-primary\">Join Mailing List</a>
 			      </div> <!-- end of card body -->
 			    </div> <!-- end of card -->
 			</div> <!-- end of col -->
@@ -188,7 +188,7 @@ switch ($v) {
 			      <div class=\"card-body\">
 			        <h2 class=\"card-title\">Common Questions</h2>
 			        <p class=\"card-text\">You can be late. You can leave early. Pre-reqs are not enforced. Click below to see other common questions. Or else email Will Hines at w.hines@gmail.com</p>
-			        <a href=\"$sc?v=faq\" class=\"\">More Common Questions</a>
+			        <a href=\"$sc?v=faq\" class=\"btn btn-outline-primary\">More Common Questions</a>
 			      </div> <!-- end of card body -->
 			    </div> <!-- end of card -->
 			</div> <!-- end of col -->
@@ -213,7 +213,6 @@ switch ($v) {
 		}
 		$body .= "</div></div> <!-- end of col and row -->\n";	
 		
-		$body .= "<br><br>\n";
 		break;
 }
 	

@@ -126,11 +126,14 @@ function validate_email($emailaddress) {
 
 function login_prompt() {
 	global $sc, $email;
-	$f = "<p>Submit your name and email and the site will email you a link to log in:</p>
-	<form action='$sc' method='post'>\n".
+	
+	$f = \Wbhkit\form_validation_javascript('log_in');
+	
+	$f .= "<p>Submit your name and email and the site will email you a link to log in:</p>
+	<form id='log_in' action='$sc' method='post' novalidate>".
 	\Wbhkit\hidden('ac', 'link').
 	\Wbhkit\texty('display_name', '', 'Real Name', 'Jane Doe', 'We list who is registered in the workshop description.').		
-	\Wbhkit\texty('email', $email, 'Email', 'something@something.com', 'We send a log in link to this address.').
+	\Wbhkit\texty('email', $email, 'Email', 'something@something.com', 'We send a log in link to this address.', 'This must be a valid email', ' required ', 'email').
 	\Wbhkit\submit('Log In').
 	"</form>";
 	
@@ -207,21 +210,67 @@ function find_students($needle = 'everyone', $sort = 'n') {
 	return $stds;
 }
 
+function delete_student($uid = 0) {
+	if (!$uid) {
+		return false;
+	}
+	$sql = "delete from registrations where user_id = ".\Database\mres($uid);
+	\Database\mysqli($sql) or \Database\db_error();
+	$sql = "delete from users where id = ".mres($uid);
+	\Database\mysqli($sql) or \Database\db_error();
+	$sql = "delete from status_change_log where user_id = ".\Database\mres($uid);
+	\Database\mysqli($sql) or \Database\db_error();
+	return true;
+	
+}
+
+function edit_display_name($u) {
+	global $sc, $ac;
+	$body = '';
+	$body .= "<form action='$sc' method='post'>\n";
+	$body .= \Wbhkit\hidden('uid', $u['id']);
+	$body .= \Wbhkit\hidden('ac', 'updatedn');
+	$body .= \Wbhkit\texty('display_name', $u['display_name'], 'Real name', 'Jane Doe', 'We list who is registered in the workshop description.');
+	$body .= \Wbhkit\submit('Update Real Name');
+	$body .= "</form>\n";
+	
+	return $body;
+}
+
+function update_display_name(&$u,  &$message, &$error) {
+
+	// update user info
+	if ($error) {
+		return false;
+	} else {
+		$sql = sprintf("update users set display_name = '%s' where id = %u",
+		\Database\mres($u['display_name']),
+		\Database\mres($u['id']));		
+		\Database\mysqli($sql) or \Database\db_error();
+		$u = get_user_by_id($u['id']); // updated so the form is correctly populated on refill
+		$message = 'Display name updated!';
+		return true;
+	}
+
+}
+
 // user id is here for admin side 
 // even though user side does not need it
 function edit_change_email($u) {
 	global $sc;
 	$body = '';
-	$body .= "<form action='$sc' method='post'>\n";
+	$body .= \Wbhkit\form_validation_javascript('changeEmail');
+	$body .= "<form id='changeEmail' action='$sc' method='post' novalidate>\n";
 	$body .= \Wbhkit\hidden('ac', 'cemail');
 	$body .= \Wbhkit\hidden('uid', $u['id']);
-	$body .= \Wbhkit\texty('newemail', null, 'New email', 'someone@somewhere.com', 'We will email a login link to this address');
+	$body .= \Wbhkit\texty('newemail', null, 'New email', 'someone@somewhere.com', 'We will email a login link to this address', 'Must be a valid email', ' required ', 'email');
 	$body .= \Wbhkit\submit('Change Email');
 	$body .= "</form>";
 	return $body;	
 }
 
 function change_email($ouid, $newe) {
+	return null;
 	$news = get_user_by_email($newe); 
 	$olds = get_user_by_id($ouid);
 	if ($news) {
@@ -261,51 +310,21 @@ function change_email($ouid, $newe) {
 }
 
 
-function delete_student($uid = 0) {
-	if (!$uid) {
-		return false;
-	}
-	$sql = "delete from registrations where user_id = ".\Database\mres($uid);
-	\Database\mysqli($sql) or \Database\db_error();
-	$sql = "delete from users where id = ".mres($uid);
-	\Database\mysqli($sql) or \Database\db_error();
-	$sql = "delete from status_change_log where user_id = ".\Database\mres($uid);
-	\Database\mysqli($sql) or \Database\db_error();
-	return true;
-	
-}
-
-
-
-
 
 function edit_text_preferences($u) {
 	global $sc, $ac;
 	$carriers = \Lookups\get_carriers_drop();
 	$body = '';
+	$body .= "";
+		
+	$body .= \Wbhkit\form_validation_javascript('edit_text_preferences');
 	$body .= "<div class='row'><div class='col'>\n";
-	$body .= "<form action='$sc' method='post'>\n";
+	$body .= "<form id='edit_text_preferences' action='$sc' method='post' novalidate>\n";
 	$body .= \Wbhkit\hidden('uid', $u['id']);
 	$body .= \Wbhkit\hidden('ac', 'updateu');
 	$body .= \Wbhkit\checkbox('send_text', 1, 'Send text updates?', $u['send_text']);
-	
-	// carrier validation
-	$error = null;
-	if ($ac == 'updateu' && $u['send_text'] == 1 && $u['carrier_id'] == 0) {
-		$error = "You must pick a carrier if you want text updates.";
-	}
-	$body .= \Wbhkit\drop('carrier_id', $carriers, $u['carrier_id'], 'phone network', null, $error);
-
-	// phone validation
-	if ($ac == 'updateu' && $u['send_text'] == 1 && strlen($u['phone']) != 10) {
-		$help = null;
-		$error = 'Phone must be 10 digits, no letters or spaces or dashes';
-	} else {
-		$help = '10 digit phone number';
-		$error = null;
-	}
-	$body .= \Wbhkit\texty('phone', $u['phone'], 'phone number', null, $help, $error);
-
+	$body .= \Wbhkit\drop('carrier_id', $carriers, $u['carrier_id'], 'phone network', null, "You must pick a carrier if you want text updates.", ' required ');
+	$body .= \Wbhkit\texty('phone', $u['phone'], 'phone number', null, '10 digit phone number', 'Phone must be 10 digits, no letters or spaces or dashes', ' required minlength="10" maxlength="11" pattern="\d+" ');
 	$body .= \Wbhkit\submit('Update Text Preferences');
 	$body .= "</form>\n";
 	$body .= "</div></div> <!-- end of col and row -->\n";
@@ -315,7 +334,6 @@ function edit_text_preferences($u) {
 
 
 function update_text_preferences(&$u,  &$message, &$error) {
-
 
 	// $u must include $carrier_id, $phone, $send_text
 	$carrier_id = $u['carrier_id'];
@@ -345,36 +363,6 @@ function update_text_preferences(&$u,  &$message, &$error) {
 		\Database\mysqli($sql) or \Database\db_error();
 		$u = get_user_by_id($u['id']); // updated so the form is correctly populated on refill
 		$message = 'Preferences updated!';
-		return true;
-	}
-
-}
-
-function edit_display_name($u) {
-	global $sc, $ac;
-	$body = '';
-	$body .= "<form action='$sc' method='post'>\n";
-	$body .= \Wbhkit\hidden('uid', $u['id']);
-	$body .= \Wbhkit\hidden('ac', 'updatedn');
-	$body .= \Wbhkit\texty('display_name', $u['display_name'], 'Real name', 'Jane Doe', 'We list who is registered in the workshop description.');
-	$body .= \Wbhkit\submit('Update Real Name');
-	$body .= "</form>\n";
-	
-	return $body;
-}
-
-function update_display_name(&$u,  &$message, &$error) {
-
-	// update user info
-	if ($error) {
-		return false;
-	} else {
-		$sql = sprintf("update users set display_name = '%s' where id = %u",
-		\Database\mres($u['display_name']),
-		\Database\mres($u['id']));		
-		\Database\mysqli($sql) or \Database\db_error();
-		$u = get_user_by_id($u['id']); // updated so the form is correctly populated on refill
-		$message = 'Display name updated!';
 		return true;
 	}
 

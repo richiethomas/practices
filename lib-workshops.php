@@ -270,10 +270,10 @@ function empty_workshop() {
 }
 
 function workshop_fields($wk) {
-	return \Wbhkit\texty('title', $wk['title']).
+	return \Wbhkit\texty('title', $wk['title'], null, null, null, 'Required', ' required ').
 	\Lookups\locations_drop($wk['location_id']).
-	\Wbhkit\texty('start', $wk['start']).
-	\Wbhkit\texty('end', $wk['end']).
+	\Wbhkit\texty('start', $wk['start'], null, null, null, 'Required', ' required ').
+	\Wbhkit\texty('end', $wk['end'], null, null, null, 'Required', ' required ').
 	\Wbhkit\texty('cost', $wk['cost']).
 	\Wbhkit\texty('capacity', $wk['capacity']).
 	\Wbhkit\textarea('notes', $wk['notes']).

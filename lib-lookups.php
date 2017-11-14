@@ -45,7 +45,6 @@ function get_carriers($update = 0) {
 function get_carriers_drop() {
 	$carriers = get_carriers();
 	$cardrop = '';
-	$cardrop[0] = 'No Network';
 	foreach ($carriers as $c) {
 		$cardrop[$c['id']] = $c['network'];
 	}
@@ -70,9 +69,8 @@ function locations_drop($lid = null) {
 	foreach ($l as $id => $info) {
 		$opts[$id] = $info['place'];
 	}
-	return \Wbhkit\drop('lid', $opts, $lid, 'Location');
+	return \Wbhkit\drop('lid', $opts, $lid, 'Location', null, 'Required', ' required ');
 }
-
 
 	
 	
