@@ -6,7 +6,7 @@ switch ($v) {
 	
 		$body .= "<div class='row'><div class='col'>\n";
 		$body .= Emails\get_faq();
-		$body .= "<p>Just <a href='$sc'>go back to the main page</a>.</p>";
+		$body .= "<p>Just <a href='$sc'>go back to the main page <span class=\"oi oi-home\" title=\"home\" aria-hidden=\"true\"></span></a>.</p>";
 		$body .= "</div></div>\n";
 		break;	
 	
@@ -43,7 +43,7 @@ switch ($v) {
 				$point = "This workshop is IN THE PAST.";
 			}
 			$body .= "<p class='alert alert-info'>$point</p>\n";
-			$body .= "<p>Click here to <a href='$sc'>return to the main page</a>.</p>\n";
+			$body .= "<p>Click here to <a href='$sc'> <span class=\"oi oi-home\" title=\"home\" aria-hidden=\"true\"></span> return to the main page</a>.</p>\n";
 			$body .= "<hr>";
 			$body .= Workshops\get_workshop_info_tabled($wk);
 		
@@ -65,7 +65,8 @@ switch ($v) {
 		}
 		
 	
-		$body .= "<div class='row mb-md-4'><div class='col-md-12'><div id='login_prompt' class='card'>
+		$body .= "<div class='row mb-md-4'><div class='col-md-12'>
+			<div id='login_prompt' class='card border-info bg-light'>
 			<div class='card-body'>\n";
 	
 		if (Users\logged_in()) {
@@ -82,16 +83,15 @@ switch ($v) {
 			"</strong></p>";
 			
 			$body .= '
-				  <button type="button" class="btn btn-info" data-toggle="modal" data-target="#nameEmailModal">update name and email</button>
-				  <button type="button" class="btn btn-info" data-toggle="modal" data-target="#textModal">update text notifications</button>				  
-				  <a href="'.$sc.'?ac=lo" class="btn btn-info">log out</a>
+				  <button type="button" class="btn btn-info" data-toggle="modal" data-target="#nameEmailModal"><span class="oi oi-person" title="person" aria-hidden="true"></span> update name and email</button>
+				  <button type="button" class="btn btn-info" data-toggle="modal" data-target="#textModal"><span class="oi oi-phone" title="phone" aria-hidden="true"></span> update text notifications </button>				  
+				  <a href="'.$sc.'?ac=lo" class="btn btn-info"><span class="oi oi-account-logout" title="account-logout" aria-hidden="true"></span> log out</a>
 				  
-
 				  <div class="modal fade" id="textModal" tabindex="-1" role="dialog" aria-labelledby="textModalLabel" aria-hidden="true">
 				    <div class="modal-dialog" role="document">
 				      <div class="modal-content">
 				        <div class="modal-header">
-				          <h5 class="modal-title" id="exampleModalLabel">Text Notifications</h5>
+				          <h5 class="modal-title" id="exampleModalLabel"><span class="oi oi-phone" title="phone" aria-hidden="true"></span> Text Notifications</h5>
 				          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
 				            <span aria-hidden="true">&times;</span>
 				          </button>
@@ -102,7 +102,7 @@ switch ($v) {
 
 				      $body .= '</div>
 				        <div class="modal-footer">
-				          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+				          <button type="button" class="btn btn-secondary" data-dismiss="modal"><span class="oi oi-circle-x" title="circle-x" aria-hidden="true"></span> Close</button>
 				        </div>
 				      </div>
 				    </div>
@@ -113,25 +113,24 @@ switch ($v) {
 				    <div class="modal-dialog" role="document">
 				      <div class="modal-content">
 				        <div class="modal-header">
-				          <h5 class="modal-title" id="exampleModalLabel">Name and Email</h5>
+				          <h5 class="modal-title" id="exampleModalLabel"><span class="oi oi-person" title="person" aria-hidden="true"></span> Name and Email</h5>
 				          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
 				            <span aria-hidden="true">&times;</span>
 				          </button>
 				        </div>
+				       	 <div class="modal-body">';
 						
-				        <div class="modal-body">';
-						$body .= "<div class='row mb-md-4'><div class='col'>\n";
-						$body .= Users\edit_display_name($u);
-						$body .= "</div></div> <!-- end of col and row -->\n";
+						$body .= '<div class="row mb-md-4"><div class="col">'.
+								Users\edit_display_name($u).
+								'</div></div> <!-- end of col and row -->
 
-						$body .= "<div class='row mb-md-4'><div class='col'>\n";
-						$body .= Users\edit_change_email($u);
-						$body .= "</div></div> <!-- end of col and row -->\n";	
-				          
-				        $body .= '</div>
+								<div class="row mb-md-4"><div class="col">'.
+							Users\edit_change_email($u).
+								'</div></div> <!-- end of col and row -->	
+								</div>
 					        <div class="modal-footer">
-					          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-					        </div>
+				          <button type="button" class="btn btn-secondary" data-dismiss="modal"><span class="oi oi-circle-x" title="circle-x" aria-hidden="true"></span> Close</button>
+						  	</div>
 				      </div>
 				    </div>
 				  </div>';
@@ -145,24 +144,25 @@ switch ($v) {
 
 
 		// common info
-		$body .= "
-			<div class=\"row justify-content-center mb-md-4\">
+		$body .= '
+			<div class="row justify-content-center mb-md-4">
 		
-			<div class=\"col col-4\">
-			<div class=\"card text-center\">
-		      <div class=\"card-body\">
-		        <h2 class=\"card-title\">Paying</h2>
-		        <p class=\"card-text\">Pay in person or with Venmo to whines@gmail.com. On the day of the workshop is fine.</p>
-		        <a href=\"http://venmo.com/willhines?txn=pay&share=friends&amount=25&note=improv%20workshop\"  class=\"btn btn-outline-primary\">Venmo whines@gmail.com</a>
+			<div class="col col-4">
+			<div class="card text-center text-white bg-success">
+		      <div class="card-body">
+		        <h2 class="card-title"><span class="oi oi-dollar" title="dollar" aria-hidden="true"></span><br>Paying</h2>
+		        <p class="card-text">
+				Pay in person or with Venmo to whines@gmail.com. On the day of the workshop is fine.</p>
+		        <a href="http://venmo.com/willhines?txn=pay&share=friends&amount=25&note=improv%20workshop"  class="btn btn-outline-light">Venmo whines@gmail.com</a>
 		      </div> <!-- end of card body -->
 		    </div> <!-- end of card -->
 		</div> <!-- end of col -->
 
-		<div class=\"col col-4\">
-		<div class=\"card text-center\">
-		      <div class=\"card-body\">
-		        <h2 class=\"card-title\">No Late Drops!</h2>
-		        <p class=\"card-text\">Dropping out the night before or the morning of is not cool! If you have to drop, can you get a replacement?</p>
+		<div class="col col-4">
+		<div class="card text-center text-white bg-danger">
+		      <div class="card-body">
+		        <h2 class="card-title"><span class="oi oi-ban" title="ban" aria-hidden="true"></span><br>No Late Drops!</h2>
+		        <p class="card-text">Please don\'t drop out late! I mean, if you gotta you gotta, but.. try not to?<br><br><br>&nbsp;</p>
 		      </div> <!-- end of card body -->
 		    </div> <!-- end of card -->
 		</div> <!-- end of col -->
@@ -170,31 +170,30 @@ switch ($v) {
 		</div> <!-- end of row -->
 		
 		
-		<div class=\"row justify-content-center mb-md-4\">
+		<div class="row justify-content-center mb-md-4">
 			
-			<div class=\"col col-4\">
-			<div class=\"card text-center\">
-			      <div class=\"card-body\">
-			        <h2 class=\"card-title\">Mailing List</h2>
-			        <p class=\"card-text\">You are NOT automatically put on my mailing list for these workshops. If you WANT to be on that mailing list, sign up right here.</p>
-			        <a href=\"http://eepurl.com/c6-T-H\" class=\"btn btn-outline-primary\">Join Mailing List</a>
+			<div class="col col-4">
+			<div class="card text-center text-white bg-info">
+			      <div class="card-body">
+			        <h2 class="card-title"><span class="oi oi-envelope-closed" title="envelope-closed" aria-hidden="true"></span><br>Mailing List</h2>
+			        <p class="card-text">You are NOT automatically put on my mailing list for these workshops. If you WANT to be on that mailing list, sign up right here.</p>
+			        <a href="http://eepurl.com/c6-T-H" class="btn btn-outline-light">Join Mailing List</a>
 			      </div> <!-- end of card body -->
 			    </div> <!-- end of card -->
 			</div> <!-- end of col -->
 			
 			
-			<div class=\"col col-4\">
-			<div class=\"card text-center\">
-			      <div class=\"card-body\">
-			        <h2 class=\"card-title\">Common Questions</h2>
-			        <p class=\"card-text\">You can be late. You can leave early. Pre-reqs are not enforced. Click below to see other common questions. Or else email Will Hines at w.hines@gmail.com</p>
-			        <a href=\"$sc?v=faq\" class=\"btn btn-outline-primary\">More Common Questions</a>
+			<div class="col col-4">
+			<div class="card text-center text-white bg-warning">
+			      <div class="card-body">
+			        <h2 class="card-title"><span class="oi oi-question-mark" title="question-mark" aria-hidden="true"></span><br>Common Questions</h2>
+			        <p class="card-text">You can be late. You can leave early. Pre-reqs are not enforced. Click below to see other common questions. Or else email Will Hines at w.hines@gmail.com</p>
+			        <a href="$sc?v=faq" class="btn btn-outline-light">More Common Questions</a>
 			      </div> <!-- end of card body -->
 			    </div> <!-- end of card -->
 			</div> <!-- end of col -->
 
-			</div> <!-- end of row -->";
-
+			</div> <!-- end of row -->';
 
 			// upcoming workshops
 		$body .= "<div class='row mb-md-4'><div class='col'>\n";

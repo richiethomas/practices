@@ -193,7 +193,6 @@ When: {$wk['when']}";
 		
 		
 	case 'remind':
-	//{$wk['friendly_when']}
 		$subject = "REMINDER: workshop {$wk['friendly_when']} at {$wk['place']}";
 		$note = "Hey! You're enrolled in this workshop. ";
 		if ($wk['type'] == 'past') {
@@ -209,6 +208,18 @@ When: {$wk['when']}";
 		$sms = "Reminder: workshop {$wk['friendly_when']} at {$wk['place']}";
 		$st = ENROLLED; // pre-populating the status drop in 'send message' form
 		break;
+
+		case 'feedback':
+			$subject = "Feedback for '{$wk['showtitle']}'";
+			$note = "Thank you for taking this workshop!
+
+If you want: I'd love to know feedback on the workshop. Any suggestions of what you liked or what you'd change.
+
+No worries if you'd rather not answer! Thank you all again for taking it!
+
+-Will";
+			$st = ENROLLED; // pre-populating the status drop in 'send message' form
+			break;
 
 	case 'rev':
 		foreach ($_REQUEST as $key => $value) {

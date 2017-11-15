@@ -11,10 +11,14 @@ switch ($v) {
 	
 	case 'ed':
 		$body .= "<h2>{$wk['showtitle']}</h2>
-			<div class='row'>";
+			<div class='row mt-md-3 admin-edit-workshop'>";
 
 		// enrollment column
-		$body .= "<div class='col-md-7'><h2>Enrollment Info <small><br><a class='btn btn-primary' href='$sc?v=em&wid={$wid}'>see emails</a> <a class='btn btn-primary'  href='$sc?v=at&wid={$wid}'>attendance</a> <a class='btn btn-primary'  href='$sc?v=ed&ac=cw&wid={$wid}'>check waiting</a></small></h2>\n";
+		$body .= "<div class='col-md-7'><h2>Enrollment Info <small><br>
+			<a class='btn btn-primary' href='$sc?v=em&wid={$wid}'><span class='oi oi-envelope-closed' title='envelope-closed' aria-hidden='true'></span> see emails</a> 
+			<a class='btn btn-primary'  href='$sc?v=at&wid={$wid}'><span class='oi oi-clipboard' title='clipboard' aria-hidden='true'></span> attendance</a> 
+			<a class='btn btn-primary'  href='$sc?v=ed&ac=cw&wid={$wid}'><span class='oi oi-clock' title='clock' aria-hidden='true'></span> check waiting</a>
+			</small></h2>\n";
 		
 		//show enrollment totals at top
 		$stats = array();
@@ -45,7 +49,7 @@ switch ($v) {
 		Wbhkit\hidden('v', 'ed').
 		Wbhkit\hidden('wid', $wid).
 		Wbhkit\submit('Update').
-		"<a href=\"{$sc}?wid={$wid}&ac=cdel&v=ed\">Delete This Practice</a>".
+		"<a class='btn btn-outline-primary' href=\"{$sc}?wid={$wid}&ac=cdel&v=ed\">Delete This Practice</a>".
 		"</fieldset></form>\n";
 	
 		
@@ -69,7 +73,11 @@ switch ($v) {
 	case 'em':
 		$body .= "<div class='row'><div class='col-md-6'><h2>emails for <a href='$sc?v=ed&wid={$wid}'>{$wk['showtitle']}</a></h2>";
 		$body .= "<p>(Will replace TITLE in subject or note. Also, practice info is appended to message.)</p>\n";
-		$body .= "<div class='well'><h3>Send Message <small><a href='$sc?v=em&ac=remind&wid={$wk['id']}'>load reminder</a></small></h3><form action ='$sc' method='post'>".
+		$body .= "<div class='well'><h3>Send Message 
+			<small><a href='$sc?v=em&ac=remind&wid={$wk['id']}'>load reminder</a> / 
+		<a href='$sc?v=em&ac=feedback&wid={$wk['id']}'>load feedback</a></small>
+		</h3>
+			<form action ='$sc' method='post'>".
 		Wbhkit\hidden('wid', $wk['id']).
 		Wbhkit\hidden('ac', 'sendmsg').
 		Wbhkit\texty('subject', $subject).
@@ -191,7 +199,16 @@ switch ($v) {
 		Wbhkit\texty('searchend', $searchend, 'Search End').
 		Wbhkit\submit('Update').
 		Wbhkit\hidden('ac', 'rev');
-		$body .= "<table class='table table-striped'><thead><tr><th>workshop</th><th>enrolled / capacity</th><th>cost</th><th>suggested</th><th>revenue</th><th>expenses</th><th>profit</th></tr></thead><tbody>\n";
+		$body .= "<table class='table table-striped'>
+			<thead><tr>
+				<th>workshop</th>
+				<th>enrolled / capacity</th>
+				<th>cost</th>
+				<th>suggested</th>
+				<th>revenue</th>
+				<th>expenses</th>
+				<th>profit</th></tr>
+			</thead><tbody>\n";
 		$totals = array(
 			'revenue' => 0,
 			'expenses' => 0
@@ -304,14 +321,14 @@ switch ($v) {
 
 	
 		$body .= "<p>
-			<a class='btn btn-primary' href='#add'>add a workshop</a> 
-			<a class='btn btn-primary' href='$sc?v=gemail'>get emails</a> 
-			<a class='btn btn-primary' href='$sc?v=rev'>revenues</a>
-			<a class='btn btn-primary' href='$sc?v=search'>find students</a>
-			<a class='btn btn-primary' href='$sc?v=allchange'>change log</a>
+			<a class='btn btn-primary' href='#add'><span class='oi oi-people' title='people' aria-hidden='true'></span> add a workshop</a> 
+			<a class='btn btn-primary' href='$sc?v=gemail'><span class='oi oi-envelope-closed' title='envelope-closed' aria-hidden='true'></span> get emails</a> 
+			<a class='btn btn-primary' href='$sc?v=rev'><span class='oi oi-dollar' title='dollar' aria-hidden='true'></span> revenues</a>
+			<a class='btn btn-primary' href='$sc?v=search'><span class='oi oi-magnifying-glass' title='magnifying-glass' aria-hidden='true'></span> find students</a>
+			<a class='btn btn-primary' href='$sc?v=allchange'><span class='oi oi-graph' title='graph' aria-hidden='true'></span> change log</a>
 
 			</p>\n";
-		$body .= "<h2>All Practices</h2>";
+		$body .= "<h2>All Workshops</h2>";
 		
 		$body .= Workshops\get_workshops_list(1, $page);
 		

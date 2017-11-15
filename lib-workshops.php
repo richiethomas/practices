@@ -89,13 +89,13 @@ function get_workshop_info_tabled($wk) {
 	
 	return "<table class=\"table table-striped\">
 		<tbody>
-		<tr><td scope=\"row\">Title:</td><td>{$wk['title']}</tr>
-		<tr><td scope=\"row\">Description:</td><td>{$wk['notes']}</td></tr>
-		<tr><td scope=\"row\">When:</td><td>{$wk['when']}</tr>
-		<tr><td scope=\"row\">Where:</td><td>{$wk['place']} {$wk['lwhere']}</tr>
-		<tr><td scope=\"row\">Cost:</td><td>{$wk['cost']}</td></tr>
-		<tr><td scope=\"row\">Open Spots:</td><td>{$wk['open']} (of {$wk['capacity']})</td></tr>
-		<tr><td scope=\"row\">Waiting:</td><td>".($wk['waiting']+$wk['invited'])."</td></tr>
+		<tr><td scope=\"row\"><span class='oi oi-people' title='people' aria-hidden='true'></span> Workshop:</td><td>{$wk['title']}</tr>
+		<tr><td scope=\"row\"><span class='oi oi-book' title='book' aria-hidden='true'></span> Description:</td><td>{$wk['notes']}</td></tr>
+		<tr><td scope=\"row\"><span class='oi oi-calendar' title='calendar' aria-hidden='true'></span> When:</td><td>{$wk['when']}</tr>
+		<tr><td scope=\"row\"><span class='oi oi-map title='map' aria-hidden='true'></span> Where:</td><td>{$wk['place']} {$wk['lwhere']}</tr>
+		<tr><td scope=\"row\"><span class='oi oi-dollar' title='dollar' aria-hidden='true'></span> Cost:</td><td>{$wk['cost']}</td></tr>
+		<tr><td scope=\"row\"><span class='oi oi-clipboard' title='clipboard' aria-hidden='true'></span> Open Spots:</td><td>{$wk['open']} (of {$wk['capacity']})</td></tr>
+		<tr><td scope=\"row\"><span class='oi oi-clock' title='clock' aria-hidden='true'></span> Waiting:</td><td>".($wk['waiting']+$wk['invited'])."</td></tr>
 		$names_list
 		
 		</tbody>
@@ -173,15 +173,17 @@ function get_workshops_list($admin = 0, $page = 1) {
 	$rows = $paginator->getData($page);
 	
 	$body = $paginator->createLinks();
-	$body .= "<table class='table table-striped'><thead><tr>
-		<th class='workshop-name' scope=\"col\">Title</th>
-		<th scope=\"col\">When</th>
-		<th scope=\"col\">Where</th>
-		<th scope=\"col\">Cost</th>
-		<th scope=\"col\">Spots</th>
-		<th scope=\"col\">Action</th>
-		</tr></thead><tbody>\n";
-
+	
+	$body .= '<table class="table table-striped"><thead>
+		<tr>
+			<th class="workshop-name" scope="col"><span class="oi oi-people" title="people" aria-hidden="true"></span> Workshop</th>
+			<th scope="col"><span class="oi oi-calendar" title="calendar" aria-hidden="true"></span> When</th>
+			<th scope="col"><span class="oi oi-map" title="map" aria-hidden="true"></span> Where</th>
+			<th scope="col"><span class="oi oi-dollar" title="dollar" aria-hidden="true"></span> Cost</th>
+			<th scope="col"><span class="oi oi-clipboard" title="clipboard" aria-hidden="true"></span> Spots</th>
+			<th scope="col"><span class="oi oi-task" title="task" aria-hidden="true"></span> Action</th>
+		</tr></thead>
+			<tbody>';	
 
 	if ($rows->total > 0) {
 		
@@ -209,7 +211,7 @@ function get_workshops_list($admin = 0, $page = 1) {
 			$body .= "<tr class='$cl'>";
 			$titlelink = ($admin 
 				? "<a href='$sc?wid={$row['id']}&v=ed'>{$wk['title']}</a>"
-				: "<a href='$sc?wid={$row['id']}&v=winfo'>{$wk['title']}</a>");
+				: "<a href='$sc?wid={$row['id']}&v=winfo'>{$wk['title']} <span class=\"oi oi-info\" title=\"info\" aria-hidden=\"true\"></span></a>");
 			
 			$body .= "<td>{$titlelink}".($wk['notes'] ? "<p class='small text-muted'>{$wk['notes']}</p>" : '')."</td>
 			<td>{$wk['when']}{$public}</td>

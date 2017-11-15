@@ -311,15 +311,15 @@ function get_transcript_tabled($u, $admin = false, $page = 1) {
 	}
 
 	$body = $paginator->createLinks();
-	$body .= "<table class='table table-striped'><thead>
+	$body .= '<table class="table table-striped"><thead>
 		<tr>
-			<th class='workshop-name' scope=\"col\">Title</th>
-			<th scope=\"col\">When</th>
-			<th scope=\"col\">Where</th>
-			<th scope=\"col\">Status</th>
-			<th scope=\"col\">Action</th>
-		</tr></thead>\n";
-	$body .= "<tbody>";
+			<th class="workshop-name" scope="col"><span class="oi oi-people" title="people" aria-hidden="true"></span> Workshop</th>
+			<th scope="col"><span class="oi oi-calendar" title="calendar" aria-hidden="true"></span> When</th>
+			<th scope="col"><span class="oi oi-map" title="map" aria-hidden="true"></span> Where</th>
+			<th scope="col"><span class="oi oi-pulse" title="pulse" aria-hidden="true"></span> Status</th>
+			<th scope="col"><span class="oi oi-task" title="task" aria-hidden="true"></span> Action</th>
+		</tr></thead>
+			<tbody>';
 	
 	foreach ($rows->data as $t) {
 		$wk = \Workshops\get_workshop_info($t['workshop_id']);
@@ -343,7 +343,7 @@ function get_transcript_tabled($u, $admin = false, $page = 1) {
 			$e = get_an_enrollment($wk, $u); 
 			$body .= " (spot {$e['rank']})";
 		}
-		$body .= "</td><td><a href='index.php?v=winfo&wid={$t['workshop_id']}'>More Info</a></td></tr>\n";
+		$body .= "</td><td><a href='index.php?v=winfo&wid={$t['workshop_id']}'><span class=\"oi oi-info\" title=\"info\" aria-hidden=\"true\"></span> info</a></td></tr>\n";
 	}
 	$body .= "</tbody></table>\n";
 	$body .= $paginator->createLinks();
