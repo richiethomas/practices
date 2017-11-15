@@ -71,7 +71,7 @@ switch ($v) {
 	
 		if (Users\logged_in()) {
 			
-			$body .= "<h2 class='card-title'>Welcome";
+			$body .= "<h2 class='card-title text-light'>Welcome";
 			if ($u['display_name']) {
 				$body .= ", {$u['display_name']}";
 			}
@@ -83,9 +83,9 @@ switch ($v) {
 			"</strong></p>";
 			
 			$body .= '
-				  <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#nameEmailModal"><span class="oi oi-person" title="person" aria-hidden="true"></span> update name and email</button>
-				  <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#textModal"><span class="oi oi-phone" title="phone" aria-hidden="true"></span> update text notifications </button>				  
-				  <a href="'.$sc.'?ac=lo" class="btn btn-warning"><span class="oi oi-account-logout" title="account-logout" aria-hidden="true"></span> log out</a>
+				  <button type="button" class="btn btn-warning m-2" data-toggle="modal" data-target="#nameEmailModal"><span class="oi oi-person" title="person" aria-hidden="true"></span> update name and email</button>
+				  <button type="button" class="btn btn-warning m-2" data-toggle="modal" data-target="#textModal"><span class="oi oi-phone" title="phone" aria-hidden="true"></span> update text notifications </button>				  
+				  <a href="'.$sc.'?ac=lo" class="btn btn-warning m-2"><span class="oi oi-account-logout" title="account-logout" aria-hidden="true"></span> log out</a>
 				  
 				  <div class="modal fade" id="textModal" tabindex="-1" role="dialog" aria-labelledby="textModalLabel" aria-hidden="true">
 				    <div class="modal-dialog" role="document">
@@ -147,7 +147,7 @@ switch ($v) {
 		$body .= '
 			<div class="row justify-content-center mb-md-4">
 		
-			<div class="col col-4">
+			<div class="col m-2">
 			<div class="card text-center text-white bg-warning">
 		      <div class="card-body">
 		        <h2 class="card-title"><span class="oi oi-dollar" title="dollar" aria-hidden="true"></span><br>Paying</h2>
@@ -158,7 +158,7 @@ switch ($v) {
 		    </div> <!-- end of card -->
 		</div> <!-- end of col -->
 
-		<div class="col col-4">
+		<div class="col m-2">
 		<div class="card text-center text-white bg-danger">
 		      <div class="card-body">
 		        <h2 class="card-title"><span class="oi oi-ban" title="ban" aria-hidden="true"></span><br>No Late Drops!</h2>
@@ -172,7 +172,7 @@ switch ($v) {
 		
 		<div class="row justify-content-center mb-md-4">
 			
-			<div class="col col-4">
+			<div class="col m-2">
 			<div class="card text-center text-white bg-success">
 			      <div class="card-body">
 			        <h2 class="card-title"><span class="oi oi-envelope-closed" title="envelope-closed" aria-hidden="true"></span><br>Mailing List</h2>
@@ -183,7 +183,7 @@ switch ($v) {
 			</div> <!-- end of col -->
 			
 			
-			<div class="col col-4">
+			<div class="col m-2">
 			<div class="card text-center text-white bg-info">
 			      <div class="card-body">
 			        <h2 class="card-title"><span class="oi oi-question-mark" title="question-mark" aria-hidden="true"></span><br>Common Questions</h2>
