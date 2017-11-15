@@ -10,7 +10,7 @@ namespace Wbhkit;
 // 1.5.1 - tweaking radio 1/2016
 // 1.6 - removed 'mres', renamed file, added namespace - 11/2017
 // 2.0 - upgraded to bootstrap v4.0 - 11/2017
-// 2.1 - added html5 form validation - 11/2017
+// 2.1 - added html5 form validation, modal sub - 11/2017
 
 
 function texty($key, $value = '', $label = null, $placeholder = null, $help = null, $error = null, $validation = null, $ttype = null) {
@@ -200,6 +200,28 @@ function form_validation_javascript($form_id) {
 	})();
 	</script>
 ";
+}
+
+
+function get_modal($id, $title, $body) {
+
+  return '<div class="modal fade" id="'.$id.'" tabindex="-1" role="dialog" aria-labelledby="'.$id.'Label" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header bg-info text-white">
+          <h5 class="modal-title" id="'.$id.'Label">'.$title.'</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">'.$body.'</div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal"><span class="oi oi-circle-x" title="circle-x" aria-hidden="true"></span> Close</button>
+        </div>
+      </div>
+    </div>
+  </div>';
+  
 }
 
 function parse_path() {

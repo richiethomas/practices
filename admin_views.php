@@ -215,7 +215,7 @@ switch ($v) {
 		);
 		foreach ($workshops as $wid => $w) {
 			$wk = Workshops\get_workshop_info($w['id']);
-			$body .= "<tr><td>({$w['id']}) {$w['showtitle']}</td>
+			$body .= "<tr><td>({$w['id']}) {$w['showtitle']}<br><span class='text-secondary'>{$w['place']}</span></td>
 			<td>{$wk['enrolled']} / {$w['capacity']}</td>
 			<td>{$w['cost']}</td>
 			<td>".($w['cost']*$wk['enrolled'])."</td>

@@ -85,56 +85,13 @@ switch ($v) {
 			$body .= '
 				  <button type="button" class="btn btn-warning m-2" data-toggle="modal" data-target="#nameEmailModal"><span class="oi oi-person" title="person" aria-hidden="true"></span> update name and email</button>
 				  <button type="button" class="btn btn-warning m-2" data-toggle="modal" data-target="#textModal"><span class="oi oi-phone" title="phone" aria-hidden="true"></span> update text notifications </button>				  
-				  <a href="'.$sc.'?ac=lo" class="btn btn-warning m-2"><span class="oi oi-account-logout" title="account-logout" aria-hidden="true"></span> log out</a>
+				  <a href="'.$sc.'?ac=lo" class="btn btn-warning m-2"><span class="oi oi-account-logout" title="account-logout" aria-hidden="true"></span> log out</a>';
 				  
-				  <div class="modal fade" id="textModal" tabindex="-1" role="dialog" aria-labelledby="textModalLabel" aria-hidden="true">
-				    <div class="modal-dialog" role="document">
-				      <div class="modal-content">
-				        <div class="modal-header">
-				          <h5 class="modal-title" id="exampleModalLabel"><span class="oi oi-phone" title="phone" aria-hidden="true"></span> Text Notifications</h5>
-				          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-				            <span aria-hidden="true">&times;</span>
-				          </button>
-				        </div>
-				        <div class="modal-body">';
-						
-					$body .= Users\edit_text_preferences($u);
+				  $body .= Wbhkit\get_modal('textModal', '<span class="oi oi-phone" title="phone" aria-hidden="true"></span> Text Notifications', Users\edit_text_preferences($u));
 
-				      $body .= '</div>
-				        <div class="modal-footer">
-				          <button type="button" class="btn btn-secondary" data-dismiss="modal"><span class="oi oi-circle-x" title="circle-x" aria-hidden="true"></span> Close</button>
-				        </div>
-				      </div>
-				    </div>
-				  </div>
-
-				  
-				  <div class="modal fade" id="nameEmailModal" tabindex="-1" role="dialog" aria-labelledby="nameEmailModalLabel" aria-hidden="true">
-				    <div class="modal-dialog" role="document">
-				      <div class="modal-content">
-				        <div class="modal-header">
-				          <h5 class="modal-title" id="exampleModalLabel"><span class="oi oi-person" title="person" aria-hidden="true"></span> Name and Email</h5>
-				          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-				            <span aria-hidden="true">&times;</span>
-				          </button>
-				        </div>
-				       	 <div class="modal-body">';
-						
-						$body .= '<div class="row mb-md-4"><div class="col">'.
-								Users\edit_display_name($u).
-								'</div></div> <!-- end of col and row -->
-
-								<div class="row mb-md-4"><div class="col">'.
-							Users\edit_change_email($u).
-								'</div></div> <!-- end of col and row -->	
-								</div>
-					        <div class="modal-footer">
-				          <button type="button" class="btn btn-secondary" data-dismiss="modal"><span class="oi oi-circle-x" title="circle-x" aria-hidden="true"></span> Close</button>
-						  	</div>
-				      </div>
-				    </div>
-				  </div>';
-
+				  $body .= Wbhkit\get_modal('nameEmailModal', '<span class="oi oi-person" title="person" aria-hidden="true"></span> Name and Email', Users\edit_display_name($u).'<br><br>'.Users\edit_change_email($u));
+				  	  
+			
 		} else {
 			$body .= "<h2 class='card-title'>Log In To This Site</h2>\n";
 			$body .= "<p>First you must log in. We do that via email.</p>";
@@ -147,7 +104,7 @@ switch ($v) {
 		$body .= '
 			<div class="row justify-content-center mb-md-4">
 		
-			<div class="col m-2">
+			<div class="col-md-4 m-2">
 			<div class="card text-center text-white bg-warning">
 		      <div class="card-body">
 		        <h2 class="card-title"><span class="oi oi-dollar" title="dollar" aria-hidden="true"></span><br>Paying</h2>
@@ -158,7 +115,7 @@ switch ($v) {
 		    </div> <!-- end of card -->
 		</div> <!-- end of col -->
 
-		<div class="col m-2">
+		<div class="col-md-4 m-2">
 		<div class="card text-center text-white bg-danger">
 		      <div class="card-body">
 		        <h2 class="card-title"><span class="oi oi-ban" title="ban" aria-hidden="true"></span><br>No Late Drops!</h2>
@@ -172,7 +129,7 @@ switch ($v) {
 		
 		<div class="row justify-content-center mb-md-4">
 			
-			<div class="col m-2">
+			<div class="col-md-4 m-2">
 			<div class="card text-center text-white bg-success">
 			      <div class="card-body">
 			        <h2 class="card-title"><span class="oi oi-envelope-closed" title="envelope-closed" aria-hidden="true"></span><br>Mailing List</h2>
@@ -183,11 +140,11 @@ switch ($v) {
 			</div> <!-- end of col -->
 			
 			
-			<div class="col m-2">
+			<div class="col-md-4 m-2">
 			<div class="card text-center text-white bg-info">
 			      <div class="card-body">
 			        <h2 class="card-title"><span class="oi oi-question-mark" title="question-mark" aria-hidden="true"></span><br>Common Questions</h2>
-			        <p class="card-text text-dark">You can be late. You can leave early. Pre-reqs are not enforced. Click below to see other common questions. Or else email Will Hines at w.hines@gmail.com</p>
+			        <p class="card-text text-dark">You can be late. You can leave early. Pre-reqs are not enforced. Click below to see other common questions.</p>
 			        <a href="$sc?v=faq" class="btn btn-outline-light">More Common Questions</a>
 			      </div> <!-- end of card body -->
 			    </div> <!-- end of card -->
