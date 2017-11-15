@@ -174,7 +174,7 @@ function get_workshops_list($admin = 0, $page = 1) {
 	
 	$body = $paginator->createLinks();
 	
-	$body .= '<table class="table table-striped table-bordered"><thead>
+	$body .= '<table class="table table-striped table-bordered"><thead class="thead-dark">
 		<tr>
 			<th class="workshop-name" scope="col"><span class="oi oi-people" title="people" aria-hidden="true"></span> Workshop</th>
 			<th scope="col"><span class="oi oi-calendar" title="calendar" aria-hidden="true"></span> When</th>
