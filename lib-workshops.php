@@ -87,7 +87,7 @@ function get_workshop_info_tabled($wk) {
 		$names_list = "<tr><td scope=\"row\">Currently Registered:</td><td>{$names_list}</td></tr>";
 	}
 	
-	return "<table class=\"table table-striped\">
+	return "<table class=\"table table-striped table-bordered\">
 		<tbody>
 		<tr><td scope=\"row\"><span class='oi oi-people' title='people' aria-hidden='true'></span> Workshop:</td><td>{$wk['title']}</tr>
 		<tr><td scope=\"row\"><span class='oi oi-book' title='book' aria-hidden='true'></span> Description:</td><td>{$wk['notes']}</td></tr>
@@ -174,7 +174,7 @@ function get_workshops_list($admin = 0, $page = 1) {
 	
 	$body = $paginator->createLinks();
 	
-	$body .= '<table class="table table-striped"><thead>
+	$body .= '<table class="table table-striped table-bordered"><thead>
 		<tr>
 			<th class="workshop-name" scope="col"><span class="oi oi-people" title="people" aria-hidden="true"></span> Workshop</th>
 			<th scope="col"><span class="oi oi-calendar" title="calendar" aria-hidden="true"></span> When</th>

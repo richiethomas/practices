@@ -66,7 +66,7 @@ switch ($v) {
 		
 	
 		$body .= "<div class='row mb-md-4'><div class='col-md-12'>
-			<div id='login_prompt' class='card border-info bg-light'>
+			<div id='login_prompt' class='card border-info bg-success'>
 			<div class='card-body'>\n";
 	
 		if (Users\logged_in()) {
@@ -83,9 +83,9 @@ switch ($v) {
 			"</strong></p>";
 			
 			$body .= '
-				  <button type="button" class="btn btn-info" data-toggle="modal" data-target="#nameEmailModal"><span class="oi oi-person" title="person" aria-hidden="true"></span> update name and email</button>
-				  <button type="button" class="btn btn-info" data-toggle="modal" data-target="#textModal"><span class="oi oi-phone" title="phone" aria-hidden="true"></span> update text notifications </button>				  
-				  <a href="'.$sc.'?ac=lo" class="btn btn-info"><span class="oi oi-account-logout" title="account-logout" aria-hidden="true"></span> log out</a>
+				  <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#nameEmailModal"><span class="oi oi-person" title="person" aria-hidden="true"></span> update name and email</button>
+				  <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#textModal"><span class="oi oi-phone" title="phone" aria-hidden="true"></span> update text notifications </button>				  
+				  <a href="'.$sc.'?ac=lo" class="btn btn-warning"><span class="oi oi-account-logout" title="account-logout" aria-hidden="true"></span> log out</a>
 				  
 				  <div class="modal fade" id="textModal" tabindex="-1" role="dialog" aria-labelledby="textModalLabel" aria-hidden="true">
 				    <div class="modal-dialog" role="document">
@@ -148,10 +148,10 @@ switch ($v) {
 			<div class="row justify-content-center mb-md-4">
 		
 			<div class="col col-4">
-			<div class="card text-center text-white bg-success">
+			<div class="card text-center text-white bg-warning">
 		      <div class="card-body">
 		        <h2 class="card-title"><span class="oi oi-dollar" title="dollar" aria-hidden="true"></span><br>Paying</h2>
-		        <p class="card-text">
+		        <p class="card-text text-dark">
 				Pay in person or with Venmo to whines@gmail.com. On the day of the workshop is fine.</p>
 		        <a href="http://venmo.com/willhines?txn=pay&share=friends&amount=25&note=improv%20workshop"  class="btn btn-outline-light">Venmo whines@gmail.com</a>
 		      </div> <!-- end of card body -->
@@ -162,7 +162,7 @@ switch ($v) {
 		<div class="card text-center text-white bg-danger">
 		      <div class="card-body">
 		        <h2 class="card-title"><span class="oi oi-ban" title="ban" aria-hidden="true"></span><br>No Late Drops!</h2>
-		        <p class="card-text">Please don\'t drop out late! I mean, if you gotta you gotta, but.. try not to?<br><br><br>&nbsp;</p>
+		        <p class="card-text text-dark">Please don\'t drop out late! I mean, if you gotta you gotta, but.. try not to?<br><br><br>&nbsp;</p>
 		      </div> <!-- end of card body -->
 		    </div> <!-- end of card -->
 		</div> <!-- end of col -->
@@ -173,10 +173,10 @@ switch ($v) {
 		<div class="row justify-content-center mb-md-4">
 			
 			<div class="col col-4">
-			<div class="card text-center text-white bg-info">
+			<div class="card text-center text-white bg-success">
 			      <div class="card-body">
 			        <h2 class="card-title"><span class="oi oi-envelope-closed" title="envelope-closed" aria-hidden="true"></span><br>Mailing List</h2>
-			        <p class="card-text">You are NOT automatically put on my mailing list for these workshops. If you WANT to be on that mailing list, sign up right here.</p>
+			        <p class="card-text text-dark">You are NOT automatically put on my mailing list for these workshops. If you WANT to be on that mailing list, sign up right here.</p>
 			        <a href="http://eepurl.com/c6-T-H" class="btn btn-outline-light">Join Mailing List</a>
 			      </div> <!-- end of card body -->
 			    </div> <!-- end of card -->
@@ -184,10 +184,10 @@ switch ($v) {
 			
 			
 			<div class="col col-4">
-			<div class="card text-center text-white bg-warning">
+			<div class="card text-center text-white bg-info">
 			      <div class="card-body">
 			        <h2 class="card-title"><span class="oi oi-question-mark" title="question-mark" aria-hidden="true"></span><br>Common Questions</h2>
-			        <p class="card-text">You can be late. You can leave early. Pre-reqs are not enforced. Click below to see other common questions. Or else email Will Hines at w.hines@gmail.com</p>
+			        <p class="card-text text-dark">You can be late. You can leave early. Pre-reqs are not enforced. Click below to see other common questions. Or else email Will Hines at w.hines@gmail.com</p>
 			        <a href="$sc?v=faq" class="btn btn-outline-light">More Common Questions</a>
 			      </div> <!-- end of card body -->
 			    </div> <!-- end of card -->
