@@ -323,14 +323,15 @@ function get_transcript_tabled($u, $admin = false, $page = 1) {
 	
 	foreach ($rows->data as $t) {
 		$wk = \Workshops\get_workshop_info($t['workshop_id']);
+		$cl = 'table-';
 		if ($wk['type'] == 'past') {
-			$cl = 'light';
+			$cl .= 'light';
 		} elseif ($t['status_id'] == ENROLLED) {
-			$cl = 'success';
+			$cl .= 'success';
 		} else {
-			$cl = 'danger';
+			$cl .= 'warning';
 		}
-
+		
 		$body .= "<tr class='$cl'><td>";
 		if ($admin) {
 			$body .= "<a href=\"?wid={$t['workshop_id']}&v=ed\">{$t['title']}</a>";

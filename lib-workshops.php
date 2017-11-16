@@ -196,14 +196,15 @@ function get_workshops_list($admin = 0, $page = 1) {
 				$public = "<br><small>Public: ".date('D M j - g:ia', strtotime($wk['when_public']))."</small>\n";
 			}	
 					
+			$cl = 'table-';
 			if (date('z', strtotime($wk['start'])) == date('z')) { // today
-				$cl = 'info'; 
+				$cl .= 'info'; 
 			} elseif ($wk['type'] == 'soldout') {
-				$cl = 'danger';
+				$cl .= 'danger';
 			} elseif ($wk['type'] == 'open') {
-				$cl = 'success';
+				$cl .= 'success';
 			} elseif ($wk['type'] == 'past') {
-				$cl = 'light';
+				$cl .= 'light';
 			} else  {
 				$cl = '';
 			}
