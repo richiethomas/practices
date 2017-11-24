@@ -16,15 +16,15 @@ spl_autoload_register(function ($className) {
 });
 
 // set objects, code, et
-include 'db.php';
-include 'wbh_webkit.php';
-include 'wbh_webkit_pagination.php';
-include 'time_difference.php';
-include 'lib-users.php';
-include 'lib-workshops.php';
-include 'lib-enrollments.php';
-include 'lib-lookups.php';
-include 'lib-emails.php';
+include 'libs/db.php';
+include 'libs/wbh_webkit.php';
+include 'libs/wbh_webkit_pagination.php';
+include 'libs/time_difference.php';
+include 'libs/lib-users.php';
+include 'libs/lib-workshops.php';
+include 'libs/lib-enrollments.php';
+include 'libs/lib-lookups.php';
+include 'libs/lib-emails.php';
 
 // some constants
 define('DEBUG_MODE', false);

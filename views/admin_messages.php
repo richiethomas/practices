@@ -1,6 +1,6 @@
 <?php
 	
-		echo  "<div class='row'><div class='col-md-6'><h2>emails for <a href='$sc?ac=ed&wid={$wk['id']}'>{$wk['showtitle']}</a></h2>";
+		echo  "<div class='row'><div class='col-md-6'><h2>emails for <a href='admin.php?ac=ed&wid={$wk['id']}'>{$wk['showtitle']}</a></h2>";
 		echo  "<p>(Will replace TITLE in subject or note. Also, practice info is appended to message.)</p>\n";
 		echo  "<div class='well'><h3>Send Message 
 			<small><a href='$sc?ac=remind&wid={$wk['id']}'>load reminder</a> / 

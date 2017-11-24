@@ -2,10 +2,9 @@
 $sc = "admin.php";
 $heading = "practices: admin";
 include 'lib-master.php';
-include 'validate.php';
+include 'libs/validate.php';
 
 $wk_vars = array('wid', 'title', 'notes', 'start', 'end', 'lid', 'cost', 'capacity', 'notes', 'revenue', 'expenses', 'when_public', 'email', 'con');
-$mess_vars = array('st', 'note', 'subject', 'sms');
 
 Wbhkit\set_vars(array('st', 'con', 'lmod'));
 
@@ -47,76 +46,6 @@ switch ($ac) {
 			$message = Enrollments\change_status($wk, $u, $st, $con);
 		}
 		break;
-
-	case 'sendmsg':
-
-		Wbhkit\set_vars($mess_vars);
-
-		if (!$st) {
-			$error = 'No status chosen';
-			break;
-		}
-		if (!$wk['id']) {
-			$error = 'No workshop chosen';
-			break;
-		}
-		$stds = Enrollments\get_students($wk['id'], $st);
-		$sent = '';
-		$subject = preg_replace('/TITLE/', $wk['showtitle'], $subject);
-		$note = preg_replace('/TITLE/', $wk['showtitle'], $note);
-		$sms = preg_replace('/TITLE/', $wk['showtitle'], $sms);
-
-		foreach ($stds as $std) {
-			$key = Users\get_key($std['id']);
-			$trans = URL."index.php?key=$key";
-			$msg = $note;
-			$msg .= "\n\nLog in or drop out here:\n$trans\n";
-			$msg .= "
-Regarding this practice:
-Title: {$wk['showtitle']}
-Where: {$wk['place']}
-When: {$wk['when']}";
-			mail($std['email'], $subject, $msg, 'From: '.WEBMASTER);
-			$sent .= "{$std['email']}, ";
-		
-			Emails\send_text($std, $sms); // routine will check if they want texts and have proper info
-		
-		}
-		$message = "Email '$subject' sent to $sent";
-		$v = 'mess';
-		break;
-
-	case 'remind':
-		$subject = "REMINDER: workshop {$wk['friendly_when']} at {$wk['place']}";
-		$note = "Hey! You're enrolled in this workshop. ";
-		if ($wk['type'] == 'past') {
-			$note .= "Actually, it looks like this workshop is in the past, which means this reminder was probably sent in error. But since I'm just a computer, then maybe there's something going on that I don't quite grasp. At any rate, this is a reminder. ";
-		} else {
-			$note .= "It starts ".nicetime($wk['start']).".";
-		}
-		$note .=" If you think you're not going to make it, that's fine but use the link below to drop out. ";
-		if ($wk['waiting'] > 0) {
-			$note .= "There are currently people on the waiting list who might want to go. ";
-		}
-		$note .= " Okay, see you soon!";
-		$sms = "Reminder: workshop {$wk['friendly_when']} at {$wk['place']}";
-		$st = ENROLLED; // pre-populating the status drop in 'send message' form
-		$v = 'mess';
-		break;
-
-	case 'feedback':
-		$subject = "Feedback for '{$wk['showtitle']}'";
-		$note = "Thank you for taking this workshop!
-
-If you want: I'd love to know feedback on the workshop. Any suggestions of what you liked or what you'd change.
-
-No worries if you'd rather not answer! Thank you all again for taking it!
-
--Will";
-		$st = ENROLLED; // pre-populating the status drop in 'send message' form
-		$v = 'mess';
-		break;
-
 
 	case 'up':
 	
@@ -183,22 +112,6 @@ No worries if you'd rather not answer! Thank you all again for taking it!
 		$message = Enrollments\handle_enroll($wk, $u, $email, $con);
 		$v = 'ed';
 		break;
-
-	case 'rev':
-
-		foreach ($_REQUEST as $key => $value) {
-			$exp = null;
-			$rev = null;
-			if (substr($key, 0, 8) == 'revenue_') {
-				$id = substr($key, 8);
-				Workshops\update_workshop_col($id, 'revenue', $value);
-			}
-			if (substr($key, 0, 9) == 'expenses_') {
-				$id = substr($key, 9);
-				Workshops\update_workshop_col($id, 'expenses', $value);
-			}
-		}
-		break;
 		
 	case 'gemail':
 	
@@ -253,18 +166,6 @@ switch ($v) {
 		$view->renderPage('admin_change_status');
 		break;
 	
-	case 'mess':
-		
-		$view->add_globals($mess_vars);		
-		$students = array();
-		foreach ($statuses as $stid => $status_name) {
-			$students[$stid] = Enrollments\get_students($wid, $stid);
-		}	
-		$view->data['students'] = $students;
-		$view->data['statuses'] = $statuses;
-		$view->renderPage('admin_send_messages');
-		break;
-	
 	case 'ed':
 		$stats = array();
 		$lists = array();
@@ -300,18 +201,6 @@ switch ($v) {
 	case 'gemail':
 		$view->add_globals(array('all_workshops', 'workshops', 'statuses', 'results'));
 		$view->renderPage('admin_gemail');
-		break;
-	
-
-	case 'rev':
-		$vars = array('searchstart', 'searchend');
-		Wbhkit\set_vars($vars);
-		if ($searchstart) { $searchstart = date('Y-m-d H:i:s', strtotime($searchstart)); }
-		if ($searchend) { $searchend = date('Y-m-d H:i:s', strtotime($searchend)); }
-
-		$view->add_globals($vars);	
-		$view->data['workshops_list'] = Workshops\get_workshops_list_bydate($searchstart, $searchend);
-		$view->renderPage('admin_rev');
 		break;
 
 	case 'home':

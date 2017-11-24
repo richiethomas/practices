@@ -1,7 +1,7 @@
 <p>
 	<a class='btn btn-primary' href='#add'><span class='oi oi-people' title='people' aria-hidden='true'></span> add a workshop</a> 
 	<a class='btn btn-primary' href='<?php echo $sc; ?>?ac=gemail'><span class='oi oi-envelope-closed' title='envelope-closed' aria-hidden='true'></span> get emails</a> 
-	<a class='btn btn-primary' href='<?php echo $sc; ?>?ac=rev'><span class='oi oi-dollar' title='dollar' aria-hidden='true'></span> revenues</a>
+	<a class='btn btn-primary' href='admin_revenue'><span class='oi oi-dollar' title='dollar' aria-hidden='true'></span> revenues</a>
 	<a class='btn btn-primary' href='admin_search.php'><span class='oi oi-magnifying-glass' title='magnifying-glass' aria-hidden='true'></span> find students</a>
 	<a class='btn btn-primary' href='<?php echo $sc; ?>?ac=allchange'><span class='oi oi-graph' title='graph' aria-hidden='true'></span> change log</a>
 </p>
