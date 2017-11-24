@@ -5,8 +5,10 @@ include 'lib-master.php';
 include 'libs/validate.php';
 
 $wk_vars = array('wid', 'title', 'notes', 'start', 'end', 'lid', 'cost', 'capacity', 'notes', 'revenue', 'expenses', 'when_public', 'email', 'con');
+Wbhkit\set_vars($wk_vars);
 
-Wbhkit\set_vars(array('st', 'con', 'lmod'));
+$change_status_vars = array('st', 'con', 'lmod');
+Wbhkit\set_vars($change_status_vars);
 
 $v = null;
 
@@ -16,19 +18,16 @@ switch ($ac) {
 		Users\delete_student($u['id']);
 		break;
 	
+		// change last modified (moves people in waiting list order)
 	case 'cr':
 		$sql = 'update registrations set last_modified = \''.Database\mres(date('Y-m-d H:i:s', strtotime($lmod))).'\' where workshop_id = '.Database\mres($wk['id']).' and user_id = '.Database\mres($u['id']);
 		Database\mysqli($sql) or Database\db_error();
 		$v = 'cs';
 		break; 
 		
-	case 'lo':
-		Validate\invalidate();
-		header("Location: $sc");
-		break;
-		 
 	case 'cdel':
-		$error = "Are you sure you want to delete '{$wk['title']}'? <a class='btn btn-danger' href='$sc?ac=del&wid={$wid}'>delete</a>";
+		$error = "Are you sure you want to delete '{$wk['title']}'? <a class='btn btn-danger' href='$sc?ac=del&wid={$wk['id']}'>delete</a>";
+		$v = 'ed';
 		break;
 		
 	case 'del':
@@ -41,7 +40,6 @@ switch ($ac) {
 		break;
 		
 	case 'cs':
-		\Wbhkit\set_vars('st', 'con', 'lmod');
 		if ($st) {
 			$message = Enrollments\change_status($wk, $u, $st, $con);
 		}
@@ -49,7 +47,6 @@ switch ($ac) {
 
 	case 'up':
 	
-		Wbhkit\set_vars($wk_vars);
 		$sql = sprintf("update workshops
 		set title = '%s', start = '%s', end = '%s', cost = %u, capacity = %u, location_id = %u, notes = '%s', revenue = %u, expenses = %u, when_public = '%s'
 		where id = %u",
@@ -71,9 +68,9 @@ switch ($ac) {
 		break;
 		
 	case 'ad':
-		Wbhkit\set_vars($wk_vars);
 		if (!$title) {
 			$error = 'Must include a title for new workshop.';
+			$v = 'home';
 			break;
 		}
 
@@ -93,7 +90,7 @@ switch ($ac) {
 		$wid = $db->insert_id;
 		$wk = Workshops\get_workshop_info($wid);
 		$message = "Added practice ({$title})";
-		$v = 'home';
+		$v = 'ed';
 		break;
 
 	case 'cw':
@@ -112,46 +109,7 @@ switch ($ac) {
 		$message = Enrollments\handle_enroll($wk, $u, $email, $con);
 		$v = 'ed';
 		break;
-		
-	case 'gemail':
-	
-		Wbhkit\set_vars(array('workshops'));
-		$all_workshops = Workshops\get_workshops_dropdown();
-		$results = null;
-		if (is_array($workshops)) {
-			$statuses[0] = 'all'; // modifying global $statuses
-			foreach ($statuses as $stid => $status_name) { 
-				foreach ($workshops as $workshop_id) {
-					if ($workshop_id) {
-						$stds = Enrollments\get_students($workshop_id, $stid);
-						$students = array();
-						foreach ($stds as $as) {
-							$students[] = $as['email'];
-						}
-					}
-				}
-				$students = array_unique($students);
-				natcasesort($students);
-				$results[$stid] = $students; // attach list of students
-			}
-		}
-		break;
 
-	case 'at':
-		if (isset($_REQUEST['users']) && is_array($_REQUEST['users']) && $wid) {
-			$users = $_REQUEST['users'];
-			foreach ($statuses as $sid => $sts) {
-				$stds = Enrollments\get_students($wid, $sid);
-				foreach ($stds as $as) {
-					if (in_array($as['id'], $users)) {
-						Enrollments\update_attendance($wid, $as['id'], 1);
-					} else {
-						Enrollments\update_attendance($wid, $as['id'], 0);
-					}
-				}
-			}		
-		}
-		break;
 						
 }
 
@@ -163,6 +121,7 @@ switch ($v) {
 	
 	case 'cs':
 		$view->data['e'] = Enrollments\get_an_enrollment($wk, $u);
+		$view->data['statuses'] = $statuses;
 		$view->renderPage('admin_change_status');
 		break;
 	
@@ -177,30 +136,6 @@ switch ($v) {
 		$log = Enrollments\get_status_change_log($wk);
 		$view->add_globals(array('stats', 'statuses', 'lists', 'log'));		
 		$view->renderPage('admin_edit');
-		break;
-	
-	case 'at':
-		$students = array();
-		if ($wid) {
-			foreach ($statuses as $stid => $status_name) {
-				$students[$stid] = Enrollments\get_students($wid, $stid);
-			}
-		}
-		$view->data['wk'] = $wk;
-		$view->data['statuses'] = $statuses; // global
-		$view->data['students'] = $students;
-		$view->renderPage('admin_attendance');
-		break;
-	
-	case 'allchange':
-	
-		$view->data['log'] = Enrollments\get_status_change_log();
-		$view->renderPage('admin_allchange');
-		break;
-	
-	case 'gemail':
-		$view->add_globals(array('all_workshops', 'workshops', 'statuses', 'results'));
-		$view->renderPage('admin_gemail');
 		break;
 
 	case 'home':

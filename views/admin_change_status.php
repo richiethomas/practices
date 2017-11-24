@@ -1,9 +1,9 @@
 <?php
-		echo  "<div class='row'><div class='col-md-4'><h2><a href='$sc?v=ed&wid={$wid}'>{$wk['showtitle']}</a></h2>".
+		echo  "<div class='row'><div class='col-md-5'><h2><a href='$sc?ac=ed&wid={$wk['id']}'>{$wk['showtitle']}</a></h2>".
 		"<p>Email: {$u['email']}</p>
 		<p>Display Name: {$u['display_name']}</p>
 		<p>Status: {$e['status_name']}</p>";
-		
+
 		echo  "<form action ='$sc' method='post'>".
 		Wbhkit\hidden('wid', $wk['id']).
 		Wbhkit\hidden('uid', $u['id']).
