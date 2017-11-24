@@ -11,10 +11,7 @@ if ($sort != 'n' && $sort != 't' && $sort != 'd') {
 }
 
 switch ($ac) {
-	
-	case 'delstudentconfirm':
-		Users\delete_student($u['id']);
-		break;
+
 	
 	case 'zeroconfirm':
 
