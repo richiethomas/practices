@@ -42,7 +42,6 @@ echo "<div class=\"container\">\n";
 if (strpos($sc, 'admin') !== false ) {
 	echo "<h1 class=\"display-2\"><a href=\"admin.php\">{$heading}</a></h1>\n";
 } else {
-	echo $sc;
 	echo "<div class=\"jumbotron bg-gradient-info  text-light\">";
 	echo "<h1 class=\"display-2\"><a class=\"text-light\" href=\"{$sc}\">{$heading}</a></h1>\n";	
 	echo "<p class=\"lead text-dark\">Greetings. This is a list of improv practices taught by Will Hines.";

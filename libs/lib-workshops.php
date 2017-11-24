@@ -165,7 +165,7 @@ function get_workshops_list($admin = 0, $page = 1) {
 		$sql .= " order by start desc";
 	} else {
 		$mysqlnow = date("Y-m-d H:i:s");
-		$sql .= "where when_public > '$mysqlnow' and start > '$mysqlnow' order by start asc";
+		$sql .= "where when_public < '$mysqlnow' and start > '$mysqlnow' order by start asc";
 	}
 		
 	$paginator  = new \Paginator( \Database\wh_set_db_link(), $sql );
