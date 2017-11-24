@@ -216,7 +216,7 @@ function delete_student($uid = 0) {
 	}
 	$sql = "delete from registrations where user_id = ".\Database\mres($uid);
 	\Database\mysqli($sql) or \Database\db_error();
-	$sql = "delete from users where id = ".mres($uid);
+	$sql = "delete from users where id = ".\Database\mres($uid);
 	\Database\mysqli($sql) or \Database\db_error();
 	$sql = "delete from status_change_log where user_id = ".\Database\mres($uid);
 	\Database\mysqli($sql) or \Database\db_error();
@@ -225,7 +225,7 @@ function delete_student($uid = 0) {
 }
 
 function edit_display_name($u) {
-	global $sc, $ac;
+	global $sc;
 	$body = '';
 	$body .= "<form action='$sc' method='post'>\n";
 	$body .= \Wbhkit\hidden('uid', $u['id']);
@@ -248,7 +248,7 @@ function update_display_name(&$u,  &$message, &$error) {
 		\Database\mres($u['id']));		
 		\Database\mysqli($sql) or \Database\db_error();
 		$u = get_user_by_id($u['id']); // updated so the form is correctly populated on refill
-		$message = 'Display name updated!';
+		$message = "Display name updated to '{$u['display_name']}'";
 		return true;
 	}
 
@@ -270,7 +270,6 @@ function edit_change_email($u) {
 }
 
 function change_email($ouid, $newe) {
-	return null;
 	$news = get_user_by_email($newe); 
 	$olds = get_user_by_id($ouid);
 	if ($news) {

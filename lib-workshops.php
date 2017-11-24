@@ -211,8 +211,8 @@ function get_workshops_list($admin = 0, $page = 1) {
 		
 			$body .= "<tr class='$cl'>";
 			$titlelink = ($admin 
-				? "<a href='$sc?wid={$row['id']}&v=ed'>{$wk['title']}</a>"
-				: "<a href='$sc?wid={$row['id']}&v=winfo'>{$wk['title']} <span class=\"oi oi-info\" title=\"info\" aria-hidden=\"true\"></span></a>");
+				? "<a href='$sc?wid={$row['id']}&ac=ed'>{$wk['title']}</a>"
+				: "<a href='$sc?wid={$row['id']}'>{$wk['title']} <span class=\"oi oi-info\" title=\"info\" aria-hidden=\"true\"></span></a>");
 			
 			$body .= "<td>{$titlelink}".($wk['notes'] ? "<p class='small text-muted'>{$wk['notes']}</p>" : '')."</td>
 			<td>{$wk['when']}{$public}</td>
@@ -236,7 +236,7 @@ function get_workshops_list($admin = 0, $page = 1) {
 }
 
 
-function get_workshops_list_raw($start = null, $end = null) {
+function get_workshops_list_bydate($start = null, $end = null) {
 	$sql = "select w.*, l.place, l.lwhere 
 	from workshops w LEFT OUTER JOIN locations l on w.location_id = l.id WHERE 1 = 1 ";
 	if ($start) {
@@ -252,7 +252,7 @@ function get_workshops_list_raw($start = null, $end = null) {
 		$row['showstart'] = date('D M j - g:ia', strtotime($row['start']));
 		$row['showend'] = date('g:ia', strtotime($row['end']));		
 		$row['showtitle'] = "{$row['title']} - {$row['showstart']}-{$row['showend']}";
-		$workshops[$row['id']] = $row;
+		$workshops[$row['id']] = get_workshop_info($row['id']);
 	}
 	return $workshops;
 }	
@@ -270,6 +270,17 @@ function empty_workshop() {
 		'expenses' => '',
 		'when_public' => ''
 	);
+}
+function add_workshop_form($wk) {
+	global $sc;
+	return "<form id='add_wk' action='$sc' method='post' novalidate>".
+	\Wbhkit\form_validation_javascript('add_wk').
+	"<fieldset name='session_add'><legend>Add Session</legend>".
+	\Wbhkit\hidden('ac', 'ad').
+	workshop_fields($wk).
+	\Wbhkit\submit('Add').
+	"</fieldset></form>";
+	
 }
 
 function workshop_fields($wk) {

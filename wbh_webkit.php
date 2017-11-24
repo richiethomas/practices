@@ -141,7 +141,7 @@ function form_element_start() {
 function form_help_block($id, $help = null, $error = null) {
 	$id = figure_help_id($id);
 	$element = '';
-	if ($help) { $element = "<small id ='$id' class='form-text text-muted'>$help</small>"; }
+	if ($help) { $element = "<small id ='$id' class='form-text'>$help</small>"; }
 	if ($error) { $element .= "<div class='invalid-feedback'>{$error}</div>\n"; }
 	return $element;
 }

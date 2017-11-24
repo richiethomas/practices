@@ -17,6 +17,8 @@ function get_enrollments($id, $status_id = ENROLLED) {
 function get_an_enrollment($wk, $u) {
 	$statuses = \Lookups\get_statuses();
 	$sql = "select r.* from registrations r where r.workshop_id = ".\Database\mres($wk['id'])." and user_id = ".\Database\mres($u['id']);
+
+
 	$rows = \Database\mysqli( $sql) or \Database\db_error($sql);
 	while ($row = mysqli_fetch_assoc($rows)) {
 		$sql2 = "select r.* from registrations r where r.workshop_id = ".\Database\mres($wk['id'])." and r.status_id = '".\Database\mres($row['status_id'])."' order by last_modified";
@@ -34,6 +36,51 @@ function get_an_enrollment($wk, $u) {
 	}
 	return false;
 }
+
+
+function get_enrollment_prompt($wk, $u) {
+	
+	global $sc;
+	
+	if ($wk['type'] == 'past') {
+		$point = "This workshop is IN THE PAST.";
+	} else {
+		if (\Users\logged_in()) {
+			$e = get_an_enrollment($wk, $u);
+	
+			$enroll_link = "$sc?ac=enroll&wid={$wk['id']}";
+	
+			switch ($e['status_id']) {
+				case ENROLLED:
+					$point = "You are ENROLLED in the practice listed below. Would you like to <a class='btn btn-primary' href='$sc?ac=drop&wid={$wk['id']}&uid={$u['id']}&key={$key}&v=winfo'>drop</a> it?";
+					break;
+				case WAITING:
+					$point = "You are spot number {$e['rank']} on the WAIT LIST for the practice listed below. Would you like to <a class='btn btn-primary' href='$sc?ac=drop&wid={$wk['id']}&uid={$u['id']}&key={$key}&v=winfo'>drop</a> it?";
+					break;
+				case INVITED:
+					$point = "A spot opened up in the practice listed below. Would you like to <a class='btn btn-primary' href='$sc?ac=accept&wid={$wk['id']}&uid={$u['id']}&key={$key}&v=winfo'>accept</a> it, or <a class='btn btn-primary' href='$sc?ac=decline&wid={$wk['id']}&uid={$u['id']}&key={$key}&v=winfo'>decline</a> it?";
+					break;
+				case DROPPED:
+					$point = "You have dropped out of the practice listed below. Would you like to <a class='btn btn-primary'  href='$enroll_link'>re-enroll</a>?";
+					break;
+				default:
+		
+					$point = "You are not currenty signed up for the practice listed below. ".
+						($wk['type'] == 'soldout' 
+						? "It is full. Want to <a class='btn btn-primary' href='$enroll_link'>join the wait list</a>?"
+						: "Want to <a class='btn btn-primary' href='$enroll_link'>enroll</a>?");
+		
+					break;
+			}
+		} else {
+			$point = "If you wish to enroll, you must first log in <a href='$sc'>on the front page</a>.";
+		}
+		
+	}		
+	
+	return $point;
+}
+
 
 function handle_enroll($wk, $u, $email, $confirm = true) {
 	global $error;
@@ -288,9 +335,9 @@ function list_students($wid, $status_id = ENROLLED) {
 	$body = '';
 	foreach ($stds as $uid => $s) {
 		$s['ukey'] = \Users\check_key($s['ukey'], $uid);
-		$body .= "<div class='row'><div class='col-md-6'><a href='admin.php?v=astd&uid={$s['id']}&wid={$wid}'>{$s['nice_name']}</a> <small>".date('M j g:ia', strtotime($s['last_modified']))."</small></div>".
+		$body .= "<div class='row'><div class='col-md-6'><a href='admin_student.php?uid={$s['id']}&wid={$wid}'>{$s['nice_name']}</a> <small>".date('M j g:ia', strtotime($s['last_modified']))."</small></div>".
 		"<div class='col-md-6'>
-		<a class='btn btn-primary' href='$sc?v=cs&wid={$wid}&uid={$uid}'>change status</a> <a class='btn btn-danger' href='$sc?v=rem&uid={$uid}&wid={$wid}'>remove</a></div>".
+		<a class='btn btn-primary' href='$sc?ac=cs&wid={$wid}&uid={$uid}'>change status</a> <a class='btn btn-danger' href='$sc?ac=rem&uid={$uid}&wid={$wid}'>remove</a></div>".
 		"</div>\n";
 	}
 	return $body;
@@ -334,9 +381,9 @@ function get_transcript_tabled($u, $admin = false, $page = 1) {
 		
 		$body .= "<tr class='$cl'><td>";
 		if ($admin) {
-			$body .= "<a href=\"?wid={$t['workshop_id']}&v=ed\">{$t['title']}</a>";
+			$body .= "<a href=\"admin.php?wid={$t['workshop_id']}&ac=ed\">{$t['title']}</a>";
 		} else {
-			$body .= "<a href=\"?wid={$t['workshop_id']}&v=winfo\">{$t['title']}</a>";
+			$body .= "<a href=\"index.php?wid={$t['workshop_id']}\">{$t['title']}</a>";
 		}
 		$body .= "</td><td>{$wk['when']}</td><td>{$t['place']}</td><td>";
 		$body .= "{$statuses[$t['status_id']]}";
@@ -344,7 +391,7 @@ function get_transcript_tabled($u, $admin = false, $page = 1) {
 			$e = get_an_enrollment($wk, $u); 
 			$body .= " (spot {$e['rank']})";
 		}
-		$body .= "</td><td><a href='index.php?v=winfo&wid={$t['workshop_id']}'><span class=\"oi oi-info\" title=\"info\" aria-hidden=\"true\"></span> info</a></td></tr>\n";
+		$body .= "</td><td><a href='index.php?wid={$t['workshop_id']}'><span class=\"oi oi-info\" title=\"info\" aria-hidden=\"true\"></span> info</a></td></tr>\n";
 	}
 	$body .= "</tbody></table>\n";
 	$body .= $paginator->createLinks();

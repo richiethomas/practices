@@ -19,9 +19,6 @@
 	<!--script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script-->	
 	<script src="bootstrap/bootstrap.min.js"></script>
 
-
-
-
 <style>
 table th.workshop-name {
 	width: 300px;
@@ -42,16 +39,15 @@ div.admin-edit-workshop h4
 <?php
 echo "<div class=\"container\">\n";
 
-if ($sc == 'admin.php') {
-	echo "<h1 class=\"display-2\"><a href=\"{$sc}\">{$heading}</a></h1>\n";
+if (strpos($sc, 'admin') !== false ) {
+	echo "<h1 class=\"display-2\"><a href=\"admin.php\">{$heading}</a></h1>\n";
 } else {
+	echo $sc;
 	echo "<div class=\"jumbotron bg-gradient-info  text-light\">";
 	echo "<h1 class=\"display-2\"><a class=\"text-light\" href=\"{$sc}\">{$heading}</a></h1>\n";	
 	echo "<p class=\"lead text-dark\">Greetings. This is a list of improv practices taught by Will Hines.";
 	echo "</div>\n";
 }
-
-
 
 if (isset($error) && $error) {
 	echo "<div class='alert alert-danger' role='alert'>

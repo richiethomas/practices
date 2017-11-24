@@ -11,6 +11,8 @@ namespace Validate;
 //session_start();
 //validate_user() or die;
 
+
+
 function get_actual_password() {
 	return '1234';  
 }
@@ -85,6 +87,11 @@ VALIDFORM;
   return true;
 }
 
-
+if (!is_validated()) {
+	include 'header.php';
+	validate_user() or die();
+	include 'footer.php';
+	exit;
+}
 
 ?>
