@@ -81,25 +81,35 @@ function get_enrollment_prompt($wk, $u) {
 	return $point;
 }
 
-
-function handle_enroll($wk, $u, $email, $confirm = true) {
+// figures what the user should be
+// figures if there's been a previous registration
+function handle_enroll($wk, $u, $email = null, $confirm = true) {
 	global $error;
 	if (!$wk) {
 		$error = 'The workshop ID was not passed along.';
 		return false;
 	}
-	if (!$u) {
+	if (!$u && !$email) {
+		$error = 'We need a logged in user or an email.';
+		return false;
+	}
+	// check user, the email
+	if ($u) {
+		$email = $u['email'];
+	} else {
 		if (\Users\validate_email($email)) {
-			$u = \Users\make_user($email);
+			// check for a user with this email
+			$u = \Users\get_user_by_email($email);
+			// no? make one.
+			if (!$u) { $u = \Users\make_user($email); }
 		} else {
 			$error = "I think that is not a valid email.";
 			return false;
 		}
 	}
-	if (!$email) {
-		$email = $u['email'];
-	}
-	$before = get_an_enrollment($wk, $u); // if they were already enrolled
+
+	// if they were enrolled, we'll adjust the language of confirmation message
+	$before = get_an_enrollment($wk, $u); 
 	$status_id = enroll($wk, $u);
 	$keyword = '';
 	if ($status_id == ENROLLED) {
@@ -132,7 +142,8 @@ function handle_enroll($wk, $u, $email, $confirm = true) {
 	return $message;
 }
 
-
+// enrolls
+// first figures if the person is already enrolled
 function enroll($wk, $u) {
 	$wid = $wk['id'];
 	$uid = $u['id'];
@@ -337,7 +348,7 @@ function list_students($wid, $status_id = ENROLLED) {
 		$s['ukey'] = \Users\check_key($s['ukey'], $uid);
 		$body .= "<div class='row'><div class='col-md-6'><a href='admin_student.php?uid={$s['id']}&wid={$wid}'>{$s['nice_name']}</a> <small>".date('M j g:ia', strtotime($s['last_modified']))."</small></div>".
 		"<div class='col-md-6'>
-		<a class='btn btn-primary' href='$sc?ac=cs&wid={$wid}&uid={$uid}'>change status</a> <a class='btn btn-danger' href='$sc?ac=rem&uid={$uid}&wid={$wid}'>remove</a></div>".
+		<a class='btn btn-primary' href='$sc?ac=cs&wid={$wid}&uid={$uid}'>change status</a> <a class='btn btn-danger' href='$sc?ac=conrem&uid={$uid}&wid={$wid}'>remove</a></div>".
 		"</div>\n";
 	}
 	return $body;
@@ -404,6 +415,7 @@ function drop_session($wk, $u) {
 		\Database\mres($wk['id']),
 		\Database\mres($u['id']));
 	\Database\mysqli( $sql) or db_error();
+	update_change_log($wk, $u, DROPPED); // really should be a new status like "REMOVED" 
 	check_waiting($wk);
 	return true;
 }	

@@ -13,37 +13,6 @@ Wbhkit\set_vars($change_status_vars);
 $v = null;
 
 switch ($ac) {
-	
-	case 'delstudentconfirm':
-		Users\delete_student($u['id']);
-		break;
-	
-		// change last modified (moves people in waiting list order)
-	case 'cr':
-		$sql = 'update registrations set last_modified = \''.Database\mres(date('Y-m-d H:i:s', strtotime($lmod))).'\' where workshop_id = '.Database\mres($wk['id']).' and user_id = '.Database\mres($u['id']);
-		Database\mysqli($sql) or Database\db_error();
-		$v = 'cs';
-		break; 
-		
-	case 'cdel':
-		$error = "Are you sure you want to delete '{$wk['title']}'? <a class='btn btn-danger' href='$sc?ac=del&wid={$wk['id']}'>delete</a>";
-		$v = 'ed';
-		break;
-		
-	case 'del':
-		$sql = "delete from registrations where workshop_id = ".Database\mres($wid);
-		Database\mysqli($sql) or Database\db_error();
-		$sql = "delete from workshops where id = ".Database\mres($wid);
-		Database\mysqli($sql) or Database\db_error();
-		$message = "Deleted '{$wk['title']}'";
-		$v= 'home';
-		break;
-		
-	case 'cs':
-		if ($st) {
-			$message = Enrollments\change_status($wk, $u, $st, $con);
-		}
-		break;
 
 	case 'up':
 	
@@ -106,11 +75,44 @@ switch ($ac) {
 
 	case 'enroll':
 		Wbhkit\set_vars(array('email', 'con'));
-		$message = Enrollments\handle_enroll($wk, $u, $email, $con);
+		$message = Enrollments\handle_enroll($wk, null, $email, $con); 
+		// second argument is null, because i don't want to enroll the user who is logged in,
+		// want to enroll the email which is the third argument
 		$v = 'ed';
 		break;
 
-						
+	// initially called in admin_student.php
+	// but it comes here to finish the job
+	case 'delstudentconfirm':
+		Users\delete_student($u['id']);
+		break;
+
+	// change last modified (moves people in waiting list order)
+	case 'cr':
+		$sql = 'update registrations set last_modified = \''.Database\mres(date('Y-m-d H:i:s', strtotime($lmod))).'\' where workshop_id = '.Database\mres($wk['id']).' and user_id = '.Database\mres($u['id']);
+		Database\mysqli($sql) or Database\db_error();
+		$v = 'cs';
+		break; 
+	
+	case 'cdel':
+		$error = "Are you sure you want to delete '{$wk['title']}'? <a class='btn btn-danger' href='$sc?ac=del&wid={$wk['id']}'>delete</a>";
+		$v = 'ed';
+		break;
+	
+	case 'del':
+		$sql = "delete from registrations where workshop_id = ".Database\mres($wk['id']);
+		Database\mysqli($sql) or Database\db_error();
+		$sql = "delete from workshops where id = ".Database\mres($wk['id']);
+		Database\mysqli($sql) or Database\db_error();
+		$message = "Deleted '{$wk['title']}'";
+		$v= 'home';
+		break;
+	
+	case 'cs':
+		if ($st) {
+			$message = Enrollments\change_status($wk, $u, $st, $con);
+		}
+		break;						
 }
 
 if (!$v && $ac) { 
