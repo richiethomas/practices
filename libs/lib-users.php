@@ -179,9 +179,6 @@ function logout(&$key, &$u, &$message) {
 
 function find_students($needle = 'everyone', $sort = 'n') {
 	
-	if ($sort != 'n' && $sort != 't' && $sort != 'd') {
-		$sort = 'n';
-	}
 	$order_by = array('n' => 'a.email', 't' => 'classes desc', 'd' => 'a.joined desc');
 	
 	$where = '';

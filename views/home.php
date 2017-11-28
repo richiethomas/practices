@@ -26,7 +26,7 @@
 ?>			
 				  <button type="button" class="btn btn-warning m-2" data-toggle="modal" data-target="#nameEmailModal"><span class="oi oi-person" title="person" aria-hidden="true"></span> update name and email</button>
 				  <button type="button" class="btn btn-warning m-2" data-toggle="modal" data-target="#textModal"><span class="oi oi-phone" title="phone" aria-hidden="true"></span> update text notifications </button>				  
-				  <a href="'.$sc.'?ac=lo" class="btn btn-warning m-2"><span class="oi oi-account-logout" title="account-logout" aria-hidden="true"></span> log out</a>
+				  <a href="index.php?ac=lo" class="btn btn-warning m-2"><span class="oi oi-account-logout" title="account-logout" aria-hidden="true"></span> log out</a>
 				  
 				  <?php echo Wbhkit\get_modal('textModal', '<span class="oi oi-phone" title="phone" aria-hidden="true"></span> Text Notifications', Users\edit_text_preferences($u)); ?>
 

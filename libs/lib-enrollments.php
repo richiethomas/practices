@@ -357,6 +357,12 @@ function list_students($wid, $status_id = ENROLLED) {
 
 function get_transcript_tabled($u, $admin = false, $page = 1) {
 	global $key;
+
+
+	if (!$u || !isset($u['id'])) {
+		return "<p>Not logged in!</p>\n";
+	}
+
 	$statuses = \Lookups\get_statuses();
 
 	$sql = "select * from registrations r, workshops w, locations l where r.workshop_id = w.id and w.location_id = l.id and r.user_id = ".\Database\mres($u['id'])." order by w.start desc";
