@@ -88,9 +88,9 @@ VALIDFORM;
 }
 
 if (!is_validated()) {
-	include 'header.php';
+	include 'views/header.php';
 	validate_user() or die();
-	include 'footer.php';
+	include 'views/footer.php';
 	exit;
 }
 

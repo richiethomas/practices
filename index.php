@@ -72,7 +72,7 @@ switch ($ac) {
 		
 		if ($display_name) {
 			$u['display_name'] = $display_name;
-			Users\update_display_name($u);
+			Users\update_display_name($u, $message, $error);
 		}
 		
 		break;		
