@@ -44,14 +44,15 @@ switch ($ac) {
 			break;
 		}
 
-		$sql = sprintf("insert into workshops (title, start, end, cost, capacity, location_id, notes, revenue, expenses, when_public)
-		VALUES ('%s', '%s', '%s', '%u', '%u', '%u', '%s', %u, %u, '%s')",
+		$sql = sprintf("insert into workshops (title, start, end, cost, capacity, location_id, cancelled, notes, revenue, expenses, when_public)
+		VALUES ('%s', '%s', '%s', '%u', '%u', '%u', '%u', '%s', %u, %u, '%s')",
 			Database\mres($title),
 			Database\mres(date('Y-m-d H:i:s', strtotime($start))),
 			Database\mres(date('Y-m-d H:i:s', strtotime($end))),
 			Database\mres($cost),
 			Database\mres($capacity),
 			Database\mres($lid),
+			Database\mres($cancelled),
 			Database\mres($notes),
 			Database\mres($revenue),
 			Database\mres($expenses),

@@ -57,6 +57,7 @@ function get_locations() {
 	$rows = \Database\mysqli( $sql) or \Database\db_error();
 	$locations = array();
 	while ($row = mysqli_fetch_assoc($rows)) {
+		$row['lwhere'] = $row['address'].' '.$row['city'].' '.$row['state'].' '.$row['zip'];
 		$locations[$row['id']]['place'] = $row['place'];
 		$locations[$row['id']]['lwhere'] = $row['lwhere'];
 	}

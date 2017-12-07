@@ -263,7 +263,7 @@ function update_change_log($wk, $u, $status_id) {
 function get_status_change_log($wk = null) {
 
 	global $sc, $late_hours;
-	$sql = "select s.*, u.email, u.display_name, st.status_name, wk.title, wk.start, wk.end from status_change_log s, users u, statuses st, workshops wk where";
+	$sql = "select s.*, u.email, u.display_name, st.status_name, wk.title, wk.start, wk.end, wk.cancelled from status_change_log s, users u, statuses st, workshops wk where";
 	if ($wk) { 
 		$sql .= " workshop_id = ".\Database\mres($wk['id'])." and "; 
 	}

@@ -2,6 +2,17 @@
 namespace Emails;	
 	
 
+function send_html_email($to, $sub, $body, $addl_headers = null) {
+	
+	$headers = array();
+	$headers[] = 'MIME-Version: 1.0';
+	$headers[] = 'Content-type: text/html; charset=iso-8859-1';
+	$headers[] = 'From: '.WEBMASTER;
+	//$headers[] = 'Bcc: '.WEBMASTER;
+	
+	return mail($to, $sub, $body, implode("\r\n", $headers).$addl_headers);
+}
+
 
 function confirm_email($wk, $u, $status_id = ENROLLED) {
 		
@@ -29,6 +40,7 @@ function confirm_email($wk, $u, $status_id = ENROLLED) {
 	
 	
 	$send_faq = false;
+	$email_markup = null;
 	switch ($status_id) {
 		case 'already':
 		case ENROLLED:
@@ -37,9 +49,10 @@ function confirm_email($wk, $u, $status_id = ENROLLED) {
 			$textpoint = $point." For more info: ";
 			$call = "To DROP, click here:\n{$drop}";
 			if ($wk['cost'] > 0) {
-				$call .= "\n\nPay in person or venmo. On the day of the workshop is fine. Venmo link:\nhttp://venmo.com/willhines?txn=pay&share=friends&amount={$wk['cost']}&note=improv%20workshop";
+				$call .= "<br><br>Pay in person or venmo. On the day of the workshop is fine.<br>Venmo link:\nhttp://venmo.com/willhines?txn=pay&share=friends&amount={$wk['cost']}&note=improv%20workshop";
 			}
-			$send_faq = true;
+			$send_faq = false;
+			$email_markup = set_email_markup($e, $wk, $u);
 			break;
 		case WAITING:
 			$sub = "WAIT LIST: {$wk['showtitle']}";
@@ -58,7 +71,7 @@ function confirm_email($wk, $u, $status_id = ENROLLED) {
 			$point = "You have dropped out of {$wk['showtitle']}";
 			$textpoint = $point." For more info: ";
 			if ($e['while_soldout'] == 1) {
-				$late .= "\n".get_dropping_late_warning();
+				$late .= "<br><i>".get_dropping_late_warning()."</i>";
 			}
 			$call = "If you change your mind, re-enroll here:\n{$enroll}";
 			break;
@@ -78,26 +91,65 @@ function confirm_email($wk, $u, $status_id = ENROLLED) {
 	
 	$notifcations = '';
 	if (!$u['send_text']) {
-		$notifications = "\nWould you want to be notified via text? You can set text preferences:\n".$textpref;
+		$notifications = "<p>Would you want to be notified via text? You can set text preferences:<br>".$textpref."</p>";
 	}
 
-	$body = "$point $late
+	$body = "$email_markup
+<p>$point $late</p>
 
-$call
+<p>$call</p>
 
-Full info:
+<p>Full info:</p>
 
-Title: {$wk['title']}
-Description: {$wk['notes']}
-When: {$wk['when']}
-Where: {$wk['place']} {$wk['lwhere']}
-Cost: {$wk['cost']}
+<p><b>Title:</b> {$wk['title']}<br>
+<b>When:</b> {$wk['when']}<br>
+<b>Where:</b> {$wk['place']} {$wk['lwhere']}<br>
+<b>Cost:</b> {$wk['cost']}</p>
+<b>Description:</b> {$wk['notes']}</p>
 
 $notifications
 
 ".email_footer($send_faq);	
 	
-	return mail($u['email'], $sub, $body, "From: ".WEBMASTER);
+	return send_html_email($u['email'], $sub, $body);
+}
+
+
+function set_email_markup($e, $wk, $u) {
+		
+	return "<script type=\"application/ld+json\">
+	{
+	  \"@context\": \"http://willhines.net/practices\",
+	  \"@type\": \"EventReservation\",
+	  \"reservationNumber\": \"wbhwk{$e['id']}\",
+	   \"reservationStatus\": \"http://willhines.net/practices/index.php?wid={$wk['id']}\",
+	  \"underName\": {
+	    \"@type\": \"Person\",
+	    \"name\": \"{$u['nice_name']}\"
+	  },
+	  \"reservationFor\": {
+	    \"@type\": \"EducationEvent\",
+	    \"name\": \"{$wk['title']}\",
+	    \"startDate\": \"{$wk['start']}\",
+		\"endDate\": \"{$wk['end']}\",
+	    \"location\": {
+	      \"@type\": \"Place\",
+	      \"name\": \"{$wk['place']}\",
+	      \"address\": {
+	        \"@type\": \"PostalAddress\",
+	        \"streetAddress\": \"{$wk['address']}\",
+	        \"addressLocality\": \"{$wk['city']}\",
+	        \"addressRegion\": \"{$wk['state']}\",
+	        \"postalCode\": \"{$wk['zip']}\",
+	        \"addressCountry\": \"US\"
+	      }
+	    }
+	  },
+	  \"modifiedTime\": \"".date("Y-m-d H:i:s")."\",
+	  \"modifyReservationUrl\": \"http://willhines.net/practices/index.php?wid={$wk['id']}\"
+	}
+	</script>";
+	
 }
 
 
@@ -135,6 +187,8 @@ function shorten_link($link) {
 	
 }
 
+
+
 function get_dropping_late_warning() {
 	global $late_hours;
 	return "NOTE: You are dropping within {$late_hours} hours of the start, and there was a waiting list. Is there a way you could find someone to take your spot?";
@@ -146,18 +200,15 @@ function get_dropping_late_warning() {
 
 function email_footer($faq = false) {
 
-	$faqadd = '';
-	if ($faq) {
-		$faqadd = strip_tags(get_faq());
-	}
+	$faqadd =  $faq ? get_faq() : '';
+
 	return "
 $faqadd
 		
-Thanks!
+<p>Thanks!</p>
 		
--Will Hines
-HQ: 1948 Hillhurst Ave. Los Angeles, CA 90027
-";
+<p>-Will Hines<br>
+HQ: 1948 Hillhurst Ave. Los Angeles, CA 90027</p>";
 }
 
 function get_faq() {

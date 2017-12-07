@@ -5,9 +5,11 @@ namespace Workshops;
 
 // workshops
 function get_workshop_info($id) {
-	$sql = "select w.*, l.place, l.lwhere from workshops w LEFT OUTER JOIN locations l on w.location_id = l.id where w.id = ".\Database\mres($id);
+	$sql = "select w.*, l.place, l.address, l.city, l.state, l.zip from workshops w LEFT OUTER JOIN locations l on w.location_id = l.id where w.id = ".\Database\mres($id);
 	$rows = \Database\mysqli( $sql) or \Database\db_error();
 	while ($row = mysqli_fetch_assoc($rows)) {
+		
+		$row['lwhere'] = $row['address'].' '.$row['city'].' '.$row['state'].' '.$row['zip'];
 		
 		if ($row['when_public'] == 0 ) {
 			$row['when_public'] = '';
@@ -103,11 +105,12 @@ function get_workshop_info_tabled($wk) {
 }
 
 function get_workshops_dropdown($start = null, $end = null) {
-	$sql = "select w.*, l.place, l.lwhere 
+	$sql = "select w.*, l.place, l.address, l.city, l.state, l.zip 
 	from workshops w LEFT OUTER JOIN locations l on w.location_id = l.id order by start desc";
 	$rows = \Database\mysqli( $sql) or \Database\db_error();
 	$workshops = array();
 	while ($row = mysqli_fetch_assoc($rows)) {
+		$row['lwhere'] = $row['address'].' '.$row['city'].' '.$row['state'].' '.$row['zip'];
 		$row = format_workshop_startend($row);
 		$workshops[$row['id']] = $row['showtitle'];
 	}
@@ -141,7 +144,7 @@ function friendly_date($time_string) {
 
 // pass in the workshop row as it comes from the database table
 // add some columns with date / time stuff figured out
-function format_workshop_startend($row) {	
+function format_workshop_startend($row) {
 	if (date('Y', strtotime($row['start'])) != date('Y')) {
 		$row['showstart'] = date('D M j, Y - g:ia', strtotime($row['start']));
 	} else {
@@ -162,7 +165,7 @@ function get_workshops_list($admin = 0, $page = 1) {
 	
 	
 	global $sc;
-	$sql = 'select w.*, l.place, l.lwhere 
+	$sql = 'select w.*, l.place 
 	from workshops w LEFT OUTER JOIN locations l on w.location_id = l.id ';
 	if ($admin) {
 		$sql .= " order by start desc";
@@ -192,6 +195,7 @@ function get_workshops_list($admin = 0, $page = 1) {
 		
 		for( $i = 0; $i < count( $rows->data ); $i++ ) {
 			$row = $rows->data[$i];
+			
 			$wk = get_workshop_info($row['id']);
 		
 			$public = '';
@@ -240,7 +244,7 @@ function get_workshops_list($admin = 0, $page = 1) {
 
 
 function get_workshops_list_bydate($start = null, $end = null) {
-	$sql = "select w.*, l.place, l.lwhere 
+	$sql = "select w.*, l.place, l.address, l.city, l.state, l.zip 
 	from workshops w LEFT OUTER JOIN locations l on w.location_id = l.id WHERE 1 = 1 ";
 	if ($start) {
 		$sql .= " and w.start >= '".date('Y-m-d H:i:s', strtotime($start))."'";
@@ -252,6 +256,7 @@ function get_workshops_list_bydate($start = null, $end = null) {
 	$rows = \Database\mysqli( $sql) or \Database\db_error();
 	$workshops = array();
 	while ($row = mysqli_fetch_assoc($rows)) {
+		$row['lwhere'] = $row['address'].' '.$row['city'].' '.$row['state'].' '.$row['zip'];
 		$row['showstart'] = date('D M j - g:ia', strtotime($row['start']));
 		$row['showend'] = date('g:ia', strtotime($row['end']));		
 		$row['showtitle'] = "{$row['title']} - {$row['showstart']}-{$row['showend']}";
@@ -271,7 +276,8 @@ function empty_workshop() {
 		'notes' => '',
 		'revenue' => '',
 		'expenses' => '',
-		'when_public' => ''
+		'when_public' => '',
+		'cancelled' => ''
 	);
 }
 function add_workshop_form($wk) {

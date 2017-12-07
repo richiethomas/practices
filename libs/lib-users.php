@@ -29,7 +29,7 @@ function add_extra_user_info($row) {
 
 function set_nice_name($row) {
 	if ($row['display_name']) {
-		$row['nice_name'] = "{$row['display_name']} ({$row['email']})"; 		
+		$row['nice_name'] = "{$row['display_name']}"; 		
 	} else {
 		$row['nice_name'] = $row['email'];
 	}
@@ -145,12 +145,10 @@ function email_link($u) {
 			return false;
 		}
 		$trans = URL."index.php?key=".get_key($u['id']);
-		$body = "Use this link to log in:
-{$trans}
+		$body = "<p>Use this link to log in:</p>
+<p>{$trans}</p>".\Emails\email_footer();
 
-".\Emails\email_footer();
-
-		return mail($u['email'], "Log in to 'Will Hines practices'", $body, "From: ".WEBMASTER);
+		return Emails\send_html_email($u['email'], "Log in to 'Will Hines practices'", $body);
 }
 
 function logged_in() {

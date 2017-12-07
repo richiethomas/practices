@@ -22,8 +22,8 @@ switch ($ac) {
 		
 		$sub = 'email update at will hines practices';
 		$link = URL."index.php?key=$key&ac=concemail";
-		$ebody = "You requested to change what email you use at the Will Hines practices web site. Use the link below to do that:\n\n$link";
-		mail($newemail, $sub, $ebody, "From: ".WEBMASTER);
+		$ebody = "<p>You requested to change what email you use at the Will Hines practices web site. Use the link below to do that:</p><p>$link</p>";
+		Emails\send_html_email($newemail, $sub, $ebody);
 		$message = "Okay, a link has been sent to the new email address ({$newemail}). Check your spam folder if you don't see it.";
 		
 		
