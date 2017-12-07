@@ -44,6 +44,8 @@ function get_enrollment_prompt($wk, $u) {
 	
 	if ($wk['type'] == 'past') {
 		$point = "This workshop is IN THE PAST.";
+	} elseif ($wk['cancelled'] == true) {
+		$point = "This workshop is CANCELLED.";
 	} else {
 		if (\Users\logged_in()) {
 			$e = get_an_enrollment($wk, $u);

@@ -43,7 +43,7 @@
 
 		<div class="row justify-content-center mb-md-4">
 		
-			<div class="col-md-4 m-2">
+			<div class="col-md-4">
 			<div class="card text-center text-white bg-warning">
 		      <div class="card-body">
 		        <h2 class="card-title"><span class="oi oi-dollar" title="dollar" aria-hidden="true"></span><br>Paying</h2>
@@ -52,24 +52,10 @@
 		        <a href="http://venmo.com/willhines?txn=pay&share=friends&amount=25&note=improv%20workshop"  class="btn btn-outline-light">Venmo whines@gmail.com</a>
 		      </div> <!-- end of card body -->
 		    </div> <!-- end of card -->
-		</div> <!-- end of col -->
-
-		<div class="col-md-4 m-2">
-		<div class="card text-center text-white bg-danger">
-		      <div class="card-body">
-		        <h2 class="card-title"><span class="oi oi-ban" title="ban" aria-hidden="true"></span><br>No Late Drops!</h2>
-		        <p class="card-text text-dark">Please don\'t drop out late! I mean, if you gotta you gotta, but.. try not to?<br><br><br>&nbsp;</p>
-		      </div> <!-- end of card body -->
-		    </div> <!-- end of card -->
-		</div> <!-- end of col -->
-		
-		</div> <!-- end of row -->
-		
-		
-		<div class="row justify-content-center mb-md-4">
-			
-			<div class="col-md-4 m-2">
-			<div class="card text-center text-white bg-success">
+		</div> <!-- end of col -->		
+					
+			<div class="col-md-4">
+			<div class="card text-center text-white bg-danger">
 			      <div class="card-body">
 			        <h2 class="card-title"><span class="oi oi-envelope-closed" title="envelope-closed" aria-hidden="true"></span><br>Mailing List</h2>
 			        <p class="card-text text-dark">You are NOT automatically put on my mailing list for these workshops. If you WANT to be on that mailing list, sign up right here.</p>
@@ -79,11 +65,11 @@
 			</div> <!-- end of col -->
 			
 			
-			<div class="col-md-4 m-2">
+			<div class="col-md-4">
 			<div class="card text-center text-white bg-info">
 			      <div class="card-body">
 			        <h2 class="card-title"><span class="oi oi-question-mark" title="question-mark" aria-hidden="true"></span><br>Common Questions</h2>
-			        <p class="card-text text-dark">You can be late. You can leave early. Pre-reqs are not enforced. Click below to see other common questions.</p>
+			        <p class="card-text text-dark">You can arrive late and leave early. Pre-reqs are not enforced. Click below to see other common questions.</p>
 			        <a href="<?php echo $sc; ?>?ac=faq" class="btn btn-outline-light">More Common Questions</a>
 			      </div> <!-- end of card body -->
 			    </div> <!-- end of card -->

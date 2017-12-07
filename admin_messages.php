@@ -35,10 +35,10 @@ Regarding this practice:
 Title: {$wk['showtitle']}
 Where: {$wk['place']}
 When: {$wk['when']}";
-			//mail($std['email'], $subject, $msg, 'From: '.WEBMASTER);
+			mail($std['email'], $subject, $msg, 'From: '.WEBMASTER);
 			$sent .= "{$std['email']}, ";
 		
-			//Emails\send_text($std, $sms); // routine will check if they want texts and have proper info
+			Emails\send_text($std, $sms); // routine will check if they want texts and have proper info
 		
 		}
 		$message = "Email '$subject' sent to $sent";
@@ -74,7 +74,7 @@ No worries if you'd rather not answer! Thank you all again for taking it!
 		break;
 						
 }
-if (!$u['id']) {
+if (!$wk['id']) {
 	$view->renderPage('admin_error');	
 } else {
 	$view->add_globals($mess_vars);		

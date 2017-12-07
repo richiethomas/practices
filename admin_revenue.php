@@ -34,9 +34,8 @@ if ($searchend) { $searchend = date('Y-m-d H:i:s', strtotime($searchend)); }
 $view->add_globals($vars);	
 
 $view->data['workshops_list'] = Workshops\get_workshops_list_bydate($searchstart, $searchend);
-$view->renderPage('admin_rev');
+$view->renderPage('admin_revenue');
 
-}
 
 
 

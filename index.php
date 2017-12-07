@@ -101,6 +101,10 @@ switch ($ac) {
 			$error = 'You are not logged in! You have to be logged in to accept an invite.';
 			break;
 		}
+		if ($wk['cancelled']) {
+			$error = 'This workshop has been cancelled.';
+			break;
+		}
 		$e = Enrollments\get_an_enrollment($wk, $u);
 		if ($e['status_id'] == INVITED) {
 			Enrollments\change_status($wk, $u, ENROLLED, 1);
@@ -116,6 +120,10 @@ switch ($ac) {
 			$error = 'You are not logged in! You have to be logged in to decline an invite.';
 			break;
 		}
+		if ($wk['cancelled']) {
+			$error = 'This workshop has been cancelled.';
+			break;
+		}
 	
 		$e = Enrollments\get_an_enrollment($wk, $u);
 		if ($e['status_id'] == INVITED) {
@@ -128,6 +136,10 @@ switch ($ac) {
 		break;
 	
 	case 'enroll':
+		if ($wk['cancelled']) {
+			$error = 'This workshop has been cancelled.';
+			break;
+		}	
 		if (Users\logged_in()) {
 			$message = Enrollments\handle_enroll($wk, $u, $email);
 			if (!$u['send_text']) {
@@ -142,6 +154,10 @@ switch ($ac) {
 	case 'drop':
 		if (!Users\logged_in()) {
 			$error = 'You are not logged in! You have to be logged in to drop a workshop.';
+			break;
+		}
+		if ($wk['cancelled']) {
+			$error = 'This workshop has been cancelled.';
 			break;
 		}
 	
@@ -162,6 +178,10 @@ switch ($ac) {
 	case 'condrop':
 		if (!Users\logged_in()) {
 			$error = 'You are not logged in! You have to be logged in to drop a workshop.';
+			break;
+		}
+		if ($wk['cancelled']) {
+			$error = 'This workshop has been cancelled.';
 			break;
 		}
 	

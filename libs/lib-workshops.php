@@ -149,6 +149,9 @@ function format_workshop_startend($row) {
 	}
 	$row['showend'] = friendly_time($row['end']);
 	$row['friendly_when'] = friendly_date($row['start']).' '.friendly_time($row['start']);
+	if ($row['cancelled']) {
+		$row['title'] = "CANCELLED: {$row['title']}";
+	}
 	$row['showtitle'] = "{$row['title']} - {$row['showstart']}-{$row['showend']}";
 	$row['when'] = "{$row['showstart']}-{$row['showend']}";
 	
@@ -293,7 +296,9 @@ function workshop_fields($wk) {
 	\Wbhkit\textarea('notes', $wk['notes']).
 	\Wbhkit\texty('revenue', $wk['revenue']).
 	\Wbhkit\texty('expenses', $wk['expenses']).
+	\Wbhkit\checkbox('cancelled', 1, null, $wk['cancelled']).	
 	\Wbhkit\texty('when_public', $wk['when_public'], 'When Public');
+	
 }
 
 function update_workshop_col($wid, $colname, $value) {

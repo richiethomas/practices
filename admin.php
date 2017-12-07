@@ -4,7 +4,7 @@ $heading = "practices: admin";
 include 'lib-master.php';
 include 'libs/validate.php';
 
-$wk_vars = array('wid', 'title', 'notes', 'start', 'end', 'lid', 'cost', 'capacity', 'notes', 'revenue', 'expenses', 'when_public', 'email', 'con');
+$wk_vars = array('wid', 'title', 'notes', 'start', 'end', 'lid', 'cost', 'capacity', 'notes', 'revenue', 'expenses', 'when_public', 'email', 'con', 'cancelled');
 Wbhkit\set_vars($wk_vars);
 
 $change_status_vars = array('st', 'con', 'lmod');
@@ -17,7 +17,7 @@ switch ($ac) {
 	case 'up':
 	
 		$sql = sprintf("update workshops
-		set title = '%s', start = '%s', end = '%s', cost = %u, capacity = %u, location_id = %u, notes = '%s', revenue = %u, expenses = %u, when_public = '%s'
+		set title = '%s', start = '%s', end = '%s', cost = %u, capacity = %u, location_id = %u, notes = '%s', revenue = %u, expenses = %u, when_public = '%s', cancelled = %u
 		where id = %u",
 			Database\mres($title),
 			Database\mres(date('Y-m-d H:i:s', strtotime($start))),
@@ -29,6 +29,7 @@ switch ($ac) {
 			Database\mres($revenue),
 			Database\mres($expenses),
 			Database\mres(date('Y-m-d H:i:s', strtotime($when_public))),
+			Database\mres($cancelled),
 			Database\mres($wid));
 		Database\mysqli($sql) or Database\db_error();
 		$wk = Workshops\get_workshop_info($wid);
