@@ -119,16 +119,16 @@ function set_email_markup($e, $wk, $u) {
 		
 	return "<script type=\"application/ld+json\">
 	{
-	  \"@context\": \"http://willhines.net/practices\",
+	  \"@context\": \"http://schema.org\",
 	  \"@type\": \"EventReservation\",
 	  \"reservationNumber\": \"wbhwk{$e['id']}\",
-	   \"reservationStatus\": \"http://willhines.net/practices/index.php?wid={$wk['id']}\",
+	   \"reservationStatus\": \"http://schema.org/ConfirmAction\",
 	  \"underName\": {
 	    \"@type\": \"Person\",
 	    \"name\": \"{$u['nice_name']}\"
 	  },
 	  \"reservationFor\": {
-	    \"@type\": \"EducationEvent\",
+	    \"@type\": \"Event\",
 	    \"name\": \"{$wk['title']}\",
 	    \"startDate\": \"{$wk['start']}\",
 		\"endDate\": \"{$wk['end']}\",
