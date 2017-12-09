@@ -138,9 +138,6 @@ function handle_enroll($wk, $u, $email = null, $confirm = true) {
 		$message = "Not sure what happened. Tried to enroll and got this status id: ".$status_id;
 	}		
 	if ($confirm) { \Emails\confirm_email($wk, $u, $status_id); }
-	if (DEBUG_MODE) {
-		mail(WEBMASTER, $message, $message, "From: ".WEBMASTER);
-	}
 	return $message;
 }
 
@@ -240,10 +237,6 @@ function change_status($wk, $u, $status_id = ENROLLED, $confirm = true) {
 	
 	if ($confirm) { \Emails\confirm_email($wk, $u, $status_id); }
 	$return_msg = "Updated user ({$u['email']}) to status '{$statuses[$status_id]}' for {$wk['showtitle']}.";
-	if (DEBUG_MODE) {
-		mail(WEBMASTER, "{$u['email']} now '{$statuses['status_id']}' for '{$wk['showtitle']}'", $return_msg, "From: ".WEBMASTER);
-	}
-	
 	return $return_msg;
 }
 

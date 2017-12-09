@@ -2,6 +2,27 @@
 namespace Emails;	
 	
 
+function centralized_mail($to, $sub, $body, $addl_headers = null) {
+	
+	$sent = mail($to, $sub, $body, implode("\r\n", $headers).$addl_headers);
+	$ts = date("Y-m-d H:i:s").': ';
+	$mail_activity = "emailed '$to', '$sub'\n";
+	if ($sent) {
+		$return = true;
+		if (DEBUG_MODE) {
+			file_put_contents(MAIL_LOG, $ts.$mail_activity, FILE_APPEND | LOCK_EX);
+		}
+	} else {
+		$error = error_get_last();
+		$return = "Error type '{$error['type']}': '{$error['message']}' in file '{$error['file']}', line '{$error['line']}'. Attempted: $mail_activity\n";
+		if (DEBUG_MODE) {
+			file_put_contents(MAIL_LOG, $ts.$return, FILE_APPEND | LOCK_EX);
+		}
+	}
+	return $return;
+}
+
+
 function send_html_email($to, $sub, $body, $addl_headers = null) {
 	
 	$headers = array();
@@ -10,7 +31,8 @@ function send_html_email($to, $sub, $body, $addl_headers = null) {
 	$headers[] = 'From: '.WEBMASTER;
 	//$headers[] = 'Bcc: '.WEBMASTER;
 	
-	return mail($to, $sub, $body, implode("\r\n", $headers).$addl_headers);
+	return centralized_mail($to, $sub, $body, implode("\r\n", $headers).$addl_headers);
+	
 }
 
 
@@ -159,7 +181,7 @@ function send_text($u, $msg) {
 	}
 	$carriers = \Lookups\get_carriers();
 	$to = $u['phone'].'@'.$carriers[$u['carrier_id']]['email'];	
-	$mailed=  mail($to, '', $msg, "From: ".WEBMASTER);
+	$mailed=  centralized_mail($to, '', $msg, "From: ".WEBMASTER);
 	return $mailed;
 }
 

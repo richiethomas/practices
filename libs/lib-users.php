@@ -148,7 +148,7 @@ function email_link($u) {
 		$body = "<p>Use this link to log in:</p>
 <p>{$trans}</p>".\Emails\email_footer();
 
-		return Emails\send_html_email($u['email'], "Log in to 'Will Hines practices'", $body);
+		return \Emails\send_html_email($u['email'], "Log in to 'Will Hines practices'", $body);
 }
 
 function logged_in() {
@@ -163,7 +163,9 @@ function logged_in() {
 
 function logout(&$key, &$u, &$message) {
 	
-	$key = gen_key($u['id']); // change the key
+	if (isset($u['id']) && $u['id']) {
+		$key = gen_key($u['id']); // change the key
+	}
 	
 	unset($_SESSION['s_key']);
     unset($_COOKIE['c_key']);

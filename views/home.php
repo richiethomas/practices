@@ -18,11 +18,7 @@
 				echo ", {$u['display_name']}";
 			}
 			echo "</h2>\n";
-			echo "<p>You are logged in as <strong>".
-				($u['display_name'] 
-				? "{$u['display_name']} ({$u['email']})"
-				: "{$u['email']}").
-			"</strong></p>";
+			echo "<p>You are logged in as <strong>{$u['nice_name']}</strong></p>";
 ?>			
 				  <button type="button" class="btn btn-warning m-2" data-toggle="modal" data-target="#nameEmailModal"><span class="oi oi-person" title="person" aria-hidden="true"></span> update name and email</button>
 				  <button type="button" class="btn btn-warning m-2" data-toggle="modal" data-target="#textModal"><span class="oi oi-phone" title="phone" aria-hidden="true"></span> update text notifications </button>				  

@@ -27,7 +27,8 @@ include 'libs/lib-lookups.php';
 include 'libs/lib-emails.php';
 
 // some constants
-define('DEBUG_MODE', false);
+define('DEBUG_MODE', true);
+define('MAIL_LOG', 'mail_log.txt');
 define('URL', "http://{$_SERVER['HTTP_HOST']}/practices/");
 define('WEBMASTER', "will@willhines.net");
 ini_set('sendmail_from','will@willhines.net'); 
