@@ -5,7 +5,7 @@ namespace Emails;
 function centralized_mail($to, $sub, $body, $addl_headers = null) {
 	
 	$sent = mail($to, $sub, $body, implode("\r\n", $headers).$addl_headers);
-	$ts = date("Y-m-d H:i:s").': ';
+	$ts = date("Y-m-d H:i:s").' ';
 	$mail_activity = "emailed '$to', '$sub'\n";
 	if ($sent) {
 		$return = true;

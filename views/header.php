@@ -41,6 +41,15 @@ echo "<div class=\"container\">\n";
 
 if (strpos($sc, 'admin') !== false ) {
 	echo "<h1 class=\"display-2\"><a href=\"admin.php\">{$heading}</a></h1>\n";
+	echo "<ul class='nav nav-pills nav-fill'>\n";
+	echo nav_link($sc, 'admin.php', 'list workshops', 'people');
+	echo nav_link($sc, 'admin_emails.php', 'get emails', 'envelope-closed');
+	echo nav_link($sc, 'admin_revenue.php', 'revenues', 'dollar');
+	echo nav_link($sc, 'admin_search.php', 'find students', 'magnifying-glass');
+	echo nav_link($sc, 'admin_status.php', 'status log', 'graph');
+	echo nav_link($sc, 'admin_mail_log.php', 'email activity', 'clipboard');
+	echo "</ul>\n";
+	
 } else {
 	echo "<div class=\"jumbotron bg-gradient-info  text-light\">";
 	echo "<h1 class=\"display-2\"><a class=\"text-light\" href=\"{$sc}\">{$heading}</a></h1>\n";	
@@ -61,6 +70,11 @@ if (isset($message) && $message) {
 	<button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\">
 	    <span aria-hidden=\"true\">&times;</span>
 	  </button></div>\n";
+}
+
+function nav_link($sc, $page, $text, $icon) {
+	return "<li class='nav-item'><a class='nav-link ".(strpos($sc, $page) !== false ? 'active' : '')."' href='{$page}'><span class='oi oi-{$icon}' title='{$icon}' aria-hidden='true'></span> {$text}</a></li>\n";
+	
 }
 
 ?>		
