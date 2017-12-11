@@ -29,9 +29,10 @@ function add_extra_user_info($row) {
 
 function set_nice_name($row) {
 	if ($row['display_name']) {
-		$row['nice_name'] = "{$row['display_name']}"; 		
+		$row['nice_name'] = "{$row['display_name']}"; 	
+		$row['fullest_name'] = "{$row['display_name']} ({$row['email']})";	
 	} else {
-		$row['nice_name'] = $row['email'];
+		$row['nice_name'] = $row['fullest_name'] = $row['email'];
 	}
 	return $row;
 }

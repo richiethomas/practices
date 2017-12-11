@@ -9,7 +9,7 @@ foreach ($statuses as $stid => $status_name) {
 	echo "<h3>{$status_name}</h3>\n";
 	$stds = $students[$stid];
 	foreach ($stds as $as) {
-		echo"<p>".Wbhkit\checkbox('users', $as['id'], $as['email'], $as['attended'], true).'</p>';
+		echo"<p>".Wbhkit\checkbox('users', $as['id'], $as['fullest_name'], $as['attended'], true).'</p>';
 	}
 }
 echo Wbhkit\submit("update attendance");
