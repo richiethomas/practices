@@ -8,26 +8,31 @@
 		
 	
 <div class='row mb-md-4'><div class='col-md-12'>
-			<div id='login_prompt' class='card border-info bg-success'>
+			<div id='login_prompt' class='card bg-success'>
 			<div class='card-body'>
 	
 <?php 		if (Users\logged_in()) { 
 			
-			echo "<h2 class='card-title text-light'>Welcome";
-			if ($u['display_name']) {
-				echo ", {$u['display_name']}";
-			}
-			echo "</h2>\n";
-			echo "<p>You are logged in as <strong>{$u['nice_name']}</strong></p>";
-?>			
-				  <button type="button" class="btn btn-warning m-2" data-toggle="modal" data-target="#nameEmailModal"><span class="oi oi-person" title="person" aria-hidden="true"></span> update name and email</button>
-				  <button type="button" class="btn btn-warning m-2" data-toggle="modal" data-target="#textModal"><span class="oi oi-phone" title="phone" aria-hidden="true"></span> update text notifications </button>				  
-				  <a href="index.php?ac=lo" class="btn btn-warning m-2"><span class="oi oi-account-logout" title="account-logout" aria-hidden="true"></span> log out</a>
-				  
-				  <?php echo Wbhkit\get_modal('textModal', '<span class="oi oi-phone" title="phone" aria-hidden="true"></span> Text Notifications', Users\edit_text_preferences($u)); ?>
+			echo "<p>Welcome, you are logged in as <strong>{$u['nice_name']}</strong>.</p>";
+?>		
+<ul class="nav">
+  <li class="nav-item">
+    <a class='nav-link btn btn-outline-light m-2' href='' data-toggle="modal" data-target="#nameEmailModal"><span class="oi oi-person" title="person" aria-hidden="true"></span> update name and email</a>
+  </li>
+  <li class="nav-item">
+    <a class='nav-link btn btn-outline-light m-2' href='' data-toggle="modal" data-target="#textModal"><span class="oi oi-phone" title="phone" aria-hidden="true"></span> update text notifications</a>
+  </li>
+  <li class="nav-item">
+    <a class='nav-link btn btn-outline-light m-2' href="index.php?ac=lo" class="btn btn-warning btn-sm m-2"><span class="oi oi-account-logout" title="account-logout" aria-hidden="true"></span> log out</a>
+  </li>
+</ul>	
+				
 
-				  <?php echo Wbhkit\get_modal('nameEmailModal', '<span class="oi oi-person" title="person" aria-hidden="true"></span> Name and Email', Users\edit_display_name($u).'<br><br>'.Users\edit_change_email($u)); ?>
-				  	  
+
+				 <!--  <button type="button" class="btn btn-warning btn-sm m-2" data-toggle="modal" data-target="#nameEmailModal"><span class="oi oi-person" title="person" aria-hidden="true"></span> update name and email</button>
+				  <button type="button" class="btn btn-warning btn-sm m-2" data-toggle="modal" data-target="#textModal"><span class="oi oi-phone" title="phone" aria-hidden="true"></span> update text notifications </button>				  
+				  <a href="index.php?ac=lo" class="btn btn-warning btn-sm m-2"><span class="oi oi-account-logout" title="account-logout" aria-hidden="true"></span> log out</a>-->
+							  	  
 			
 <?php 		} else { ?>
 			<h2 class='card-title'>Log In To This Site</h2>
@@ -88,3 +93,11 @@
 		}
 		?>
 		</div></div> <!-- end of col and row -->
+		
+<?php if (Users\logged_in()) { ?>		
+				  <?php echo Wbhkit\get_modal('textModal', '<span class="oi oi-phone" title="phone" aria-hidden="true"></span> Text Notifications', Users\edit_text_preferences($u)); ?>
+
+				  <?php echo Wbhkit\get_modal('nameEmailModal', '<span class="oi oi-person" title="person" aria-hidden="true"></span> Name and Email', Users\edit_display_name($u).'<br><br>'.Users\edit_change_email($u)); ?>
+
+<?php } ?>
+

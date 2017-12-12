@@ -40,7 +40,7 @@ div.admin-edit-workshop h4
 echo "<div class=\"container\">\n";
 
 if (strpos($sc, 'admin') !== false ) {
-	echo "<h1 class=\"display-2\"><a href=\"admin.php\">{$heading}</a></h1>\n";
+	echo "<h1><a href=\"admin.php\">{$heading}</a> <small><a class='text-muted' href='index.php'>(user side)</a></small></h1>\n";
 	echo "<ul class='nav nav-pills nav-fill'>\n";
 	echo nav_link($sc, 'admin.php', 'list workshops', 'people');
 	echo nav_link($sc, 'admin_emails.php', 'get emails', 'envelope-closed');
@@ -52,7 +52,7 @@ if (strpos($sc, 'admin') !== false ) {
 	
 } else {
 	echo "<div class=\"jumbotron bg-gradient-info  text-light\">";
-	echo "<h1 class=\"display-2\"><a class=\"text-light\" href=\"{$sc}\">{$heading}</a></h1>\n";	
+	echo "<h1 class=\"display-1\"><a class=\"text-light\" href=\"{$sc}\">{$heading}</a></h1>\n";	
 	echo "<p class=\"lead text-dark\">Greetings. This is a list of improv practices taught by Will Hines.";
 	echo "</div>\n";
 }
