@@ -6,6 +6,9 @@ tested on PHP 7.0.15
 date_default_timezone_set ( 'America/Los_Angeles' );
 session_start();
 
+ini_set("include_path", '/home/whines/php:' . ini_get("include_path") );
+ini_set("include_path", '/Applications/MAMP/bin/php/php7.0.15/lib/php:' . ini_get("include_path") );
+
 // set function for autoloading classes
 spl_autoload_register(function ($className) {
         $className = str_replace('\\', DIRECTORY_SEPARATOR, $className); // for subdirectories in 'classes'
@@ -37,7 +40,8 @@ define('ENROLLED', Lookups\find_status_by_value('enrolled'));
 define('WAITING', Lookups\find_status_by_value('waiting'));
 define('DROPPED', Lookups\find_status_by_value('dropped'));
 define('INVITED', Lookups\find_status_by_value('invited'));
-$late_hours = '24';
+$late_hours = '24'; // deprecated, use contant in next line
+define('LATE_HOURS', 24);
 $carriers = array();
 $error = '';
 $message = '';

@@ -35,7 +35,7 @@ Regarding this practice:
 Title: {$wk['showtitle']}
 Where: {$wk['place']}
 When: {$wk['when']}";
-			\Emails\centralized_mail($std['email'], $subject, $msg, 'From: '.WEBMASTER);
+			\Emails\centralized_email($std['email'], $subject, $msg);
 			$sent .= "{$std['email']}, ";
 		
 			Emails\send_text($std, $sms); // routine will check if they want texts and have proper info

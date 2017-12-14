@@ -263,47 +263,19 @@ function get_status_change_log($wk = null) {
 	$sql .= " s.workshop_id = wk.id and s.user_id = u.id and s.status_id = st.id order by happened desc";
 
 	$rows = \Database\mysqli($sql) or \Database\db_error();
-	$log = '';
-
-	if ($wk) {
-		$log = "<tr><th>user</th><th>status</th><th>changed / last enrolled</th></tr>\n";
-	} else {
-		$log = "<tr><th>user</th><th>workshop</th><th>status</th><th>changed / last enrolled</th></tr>\n";
-	}
+	$log = array();
 
 	while ($row = mysqli_fetch_assoc($rows)) {
 		$row = \Workshops\format_workshop_startend($row);
 		$row = \Users\set_nice_name($row);
-		$wkname = '';
 		if (!$wk) {
 			// skip old ones for the global change log
 			if (strtotime($row['start']) < strtotime("24 hours ago")) {
 				continue;
 			}
-			$wkname = "<a href='$sc?v=ed&wid={$row['workshop_id']}'>{$row['title']}</a><br><small>{$row['showstart']}</small></td><td>";
 		}
-		$last_enrolled = get_last_enrolled($row['workshop_id'], $row['user_id']);
-		$row_class = '';
-		if ($row['status_id'] == DROPPED && $last_enrolled) {
-			
-			$hours_before = round((strtotime($row['start']) - strtotime($row['happened'])) / 3600);
-			
-			$last_enrolled = "/<br>".date('j-M-y g:ia', strtotime($last_enrolled))." ($hours_before)";
-			if ($hours_before < $late_hours) {
-				$row_class = 'danger';
-			}
-		} else {
-			$last_enrolled = "<td>&nbsp;</td>";
-		}
-
-		$log .= "<tr class='$row_class'><td>{$row['nice_name']}</td><td>$wkname {$row['status_name']}</td><td><small>".date('j-M-y g:ia', strtotime($row['happened']))."$last_enrolled</small></td>\n";
-		$log .= "</tr>\n";
-		
-	}
-	if (!$log) {
-		$log = 'No recorded updates.';
-	} else {
-		$log = "<table class='table'>$log</table>\n";
+		$row['last_enrolled'] = get_last_enrolled($row['workshop_id'], $row['user_id']);
+		$log[] = $row;
 	}
 	return $log;
 }

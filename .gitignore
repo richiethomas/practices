@@ -5,6 +5,7 @@
 !*/cache/index.html
 !*/cache/.htaccess
 db.php
+mail_log.txt
 
 # Compiled source #
 ###################

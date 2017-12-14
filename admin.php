@@ -137,8 +137,10 @@ switch ($v) {
 			$lists[$stid] = Enrollments\list_students($wid, $stid);
 		}
 				
-		$log = Enrollments\get_status_change_log($wk);
-		$view->add_globals(array('stats', 'statuses', 'lists', 'log'));		
+		$data['log'] = Enrollments\get_status_change_log($wk);
+		$status_log = $view->renderSnippet('admin_status', $data);
+		
+		$view->add_globals(array('stats', 'statuses', 'lists', 'status_log'));		
 		$view->renderPage('admin_edit');
 		break;
 

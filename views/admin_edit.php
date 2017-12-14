@@ -19,8 +19,8 @@ echo "<div class='row mt-md-3 admin-edit-workshop'>\n";
 			echo  $lists[$stid];
 		}
 		
-		echo  "<h2>Change Log</h2>\n";
-		echo  $log;
+		echo  $status_log; // from a snippet "admin_status"
+
 		echo  "</div>"; // end of column
 		
 		//session column

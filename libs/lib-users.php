@@ -149,7 +149,7 @@ function email_link($u) {
 		$body = "<p>Use this link to log in:</p>
 <p>{$trans}</p>".\Emails\email_footer();
 
-		return \Emails\send_html_email($u['email'], "Log in to 'Will Hines practices'", $body);
+		return \Emails\centralized_email($u['email'], "Log in to 'Will Hines practices'", $body);
 }
 
 function logged_in() {

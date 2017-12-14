@@ -1,10 +1,57 @@
 <?php
 namespace Emails;	
-	
 
-function centralized_mail($to, $sub, $body, $addl_headers = null) {
+require_once 'Mail.php';
+//require_once 'Mail/mime.php';	
+
+
+// Mail_mime did weird things to encoding of mail
+// turned '=' into '=3D' and other things
+function centralized_email($to, $sub, $body, $text = false) {
 	
-	$sent = mail($to, $sub, $body, implode("\r\n", $headers).$addl_headers);
+	// connect to SMTP
+	$params = array();
+	$params["host"] = "mail.willhines.net";
+	$params["port"] = '26';
+	$params["auth"] = "PLAIN";
+	$params["username"] = 'will@willhines.net';
+	$params["password"] = EMAIL_PASSWORD;
+	$smtp = \Mail::factory('smtp', $params);
+	
+	$crlf = "\n";
+	 $headers = array(
+                     'From'          => WEBMASTER,
+                     'Reply-To'   => WEBMASTER,
+                     'Subject'       => $sub,
+					 'To'			=> $to);
+
+
+     // Setting the body of the email
+	 //if (!$text) {
+
+	  /*   // Creating the Mime message
+	     $mime = new \Mail_mime($crlf);
+		 $headers['MIME-Version'] = 1;
+	     $mime->setHTMLBody($body);
+		 
+		 $mimeparams=array(); 
+		 $mimeparams['text_encoding']="8bit"; 
+		 $mimeparams['text_charset']="UTF-8"; 
+		 $mimeparams['html_charset']="UTF-8"; 
+		 $mimeparams['head_charset']="UTF-8"; 		 
+		 
+	     $body = $mime->get($mimeparams);
+		 
+		 //$body = preg_replace('/=3D/', '=', $body, -1, $count);
+	     $headers = $mime->headers($headers);
+	  */
+	  $headers['MIME-Version'] = "1.0";
+	  $headers['Content-Type'] = "text/html";
+	  $headers['charset'] = "iso-8859-1";
+	 //}
+
+	 $sent = $smtp->send($to, $headers, $body);
+	
 	$ts = date("Y-m-d H:i:s").' ';
 	$mail_activity = "emailed '$to', '$sub'\n";
 	if ($sent) {
@@ -21,20 +68,6 @@ function centralized_mail($to, $sub, $body, $addl_headers = null) {
 	}
 	return $return;
 }
-
-
-function send_html_email($to, $sub, $body, $addl_headers = null) {
-	
-	$headers = array();
-	$headers[] = 'MIME-Version: 1.0';
-	$headers[] = 'Content-type: text/html; charset=iso-8859-1';
-	$headers[] = 'From: '.WEBMASTER;
-	//$headers[] = 'Bcc: '.WEBMASTER;
-	
-	return centralized_mail($to, $sub, $body, implode("\r\n", $headers).$addl_headers);
-	
-}
-
 
 function confirm_email($wk, $u, $status_id = ENROLLED) {
 		
@@ -133,44 +166,44 @@ $notifications
 
 ".email_footer($send_faq);	
 	
-	return send_html_email($u['email'], $sub, $body);
+	return centralized_email($u['email'], $sub, $body);
 }
 
 
 function set_email_markup($e, $wk, $u) {
 		
-	return "<script type=\"application/ld+json\">
-	{
-	  \"@context\": \"http://schema.org\",
-	  \"@type\": \"EventReservation\",
-	  \"reservationNumber\": \"wbhwk{$e['id']}\",
-	   \"reservationStatus\": \"http://schema.org/ConfirmAction\",
-	  \"underName\": {
-	    \"@type\": \"Person\",
-	    \"name\": \"{$u['nice_name']}\"
-	  },
-	  \"reservationFor\": {
-	    \"@type\": \"Event\",
-	    \"name\": \"{$wk['title']}\",
-	    \"startDate\": \"{$wk['start']}\",
-		\"endDate\": \"{$wk['end']}\",
-	    \"location\": {
-	      \"@type\": \"Place\",
-	      \"name\": \"{$wk['place']}\",
-	      \"address\": {
-	        \"@type\": \"PostalAddress\",
-	        \"streetAddress\": \"{$wk['address']}\",
-	        \"addressLocality\": \"{$wk['city']}\",
-	        \"addressRegion\": \"{$wk['state']}\",
-	        \"postalCode\": \"{$wk['zip']}\",
-	        \"addressCountry\": \"US\"
-	      }
-	    }
-	  },
-	  \"modifiedTime\": \"".date("Y-m-d H:i:s")."\",
-	  \"modifyReservationUrl\": \"http://willhines.net/practices/index.php?wid={$wk['id']}\"
-	}
-	</script>";
+ return "<script type=\"application/ld+json\">
+ {
+   \"@context\": \"http://schema.org\",
+   \"@type\": \"EventReservation\",
+   \"reservationNumber\": \"wbhwk{$e['id']}\",
+    \"reservationStatus\": \"http://schema.org/ConfirmAction\",
+   \"underName\": {
+     \"@type\": \"Person\",
+     \"name\": \"{$u['nice_name']}\"
+   },
+   \"reservationFor\": {
+     \"@type\": \"Event\",
+     \"name\": \"{$wk['title']}\",
+     \"startDate\": \"{$wk['start']}\",
+  \"endDate\": \"{$wk['end']}\",
+     \"location\": {
+       \"@type\": \"Place\",
+       \"name\": \"{$wk['place']}\",
+       \"address\": {
+         \"@type\": \"PostalAddress\",
+         \"streetAddress\": \"{$wk['address']}\",
+         \"addressLocality\": \"{$wk['city']}\",
+         \"addressRegion\": \"{$wk['state']}\",
+         \"postalCode\": \"{$wk['zip']}\",
+         \"addressCountry\": \"US\"
+       }
+     }
+   },
+   \"modifiedTime\": \"".date("Y-m-d H:i:s")."\",
+   \"modifyReservationUrl\": \"http://willhines.net/practices/index.php?wid={$wk['id']}\"
+ }
+ </script>";
 	
 }
 
@@ -181,7 +214,9 @@ function send_text($u, $msg) {
 	}
 	$carriers = \Lookups\get_carriers();
 	$to = $u['phone'].'@'.$carriers[$u['carrier_id']]['email'];	
-	$mailed=  centralized_mail($to, '', $msg, "From: ".WEBMASTER);
+	//$to = 'whines@gmail.com';
+	$mailed=  centralized_email($to, '', $msg, true);
+	//$mailed=  mail($to, '', $msg, "From: ".WEBMASTER);
 	return $mailed;
 }
 
@@ -204,7 +239,6 @@ function shorten_link($link) {
    	$response = curl_exec($ch);
 	curl_close($ch);	
 	
-	//echo "Response: $response<br>\n";
 	return $response;
 	
 }
@@ -226,9 +260,9 @@ function email_footer($faq = false) {
 
 	return "
 $faqadd
-		
+
 <p>Thanks!</p>
-		
+
 <p>-Will Hines<br>
 HQ: 1948 Hillhurst Ave. Los Angeles, CA 90027</p>";
 }
