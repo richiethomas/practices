@@ -7,7 +7,7 @@ require_once 'Mail.php';
 
 // Mail_mime did weird things to encoding of mail
 // turned '=' into '=3D' and other things
-function centralized_email($to, $sub, $body, $text = false) {
+function centralized_email($to, $sub, $body) {
 	
 	// connect to SMTP
 	$params = array();
@@ -25,30 +25,9 @@ function centralized_email($to, $sub, $body, $text = false) {
                      'Subject'       => $sub,
 					 'To'			=> $to);
 
-
-     // Setting the body of the email
-	 //if (!$text) {
-
-	  /*   // Creating the Mime message
-	     $mime = new \Mail_mime($crlf);
-		 $headers['MIME-Version'] = 1;
-	     $mime->setHTMLBody($body);
-		 
-		 $mimeparams=array(); 
-		 $mimeparams['text_encoding']="8bit"; 
-		 $mimeparams['text_charset']="UTF-8"; 
-		 $mimeparams['html_charset']="UTF-8"; 
-		 $mimeparams['head_charset']="UTF-8"; 		 
-		 
-	     $body = $mime->get($mimeparams);
-		 
-		 //$body = preg_replace('/=3D/', '=', $body, -1, $count);
-	     $headers = $mime->headers($headers);
-	  */
 	  $headers['MIME-Version'] = "1.0";
 	  $headers['Content-Type'] = "text/html";
 	  $headers['charset'] = "iso-8859-1";
-	 //}
 
 	 $sent = $smtp->send($to, $headers, $body);
 	
@@ -129,6 +108,7 @@ function confirm_email($wk, $u, $status_id = ENROLLED) {
 				$late .= "<br><i>".get_dropping_late_warning()."</i>";
 			}
 			$call = "If you change your mind, re-enroll here:\n{$enroll}";
+			$email_markup = set_email_markup($e, $wk, $u, true); // cancel event
 			break;
 		default:
 			$sub = "{$statuses[$status_id]}: {$wk['showtitle']}";
@@ -170,20 +150,27 @@ $notifications
 }
 
 
-function set_email_markup($e, $wk, $u) {
-		
+function set_email_markup($e, $wk, $u, $cancel = false) {
+
+
+	if ($cancel) {
+		$status = "http://schema.org/ReservationCancelled";
+	} else {
+		$status = "http://schema.org/ReservationConfirmed";
+	}
+
  return "<script type=\"application/ld+json\">
  {
    \"@context\": \"http://schema.org\",
    \"@type\": \"EventReservation\",
    \"reservationNumber\": \"wbhwk{$e['id']}\",
-    \"reservationStatus\": \"http://schema.org/ConfirmAction\",
+    \"reservationStatus\": \"{$status}\",
    \"underName\": {
      \"@type\": \"Person\",
      \"name\": \"{$u['nice_name']}\"
    },
    \"reservationFor\": {
-     \"@type\": \"Event\",
+     \"@type\": \"EducationEvent\",
      \"name\": \"{$wk['title']}\",
      \"startDate\": \"{$wk['start']}\",
   \"endDate\": \"{$wk['end']}\",
@@ -212,12 +199,10 @@ function send_text($u, $msg) {
 	if (!$u['send_text'] || !$u['carrier_id'] || !$u['phone'] || strlen($u['phone']) != 10) {
 		return false;
 	}
+	
 	$carriers = \Lookups\get_carriers();
 	$to = $u['phone'].'@'.$carriers[$u['carrier_id']]['email'];	
-	//$to = 'whines@gmail.com';
-	$mailed=  centralized_email($to, '', $msg, true);
-	//$mailed=  mail($to, '', $msg, "From: ".WEBMASTER);
-	return $mailed;
+	$mail_status =   centralized_email($to, '', $msg);
 }
 
 

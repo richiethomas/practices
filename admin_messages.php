@@ -4,7 +4,7 @@ $heading = "practices: admin";
 include 'lib-master.php';
 include 'libs/validate.php';
 
-$mess_vars = array('st', 'note', 'subject', 'sms');
+$mess_vars = array('st', 'note', 'subject', 'sms', 'cancellation');
 Wbhkit\set_vars($mess_vars);
 
 switch ($ac) {
@@ -29,12 +29,18 @@ switch ($ac) {
 			$key = Users\get_key($std['id']);
 			$trans = URL."index.php?key=$key";
 			$msg = $note;
-			$msg .= "\n\nLog in or drop out here:\n$trans\n";
 			$msg .= "
-Regarding this practice:
-Title: {$wk['showtitle']}
-Where: {$wk['place']}
-When: {$wk['when']}";
+<p><b>Practice details:</b><br>
+Title: {$wk['showtitle']}<br>
+Where: {$wk['place']}<br>
+When: {$wk['when']}</p>\n";
+$msg .= "<p>Log in or drop out here:<br>$trans</p>\n";
+
+			if ($cancellation) {
+				$e = \Enrollments\get_an_enrollment($wk, $std); 
+				$msg .= \Emails\set_email_markup($e, $wk, $std, true);
+			}
+
 			\Emails\centralized_email($std['email'], $subject, $msg);
 			$sent .= "{$std['email']}, ";
 		
@@ -71,6 +77,17 @@ No worries if you'd rather not answer! Thank you all again for taking it!
 
 -Will";
 		$st = ENROLLED; // pre-populating the status drop in 'send message' form
+		break;
+
+
+	case 'cancel':
+		$subject = "'{$wk['showtitle']}'";
+		$note = "I had to cancel this workshop! I'm so sorry.
+
+-Will";
+		$st = ENROLLED; // pre-populating the status drop in 'send message' form
+		$sms = "Workshop cancelled: {$wk['showtitle']}";
+		$cancellation = 1;
 		break;
 						
 }

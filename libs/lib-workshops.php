@@ -19,20 +19,26 @@ function get_workshop_info($id) {
 		$row['invited'] = \Enrollments\get_enrollments($id, INVITED);
 		$row['waiting'] = \Enrollments\get_enrollments($id, WAITING);
 		$row['open'] = ($row['enrolled'] >= $row['capacity'] ? 0 : $row['capacity'] - $row['enrolled']);
-		if (strtotime($row['start']) < strtotime('now')) { 
-			$row['type'] = 'past'; 
-		} elseif ($row['enrolled'] >= $row['capacity'] || $row['waiting'] > 0 || $row['invited'] > 0) { 
-			$row['type'] = 'soldout'; 
-		} else {
-			$row['type'] = 'open';
-		}
-		
+		$row = set_workshop_type($row);
 		$row = check_last_minuteness($row);
 		
 		return $row;
 	}
 	return false;
 }
+
+function set_workshop_type($row) {
+	
+	if (strtotime($row['start']) < strtotime('now')) { 
+		$row['type'] = 'past'; 
+	} elseif ($row['enrolled'] >= $row['capacity'] || $row['waiting'] > 0 || $row['invited'] > 0) { 
+		$row['type'] = 'soldout'; 
+	} else {
+		$row['type'] = 'open';
+	}
+	return $row;
+}
+
 
 function check_last_minuteness($wk) {
 	
@@ -69,6 +75,7 @@ function check_last_minuteness($wk) {
 
 function get_workshop_info_tabled($wk) {
 	
+	global $view;
 	$stds = \Enrollments\get_students($wk['id']);
 
 	$snames = array();
@@ -88,20 +95,8 @@ function get_workshop_info_tabled($wk) {
 		}
 		$names_list = "<tr><td scope=\"row\">Currently Registered:</td><td>{$names_list}</td></tr>";
 	}
-	
-	return "<table class=\"table table-striped table-bordered\">
-		<tbody>
-		<tr><td scope=\"row\"><span class='oi oi-people' title='people' aria-hidden='true'></span> Workshop:</td><td>{$wk['title']}</tr>
-		<tr><td scope=\"row\"><span class='oi oi-book' title='book' aria-hidden='true'></span> Description:</td><td>{$wk['notes']}</td></tr>
-		<tr><td scope=\"row\"><span class='oi oi-calendar' title='calendar' aria-hidden='true'></span> When:</td><td>{$wk['when']}</tr>
-		<tr><td scope=\"row\"><span class='oi oi-map title='map' aria-hidden='true'></span> Where:</td><td>{$wk['place']} {$wk['lwhere']}</tr>
-		<tr><td scope=\"row\"><span class='oi oi-dollar' title='dollar' aria-hidden='true'></span> Cost:</td><td>{$wk['cost']}</td></tr>
-		<tr><td scope=\"row\"><span class='oi oi-clipboard' title='clipboard' aria-hidden='true'></span> Open Spots:</td><td>{$wk['open']} (of {$wk['capacity']})</td></tr>
-		<tr><td scope=\"row\"><span class='oi oi-clock' title='clock' aria-hidden='true'></span> Waiting:</td><td>".($wk['waiting']+$wk['invited'])."</td></tr>
-		$names_list
-		
-		</tbody>
-		</table>";
+	$view->data['names_list'] = $names_list;
+	return $view->renderSnippet('workshop_info');
 }
 
 function get_workshops_dropdown($start = null, $end = null) {
@@ -163,83 +158,38 @@ function format_workshop_startend($row) {
 
 function get_workshops_list($admin = 0, $page = 1) {
 	
+	global $view;
 	
-	global $sc;
-	$sql = 'select w.*, l.place 
-	from workshops w LEFT OUTER JOIN locations l on w.location_id = l.id ';
+	// get IDs of workshops
+	$sql = 'select w.* from workshops w ';
 	if ($admin) {
-		$sql .= " order by start desc";
+		$sql .= " order by start desc"; // get all
 	} else {
 		$mysqlnow = date("Y-m-d H:i:s");
-		$sql .= "where when_public < '$mysqlnow' and date(start) >= date('$mysqlnow') order by start asc";
+		$sql .= "where when_public < '$mysqlnow' and date(start) >= date('$mysqlnow') order by start asc"; // get public ones to come
 	}
 		
+	// prep paginator
 	$paginator  = new \Paginator( \Database\wh_set_db_link(), $sql );
-	
 	$rows = $paginator->getData($page);
-	
-	$body = $paginator->createLinks();
-	
-	$body .= '<table class="table table-striped table-bordered"><thead class="thead-dark">
-		<tr>
-			<th class="workshop-name" scope="col"><span class="oi oi-people" title="people" aria-hidden="true"></span> Workshop</th>
-			<th scope="col"><span class="oi oi-calendar" title="calendar" aria-hidden="true"></span> When</th>
-			<th scope="col"><span class="oi oi-map" title="map" aria-hidden="true"></span> Where</th>
-			<th scope="col"><span class="oi oi-dollar" title="dollar" aria-hidden="true"></span> Cost</th>
-			<th scope="col"><span class="oi oi-clipboard" title="clipboard" aria-hidden="true"></span> Spots</th>
-			<th scope="col"><span class="oi oi-task" title="task" aria-hidden="true"></span> Action</th>
-		</tr></thead>
-			<tbody>';	
+	$links = $paginator->createLinks();
 
+	// calculate enrollments, ranks, etc
 	if ($rows->total > 0) {
-		
-		for( $i = 0; $i < count( $rows->data ); $i++ ) {
-			$row = $rows->data[$i];
-			
+		$workshops = array();
+		foreach ($rows->data as $row ) {
 			$wk = get_workshop_info($row['id']);
-		
-			$public = '';
-			if ($admin && $wk['when_public']) {
-				$public = "<br><small>Public: ".date('D M j - g:ia', strtotime($wk['when_public']))."</small>\n";
-			}	
-					
-			$cl = 'table-';
-			if (date('z', strtotime($wk['start'])) == date('z')) { // today
-				$cl .= 'info'; 
-			} elseif ($wk['type'] == 'soldout') {
-				$cl .= 'danger';
-			} elseif ($wk['type'] == 'open') {
-				$cl .= 'success';
-			} elseif ($wk['type'] == 'past') {
-				$cl .= 'light';
-			} else  {
-				$cl = '';
-			}
-		
-			$body .= "<tr class='$cl'>";
-			$titlelink = ($admin 
-				? "<a href='$sc?wid={$row['id']}&ac=ed'>{$wk['title']}</a>"
-				: "<a href='$sc?wid={$row['id']}'>{$wk['title']} <span class=\"oi oi-info\" title=\"info\" aria-hidden=\"true\"></span></a>");
-			
-			$body .= "<td>{$titlelink}".($wk['notes'] ? "<p class='small text-muted'>{$wk['notes']}</p>" : '')."</td>
-			<td>{$wk['when']}{$public}</td>
-			<td>{$wk['place']}</td>
-			<td>{$wk['cost']}</td>
-			<td>".number_format($wk['open'], 0)." of ".number_format($wk['capacity'], 0).",<br> ".number_format($wk['waiting']+$wk['invited'])." waiting</td>
-	";
-			if ($admin) {
-				$body .= "<td><a href=\"$sc?wid={$row['id']}\">Clone</a></td></tr>\n";
-			} else {
-				$call = ($wk['type'] == 'soldout' ? 'Join Wait List' : 'Enroll');
-				$body .= "<td><a href=\"{$sc}?wid={$row['id']}&v=winfo\">{$call}</a></td></tr>\n";
-			}
+			$workshops[] = $wk;
 		}
 	} else {
 		return "<p>No upcoming workshops!</p>\n";	// this skips $body variable contents	
 	}
-	$body .= "</tbody></table>\n";
-	$body .= $paginator->createLinks();
-	return $body;
+	
+	// prep view
+	$view->data['links'] = $links;
+	$view->data['admin'] = $admin;
+	$view->data['rows'] = $workshops;
+	return $view->renderSnippet('workshop_list');
 }
 
 

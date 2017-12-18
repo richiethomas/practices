@@ -3,8 +3,8 @@
 		echo  "<div class='row'><div class='col-md-6'><h2>emails for <a href='admin.php?ac=ed&wid={$wk['id']}'>{$wk['showtitle']}</a></h2>";
 		echo  "<p>(Will replace TITLE in subject or note. Also, practice info is appended to message.)</p>\n";
 		echo  "<div class='well'><h3>Send Message 
-			<small><a href='$sc?ac=remind&wid={$wk['id']}'>load reminder</a> / 
-		<a href='$sc?ac=feedback&wid={$wk['id']}'>load feedback</a></small>
+			<small><a href='$sc?ac=remind&wid={$wk['id']}'>reminder</a> / 
+		<a href='$sc?ac=feedback&wid={$wk['id']}'>feedback</a> / <a href='$sc?ac=cancel&wid={$wk['id']}'>cancel</a></small>
 		</h3>
 			<form action ='$sc' method='post'>".
 		Wbhkit\hidden('wid', $wk['id']).
@@ -14,6 +14,7 @@
 		Wbhkit\textarea('sms', $sms, 'SMS version (text)').
 		Wbhkit\drop('st', $statuses, $st, 'To').
 		Wbhkit\submit('send').
+		Wbhkit\checkbox('cancellation', 1, null, $cancellation).
 		"</form></div>\n";
 		
 		echo  "<div id='emaillists'>\n";

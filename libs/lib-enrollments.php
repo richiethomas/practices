@@ -95,20 +95,6 @@ function handle_enroll($wk, $u, $email = null, $confirm = true) {
 		$error = 'We need a logged in user or an email.';
 		return false;
 	}
-	// check user, the email
-	if ($u) {
-		$email = $u['email'];
-	} else {
-		if (\Users\validate_email($email)) {
-			// check for a user with this email
-			$u = \Users\get_user_by_email($email);
-			// no? make one.
-			if (!$u) { $u = \Users\make_user($email); }
-		} else {
-			$error = "I think that is not a valid email.";
-			return false;
-		}
-	}
 
 	// if they were enrolled, we'll adjust the language of confirmation message
 	$before = get_an_enrollment($wk, $u); 
@@ -122,7 +108,7 @@ function handle_enroll($wk, $u, $email = null, $confirm = true) {
 		} else {
 			$keyword = 'is now';
 		}
-		$message = "'{$email}' $keyword enrolled in '{$wk['title']}'!";
+		$message = "'{$u['nice_name']}' $keyword enrolled in '{$wk['title']}'!";
 	} elseif ($status_id == WAITING) {
 		if (!$before) {
 			$keyword = 'has been added to';
@@ -131,9 +117,9 @@ function handle_enroll($wk, $u, $email = null, $confirm = true) {
 		} else {
 			$keyword = 'is now on';
 		}		
-		$message = "This practice is full. '{$email}' $keyword the waiting list.";
+		$message = "This practice is full. '{$u['nice_name']}' $keyword the waiting list.";
 	} elseif ($status_id == 'already') {
-		$message = "'{$email}' has already been registered.";
+		$message = "'{$u['nice_name']}' has already been registered.";
 	} else {
 		$message = "Not sure what happened. Tried to enroll and got this status id: ".$status_id;
 	}		
@@ -323,63 +309,41 @@ function list_students($wid, $status_id = ENROLLED) {
 
 
 function get_transcript_tabled($u, $admin = false, $page = 1) {
-	global $key;
-
-
+	global $key, $view;
 	if (!$u || !isset($u['id'])) {
 		return "<p>Not logged in!</p>\n";
 	}
-
-	$statuses = \Lookups\get_statuses();
-
 	$sql = "select * from registrations r, workshops w, locations l where r.workshop_id = w.id and w.location_id = l.id and r.user_id = ".\Database\mres($u['id'])." order by w.start desc";
+
+	// rank
 
 	$paginator  = new \Paginator( \Database\wh_set_db_link(), $sql );
 	$rows = $paginator->getData($page);	
-	
 	if (count($rows->data) == 0) {
 		return "<p>You have not taken any practices! Which is fine, but that's why this list is empty.</p>\n";
 	}
-
-	$body = $paginator->createLinks();
-	$body .= '<table class="table table-striped table-bordered"><thead class="thead-dark">
-		<tr>
-			<th class="workshop-name" scope="col"><span class="oi oi-people" title="people" aria-hidden="true"></span> Workshop</th>
-			<th scope="col"><span class="oi oi-calendar" title="calendar" aria-hidden="true"></span> When</th>
-			<th scope="col"><span class="oi oi-map" title="map" aria-hidden="true"></span> Where</th>
-			<th scope="col"><span class="oi oi-pulse" title="pulse" aria-hidden="true"></span> Status</th>
-			<th scope="col"><span class="oi oi-task" title="task" aria-hidden="true"></span> Action</th>
-		</tr></thead>
-			<tbody>';
 	
-	foreach ($rows->data as $t) {
-		$wk = \Workshops\get_workshop_info($t['workshop_id']);
-		$cl = 'table-';
-		if ($wk['type'] == 'past') {
-			$cl .= 'light';
-		} elseif ($t['status_id'] == ENROLLED) {
-			$cl .= 'success';
-		} else {
-			$cl .= 'warning';
-		}
-		
-		$body .= "<tr class='$cl'><td>";
-		if ($admin) {
-			$body .= "<a href=\"admin.php?wid={$t['workshop_id']}&ac=ed\">{$t['title']}</a>";
-		} else {
-			$body .= "<a href=\"index.php?wid={$t['workshop_id']}\">{$t['title']}</a>";
-		}
-		$body .= "</td><td>{$wk['when']}</td><td>{$t['place']}</td><td>";
-		$body .= "{$statuses[$t['status_id']]}";
-		if ($t['status_id'] == WAITING) {
+	// prep data
+	$links = $paginator->createLinks();
+	$past_classes = array();
+	foreach ($rows->data as $d) {
+		$wk = \Workshops\get_workshop_info($d['workshop_id']);
+		$d['type'] = $wk['type'];
+		$d['when'] = $wk['when'];
+		if ($d['status_id'] == WAITING) {
 			$e = get_an_enrollment($wk, $u); 
-			$body .= " (spot {$e['rank']})";
+			$d['rank'] = $e['rank']; 
+		} else {
+			$d['rank'] = null;
 		}
-		$body .= "</td><td><a href='index.php?wid={$t['workshop_id']}'><span class=\"oi oi-info\" title=\"info\" aria-hidden=\"true\"></span> info</a></td></tr>\n";
+		$past_classes[] = $d;
 	}
-	$body .= "</tbody></table>\n";
-	$body .= $paginator->createLinks();
-	return $body;
+	
+	$view->data['statuses'] = \Lookups\get_statuses();
+	$view->data['admin'] = $admin;
+	$view->data['links'] = $links;
+	$view->data['rows'] = $past_classes;
+	return $view->renderSnippet('admin_transcript');
 }
 
 
