@@ -81,7 +81,7 @@ No worries if you'd rather not answer! Thank you all again for taking it!
 
 
 	case 'cancel':
-		$subject = "'{$wk['showtitle']}'";
+		$subject = "{$wk['showtitle']}";
 		$note = "I had to cancel this workshop! I'm so sorry.
 
 -Will";

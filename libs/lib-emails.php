@@ -8,7 +8,7 @@ require_once 'Mail.php';
 // Mail_mime did weird things to encoding of mail
 // turned '=' into '=3D' and other things
 function centralized_email($to, $sub, $body) {
-	
+		
 	// connect to SMTP
 	$params = array();
 	$params["host"] = "mail.willhines.net";
@@ -20,8 +20,9 @@ function centralized_email($to, $sub, $body) {
 	
 	$crlf = "\n";
 	 $headers = array(
-                     'From'          => WEBMASTER,
+                     'From'       => WEBMASTER,
                      'Reply-To'   => WEBMASTER,
+					 'Return-Path' => WEBMASTER,
                      'Subject'       => $sub,
 					 'To'			=> $to);
 
@@ -80,7 +81,7 @@ function confirm_email($wk, $u, $status_id = ENROLLED) {
 		case ENROLLED:
 			$sub = "ENROLLED: {$wk['showtitle']}";
 			$point = "You are ENROLLED in {$wk['showtitle']}.";
-			$textpoint = $point." For more info: ";
+			$textpoint = $point." ";
 			$call = "To DROP, click here:\n{$drop}";
 			if ($wk['cost'] > 0) {
 				$call .= "<br><br>Pay in person or venmo. On the day of the workshop is fine.<br>Venmo link:\nhttp://venmo.com/willhines?txn=pay&share=friends&amount={$wk['cost']}&note=improv%20workshop";
@@ -91,19 +92,19 @@ function confirm_email($wk, $u, $status_id = ENROLLED) {
 		case WAITING:
 			$sub = "WAIT LIST: {$wk['showtitle']}";
 			$point = "You are wait list spot {$e['rank']} for {$wk['showtitle']}:";
-			$textpoint = $point." For more info: ";
+			$textpoint = $point." ";
 			$call = "To DROP, click here:\n{$drop}";
 			break;
 		case INVITED:
 			$sub = "INVITED: {$wk['showtitle']} -- PLEASE RESPOND";
 			$point = "A spot opened up in ({$wk['showtitle']}.";
-			$textpoint = $point." Plz ACCEPT or DECLINE here: ";
+			$textpoint = $point." ACCEPT or DECLINE: ";
 			$call = "To ACCEPT, click here:\n{$accept}\n\nTo DECLINE, click here:\n{$decline}";
 			break;
 		case DROPPED:
 			$sub = "DROPPED: {$wk['showtitle']}";
 			$point = "You have dropped out of {$wk['showtitle']}";
-			$textpoint = $point." For more info: ";
+			$textpoint = $point." ";
 			if ($e['while_soldout'] == 1) {
 				$late .= "<br><i>".get_dropping_late_warning()."</i>";
 			}
@@ -113,7 +114,7 @@ function confirm_email($wk, $u, $status_id = ENROLLED) {
 		default:
 			$sub = "{$statuses[$status_id]}: {$wk['showtitle']}";
 			$point = "You are a status of '{$statuses[$status_id]}' for {$wk['showtitle']}";
-			$textpoint = $point." Go here for more info: ";
+			$textpoint = $point." ";
 			break;
 	}
 
@@ -151,7 +152,6 @@ $notifications
 
 
 function set_email_markup($e, $wk, $u, $cancel = false) {
-
 
 	if ($cancel) {
 		$status = "http://schema.org/ReservationCancelled";
@@ -202,7 +202,9 @@ function send_text($u, $msg) {
 	
 	$carriers = \Lookups\get_carriers();
 	$to = $u['phone'].'@'.$carriers[$u['carrier_id']]['email'];	
-	$mail_status =   centralized_email($to, '', $msg);
+	$mail_status = centralized_email($to, '', $msg);
+	//echo "<pre>".print_r($u, true)."<br>to: $to<br>mail status: $mail_status<br>msg: $msg</pre>\n";
+	return $mail_status;
 }
 
 
