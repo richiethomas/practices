@@ -1,9 +1,6 @@
 <?php
 namespace Enrollments;	
 
-
-
-
 // registrations
 function get_enrollments($id, $status_id = ENROLLED) {
 	$sql = "select count(*) as total from registrations where workshop_id = ".\Database\mres($id)." and status_id = '".\Database\mres($status_id)."'";

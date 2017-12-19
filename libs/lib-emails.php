@@ -173,7 +173,12 @@ function set_email_markup($e, $wk, $u, $cancel = false) {
      \"@type\": \"EducationEvent\",
      \"name\": \"{$wk['title']}\",
      \"startDate\": \"{$wk['start']}\",
-  \"endDate\": \"{$wk['end']}\",
+ 	 \"endDate\": \"{$wk['end']}\",
+     \"performer\": {
+          \"@type\": \"Person\",
+          \"name\": \"Will Hines\",
+          \"image\": \"http://willhines.net/home_files/wh_clay_med.jpg\"
+        },
      \"location\": {
        \"@type\": \"Place\",
        \"name\": \"{$wk['place']}\",
@@ -187,6 +192,8 @@ function set_email_markup($e, $wk, $u, $cancel = false) {
        }
      }
    },
+    \"ticketNumber\": \"{$e['rank']}\",
+    \"numSeats\": \"1\",
    \"modifiedTime\": \"".date("Y-m-d H:i:s")."\",
    \"modifyReservationUrl\": \"http://willhines.net/practices/index.php?wid={$wk['id']}\"
  }

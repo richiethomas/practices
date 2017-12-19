@@ -6,7 +6,7 @@ $webmaster = 'whines@gmail.com';
 
 function mysqli($sql) {
 	$db = wh_set_db_link();
-	$rows = $db->query($sql) or db_error();	
+	$rows = $db->query($sql) or db_error(' '.$sql);	
 	return $rows;
 }
 
@@ -27,7 +27,7 @@ function db_error($extra_info = null) {
 function wh_db_error($extra_info = null) {
 	$db = wh_set_db_link();
 	if ($db->errno) {
-		die("DB error: (" . $db->errno . ") " . $db->error);
+		die("DB error: (" . $db->errno . ") " . $db->error.$extra_info);
 	}
 	
 }
