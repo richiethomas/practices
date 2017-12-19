@@ -38,55 +38,12 @@ function get_an_enrollment($wk, $u) {
 }
 
 
-function get_enrollment_prompt($wk, $u) {
-	
-	global $sc;
-	
-	if ($wk['type'] == 'past') {
-		$point = "This workshop is IN THE PAST.";
-	} elseif ($wk['cancelled'] == true) {
-		$point = "This workshop is CANCELLED.";
-	} else {
-		if (\Users\logged_in()) {
-			$e = get_an_enrollment($wk, $u);
-	
-			$enroll_link = "$sc?ac=enroll&wid={$wk['id']}";
-	
-			switch ($e['status_id']) {
-				case ENROLLED:
-					$point = "You are ENROLLED in the practice listed below. Would you like to <a class='btn btn-primary' href='$sc?ac=drop&wid={$wk['id']}&uid={$u['id']}&key={$key}&v=winfo'>drop</a> it?";
-					break;
-				case WAITING:
-					$point = "You are spot number {$e['rank']} on the WAIT LIST for the practice listed below. Would you like to <a class='btn btn-primary' href='$sc?ac=drop&wid={$wk['id']}&uid={$u['id']}&key={$key}&v=winfo'>drop</a> it?";
-					break;
-				case INVITED:
-					$point = "A spot opened up in the practice listed below. Would you like to <a class='btn btn-primary' href='$sc?ac=accept&wid={$wk['id']}&uid={$u['id']}&key={$key}&v=winfo'>accept</a> it, or <a class='btn btn-primary' href='$sc?ac=decline&wid={$wk['id']}&uid={$u['id']}&key={$key}&v=winfo'>decline</a> it?";
-					break;
-				case DROPPED:
-					$point = "You have dropped out of the practice listed below. Would you like to <a class='btn btn-primary'  href='$enroll_link'>re-enroll</a>?";
-					break;
-				default:
-		
-					$point = "You are not currenty signed up for the practice listed below. ".
-						($wk['type'] == 'soldout' 
-						? "It is full. Want to <a class='btn btn-primary' href='$enroll_link'>join the wait list</a>?"
-						: "Want to <a class='btn btn-primary' href='$enroll_link'>enroll</a>?");
-		
-					break;
-			}
-		} else {
-			$point = "If you wish to enroll, you must first log in <a href='$sc'>on the front page</a>.";
-		}
-		
-	}		
-	
-	return $point;
-}
-
 // figures what the user should be
 // figures if there's been a previous registration
-function handle_enroll($wk, $u, $email = null, $confirm = true) {
+function handle_enroll($wk, $u, $confirm = true) {
 	global $error;
+	
+	// check incoming data
 	if (!$wk) {
 		$error = 'The workshop ID was not passed along.';
 		return false;
@@ -96,9 +53,11 @@ function handle_enroll($wk, $u, $email = null, $confirm = true) {
 		return false;
 	}
 
-	// if they were enrolled, we'll adjust the language of confirmation message
-	$before = get_an_enrollment($wk, $u); 
-	$status_id = enroll($wk, $u);
+	$before = get_an_enrollment($wk, $u);  // take note of 'before' enrollment
+	$status_id = enroll($wk, $u); // actually enroll them (or update enrollment)
+	
+	
+	// finicky confirmation message
 	$keyword = '';
 	if ($status_id == ENROLLED) {
 		if (!$before) {
@@ -133,7 +92,7 @@ function enroll($wk, $u) {
 	$wid = $wk['id'];
 	$uid = $u['id'];
 	
-	// is this person already registered? then we do different things depending on current status
+	// if person is already registered
 	$sql = "select  * from registrations where workshop_id = ".\Database\mres($wid)." and user_id = ".\Database\mres($uid);
 	$rows = \Database\mysqli( $sql) or \Database\db_error();
 	while ($row = mysqli_fetch_assoc($rows)) {
@@ -164,7 +123,7 @@ function enroll($wk, $u) {
 		}
 	}
 	
-	// if we haven't returned, then there was no registration. make a new registration
+	// if not registered
 	if (($wk['enrolled']+$wk['invited']) < $wk['capacity'] && $wk['waiting'] == 0) {
 		$status_id = ENROLLED;
 	} else {

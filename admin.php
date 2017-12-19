@@ -78,7 +78,7 @@ switch ($ac) {
 	case 'enroll':
 		Wbhkit\set_vars(array('email', 'con'));
 		$u = Users\get_user_by_email($email);
-		$message = Enrollments\handle_enroll($wk, $u, $email, $con); 
+		$message = Enrollments\handle_enroll($wk, $u, $con); 
 		$v = 'ed';
 		break;
 

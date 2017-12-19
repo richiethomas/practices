@@ -138,7 +138,7 @@ switch ($ac) {
 			break;
 		}	
 		if (Users\logged_in()) {
-			$message = Enrollments\handle_enroll($wk, $u, $email);
+			$message = Enrollments\handle_enroll($wk, $u);
 			if (!$u['send_text']) {
 				$message .= " Want notifications by text? <a  class='btn btn-primary' href='$sc?v=text'>Set your text preferences</a>.";	
 			}
@@ -218,7 +218,7 @@ switch ($ac) {
 
 // if a $wid was passed in, we'll show that page
 if ($wid) {
-	$view->data['point'] = Enrollments\get_enrollment_prompt($wk, $u);
+	$view->data['e'] = Enrollments\get_an_enrollment($wk, $u);
 	$view->data['workshop_tabled'] = Workshops\get_workshop_info_tabled($wk);
 	$view->renderPage('winfo');
 } else {
