@@ -77,9 +77,8 @@ switch ($ac) {
 
 	case 'enroll':
 		Wbhkit\set_vars(array('email', 'con'));
-		$message = Enrollments\handle_enroll($wk, null, $email, $con); 
-		// second argument is null, because i don't want to enroll the user who is logged in,
-		// want to enroll the email which is the third argument
+		$u = Users\get_user_by_email($email);
+		$message = Enrollments\handle_enroll($wk, $u, $email, $con); 
 		$v = 'ed';
 		break;
 

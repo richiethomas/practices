@@ -34,6 +34,9 @@ switch ($ac) {
 			} else {
 				$message = "Email changed from '{$u['email']}' to '$newemail'";
 				$u = Users\get_user_by_email($newemail);
+				if (!$u) {
+					$error = "'$newemail' is maybe not a valid email?";
+				}
 			}
 		} else {
 			$error = "Can't change email because there's no value for the user.";

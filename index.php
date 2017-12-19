@@ -55,12 +55,9 @@ switch ($ac) {
 		$u = Users\get_user_by_email($email);
 
 		// if not, make that user
-		if ($email && !$u) {
-			$u = Users\make_user($email);
-			if ($u === false) {
-				$error = "'$email' is not a valid email, I think?";
-				break;
-			}
+		if (!$u) {
+			$error = "'$email' is not a valid email, I think?";
+			break;
 		}
 
 		// send log in link to that user

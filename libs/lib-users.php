@@ -8,8 +8,19 @@ function get_user_by_email($email) {
 	while ($row = mysqli_fetch_assoc($rows)) {
 		return add_extra_user_info($row);
 	}
-	return false;
+	
+	// didn't find one? make one
+	$db = \Database\wh_set_db_link();
+	if (validate_email($email)) {
+		$sql = "insert into users (email, joined) VALUES ('".\Database\mres($email)."', '".date("Y-m-d H:i:s")."')";
+		$rows = \Database\mysqli( $sql) or \Database\db_error();
+		$new_user_id = $db->insert_id;
+		$key = gen_key($new_user_id);
+		return get_user_by_id($new_user_id);
+	}
+	return false; // invalid email
 }
+
 
 function get_user_by_id($id) {
 	$sql = "select u.* from users u where u.id = ".\Database\mres($id);
@@ -90,7 +101,7 @@ function get_key($uid) {
 	while ($row = mysqli_fetch_assoc($rows)) {
 		if ($row['ukey']) { return $row['ukey']; }
 	}
-	return gen_key($u['id']);
+	return gen_key($uid);
 }
 
 function key_to_user($key) {
@@ -102,18 +113,6 @@ function key_to_user($key) {
 	return false;
 }
 
-
-function make_user($email) {
-	$db = \Database\wh_set_db_link();
-	if (validate_email($email)) {
-		$sql = "insert into users (email, joined) VALUES ('".\Database\mres($email)."', '".date("Y-m-d H:i:s")."')";
-		$rows = \Database\mysqli( $sql) or \Database\db_error();
-		$key = gen_key($db->insert_id);
-		return get_user_by_email($email);
-	} else {
-		return false;
-	}
-}
 
 function validate_email($emailaddress) {
 	$pattern = '/^(?!(?:(?:\\x22?\\x5C[\\x00-\\x7E]\\x22?)|(?:\\x22?[^\\x5C\\x22]\\x22?)){255,})(?!(?:(?:\\x22?\\x5C[\\x00-\\x7E]\\x22?)|(?:\\x22?[^\\x5C\\x22]\\x22?)){65,}@)(?:(?:[\\x21\\x23-\\x27\\x2A\\x2B\\x2D\\x2F-\\x39\\x3D\\x3F\\x5E-\\x7E]+)|(?:\\x22(?:[\\x01-\\x08\\x0B\\x0C\\x0E-\\x1F\\x21\\x23-\\x5B\\x5D-\\x7F]|(?:\\x5C[\\x00-\\x7F]))*\\x22))(?:\\.(?:(?:[\\x21\\x23-\\x27\\x2A\\x2B\\x2D\\x2F-\\x39\\x3D\\x3F\\x5E-\\x7E]+)|(?:\\x22(?:[\\x01-\\x08\\x0B\\x0C\\x0E-\\x1F\\x21\\x23-\\x5B\\x5D-\\x7F]|(?:\\x5C[\\x00-\\x7F]))*\\x22)))*@(?:(?:(?!.*[^.]{64,})(?:(?:(?:xn--)?[a-z0-9]+(?:-+[a-z0-9]+)*\\.){1,126}){1,}(?:(?:[a-z][a-z0-9]*)|(?:(?:xn--)[a-z0-9]+))(?:-+[a-z0-9]+)*)|(?:\\[(?:(?:IPv6:(?:(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){7})|(?:(?!(?:.*[a-f0-9][:\\]]){7,})(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,5})?::(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,5})?)))|(?:(?:IPv6:(?:(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){5}:)|(?:(?!(?:.*[a-f0-9]:){5,})(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,3})?::(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,3}:)?)))?(?:(?:25[0-5])|(?:2[0-4][0-9])|(?:1[0-9]{2})|(?:[1-9]?[0-9]))(?:\\.(?:(?:25[0-5])|(?:2[0-4][0-9])|(?:1[0-9]{2})|(?:[1-9]?[0-9]))){3}))\\]))$/iD';
@@ -268,8 +267,17 @@ function edit_change_email($u) {
 }
 
 function change_email($ouid, $newe) {
-	$news = get_user_by_email($newe); 
 	$olds = get_user_by_id($ouid);
+	
+	//does new student exist?
+	$sql = "select u.* from users u where email = '".\Database\mres($newe)."'";
+	$rows = \Database\mysqli( $sql) or \Database\db_error();
+	$news = false;
+	while ($row = mysqli_fetch_assoc($rows)) {
+		$new_student_exist = true;
+		$news = add_extra_user_info($row);
+	}	
+	
 	if ($news) {
 		// new student exists, so merge into new
 		$sql = "select * from registrations where user_id = ".\Database\mres($ouid);
