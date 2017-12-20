@@ -159,6 +159,10 @@ function set_email_markup($e, $wk, $u, $cancel = false) {
 		$status = "http://schema.org/ReservationConfirmed";
 	}
 
+	$url = "http://www.willhines.net/practices/code.php?wid={$wk['id']}&key={$u['ukey']}&v=winfo";
+	
+
+
  return "<script type=\"application/ld+json\">
  {
    \"@context\": \"http://schema.org\",
@@ -192,6 +196,7 @@ function set_email_markup($e, $wk, $u, $cancel = false) {
        }
      }
    },
+    \"ticketToken\": \"$url\",
     \"ticketNumber\": \"{$e['rank']}\",
     \"numSeats\": \"1\",
    \"modifiedTime\": \"".date("Y-m-d H:i:s")."\",
