@@ -206,10 +206,6 @@ function get_workshops_list_bydate($start = null, $end = null) {
 	$rows = \Database\mysqli( $sql) or \Database\db_error();
 	$workshops = array();
 	while ($row = mysqli_fetch_assoc($rows)) {
-		$row['lwhere'] = $row['address'].' '.$row['city'].' '.$row['state'].' '.$row['zip'];
-		$row['showstart'] = date('D M j - g:ia', strtotime($row['start']));
-		$row['showend'] = date('g:ia', strtotime($row['end']));		
-		$row['showtitle'] = "{$row['title']} - {$row['showstart']}-{$row['showend']}";
 		$workshops[$row['id']] = get_workshop_info($row['id']);
 	}
 	return $workshops;

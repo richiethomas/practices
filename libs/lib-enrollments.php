@@ -254,7 +254,7 @@ function list_students($wid, $status_id = ENROLLED) {
 	$stds = get_students($wid, $status_id);
 	$body = '';
 	foreach ($stds as $uid => $s) {
-		$s['ukey'] = \Users\check_key($s['ukey'], $uid);
+		//$s['ukey'] = \Users\check_key($s['ukey'], $uid);
 		$body .= "<div class='row'><div class='col-md-6'><a href='admin_student.php?uid={$s['id']}&wid={$wid}'>{$s['nice_name']}</a> <small>".date('M j g:ia', strtotime($s['last_modified']))."</small></div>".
 		"<div class='col-md-6'>
 		<a class='btn btn-primary' href='$sc?ac=cs&wid={$wid}&uid={$uid}'>change status</a> <a class='btn btn-danger' href='$sc?ac=conrem&uid={$uid}&wid={$wid}'>remove</a></div>".

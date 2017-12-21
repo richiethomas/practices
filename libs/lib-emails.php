@@ -154,9 +154,9 @@ $notifications
 function set_email_markup($e, $wk, $u, $cancel = false) {
 
 	if ($cancel) {
-		$status = "http://schema.org/ReservationCancelled";
+		$status = "http://schema.org/Cancelled";
 	} else {
-		$status = "http://schema.org/ReservationConfirmed";
+		$status = "http://schema.org/Confirmed";
 	}
 
 	$url = "http://www.willhines.net/practices/code.php?wid={$wk['id']}&key={$u['ukey']}&v=winfo";

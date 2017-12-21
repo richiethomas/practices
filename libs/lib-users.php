@@ -211,11 +211,11 @@ function delete_student($uid = 0) {
 	if (!$uid) {
 		return false;
 	}
+	$sql = "delete from status_change_log where user_id = ".\Database\mres($uid);
+	\Database\mysqli($sql) or \Database\db_error();
 	$sql = "delete from registrations where user_id = ".\Database\mres($uid);
 	\Database\mysqli($sql) or \Database\db_error();
 	$sql = "delete from users where id = ".\Database\mres($uid);
-	\Database\mysqli($sql) or \Database\db_error();
-	$sql = "delete from status_change_log where user_id = ".\Database\mres($uid);
 	\Database\mysqli($sql) or \Database\db_error();
 	return true;
 	
