@@ -152,7 +152,7 @@ function format_workshop_startend($row) {
 	}
 	$row['showtitle'] = "{$row['title']} - {$row['showstart']}-{$row['showend']}";
 	$row['when'] = "{$row['showstart']}-{$row['showend']}";
-	
+		
 	return $row;
 }
 

@@ -28,7 +28,7 @@ function centralized_email($to, $sub, $body) {
 
 	  $headers['MIME-Version'] = "1.0";
 	  $headers['Content-Type'] = "text/html";
-	  $headers['charset'] = "iso-8859-1";
+	  $headers['charset'] = "ISO-8859-1";
 
 	 $sent = $smtp->send($to, $headers, $body);
 	
@@ -130,8 +130,7 @@ function confirm_email($wk, $u, $status_id = ENROLLED) {
 		$notifications = "<p>Would you want to be notified via text? You can set text preferences:<br>".$textpref."</p>";
 	}
 
-	$body = "$email_markup
-<p>$point $late</p>
+	$body = "<p>$point $late</p>
 
 <p>$call</p>
 
@@ -146,8 +145,20 @@ function confirm_email($wk, $u, $status_id = ENROLLED) {
 $notifications
 
 ".email_footer($send_faq);	
+
+
+if ($email_markup) {
+	$body = "<html>
+<head>
+{$email_markup}
+</head>
+<body>
+{$body}
+</body>
+</html>\n";
+}
 	
-	return centralized_email($u['email'], $sub, $body);
+	return centralized_email($u['email'], "{$sub} ".date("c"), $body);
 }
 
 
@@ -159,8 +170,13 @@ function set_email_markup($e, $wk, $u, $cancel = false) {
 		$status = "http://schema.org/Confirmed";
 	}
 
+	// QR code thing
 	$url = "http://www.willhines.net/practices/code.php?wid={$wk['id']}&key={$u['ukey']}&v=winfo";
 	
+
+	// make start/end ISO friendly
+	$wk['start'] = date(DATE_ISO8601, strtotime($wk['start']));
+	$wk['end'] = date(DATE_ISO8601, strtotime($wk['end']));
 
 
  return "<script type=\"application/ld+json\">
@@ -174,7 +190,7 @@ function set_email_markup($e, $wk, $u, $cancel = false) {
      \"name\": \"{$u['nice_name']}\"
    },
    \"reservationFor\": {
-     \"@type\": \"EducationEvent\",
+     \"@type\": \"Event\",
      \"name\": \"{$wk['title']}\",
      \"startDate\": \"{$wk['start']}\",
  	 \"endDate\": \"{$wk['end']}\",
