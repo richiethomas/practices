@@ -1,5 +1,4 @@
 <?php
-
 $heading = 'improv practices';
 $sc = "index.php";
 
