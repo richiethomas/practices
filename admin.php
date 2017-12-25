@@ -133,7 +133,7 @@ switch ($v) {
 		$lists = array();
 		foreach ($statuses as $stid => $status_name) {
 			$stats[$stid] = count(Enrollments\get_students($wid, $stid));
-			$lists[$stid] = Enrollments\list_students($wid, $stid);
+			$lists[$stid] = Enrollments\get_students($wid, $stid);
 		}
 				
 		$data['log'] = Enrollments\get_status_change_log($wk);

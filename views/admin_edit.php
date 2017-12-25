@@ -16,7 +16,12 @@ echo "<div class='row mt-md-3 admin-edit-workshop'>\n";
 		// list students for each status
 		foreach ($statuses as $stid => $status_name) {
 			echo  "<h4>{$status_name} (".$stats[$stid].")</h4>\n";
-			echo  $lists[$stid];
+			foreach ($lists[$stid] as $s) {
+				echo "<div class='row'><div class='col-md-6'><a href='admin_student.php?uid={$s['id']}&wid={$wk['id']}'>{$s['nice_name']}</a> <small>".date('M j g:ia', strtotime($s['last_modified']))."</small></div>".
+				"<div class='col-md-6'>
+				<a class='btn btn-primary' href='admin.php?ac=cs&wid={$wk['id']}&uid={$u['id']}'>change status</a> <a class='btn btn-danger' href='admin.php?ac=conrem&uid={$u['id']}&wid={$wk['id']}'>remove</a></div>".
+				"</div>\n";
+			}
 		}
 		
 		echo  $status_log; // from a snippet "admin_status"
