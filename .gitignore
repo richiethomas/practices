@@ -6,6 +6,8 @@
 !*/cache/.htaccess
 db.php
 mail_log.txt
+.git-ftp-ignore
+.gitignore
 
 # Compiled source #
 ###################
