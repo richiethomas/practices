@@ -158,7 +158,7 @@ if ($email_markup) {
 </html>\n";
 }
 	
-	return centralized_email($u['email'], "{$sub} ".date("c"), $body);
+	return centralized_email($u['email'], "{$sub}", $body);
 }
 
 
@@ -216,7 +216,7 @@ function set_email_markup($e, $wk, $u, $cancel = false) {
     \"ticketNumber\": \"{$e['rank']}\",
     \"numSeats\": \"1\",
    \"modifiedTime\": \"".date("Y-m-d H:i:s")."\",
-   \"modifyReservationUrl\": \"http://willhines.net/practices/index.php?wid={$wk['id']}\"
+   \"modifyReservationUrl\": \"http://willhines.net/practices/index.php?wid={$wk['id']}&key={$u['ukey']}\"
  }
  </script>";
 	
