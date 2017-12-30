@@ -2,26 +2,28 @@
 namespace Enrollments;	
 
 // registrations
-function get_enrollments($id, $status_id = ENROLLED) {
-	$sql = "select count(*) as total from registrations where workshop_id = ".\Database\mres($id)." and status_id = '".\Database\mres($status_id)."'";
-	$rows = \Database\mysqli( $sql) or \Database\db_error();
-	while ($row = mysqli_fetch_assoc($rows)) {
-		return $row['total'];
+function get_enrollments($id) {
+	global $statuses;
+	$stmt = \DB\pdo_query("select count(*) as total, status_id from registrations where workshop_id = :wid group by status_id", array(':wid' => $id));
+	$enrollments = [];
+	while ($row = $stmt->fetch()) {
+		$enrollments[$row['status_id']] = $row['total'];
 	}
-	return 0;
+	foreach ($statuses as $sid => $sname) {
+		if (!isset($enrollments[$sid])) { $enrollments[$sid] = 0; }		
+	}
+	return $enrollments;
 }
 
 function get_an_enrollment($wk, $u) {
 	$statuses = \Lookups\get_statuses();
-	$sql = "select r.* from registrations r where r.workshop_id = ".\Database\mres($wk['id'])." and user_id = ".\Database\mres($u['id']);
+	$stmt = \DB\pdo_query("select r.* from registrations r where r.workshop_id = :wid and user_id = :uid", array(':wid' => $wk['id'], ':uid' => $u['id']));
 
-
-	$rows = \Database\mysqli( $sql) or \Database\db_error($sql);
-	while ($row = mysqli_fetch_assoc($rows)) {
-		$sql2 = "select r.* from registrations r where r.workshop_id = ".\Database\mres($wk['id'])." and r.status_id = '".\Database\mres($row['status_id'])."' order by last_modified";
-		$rows2 = \Database\mysqli( $sql2) or \Database\db_error();
+	while ($row = $stmt->fetch()) {
+		
+		$stmt2 = \DB\pdo_query("select r.* from registrations r where r.workshop_id = :wid and r.status_id = :sid order by last_modified", array(':wid' => $wk['id'], ':sid' => $row['status_id']));
 		$i = 1;
-		while ($row2 = mysqli_fetch_assoc($rows2)) {
+		while ($row2 = $stmt2->fetch()) {
 			if ($row2['id'] == $row['id']) {
 				break;
 			}
@@ -90,9 +92,9 @@ function enroll($wk, $u) {
 	$uid = $u['id'];
 	
 	// if person is already registered
-	$sql = "select  * from registrations where workshop_id = ".\Database\mres($wid)." and user_id = ".\Database\mres($uid);
-	$rows = \Database\mysqli( $sql) or \Database\db_error();
-	while ($row = mysqli_fetch_assoc($rows)) {
+	$stmt = \DB\pdo_query("select  * from registrations where workshop_id = :wid and user_id = :uid", array(':wid' => $wid, ':uid' => $uid));
+	
+	while ($row = $stmt->fetch()) {
 		switch($row['status_id']) {
 			case ENROLLED:
 				return 'already';
@@ -127,11 +129,7 @@ function enroll($wk, $u) {
 		$status_id = WAITING;
 	}
 
-	$sql = sprintf("INSERT INTO registrations (workshop_id, user_id, status_id, registered, last_modified) VALUES (%u, %u, '%s', '".date("Y-m-d H:i:s")."', '".date("Y-m-d H:i:s")."')",
-		\Database\mres($wid),
-		\Database\mres($uid),
-		\Database\mres($status_id));
-		\Database\mysqli( $sql) or \Database\db_error();
+	$stmt = \DB\pdo_query("INSERT INTO registrations (workshop_id, user_id, status_id, registered, last_modified) VALUES (:wid, :uid, :status_id, '".date("Y-m-d H:i:s")."', '".date("Y-m-d H:i:s")."')", array(':wid' => $wid, ':uid' => $uid, ':status_id' => $status_id));
 	
 	update_change_log($wk, $u, $status_id); 
 
@@ -142,28 +140,27 @@ function enroll($wk, $u) {
 // this checks for open spots, and makes sure invites have gone out to anyone on waiting list
 // i call this in places just to make sure i haven't neglected the waiting list
 function check_waiting($wk) {
-	$wk = \Workshops\get_workshop_info($wk['id']); // make sure it's up to date
+	$wk = \Workshops\fill_out_workshop_row($wk); // make sure it's up to date
 	$msg = '';
 	if ($wk['type'] == 'past') {
 		return 'Workshop is in the past';
 	}
 	while (($wk['enrolled']+$wk['invited']) < $wk['capacity'] && $wk['waiting'] > 0) {
-		$sql = "select * from registrations where workshop_id = ".\Database\mres($wk['id'])." and status_id = '".WAITING."' order by last_modified limit 1";
-		$rows = \Database\mysqli( $sql) or \Database\db_error();
-		while ($row = mysqli_fetch_assoc($rows)) {
+		
+		$stmt = \DB\pdo_query("select * from registrations where workshop_id = :wid and status_id = '".WAITING."' order by last_modified limit 1", array(':wid' => $wk['id']));
+		
+		while ($row = $stmt->fetch()) {
 			$u = \Users\get_user_by_id($row['user_id']);
 			$msg .= change_status($wk, $u, INVITED, true);
 		}
-		$wk = \Workshops\get_workshop_info($wk['id']); //update lists
+		$wk = \Workshops\fill_out_workshop_row($wk); //update lists
 	}
 	if ($msg) { return $msg; }
 	return "No invites sent.";
 }
 
 function update_attendance($wid, $uid, $attended = 1) {
-	$sql = "update registrations set attended = ".\Database\mres($attended)." where workshop_id = ".\Database\mres($wid)." and user_id = ".\Database\mres($uid);
-	//echo "$sql<br>\n";
-	\Database\mysqli( $sql) or \Database\db_error();
+	$stmt = \DB\pdo_query("update registrations set attended = :attended where workshop_id = :wid and user_id = :uid", array(':attended' => $attended, ':wid' => $wid, ':uid' => $uid));
 	return "Updated user ($uid) workshop ($wid) to attended: $attended";
 }
 
@@ -172,8 +169,9 @@ function change_status($wk, $u, $status_id = ENROLLED, $confirm = true) {
 	$e = get_an_enrollment($wk, $u);
 	$statuses = \Lookups\get_statuses();
 	if ($e['status_id'] != $status_id) {
-		$sql = "update registrations set status_id = '".\Database\mres($status_id)."',  last_modified = '".date("Y-m-d H:i:s")."' where workshop_id = ".\Database\mres($wk['id'])." and user_id = ".\Database\mres($u['id']);
-		\Database\mysqli( $sql) or \Database\db_error();
+		
+		$stmt = \DB\pdo_query("update registrations set status_id = :status_id,  last_modified = '".date("Y-m-d H:i:s")."' where workshop_id = :wid and user_id = :uid", array(':status_id' => $status_id, ':wid' => $wk['id'], ':uid' => $u['id']));
+		
 		update_change_log($wk, $u, $status_id);	
 	}
 	
@@ -186,28 +184,29 @@ function update_change_log($wk, $u, $status_id) {
 	if (!$wk['id'] || !$u['id'] || !$status_id) {
 		return false;
 	}
-	$sql = sprintf("insert into status_change_log (workshop_id, user_id, status_id, happened) VALUES (%u, %u, %u, '%s')",
-	\Database\mres ($wk['id']),
-	\Database\mres ($u['id']),
-	\Database\mres ($status_id),
-	date('Y-m-d H:i:s', time()));
-	\Database\mysqli($sql) or \Database\db_error();
+	
+	$stmt = \DB\pdo_query("insert into status_change_log (workshop_id, user_id, status_id, happened) VALUES (:wid, :uid, :status_id, '".date('Y-m-d H:i:s', time())."')", 
+	array(':wid' => $wk['id'],
+	':uid' => $u['id'],
+	':status_id' => $status_id));
 	return true;
 }
 
 function get_status_change_log($wk = null) {
 
 	global $sc, $late_hours;
-	$sql = "select s.*, u.email, u.display_name, st.status_name, wk.title, wk.start, wk.end, wk.cancelled from status_change_log s, users u, statuses st, workshops wk where";
+	
+	$sql = "select s.*, u.email, u.display_name, st.status_name, wk.title, wk.start, wk.end, wk.cancelled from status_change_log s, users u, statuses st, workshops wk where WORKSHOPMAYBE  s.workshop_id = wk.id and s.user_id = u.id and s.status_id = st.id order by happened desc";
 	if ($wk) { 
-		$sql .= " workshop_id = ".\Database\mres($wk['id'])." and "; 
+		$sql = preg_replace('/WORKSHOPMAYBE/', " workshop_id = :wid and ", $sql);
+		$stmt = \DB\pdo_query($sql, array(':wid' => $wk['id']));
+	} else {
+		$sql = preg_replace('/WORKSHOPMAYBE/', '', $sql);
+		$stmt = \DB\pdo_query($sql);
 	}
-	$sql .= " s.workshop_id = wk.id and s.user_id = u.id and s.status_id = st.id order by happened desc";
-
-	$rows = \Database\mysqli($sql) or \Database\db_error();
 	$log = array();
 
-	while ($row = mysqli_fetch_assoc($rows)) {
+	while ($row = $stmt->fetch()) {
 		$row = \Workshops\format_workshop_startend($row);
 		$row = \Users\set_nice_name($row);
 		if (!$wk) {
@@ -223,12 +222,17 @@ function get_status_change_log($wk = null) {
 }
 
 function get_students($wid, $status_id = ENROLLED) {
-	$sql = "select u.*, r.status_id,  r.attended, r.registered, r.last_modified  from registrations r, users u where r.workshop_id = ".\Database\mres($wid);
-	if ($status_id) { $sql .= " and status_id = '".\Database\mres($status_id)."'"; }
-	$sql .= " and r.user_id = u.id order by last_modified";
-	$rows = \Database\mysqli( $sql) or \Database\db_error();
+	$sql = "select u.*, r.status_id,  r.attended, r.registered, r.last_modified  from registrations r, users u where r.workshop_id = :wid";
+	if ($status_id) { 
+		$sql .= " and status_id = :sid and r.user_id = u.id order by last_modified"; 
+		$stmt = \DB\pdo_query($sql, array(':wid' => $wid, ':sid' => $status_id));
+	} else {
+		$sql .= " and r.user_id = u.id order by last_modified"; 
+		$stmt = \DB\pdo_query($sql, array(':wid' => $wid));
+		
+	}
 	$stds = array();
-	while ($row = mysqli_fetch_assoc($rows)) {
+	while ($row = $stmt->fetch()) {
 		$row['last_enrolled'] = get_last_enrolled($wid, $row['id']);
 		$row = \Users\set_nice_name($row);
 		$stds[$row['id']] = $row;
@@ -238,10 +242,8 @@ function get_students($wid, $status_id = ENROLLED) {
 
 
 function get_last_enrolled($wid = 0, $uid = 0) {
-	$sql = "select * from  status_change_log scl where workshop_id = ".\Database\mres($wid)." and user_id = ".\Database\mres($uid)." order by happened desc";
-	
-	$rows = \Database\mysqli($sql) or \Database\db_error();
-	while ($row = mysqli_fetch_assoc($rows)) {
+	$stmt = \DB\pdo_query("select * from  status_change_log scl where workshop_id = :wid and user_id = :uid order by happened desc", array(':wid' => $wid, ':uid' => $uid));	
+	while ($row = $stmt->fetch()) {
 		if ($row['status_id'] == ENROLLED) {
 			return $row['happened'];
 		}
@@ -254,11 +256,12 @@ function get_transcript_tabled($u, $admin = false, $page = 1) {
 	if (!$u || !isset($u['id'])) {
 		return "<p>Not logged in!</p>\n";
 	}
-	$sql = "select * from registrations r, workshops w, locations l where r.workshop_id = w.id and w.location_id = l.id and r.user_id = ".\Database\mres($u['id'])." order by w.start desc";
-
+	$sql = "select * from registrations r, workshops w, locations l where r.workshop_id = w.id and w.location_id = l.id and r.user_id = :uid order by w.start desc";
+	$params = array(':uid' => $u['id']);
+	
 	// rank
 
-	$paginator  = new \Paginator( \Database\wh_set_db_link(), $sql );
+	$paginator  = new \Paginator( $sql, $params );
 	$rows = $paginator->getData($page);	
 	if (count($rows->data) == 0) {
 		return "<p>You have not taken any practices! Which is fine, but that's why this list is empty.</p>\n";
@@ -284,15 +287,13 @@ function get_transcript_tabled($u, $admin = false, $page = 1) {
 	$view->data['admin'] = $admin;
 	$view->data['links'] = $links;
 	$view->data['rows'] = $past_classes;
-	return $view->renderSnippet('admin_transcript');
+	return $view->renderSnippet('transcript');
 }
 
 
 function drop_session($wk, $u) {
-	$sql = sprintf('delete from registrations where workshop_id = %u and user_id = %u',
-		\Database\mres($wk['id']),
-		\Database\mres($u['id']));
-	\Database\mysqli( $sql) or db_error();
+	
+	$stmt = \DB\pdo_query('delete from registrations where workshop_id = :wid and user_id = :uid', array(':wid' => $wk['id'], ':uid' => $u['id']));	
 	update_change_log($wk, $u, DROPPED); // really should be a new status like "REMOVED" 
 	check_waiting($wk);
 	return true;

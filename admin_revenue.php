@@ -15,11 +15,11 @@ switch ($ac) {
 			$rev = null;
 			if (substr($key, 0, 8) == 'revenue_') {
 				$id = substr($key, 8);
-				Workshops\update_workshop_col($id, 'revenue', $value);
+				$stmt = \DB\pdo_query("update workshops set revenue = :revenue where id = :wid", array(':revenue' => $value, ':wid' => $id));
 			}
 			if (substr($key, 0, 9) == 'expenses_') {
 				$id = substr($key, 9);
-				Workshops\update_workshop_col($id, 'expenses', $value);
+				$stmt = \DB\pdo_query("update workshops set expenses = :expenses where id = :wid", array(':expenses' => $value, ':wid' => $id));
 			}
 		}
 		break;

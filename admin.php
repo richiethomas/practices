@@ -15,55 +15,35 @@ $v = null;
 switch ($ac) {
 
 	case 'up':
-	
-		$sql = sprintf("update workshops
-		set title = '%s', start = '%s', end = '%s', cost = %u, capacity = %u, location_id = %u, notes = '%s', revenue = %u, expenses = %u, when_public = '%s', cancelled = %u
-		where id = %u",
-			Database\mres($title),
-			Database\mres(date('Y-m-d H:i:s', strtotime($start))),
-			Database\mres(date('Y-m-d H:i:s', strtotime($end))),
-			Database\mres($cost),
-			Database\mres($capacity),
-			Database\mres($lid),
-			Database\mres($notes),
-			Database\mres($revenue),
-			Database\mres($expenses),
-			Database\mres(date('Y-m-d H:i:s', strtotime($when_public))),
-			Database\mres($cancelled),
-			Database\mres($wid));
-		Database\mysqli($sql) or Database\db_error();
-		$wk = Workshops\get_workshop_info($wid);
-		$message = "Updated practice ({$wid}) - {$wk['title']}";
-		$v = 'ed';
-		break;
-		
 	case 'ad':
-		if (!$title) {
+	
+		if ($ac == 'ad' && !$title) {
 			$error = 'Must include a title for new workshop.';
 			$v = 'home';
 			break;
 		}
 
-		$sql = sprintf("insert into workshops (title, start, end, cost, capacity, location_id, cancelled, notes, revenue, expenses, when_public)
-		VALUES ('%s', '%s', '%s', '%u', '%u', '%u', '%u', '%s', %u, %u, '%s')",
-			Database\mres($title),
-			Database\mres(date('Y-m-d H:i:s', strtotime($start))),
-			Database\mres(date('Y-m-d H:i:s', strtotime($end))),
-			Database\mres($cost),
-			Database\mres($capacity),
-			Database\mres($lid),
-			Database\mres($cancelled),
-			Database\mres($notes),
-			Database\mres($revenue),
-			Database\mres($expenses),
-			Database\mres(date('Y-m-d H:i:s', strtotime($when_public))));
-		Database\mysqli($sql) or Database\db_error();
-		$wid = $db->insert_id;
-		$wk = Workshops\get_workshop_info($wid);
-		$message = "Added practice ({$title})";
+		// build a workshop array from data we have
+		$id = $wid ? $wid : null; // so the next bit can find the id
+		$location_id = $lid;
+		$wk_fields = \Workshops\empty_workshop();
+		foreach ($wk_fields as $field => $fieldvalue) {
+			$wk[$field] = $$field;
+		}
+	
+		$wid = Workshops\add_update_workshop($wk, $ac);
+		
+		// fill out $wk array
+		$wk = Workshops\fill_out_workshop_row($wk);
+		
+		if ($ac == 'up') {
+			$message = "Updated practice ({$wid}) - {$wk['title']}";
+		} elseif ($ac == 'ad') {
+			$message = "Added practice ({$title})";
+		}
 		$v = 'ed';
 		break;
-
+		
 	case 'cw':
 		$message = Enrollments\check_waiting($wk);
 		$v = 'ed';
@@ -88,10 +68,10 @@ switch ($ac) {
 		Users\delete_student($u['id']);
 		break;
 
+
 	// change last modified (moves people in waiting list order)
 	case 'cr':
-		$sql = 'update registrations set last_modified = \''.Database\mres(date('Y-m-d H:i:s', strtotime($lmod))).'\' where workshop_id = '.Database\mres($wk['id']).' and user_id = '.Database\mres($u['id']);
-		Database\mysqli($sql) or Database\db_error();
+		$stmt = \DB\pdo_query("update registrations set last_modified = :mod where workshop_id = :wid and user_id = :uid", array(':lmod' => date('Y-m-d H:i:s', strtotime($lmod)), ':wid' => $wk['id'], ':uid' => $u['id']));
 		$v = 'cs';
 		break; 
 	
@@ -101,10 +81,8 @@ switch ($ac) {
 		break;
 	
 	case 'del':
-		$sql = "delete from registrations where workshop_id = ".Database\mres($wk['id']);
-		Database\mysqli($sql) or Database\db_error();
-		$sql = "delete from workshops where id = ".Database\mres($wk['id']);
-		Database\mysqli($sql) or Database\db_error();
+		$stmt = \DB\pdo_query("delete from registrations where workshop_id = :wid", array(':wid' => $wk['id']));
+		$stmt = \DB\pdo_query("delete from workshops where id = :wid", array(':wid' => $wk['id']));
 		$message = "Deleted '{$wk['title']}'";
 		$v= 'home';
 		break;

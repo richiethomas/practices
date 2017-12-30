@@ -19,7 +19,8 @@ spl_autoload_register(function ($className) {
 });
 
 // set objects, code, et
-include 'libs/db.php';
+$last_insert_id = null;
+include 'libs/db_pdo.php';
 include 'libs/wbh_webkit.php';
 include 'libs/wbh_webkit_pagination.php';
 include 'libs/time_difference.php';
@@ -38,6 +39,7 @@ define('WEBMASTER', "will@willhines.net");
 //define('WEBMASTER', "whines@gmail.com");
 
 $statuses = Lookups\get_statuses();
+$locations = Lookups\get_locations();
 define('ENROLLED', Lookups\find_status_by_value('enrolled'));
 define('WAITING', Lookups\find_status_by_value('waiting'));
 define('DROPPED', Lookups\find_status_by_value('dropped'));
@@ -55,7 +57,6 @@ Wbhkit\set_vars(array('ac', 'wid', 'uid', 'key', 'page'));
 // workshop info
 if ($wid) {
 	$wk = Workshops\get_workshop_info($wid);
-	Enrollments\check_waiting($wk);
 } else {
 	$wk = Workshops\empty_workshop();
 }

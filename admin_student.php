@@ -4,7 +4,6 @@ $heading = "practices: admin";
 include 'lib-master.php';
 include 'libs/validate.php';
 
-
 Wbhkit\set_vars(array('carrier_id', 'phone', 'send_text', 'newemail', 'display_name', 'needle'));
 
 switch ($ac) {

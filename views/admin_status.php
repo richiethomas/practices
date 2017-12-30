@@ -6,7 +6,7 @@ if (count($log) == 0) {
 } else {
 
 	echo "<table class='table'>
-		<tr><th>user</th>".(isset($wk['id']) ? '' : '<th>workshop</th>')."<th>status</th><th>changed / last enrolled</th></tr>\n";
+		<tr><th>user</th>".(isset($wk['id']) && $wk['id'] ? '' : '<th>workshop</th>')."<th>status</th><th>changed / last enrolled</th></tr>\n";
 			
 	foreach ($log as $row) {
 		$wkname = "<a href='$sc?v=ed&wid={$row['workshop_id']}'>{$row['title']}</a><br><small>{$row['showstart']}</small>";
@@ -25,7 +25,7 @@ if (count($log) == 0) {
 	
 		echo "<tr class='$row_class'>
 			<td>{$row['nice_name']}</td>
-			".(isset($wk['id']) ? '' : "<td>$wkname</td>")."
+			".(isset($wk['id']) && $wk['id'] ? '' : "<td>$wkname</td>")."
 			<td>{$row['status_name']}</td>
 			<td><small>".date('j-M-y g:ia', strtotime($row['happened']))."{$last_enrolled}</small></td>
 		</tr>\n";
