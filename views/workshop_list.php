@@ -44,7 +44,7 @@
 			if ($admin) {
 				echo "<td><a href=\"$sc?wid={$row['id']}\">Clone</a></td></tr>\n";
 			} else {
-				echo "<td><a href=\"{$sc}?wid={$row['id']}&v=winfo\"><span class=\"oi oi-info\" title=\"info\" aria-hidden=\"true\"></span> info</a></td></tr>\n";
+				echo "<td><a href=\"{$sc}?wid={$row['id']}&v=winfo\"><span class=\"oi oi-info\" title=\"info\" aria-hidden=\"true\"></span> Enroll</a></td></tr>\n";
 			}
 		}
 
