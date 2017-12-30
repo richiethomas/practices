@@ -1,6 +1,8 @@
 <?php	
 	
 /*
+* WBH - december 2017, now intertwined with 'db_pdo.php' routines
+* 
 * the "createLinks" method builds the parameter "limit" into each link
 * but the rest of my code (the other files) ignores it and does not specify a limit
 * thus leaving limit to be the default as hard-coded below
@@ -9,20 +11,20 @@
 */	
 class Paginator {
 
-	private $_conn;
 	private $_limit;
 	private $_page;
 	private $_query;
+	private $_params; 
+	private $_stmt;
 	private $_total;
 
+	public function __construct( $query, $params = null ) {
 
-	public function __construct( $conn, $query ) {
-
-		$this->_conn = $conn;
 		$this->_query = $query;
-
-		$rs= $this->_conn->query($this->_query );
-		$this->_total = $rs->num_rows;
+		$this->_params = $params;
+		$this->_stmt = \DB\pdo_query($query, $params);
+		$all = $this->_stmt->fetchAll();
+		$this->_total = count($all);
 
 	}
 
@@ -39,8 +41,8 @@ class Paginator {
 		} else {
 			$query      = $this->_query . " LIMIT " . ( ( $this->_page - 1 ) * $this->_limit ) . ", {$this->_limit}";
 		}
-		$rs             = $this->_conn->query( $query );
-		while ( $row = $rs->fetch_assoc() ) {
+		$stmt = \DB\pdo_query($query, $this->_params);
+		while ( $row = $stmt->fetch() ) {
 			$results[]  = $row;
 		}
 

@@ -5,26 +5,40 @@ namespace Workshops;
 
 // workshops
 function get_workshop_info($id) {
-	$sql = "select w.*, l.place, l.address, l.city, l.state, l.zip from workshops w LEFT OUTER JOIN locations l on w.location_id = l.id where w.id = ".\Database\mres($id);
-	$rows = \Database\mysqli( $sql) or \Database\db_error();
-	while ($row = mysqli_fetch_assoc($rows)) {
-		
-		$row['lwhere'] = $row['address'].' '.$row['city'].' '.$row['state'].' '.$row['zip'];
-		
-		if ($row['when_public'] == 0 ) {
-			$row['when_public'] = '';
-		}
-		$row = format_workshop_startend($row);		
-		$row['enrolled'] = \Enrollments\get_enrollments($id);
-		$row['invited'] = \Enrollments\get_enrollments($id, INVITED);
-		$row['waiting'] = \Enrollments\get_enrollments($id, WAITING);
-		$row['open'] = ($row['enrolled'] >= $row['capacity'] ? 0 : $row['capacity'] - $row['enrolled']);
-		$row = set_workshop_type($row);
-		$row = check_last_minuteness($row);
-		
+	$statuses = \Lookups\get_statuses();
+	$locations = \Lookups\get_locations();
+	
+	$stmt = \DB\pdo_query("select w.* from workshops w where w.id = :id", array(':id' => $id));
+	while ($row = $stmt->fetch()) {
+		$row = fill_out_workshop_row($row);
 		return $row;
+
 	}
 	return false;
+}
+
+function fill_out_workshop_row($row) {
+	$statuses = \Lookups\get_statuses();
+	$locations = \Lookups\get_locations();
+	
+	foreach (array('address', 'city', 'state', 'zip', 'place', 'lwhere') as $loc_field) {
+		$row[$loc_field] = $locations[$row['location_id']][$loc_field];
+	}
+	
+	if ($row['when_public'] == 0 ) {
+		$row['when_public'] = '';
+	}
+	$row = format_workshop_startend($row);	
+	$enrollments = \Enrollments\get_enrollments($row['id']);
+	foreach ($statuses as $sid => $sname) {
+		$row[$sname] = $enrollments[$sid];
+	}	
+
+	$row['open'] = ($row['enrolled'] >= $row['capacity'] ? 0 : $row['capacity'] - $row['enrolled']);
+	$row = set_workshop_type($row);
+	$row = check_last_minuteness($row);
+	return $row;
+	
 }
 
 function set_workshop_type($row) {
@@ -55,16 +69,16 @@ function check_last_minuteness($wk) {
 		// have we never checked if it's sold out
 		if ($wk['sold_out_late'] == -1) {
 			if ($wk['type'] == 'soldout') {
-				$sql = 'update workshops set sold_out_late = 1 where id = '.\Database\mres($wk['id']);
-				\Database\mysqli( $sql) or \Database\db_error();
 				
-				$sql = "update registrations set while_soldout = 1 where workshop_id = ".\Database\mres($wk['id'])." and status_id = '".ENROLLED."'";
-				\Database\mysqli( $sql) or \Database\db_error();
+				$stmt = \DB\pdo_query("update workshops set sold_out_late = 1 where id = :wid", array(':wid' => $wk['id']));				
+
+				$stmt = \DB\pdo_query("update registrations set while_soldout = 1 where workshop_id = :wid and status_id = '".ENROLLED."'", array(':wid' => $wk['id']));
 				
 				$wk['sold_out_late'] = 1;
 			} else {
-				$sql = 'update workshops set sold_out_late = 0 where id = '.\Database\mres($wk['id']);
-				\Database\mysqli( $sql) or \Database\db_error();
+
+				$stmt = \DB\pdo_query("update workshops set sold_out_late = 0 where id = :wid", array(':wid' => $wk['id']));
+
 				$wk['sold_out_late'] = 0;
 			}
 		}
@@ -100,12 +114,11 @@ function get_workshop_info_tabled($wk) {
 }
 
 function get_workshops_dropdown($start = null, $end = null) {
-	$sql = "select w.*, l.place, l.address, l.city, l.state, l.zip 
-	from workshops w LEFT OUTER JOIN locations l on w.location_id = l.id order by start desc";
-	$rows = \Database\mysqli( $sql) or \Database\db_error();
+	
+	$locations = \Lookups\get_locations();
+	$stmt = \DB\pdo_query("select w.* from workshops w order by start desc");
 	$workshops = array();
-	while ($row = mysqli_fetch_assoc($rows)) {
-		$row['lwhere'] = $row['address'].' '.$row['city'].' '.$row['state'].' '.$row['zip'];
+	while ($row = $stmt->fetch()) {
 		$row = format_workshop_startend($row);
 		$workshops[$row['id']] = $row['showtitle'];
 	}
@@ -170,7 +183,7 @@ function get_workshops_list($admin = 0, $page = 1) {
 	}
 		
 	// prep paginator
-	$paginator  = new \Paginator( \Database\wh_set_db_link(), $sql );
+	$paginator  = new \Paginator( $sql );
 	$rows = $paginator->getData($page);
 	$links = $paginator->createLinks();
 
@@ -178,8 +191,7 @@ function get_workshops_list($admin = 0, $page = 1) {
 	if ($rows->total > 0) {
 		$workshops = array();
 		foreach ($rows->data as $row ) {
-			$wk = get_workshop_info($row['id']);
-			$workshops[] = $wk;
+			$workshops[] = fill_out_workshop_row($row);
 		}
 	} else {
 		return "<p>No upcoming workshops!</p>\n";	// this skips $body variable contents	
@@ -194,25 +206,21 @@ function get_workshops_list($admin = 0, $page = 1) {
 
 
 function get_workshops_list_bydate($start = null, $end = null) {
-	$sql = "select w.*, l.place, l.address, l.city, l.state, l.zip 
-	from workshops w LEFT OUTER JOIN locations l on w.location_id = l.id WHERE 1 = 1 ";
-	if ($start) {
-		$sql .= " and w.start >= '".date('Y-m-d H:i:s', strtotime($start))."'";
-	}
-	if ($end) {
-		$sql .= " and w.end <= '".date('Y-m-d H:i:s', strtotime($end))."'";
-	}
-	$sql .= " order by start desc";
-	$rows = \Database\mysqli( $sql) or \Database\db_error();
+	if (!$start) { $start = "Jan 1 1000"; }
+	if (!$end) { $end = "Dec 31 9000"; }
+	
+	$stmt = \DB\pdo_query("select w.* from workshops w WHERE w.start >= :start and w.end <= :end order by start desc", array(':start' => date('Y-m-d H:i:s', strtotime($start)), ':end' => date('Y-m-d H:i:s', strtotime($end))));
+	
 	$workshops = array();
-	while ($row = mysqli_fetch_assoc($rows)) {
-		$workshops[$row['id']] = get_workshop_info($row['id']);
+	while ($row = $stmt->fetch()) {
+		$workshops[$row['id']] = fill_out_workshop_row($row);
 	}
 	return $workshops;
 }	
 
 function empty_workshop() {
 	return array(
+		'id' => '',
 		'title' => '',
 		'location_id' => '',
 		'start' => '',
@@ -253,11 +261,37 @@ function workshop_fields($wk) {
 	
 }
 
-function update_workshop_col($wid, $colname, $value) {
-	$sql = "update workshops set $colname = ".\Database\mres($value)." where id = ".\Database\mres($wid);
-	//echo $sql;
-	\Database\mysqli($sql) or \Database\db_error();
-	return true;
-}
+// $ac can be 'up' or 'ad'
+function add_update_workshop($wk, $ac = 'up') {
 	
+	global $last_insert_id;
+	
+	$params = array(':title' => $wk['title'],
+		':start' => date('Y-m-d H:i:s', strtotime($wk['start'])),
+		':end' => date('Y-m-d H:i:s', strtotime($wk['end'])),
+		':cost' => $wk['cost'],
+		':capacity' => $wk['capacity'],
+		':lid' => $wk['location_id'],
+		':notes' => $wk['notes'],
+		':revenue' => $wk['revenue'],
+		':expenses' => $wk['expenses'],
+		':public' => date('Y-m-d H:i:s', strtotime($wk['when_public'])),
+		':cancelled' => $wk['cancelled']);
+		
+		if ($ac == 'up') {
+			$params[':wid'] = $wk['id'];
+			$stmt = \DB\pdo_query("update workshops set title = :title, start = :start, end = :end, cost = :cost, capacity = :capacity, location_id = :lid, notes = :notes, revenue = :revenue, expenses = :expenses, when_public = :public, cancelled = :cancelled where id = :wid", $params);
+			return $wk['id'];
+		} elseif ($ac = 'ad') {
+			$stmt = \DB\pdo_query("insert into workshops (title, start, end, cost, capacity, location_id, notes, revenue, expenses, when_public, cancelled)
+			VALUES (:title, :start, :end, :cost, :capacity, :lid, :notes, :revenue, :expenses, :public, :cancelled)",
+			$params);
+			return $last_insert_id; // set as a global by my dbo routines
+		}
+
+
+		
+	
+}
+
 ?>

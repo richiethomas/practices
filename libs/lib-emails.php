@@ -99,7 +99,7 @@ function confirm_email($wk, $u, $status_id = ENROLLED) {
 			$sub = "INVITED: {$wk['showtitle']} -- PLEASE RESPOND";
 			$point = "A spot opened up in ({$wk['showtitle']}.";
 			$textpoint = $point." ACCEPT or DECLINE: ";
-			$call = "To ACCEPT, click here:\n{$accept}\n\nTo DECLINE, click here:\n{$decline}";
+			$call = "To ACCEPT, click here:\n{$accept}<br><br>To DECLINE, click here:\n{$decline}";
 			break;
 		case DROPPED:
 			$sub = "DROPPED: {$wk['showtitle']}";

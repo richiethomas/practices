@@ -44,8 +44,7 @@
 			if ($admin) {
 				echo "<td><a href=\"$sc?wid={$row['id']}\">Clone</a></td></tr>\n";
 			} else {
-				$call = ($row['type'] == 'soldout' ? 'Join Wait List' : 'Enroll');
-				echo "<td><a href=\"{$sc}?wid={$row['id']}&v=winfo\">{$call}</a></td></tr>\n";
+				echo "<td><a href=\"{$sc}?wid={$row['id']}&v=winfo\"><span class=\"oi oi-info\" title=\"info\" aria-hidden=\"true\"></span> info</a></td></tr>\n";
 			}
 		}
 

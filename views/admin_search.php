@@ -23,7 +23,7 @@ if ($needle) {
 	} else {
 		echo "<ul>\n";
 		foreach ($all as $s) {
-			echo "<li><a href=\"admin_student.php?uid={$s['id']}&needle={$needle}\">{$s['nice_name']}</a> ".($s['phone'] ? ", {$s['phone']}" : '')." ({$s['classes']}) ".($needle == 'everyone' ? date ('Y M j, g:ia', strtotime($s['joined'])) : '')."</li>\n";
+			echo "<li><a href=\"admin_student.php?uid={$s['id']}&needle={$needle}\">{$s['fullest_name']}</a> ".($s['phone'] ? ", {$s['phone']}" : '')." ({$s['classes']}) ".($needle == 'everyone' ? date ('Y M j, g:ia', strtotime($s['joined'])) : '')."</li>\n";
 		}
 		echo "</ul>\n";
 	}

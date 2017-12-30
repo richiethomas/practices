@@ -8,9 +8,8 @@ function get_statuses() {
 		return $statuses;
 	}
 	$statuses = array();
-	$sql = "select * from statuses order by id";
-	$rows = \Database\mysqli($sql) or \Database\db_error();
-	while ($row = mysqli_fetch_assoc($rows)) {
+	$stmt = \DB\pdo_query("select * from statuses order by id");
+	while ($row = $stmt->fetch()) {
 		$statuses[$row['id']] = $row['status_name'];
 	}
 	return $statuses;
@@ -33,9 +32,8 @@ function get_carriers($update = 0) {
 		return $carriers;
 	}
 	$carriers = array();
-	$sql = "select * from carriers order by id";
-	$rows = \Database\mysqli($sql) or \Database\db_error();
-	while ($row = mysqli_fetch_assoc($rows)) {
+	$stmt = \DB\pdo_query("select * from carriers order by id");
+	while ($row = $stmt->fetch()) {
 		$carriers[$row['id']] = $row;
 	}
 	return $carriers;
@@ -53,13 +51,13 @@ function get_carriers_drop() {
 
 // locations
 function get_locations() {
-	$sql = "select * from locations";
-	$rows = \Database\mysqli( $sql) or \Database\db_error();
-	$locations = array();
-	while ($row = mysqli_fetch_assoc($rows)) {
-		$row['lwhere'] = $row['address'].' '.$row['city'].' '.$row['state'].' '.$row['zip'];
-		$locations[$row['id']]['place'] = $row['place'];
-		$locations[$row['id']]['lwhere'] = $row['lwhere'];
+	global $locations;
+	if (!$locations) {
+		$stmt = \DB\pdo_query("select * from locations order by id");
+		while ($row = $stmt->fetch()) {
+			$locations[$row['id']] = $row;
+			$locations[$row['id']]['lwhere'] = $row['address'].' '.$row['city'].' '.$row['state'].' '.$row['zip'];
+		}
 	}
 	return $locations;
 }

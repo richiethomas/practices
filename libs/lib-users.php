@@ -3,18 +3,17 @@ namespace Users;
 	
 // users
 function get_user_by_email($email) {
-	$sql = "select u.* from users u where email = '".\Database\mres($email)."'";
-	$rows = \Database\mysqli( $sql) or \Database\db_error();
-	while ($row = mysqli_fetch_assoc($rows)) {
+	global $last_insert_id;
+	
+	$stmt = \DB\pdo_query("select u.* from users u where email = :email", array(':email' => $email));
+	while ($row = $stmt->fetch()) {
 		return add_extra_user_info($row);
 	}
 	
 	// didn't find one? make one
-	$db = \Database\wh_set_db_link();
 	if (validate_email($email)) {
-		$sql = "insert into users (email, joined) VALUES ('".\Database\mres($email)."', '".date("Y-m-d H:i:s")."')";
-		$rows = \Database\mysqli( $sql) or \Database\db_error();
-		$new_user_id = $db->insert_id;
+		$stmt = \DB\pdo_query("insert into users (email, joined) VALUES (:email, '".date("Y-m-d H:i:s")."')", array(':email' => $email));
+		$new_user_id = $last_insert_id;
 		$key = gen_key($new_user_id);
 		return get_user_by_id($new_user_id);
 	}
@@ -23,9 +22,8 @@ function get_user_by_email($email) {
 
 
 function get_user_by_id($id) {
-	$sql = "select u.* from users u where u.id = ".\Database\mres($id);
-	$rows = \Database\mysqli( $sql) or \Database\db_error();
-	while ($row = mysqli_fetch_assoc($rows)) {
+	$stmt = \DB\pdo_query("select u.* from users u where u.id = :id", array(":id" => $id));
+	while ($row = $stmt->fetch()) {
 		return add_extra_user_info($row);
 	}
 	return false;
@@ -89,26 +87,23 @@ function verify_key($passed, $true, &$error, $show_error = 1) {
 
 function gen_key($uid) {
 	$key = substr(md5(uniqid(mt_rand(), true)), 0, 16);
-	$sql = "update users set ukey = '".\Database\mres($key)."' where id = ".\Database\mres($uid);
-	\Database\mysqli( $sql) or \Database\db_error();
+	$stmt = \DB\pdo_query("update users set ukey = :ukey where id = :uid", array(':ukey' => $key, ':uid' => $uid));
 	$_SESSION['s_key'] = $key;
 	return $key;
 }
 
 function get_key($uid) {
-	$sql = "select ukey from users where id = ".\Database\mres($uid);
-	$rows = \Database\mysqli( $sql) or \Database\db_error();
-	while ($row = mysqli_fetch_assoc($rows)) {
+	$stmt = \DB\pdo_query("select ukey from users where id = :uid", array(':uid' => $uid));
+	while ($row = $stmt->fetch()) {
 		if ($row['ukey']) { return $row['ukey']; }
 	}
 	return gen_key($uid);
 }
 
 function key_to_user($key) {
-	$sql = "select id from users where ukey = '".\Database\mres($key)."'";
-	$rows = \Database\mysqli( $sql) or \Database\db_error();
-	while ($row = mysqli_fetch_assoc($rows)) {
-		return get_user_by_id($row['id']);
+	$stmt = \DB\pdo_query("select * from users where ukey = :key", array(':key' => $key));
+	while ($row = $stmt->fetch()) {
+		return add_extra_user_info($row);
 	}
 	return false;
 }
@@ -180,27 +175,30 @@ function logout(&$key, &$u, &$message) {
 function find_students($needle = 'everyone', $sort = 'n') {
 	
 	$order_by = array('n' => 'a.email', 't' => 'classes desc', 'd' => 'a.joined desc');
-	
-	$where = '';
-	if ($needle != 'everyone') {
-		$where = "where a.email like '%".\Database\mres($needle)."%'";
-		$where .= " or a.phone like '%".\Database\mres($needle)."%'";
-		
-	}
-	
+
 	$sql = "SELECT a.id, a.email, a.display_name, a.phone, COUNT(b.id) AS 'classes', a.joined  
 	FROM 
 		users a 
 	   LEFT JOIN
 	   (SELECT id, user_id FROM registrations) b
 	   ON a.id = b.user_id
-	   $where
+	   WHERECLAUSE
 	group by a.email
 	order by ".$order_by[$sort];
 	
-	$rows = \Database\mysqli( $sql) or \Database\db_error();
+	if ($needle == 'everyone') {
+		$sql = preg_replace('/WHERECLAUSE/', '', $sql);
+		$stmt = \DB\pdo_query($sql);
+	} else {
+		$where = "where a.email like :needle1";
+		$where .= " or a.phone like :needle2";
+		
+		$sql = preg_replace('/WHERECLAUSE/', $where, $sql);
+		$stmt = \DB\pdo_query($sql, array(':needle1' => "%$needle%", ':needle2' => "%$needle%" ));
+	}
+	
 	$stds = array();
-	while ($row = mysqli_fetch_assoc($rows)) {
+	while ($row = $stmt->fetch()) {
 		$row = set_nice_name($row);
 		$stds[$row['id']] = $row;
 	}
@@ -211,12 +209,10 @@ function delete_student($uid = 0) {
 	if (!$uid) {
 		return false;
 	}
-	$sql = "delete from status_change_log where user_id = ".\Database\mres($uid);
-	\Database\mysqli($sql) or \Database\db_error();
-	$sql = "delete from registrations where user_id = ".\Database\mres($uid);
-	\Database\mysqli($sql) or \Database\db_error();
-	$sql = "delete from users where id = ".\Database\mres($uid);
-	\Database\mysqli($sql) or \Database\db_error();
+	$stmt = \DB\pdo_query("delete from status_change_log where user_id = :uid", array(':uid' => $uid));
+	$stmt = \DB\pdo_query("delete from registrations where user_id = :uid", array(':uid' => $uid));
+	$stmt = \DB\pdo_query("delete from users where id = :uid", array(':uid' => $uid));
+	
 	return true;
 	
 }
@@ -240,14 +236,23 @@ function update_display_name(&$u,  &$message, &$error) {
 	if ($error) {
 		return false;
 	} else {
-		$sql = sprintf("update users set display_name = '%s' where id = %u",
-		\Database\mres($u['display_name']),
-		\Database\mres($u['id']));		
-		\Database\mysqli($sql) or \Database\db_error();
+		$stmt = \DB\pdo_query("update users set display_name = :name where id = :uid", array(':name' => $u['display_name'], ':uid' => $u['id']));
 		$u = get_user_by_id($u['id']); // updated so the form is correctly populated on refill
 		$message = "Display name updated to '{$u['display_name']}'";
 		return true;
 	}
+
+}
+
+
+
+function change_email_phase_one($u, $new_email) {
+	$stmt = \DB\pdo_query("update users set new_email = :email where id = :uid", array(':email' => $new_email, ':uid' => $u['id']));
+	
+	$sub = 'email update at will hines practices';
+	$link = URL."index.php?key={$u['ukey']}&ac=concemail";
+	$ebody = "<p>You requested to change what email you use at the Will Hines practices web site. Use the link below to do that:</p><p>$link</p>";
+	\Emails\centralized_email($new_email, $sub, $ebody);
 
 }
 
@@ -260,7 +265,7 @@ function edit_change_email($u) {
 	$body .= "<form id='changeEmail' action='$sc' method='post' novalidate>\n";
 	$body .= \Wbhkit\hidden('ac', 'cemail');
 	$body .= \Wbhkit\hidden('uid', $u['id']);
-	$body .= \Wbhkit\texty('newemail', null, 'New email', 'someone@somewhere.com', 'We will email a login link to this address', 'Must be a valid email', ' required ', 'email');
+	$body .= \Wbhkit\texty('newemail', null, 'New email', $u['email'], 'We will email a login link to this address', 'Must be a valid email', ' required ', 'email');
 	$body .= \Wbhkit\submit('Change Email');
 	$body .= "</form>";
 	return $body;	
@@ -270,45 +275,36 @@ function change_email($ouid, $newe) {
 	$olds = get_user_by_id($ouid);
 	
 	//does new student exist?
-	$sql = "select u.* from users u where email = '".\Database\mres($newe)."'";
-	$rows = \Database\mysqli( $sql) or \Database\db_error();
+	$stmt = \DB\pdo_query("select u.* from users u where email = :email", array(':email' => $newe));
 	$news = false;
-	while ($row = mysqli_fetch_assoc($rows)) {
-		$new_student_exist = true;
+	while ($row = $stmt->fetch()) {
 		$news = add_extra_user_info($row);
 	}	
 	
 	if ($news) {
 		// new student exists, so merge into new
-		$sql = "select * from registrations where user_id = ".\Database\mres($ouid);
-		$rows = \Database\mysqli($sql) or \Database\db_error();
-		while ($row = mysqli_fetch_assoc($rows)) {
+		$stmt = \DB\pdo_query("select * from registrations where user_id = :uid", array(':uid' => $ouid));
+		while ($row = $stmt->fetch()) {
 			
 			//does new email already have this registation?
-			$sql2 = "select * from registrations where user_id = ".\Database\mres($news['id'])." and workshop_id = ".\Database\mres($row['workshop_id']);
-			$rows2 = \Database\mysqli($sql2) or \Database\db_error();
-			if (mysqli_num_rows($rows2) == 0) {
-				$sql3 = "update registrations set user_id = ".\Database\mres($news['id'])." where workshop_id = ".\Database\mres($row['workshop_id'])." and user_id = ".\Database\mres($ouid);
-				
-				\Database\mysqli($sql3) or \Database\db_error();
+			$stmt2 = \DB\pdo_query("select * from registrations where user_id = :uid and workshop_id = :wid", array(':uid' => $news['id'], ':wid' => $row['workshop_id']));
+			$rows2 = $stmt2->fetchAll();
+			if (count($rows2) == 0) {
+				$stmt3 = \DB\pdo_query("update registrations set user_id = :uid where workshop_id = :wid and user_id = :uid2", array(':uid' => $news['id'], ':wid' => $row['workshop_id'], ':uid2' => $ouid));
 			}
 		}
 		
 		// copy text preferences from old id
-		$sql = "update users set send_text = ".\Database\mres($olds['send_text']).", carrier_id = ".\Database\mres($olds['carrier_id']).", phone = '".\Database\mres($olds['phone'])."' where id = ".\Database\mres($news['id']);
-		\Database\mysqli($sql3) or \Database\db_error();
-		
-		
+		$stmt = \DB\pdo_query("update users set send_text = :sendtext, carrier_id = :carrier_id, phone = :phone where id = :uid", array(':sendtext' => $olds['send_text'], ':carrier_id' => $olds['carrier_id'], ':phone' => $olds['phone'], ':uid' => $news['id']));
+				
 		// update records in change log
-		$sql = "udpate status_change_log set user_id = ".\Database\mres($news['id'])." where user_id = ".\Database\mres($olds['id']);
-		\Database\mysqli($sql) or \Database\db_error();
+		$stmt = \DB\pdo_query("update status_change_log set user_id = :uid where user_id = :uid2", array(':uid' => $news['id'], ':uid2' => $olds['id']));
 		
 		delete_student($ouid);
 		return true;
 	} else {
 		// new email is not yet a student, so just rename old
-		$sql = "update users set email = '".\Database\mres($newe)."' where id = '".\Database\mres($ouid)."'";
-		\Database\mysqli($sql) or \Database\db_error();
+		$stmt = \DB\pdo_query("update users set email = :email where id = :uid", array(':email' => $newe, ':uid' => $ouid));	
 		return true;
 	}
 	return true;
@@ -360,13 +356,17 @@ function update_text_preferences(&$u,  &$message, &$error) {
 	if ($error) {
 		return false;
 	} else {
-		$sql = sprintf("update users set send_text = %u, phone = '%s', carrier_id = %u where id = %u",
-		\Database\mres($send_text),
-		\Database\mres($phone),
-		\Database\mres($carrier_id),
-		\Database\mres($u['id']));
-		\Database\mysqli($sql) or \Database\db_error();
-		$u = get_user_by_id($u['id']); // updated so the form is correctly populated on refill
+		
+		$stmt = \DB\pdo_query("update users set send_text = :send_text, phone = :phone, carrier_id = :carrier_id where id = :uid",
+		array(':send_text' => $send_text,
+		':phone' => $phone,
+		':carrier_id' => $carrier_id,
+		':uid' => $u['id']));
+
+		// update $u array with info so form is populated correctly
+		foreach (['send_text', 'phone', 'carrier_id'] as $key) {
+			$u[$key] = $$key;
+		}
 		$message = 'Preferences updated!';
 		return true;
 	}

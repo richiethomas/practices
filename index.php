@@ -17,13 +17,8 @@ switch ($ac) {
 			$error = 'You asked to change your email but the new email \'$newemail\' is not a valid email';
 			break;
 		}
-		$sql = "update users set new_email = '".Database\mres($newemail)."' where id = ".Database\mres($u['id']);
-		Database\mysqli($sql) or Database\db_error();
 		
-		$sub = 'email update at will hines practices';
-		$link = URL."index.php?key=$key&ac=concemail";
-		$ebody = "<p>You requested to change what email you use at the Will Hines practices web site. Use the link below to do that:</p><p>$link</p>";
-		Emails\centralized_email($newemail, $sub, $ebody);
+		Users\change_email_phase_one($u, $newemail);
 		$message = "Okay, a link has been sent to the new email address ({$newemail}). Check your spam folder if you don't see it.";
 		
 		
