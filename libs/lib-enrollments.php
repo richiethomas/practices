@@ -21,15 +21,19 @@ function get_an_enrollment($wk, $u) {
 
 	while ($row = $stmt->fetch()) {
 		
-		$stmt2 = \DB\pdo_query("select r.* from registrations r where r.workshop_id = :wid and r.status_id = :sid order by last_modified", array(':wid' => $wk['id'], ':sid' => $row['status_id']));
-		$i = 1;
-		while ($row2 = $stmt2->fetch()) {
-			if ($row2['id'] == $row['id']) {
-				break;
+		if ($row['status_id'] == WAITING) {
+			$stmt2 = \DB\pdo_query("select r.* from registrations r where r.workshop_id = :wid and r.status_id = :sid order by last_modified", array(':wid' => $wk['id'], ':sid' => $row['status_id']));
+			$i = 1;
+			while ($row2 = $stmt2->fetch()) {
+				if ($row2['id'] == $row['id']) {
+					break;
+				}
+				$i++;
 			}
-			$i++;
+			$row['rank'] = $i;
+		} else {
+			$row['rank'] = null;
 		}
-		$row['rank'] = $i;
 		$row['status_name'] = $statuses[$row['status_id']];
 		return $row;
 	}
@@ -215,7 +219,9 @@ function get_status_change_log($wk = null) {
 				continue;
 			}
 		}
-		$row['last_enrolled'] = get_last_enrolled($row['workshop_id'], $row['user_id']);
+		if ($row['status_id'] == DROPPED) {
+			$row['last_enrolled'] = get_last_enrolled($row['workshop_id'], $row['user_id']);
+		}
 		$log[] = $row;
 	}
 	return $log;
@@ -233,7 +239,6 @@ function get_students($wid, $status_id = ENROLLED) {
 	}
 	$stds = array();
 	while ($row = $stmt->fetch()) {
-		$row['last_enrolled'] = get_last_enrolled($wid, $row['id']);
 		$row = \Users\set_nice_name($row);
 		$stds[$row['id']] = $row;
 	}
@@ -271,7 +276,15 @@ function get_transcript_tabled($u, $admin = false, $page = 1) {
 	$links = $paginator->createLinks();
 	$past_classes = array();
 	foreach ($rows->data as $d) {
-		$wk = \Workshops\get_workshop_info($d['workshop_id']);
+		
+		
+		// build a workshop array from data we have
+		$wk_fields = \Workshops\empty_workshop();
+		foreach ($wk_fields as $field => $fieldvalue) {
+			$wk[$field] = $d[$field];
+		}
+		$wk['id'] = $d['workshop_id']; // make sure id is correct
+		$wk = \Workshops\fill_out_workshop_row($wk);
 		$d['type'] = $wk['type'];
 		$d['when'] = $wk['when'];
 		if ($d['status_id'] == WAITING) {

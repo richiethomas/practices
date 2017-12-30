@@ -4,20 +4,20 @@ namespace Workshops;
 
 
 // workshops
-function get_workshop_info($id) {
+function get_workshop_info($id, $force_enrollment_stats = false) {
 	$statuses = \Lookups\get_statuses();
 	$locations = \Lookups\get_locations();
 	
 	$stmt = \DB\pdo_query("select w.* from workshops w where w.id = :id", array(':id' => $id));
 	while ($row = $stmt->fetch()) {
-		$row = fill_out_workshop_row($row);
+		$row = fill_out_workshop_row($row, $force_enrollment_stats);
 		return $row;
 
 	}
 	return false;
 }
 
-function fill_out_workshop_row($row) {
+function fill_out_workshop_row($row, $force_enrollment_stats = false) {
 	$statuses = \Lookups\get_statuses();
 	$locations = \Lookups\get_locations();
 	
@@ -29,14 +29,23 @@ function fill_out_workshop_row($row) {
 		$row['when_public'] = '';
 	}
 	$row = format_workshop_startend($row);	
-	$enrollments = \Enrollments\get_enrollments($row['id']);
-	foreach ($statuses as $sid => $sname) {
-		$row[$sname] = $enrollments[$sid];
-	}	
-
-	$row['open'] = ($row['enrolled'] >= $row['capacity'] ? 0 : $row['capacity'] - $row['enrolled']);
-	$row = set_workshop_type($row);
-	$row = check_last_minuteness($row);
+	
+	if (strtotime($row['start']) < strtotime('now')) { 
+		$row['type'] = 'past'; 
+	} else {
+		$row['type'] = null;
+	}
+	
+	if ($row['type'] != 'past' || $force_enrollment_stats) {
+		$enrollments = \Enrollments\get_enrollments($row['id']);
+		foreach ($statuses as $sid => $sname) {
+			$row[$sname] = $enrollments[$sid];
+		}	
+		$row['open'] = ($row['enrolled'] >= $row['capacity'] ? 0 : $row['capacity'] - $row['enrolled']);
+		$row = set_workshop_type($row);
+		$row = check_last_minuteness($row);
+	}
+	
 	return $row;
 	
 }
@@ -191,7 +200,7 @@ function get_workshops_list($admin = 0, $page = 1) {
 	if ($rows->total > 0) {
 		$workshops = array();
 		foreach ($rows->data as $row ) {
-			$workshops[] = fill_out_workshop_row($row);
+			$workshops[] = fill_out_workshop_row($row, true);
 		}
 	} else {
 		return "<p>No upcoming workshops!</p>\n";	// this skips $body variable contents	

@@ -213,6 +213,7 @@ switch ($ac) {
 
 // if a $wid was passed in, we'll show that page
 if ($wid) {
+	$wk = Workshops\fill_out_workshop_row($wk, true);
 	$view->data['e'] = Enrollments\get_an_enrollment($wk, $u);
 	$view->data['workshop_tabled'] = Workshops\get_workshop_info_tabled($wk);
 	$view->renderPage('winfo');
