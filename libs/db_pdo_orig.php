@@ -7,7 +7,7 @@ define('EMAIL_PASSWORD', EMAIL PASSWORD HERE);
 $db = null;
 
 function pdo_query($sql, $params = null) {
-	global $last_insert_id;
+	global $last_insert_id, $logger;
 	$db = get_connection();
 	//echo "$sql<br>\n";
 	$stmt = $db->prepare($sql);
@@ -23,7 +23,7 @@ function pdo_query($sql, $params = null) {
 	try {
 		$stmt->execute();
 	} catch (\PDOException $e) {
-	    echo 'Connection failed: ' . $e->getMessage();
+	    $logger->critical('SQL failed: ' .$e->getMessage());
 	}
 	
 	if (preg_match('/insert/i', $sql)) {
@@ -34,12 +34,12 @@ function pdo_query($sql, $params = null) {
 }
 
 function get_connection() {	
-	global $db;
+	global $db, $logger;
 	if ($db) {
 		return $db;
 	}
-	$dsn = 'mysql:host=localhost;dbname=DB_NAME_HERE';
-	$username =  // username here
+	$dsn = 'mysql:host=localhost;dbname=DBNAME';
+	$username = // username here
 	$password =   // password here
 	$options = array(
 	    \PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8',
@@ -48,7 +48,7 @@ function get_connection() {
 	try {
 		$db = new \PDO($dsn, $username, $password, $options);	
 	} catch (\PDOException $e) {
-	    echo 'Connection failed: ' . $e->getMessage();
+	    $logger->critical('DB Connection failed: ' .$e->getMessage());
 	}
 	
 	$db->setAttribute(\PDO::ATTR_EMULATE_PREPARES, false);

@@ -213,6 +213,8 @@ function delete_student($uid = 0) {
 	$stmt = \DB\pdo_query("delete from registrations where user_id = :uid", array(':uid' => $uid));
 	$stmt = \DB\pdo_query("delete from users where id = :uid", array(':uid' => $uid));
 	
+	
+	
 	return true;
 	
 }
@@ -232,6 +234,8 @@ function edit_display_name($u) {
 
 function update_display_name(&$u,  &$message, &$error) {
 
+	global $logger;
+
 	// update user info
 	if ($error) {
 		return false;
@@ -239,6 +243,7 @@ function update_display_name(&$u,  &$message, &$error) {
 		$stmt = \DB\pdo_query("update users set display_name = :name where id = :uid", array(':name' => $u['display_name'], ':uid' => $u['id']));
 		$u = get_user_by_id($u['id']); // updated so the form is correctly populated on refill
 		$message = "Display name updated to '{$u['display_name']}'";
+		$logger->info($message);
 		return true;
 	}
 
@@ -336,6 +341,8 @@ function edit_text_preferences($u) {
 
 function update_text_preferences(&$u,  &$message, &$error) {
 
+	global $logger;
+
 	// $u must include $carrier_id, $phone, $send_text
 	$carrier_id = $u['carrier_id'];
 	$phone = $u['phone'];
@@ -368,6 +375,8 @@ function update_text_preferences(&$u,  &$message, &$error) {
 			$u[$key] = $$key;
 		}
 		$message = 'Preferences updated!';
+		$logger->debug($message." for user {$u['id']}");
+		
 		return true;
 	}
 

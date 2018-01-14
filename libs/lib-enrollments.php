@@ -44,15 +44,18 @@ function get_an_enrollment($wk, $u) {
 // figures what the user should be
 // figures if there's been a previous registration
 function handle_enroll($wk, $u, $confirm = true) {
-	global $error;
+	global $error, $logger;
 	
 	// check incoming data
 	if (!$wk) {
 		$error = 'The workshop ID was not passed along.';
+		$logger->notice('handle_enroll:'.$error);
+		
 		return false;
 	}
 	if (!$u && !$email) {
 		$error = 'We need a logged in user or an email.';
+		$logger->notice('handle_enroll:'.$error);
 		return false;
 	}
 
@@ -170,6 +173,8 @@ function update_attendance($wid, $uid, $attended = 1) {
 
 function change_status($wk, $u, $status_id = ENROLLED, $confirm = true) {
 		
+	global $logger;	
+		
 	$e = get_an_enrollment($wk, $u);
 	$statuses = \Lookups\get_statuses();
 	if ($e['status_id'] != $status_id) {
@@ -181,6 +186,7 @@ function change_status($wk, $u, $status_id = ENROLLED, $confirm = true) {
 	
 	if ($confirm) { \Emails\confirm_email($wk, $u, $status_id); }
 	$return_msg = "Updated user ({$u['email']}) to status '{$statuses[$status_id]}' for {$wk['showtitle']}.";
+	$logger->debug($return_msg);
 	return $return_msg;
 }
 
@@ -189,10 +195,17 @@ function update_change_log($wk, $u, $status_id) {
 		return false;
 	}
 	
+	global $logger;
+	
+	$statuses = \Lookups\get_statuses();
+	
 	$stmt = \DB\pdo_query("insert into status_change_log (workshop_id, user_id, status_id, happened) VALUES (:wid, :uid, :status_id, '".date('Y-m-d H:i:s', time())."')", 
 	array(':wid' => $wk['id'],
 	':uid' => $u['id'],
 	':status_id' => $status_id));
+	
+	$logger->info("{$u['nice_name']} is now {$statuses[$status_id]} for {$wk['showtitle']}");
+	
 	return true;
 }
 
@@ -313,4 +326,3 @@ function drop_session($wk, $u) {
 }	
 	
 	
-?>

@@ -9,6 +9,8 @@ require_once 'Mail.php';
 // turned '=' into '=3D' and other things
 function centralized_email($to, $sub, $body) {
 		
+	global $logger;	
+		
 	// connect to SMTP
 	$params = array();
 	$params["host"] = "mail.willhines.net";
@@ -37,14 +39,14 @@ function centralized_email($to, $sub, $body) {
 	if ($sent) {
 		$return = true;
 		if (DEBUG_MODE) {
-			file_put_contents(MAIL_LOG, $ts.$mail_activity, FILE_APPEND | LOCK_EX);
+			$logger->error($mail_activity);
+		} else {
+			$logger->info($mail_activity);
 		}
 	} else {
 		$error = error_get_last();
 		$return = "Error type '{$error['type']}': '{$error['message']}' in file '{$error['file']}', line '{$error['line']}'. Attempted: $mail_activity\n";
-		if (DEBUG_MODE) {
-			file_put_contents(MAIL_LOG, $ts.$return, FILE_APPEND | LOCK_EX);
-		}
+		$logger->error($return);
 	}
 	return $return;
 }
@@ -304,4 +306,3 @@ Venmo link: <a href='http://venmo.com/willhines?txn=pay&share=friends&note=impro
 </dl>";
 }	
 	
-?>

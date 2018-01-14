@@ -47,7 +47,7 @@ if (strpos($sc, 'admin') !== false ) {
 	echo nav_link($sc, 'admin_revenue.php', 'revenues', 'dollar');
 	echo nav_link($sc, 'admin_search.php', 'find students', 'magnifying-glass');
 	echo nav_link($sc, 'admin_status.php', 'status log', 'graph');
-	echo nav_link($sc, 'admin_mail_log.php', 'email activity', 'clipboard');
+	echo nav_link($sc, 'admin_mail_log.php', 'error log', 'clipboard');
 	echo "</ul>\n";
 	
 } else {
@@ -77,4 +77,3 @@ function nav_link($sc, $page, $text, $icon) {
 	
 }
 
-?>		

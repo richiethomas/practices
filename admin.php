@@ -38,8 +38,10 @@ switch ($ac) {
 		
 		if ($ac == 'up') {
 			$message = "Updated practice ({$wid}) - {$wk['title']}";
+			$logger->info($message);
 		} elseif ($ac == 'ad') {
 			$message = "Added practice ({$title})";
+			$logger->info($message);
 		}
 		$v = 'ed';
 		break;
@@ -52,6 +54,7 @@ switch ($ac) {
 	case 'conrem':
 		Enrollments\drop_session($wk, $u);
 		$message = "Removed user ({$u['email']}) from practice '{$wk['showtitle']}'";
+		$logger->info($message);
 		$v = 'ed';
 		break;
 
@@ -84,6 +87,7 @@ switch ($ac) {
 		$stmt = \DB\pdo_query("delete from registrations where workshop_id = :wid", array(':wid' => $wk['id']));
 		$stmt = \DB\pdo_query("delete from workshops where id = :wid", array(':wid' => $wk['id']));
 		$message = "Deleted '{$wk['title']}'";
+		$logger->info($message);
 		$v= 'home';
 		break;
 	

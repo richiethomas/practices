@@ -1,0 +1,8 @@
+2018-01-13 15:37:48 emailed '9177211138@vtext.com', ''
+2018-01-13 15:37:49 emailed 'whines@gmail.com', 'ENROLLED: test5 - Mon Jan 15 - 2:00pm-6pm'
+[2018-01-13 15:54:11] my_logger.ERROR: emailed '9177211138@vtext.com', ''  [] []
+[2018-01-13 15:54:14] my_logger.ERROR: emailed 'whines@gmail.com', 'ENROLLED: test5 - Mon Jan 15 - 2:00pm-6pm'  [] []
+[2018-01-13 16:09:09] my_logger.INFO: User Will Hines logged in. [] []
+[2018-01-13 16:09:13] my_logger.INFO: User Will Hines logged in. [] []
+[2018-01-13 16:09:14] my_logger.INFO: User Will Hines logged in. [] []
+[2018-01-13 16:09:16] my_logger.INFO: User Will Hines logged in. [] []

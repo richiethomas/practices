@@ -48,6 +48,7 @@ $msg .= "<p>Log in or drop out here:<br>$trans</p>\n";
 		
 		}
 		$message = "Email '$subject' sent to $sent";
+		$logger->info($message);
 		break;
 
 	case 'remind':

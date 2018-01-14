@@ -8,12 +8,12 @@ Wbhkit\set_vars(array('ac'));
 
 
 if ($ac == 'condel') {
-	file_put_contents(MAIL_LOG, '');
+	file_put_contents(ERROR_LOG, '');
 }
 
-$log = file_get_contents(MAIL_LOG);
+$log = file_get_contents(ERROR_LOG);
 if (!$log) {
-	$log = 'No email activity!';
+	$log = 'No log activity!';
 }
 $view->data['log'] = $log;
 $view->data['ac'] = $ac;

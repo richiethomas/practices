@@ -11,15 +11,19 @@ switch ($ac) {
 		
 		if (!Users\logged_in()) {
 			$error = 'You are not logged in! You have to be logged in to change your email.';
+			$logger->debug($error);
 			break;
 		}
 		if (!Users\validate_email($newemail)) {
 			$error = 'You asked to change your email but the new email \'$newemail\' is not a valid email';
+			$logger->debug($error);
 			break;
 		}
 		
 		Users\change_email_phase_one($u, $newemail);
 		$message = "Okay, a link has been sent to the new email address ({$newemail}). Check your spam folder if you don't see it.";
+		$logger->debug($message);
+		
 		
 		
 		break;	
@@ -27,6 +31,7 @@ switch ($ac) {
 	case 'concemail':
 		if (!Users\logged_in()) {
 			$error = 'You are not logged in! You have to be logged in to change your email.';
+			$logger->debug($error);
 			break;
 		}
 		//actually change the email
@@ -35,6 +40,8 @@ switch ($ac) {
 			$error = $result;
 		} else {
 			$message = "Email changed from '{$u['email']}' to '{$u['new_email']}'";
+			$logger->info($message);
+			
 			$u = Users\get_user_by_email($u['new_email']);
 			
 			// make session key equal to database key
@@ -52,14 +59,19 @@ switch ($ac) {
 		// if not, make that user
 		if (!$u) {
 			$error = "'$email' is not a valid email, I think?";
+			$logger->debug($error);
+			
 			break;
 		}
 
 		// send log in link to that user
 		if (Users\email_link($u)) {
 			$message = "Thanks! I've sent a link to your {$u['email']}. Click it! (check your spam folder, too)";
+			$logger->debug($message);
+			
 		} else {
 			$error = "I was unable to email a link to {$u['email']}! Sorry.";
+			$logger->debug($error);
 		}
 		
 		if ($display_name) {
@@ -75,8 +87,10 @@ switch ($ac) {
 
 		if (!Users\logged_in()) {
 			$error = 'You are not logged in! You have to be logged in to update your display name.';
+			$logger->debug($error);
 			break;
 		}
+		$logger->info("Changing display name to '$display_name' from '{$u['display_name']}' for user {$u['id']}");
 		$u['display_name'] = $display_name;
 		Users\update_display_name($u, $message, $error); // function will update all of those arguments
 		break;		
@@ -84,6 +98,7 @@ switch ($ac) {
 	
 	// log out	
 	case 'lo':
+		$logger->info("{$u['nice_name']} logging out.");
 		Users\logout($key, $u, $message);
 		break;
 	
@@ -91,10 +106,14 @@ switch ($ac) {
 	case 'accept':
 		if (!Users\logged_in()) {
 			$error = 'You are not logged in! You have to be logged in to accept an invite.';
+			$logger->debug($error);
+			
 			break;
 		}
 		if ($wk['cancelled']) {
-			$error = 'This workshop has been cancelled.';
+			$error = 'Cannot accept invite. This workshop has been cancelled.';
+			$logger->debug("Rejected invite for {$u['nice_name']} since {$wk['showtitle']} is cancelled.");
+			
 			break;
 		}
 		$e = Enrollments\get_an_enrollment($wk, $u);
@@ -102,18 +121,22 @@ switch ($ac) {
 			Enrollments\change_status($wk, $u, ENROLLED, 1);
 			Enrollments\check_waiting($wk);
 			$message = "You are now enrolled in '{$wk['showtitle']}'!";
+			
 		} else {
 			$error = "You tried to accept an invitation to '{$wk['showtitle']}', but I don't see that there is an open spot.";
+			$logger->debug("Rejected invite for {$u['nice_name']} since {$wk['showtitle']} is full.");
 		}
 		break;
 
 	case 'decline':
 		if (!Users\logged_in()) {
 			$error = 'You are not logged in! You have to be logged in to decline an invite.';
+			$logger->debug($error);
 			break;
 		}
 		if ($wk['cancelled']) {
 			$error = 'This workshop has been cancelled.';
+			$logger->debug("Rejected decline for {$u['nice_name']} since {$wk['showtitle']} is cancelled.");
 			break;
 		}
 	
@@ -121,15 +144,19 @@ switch ($ac) {
 		if ($e['status_id'] == INVITED) {
 			Enrollments\change_status($wk, $u, DROPPED, 1);
 			Enrollments\check_waiting($wk);
-			$message = "You have dropped out of the waiting list for '{$wk['showtitle']}'.";
+			$message = "You have dropped out of the waiting list for '{$wk['showtitle']}'.";			
 		} else {
 			$error = "You tried to decline an invitation to '{$wk['showtitle']}', but I don't see that there was an open spot.";
+			$logger->debug("Rejected decline for {$u['nice_name']} since {$wk['showtitle']} is full.");
+			
 		}
 		break;
 	
 	case 'enroll':
 		if ($wk['cancelled']) {
 			$error = 'This workshop has been cancelled.';
+			$logger->debug("{$u['nice_name']} cannot enroll since {$wk['showtitle']} is cancelled.");
+			
 			break;
 		}	
 		if (Users\logged_in()) {
@@ -139,6 +166,8 @@ switch ($ac) {
 			}
 		} else {
 			$error = "You must be logged in to enroll.";
+			$logger->debug("attempted enroll with no one logged in.");
+			
 		}
 		break;
 		
@@ -146,10 +175,14 @@ switch ($ac) {
 	case 'drop':
 		if (!Users\logged_in()) {
 			$error = 'You are not logged in! You have to be logged in to drop a workshop.';
+			$logger->debug("attempted drop with no one logged in.");
+			
 			break;
 		}
 		if ($wk['cancelled']) {
 			$error = 'This workshop has been cancelled.';
+			$logger->debug("{$u['nice_name']} tried to drop from {$wk['showtitle']} but it's cancelled.");
+			
 			break;
 		}
 	
@@ -224,8 +257,6 @@ if ($wid) {
 	$view->renderPage('home');
 	
 }
-	
-?>
 
 
 

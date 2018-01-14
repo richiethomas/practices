@@ -3,9 +3,13 @@
 using Bootstrap 4.0
 tested on PHP 7.0.15
 */
+
+require "vendor/autoload.php";
+
 date_default_timezone_set ( 'America/Los_Angeles' );
 session_start();
 
+// maybe i don't need these next two anymore? i dnuno :(
 ini_set("include_path", '/home/whines/php:' . ini_get("include_path") );
 ini_set("include_path", '/Applications/MAMP/bin/php/php7.0.15/lib/php:' . ini_get("include_path") );
 
@@ -18,8 +22,18 @@ spl_autoload_register(function ($className) {
         if (is_readable($file)) require_once $file;
 });
 
-// set objects, code, et
+// some constants
+define('DEBUG_MODE', true);
+define('ERROR_LOG', 'info.txt');
+define('URL', "http://{$_SERVER['HTTP_HOST']}/practices/");
+
+define('WEBMASTER', "will@willhines.net");
+//define('WEBMASTER', "whines@gmail.com");
+
+
+// set objects, code, etc
 $last_insert_id = null;
+include 'libs/lib-logger.php';
 include 'libs/db_pdo.php';
 include 'libs/wbh_webkit.php';
 include 'libs/wbh_webkit_pagination.php';
@@ -29,14 +43,6 @@ include 'libs/lib-workshops.php';
 include 'libs/lib-enrollments.php';
 include 'libs/lib-lookups.php';
 include 'libs/lib-emails.php';
-
-// some constants
-define('DEBUG_MODE', true);
-define('MAIL_LOG', 'mail_log.txt');
-define('URL', "http://{$_SERVER['HTTP_HOST']}/practices/");
-
-define('WEBMASTER', "will@willhines.net");
-//define('WEBMASTER', "whines@gmail.com");
 
 $statuses = Lookups\get_statuses();
 $locations = Lookups\get_locations();
@@ -62,6 +68,8 @@ if ($wid) {
 }
 
 // user info
+$already_here_key = (isset($_SESSION['s_key']) ? $_SESSION['s_key'] : null);
+
 $key = Users\current_key(); // checks for key in REQUEST and SESSION and COOKIE, not logged in otherwise
 if ($uid) {
 	$u = Users\get_user_by_id($uid);
@@ -69,6 +77,10 @@ if ($uid) {
 	$u = Users\key_to_user($key);
 } else {
 	$u = array();
+}
+
+if (isset($u['ukey']) && $u['ukey'] != $already_here_key) {
+	$logger->info("{$u['fullest_name']} logged in.");
 }
 
 $view = new View();

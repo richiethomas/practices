@@ -303,4 +303,3 @@ function add_update_workshop($wk, $ac = 'up') {
 	
 }
 
-?>

@@ -72,5 +72,3 @@ function locations_drop($lid = null) {
 }
 
 	
-	
-?>

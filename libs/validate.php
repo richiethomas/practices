@@ -94,4 +94,3 @@ if (!is_validated()) {
 	exit;
 }
 
-?>

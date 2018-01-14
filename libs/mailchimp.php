@@ -17,4 +17,3 @@ $body .=<<<MAILCHIMP
 </div>
 <!--End mc_embed_signup-->
 MAILCHIMP
-?>
