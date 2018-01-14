@@ -172,9 +172,7 @@ function update_attendance($wid, $uid, $attended = 1) {
 }
 
 function change_status($wk, $u, $status_id = ENROLLED, $confirm = true) {
-		
-	global $logger;	
-		
+				
 	$e = get_an_enrollment($wk, $u);
 	$statuses = \Lookups\get_statuses();
 	if ($e['status_id'] != $status_id) {
@@ -186,7 +184,6 @@ function change_status($wk, $u, $status_id = ENROLLED, $confirm = true) {
 	
 	if ($confirm) { \Emails\confirm_email($wk, $u, $status_id); }
 	$return_msg = "Updated user ({$u['email']}) to status '{$statuses[$status_id]}' for {$wk['showtitle']}.";
-	$logger->debug($return_msg);
 	return $return_msg;
 }
 
@@ -204,7 +201,7 @@ function update_change_log($wk, $u, $status_id) {
 	':uid' => $u['id'],
 	':status_id' => $status_id));
 	
-	$logger->info("{$u['nice_name']} is now {$statuses[$status_id]} for {$wk['showtitle']}");
+	$logger->info("{$u['fullest_name']} is now '{$statuses[$status_id]}' for '{$wk['showtitle']}'");
 	
 	return true;
 }
