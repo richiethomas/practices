@@ -2,7 +2,7 @@
 class View extends WBHObject
 {
 
-	public $title = 'will hines practices';
+	public $title = 'will hines online practices';
 	public $data = array();
 	private $header = 'header';
 	private $footer = 'footer';

@@ -49,8 +49,8 @@
 		      <div class="card-body">
 		        <h2 class="card-title"><span class="oi oi-dollar" title="dollar" aria-hidden="true"></span><br>Paying</h2>
 		        <p class="card-text text-dark">
-				Pay in person or with Venmo to whines@gmail.com. On the day of the workshop is fine.</p>
-		        <a href="http://venmo.com/willhines?txn=pay&share=friends&amount=25&note=improv%20workshop"  class="btn btn-outline-light">Venmo whines@gmail.com</a>
+				Pay in person or with Venmo to @willhines. On the day of the workshop is fine.</p>
+		        <a href="http://venmo.com/willhines?txn=pay&share=friends&amount=25&note=improv%20workshop"  class="btn btn-outline-light">Venmo @willhines</a>
 		      </div> <!-- end of card body -->
 		    </div> <!-- end of card -->
 		</div> <!-- end of col -->		
@@ -60,7 +60,7 @@
 			      <div class="card-body">
 			        <h2 class="card-title"><span class="oi oi-envelope-closed" title="envelope-closed" aria-hidden="true"></span><br>Mailing List</h2>
 			        <p class="card-text text-dark">You are NOT automatically put on my mailing list for these workshops. If you WANT to be on that mailing list, sign up right here.</p>
-			        <a href="http://eepurl.com/c6-T-H" class="btn btn-outline-light">Join Mailing List</a>
+			        <a href="http://eepurl.com/R2Ytz" class="btn btn-outline-light">Join Mailing List</a>
 			      </div> <!-- end of card body -->
 			    </div> <!-- end of card -->
 			</div> <!-- end of col -->
