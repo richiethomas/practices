@@ -6,3 +6,8 @@
 [2018-01-13 16:09:13] my_logger.INFO: User Will Hines logged in. [] []
 [2018-01-13 16:09:14] my_logger.INFO: User Will Hines logged in. [] []
 [2018-01-13 16:09:16] my_logger.INFO: User Will Hines logged in. [] []
+[2020-03-23 15:37:23] my_logger.ERROR: emailed 'whines@gmail.com', 'Log in to 'Will Hines practices''  [] []
+[2020-03-23 15:37:23] my_logger.DEBUG: Thanks! I've sent a link to your whines@gmail.com. Click it! (check your spam folder, too) [] []
+[2020-03-23 15:37:23] my_logger.INFO: Display name updated to 'Will Hines' [] []
+[2020-03-23 15:37:55] my_logger.INFO: Will Hines (whines@gmail.com) logged in. [] []
+[2020-03-24 09:26:53] my_logger.INFO: Will Hines (whines@gmail.com) logged in. [] []

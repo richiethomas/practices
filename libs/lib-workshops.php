@@ -36,6 +36,8 @@ function fill_out_workshop_row($row, $force_enrollment_stats = false) {
 		$row['type'] = null;
 	}
 	
+	$row['costdisplay'] = $row['cost'] ? $row['cost'] : 'Pay what you can / donation';
+	
 	if ($row['type'] != 'past' || $force_enrollment_stats) {
 		$enrollments = \Enrollments\get_enrollments($row['id']);
 		foreach ($statuses as $sid => $sname) {

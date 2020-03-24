@@ -32,7 +32,11 @@ function centralized_email($to, $sub, $body) {
 	  $headers['Content-Type'] = "text/html";
 	  $headers['charset'] = "ISO-8859-1";
 
-	 $sent = $smtp->send($to, $headers, $body);
+	  if (LOCAL) {
+	  	 $sent = $smtp->send($to, $headers, $body);  // laptop can use the SMTP server on willhines.net
+ 	  } else {
+	  	 $sent = mail($to, $sub, $body, $headers); // willhinesimprov.com uses local server
+ 	  }
 	
 	$ts = date("Y-m-d H:i:s").' ';
 	$mail_activity = "emailed '$to', '$sub'\n";
@@ -127,6 +131,12 @@ function confirm_email($wk, $u, $status_id = ENROLLED) {
 		send_text($u, $textmsg);
 	}
 	
+	
+	$zoom ='';
+	if ($wk['where'] == 'Online') {
+		$zoom = "This is an online class. You need the Zoom app. You will get a link to a Zoom meeting room the day of the workshop, or maybe the day before.";
+	}
+	
 	$notifcations = '';
 	if (!$u['send_text']) {
 		$notifications = "<p>Would you want to be notified via text? You can set text preferences:<br>".$textpref."</p>";
@@ -143,6 +153,8 @@ function confirm_email($wk, $u, $status_id = ENROLLED) {
 <b>Where:</b> {$wk['place']} {$wk['lwhere']}<br>
 <b>Cost:</b> {$wk['cost']}</p>
 <b>Description:</b> {$wk['notes']}</p>
+
+$zoom
 
 $notifications
 
@@ -288,12 +300,17 @@ function get_faq() {
 	
 return "<h2>Questions</h2>
 <dl>
+<dt>How does online work?</dt>
+<dd>You need the Zoom app, which is free. On the day of the workshop, or maybe the day before you'll get a link to a Zoom meeting.<br>
+Zoom available at: http://www.zoom.us/</dd>
+
+
 <dt>Can I drop out?</dt>
 <dd>Yes, use the link in your confirmation email to go to the web site, where you can drop out.</dd>
 
-<dt>If there is a cost, how should I pay?</dt>
-<dd>In cash, at the practice. Or Venmo it to Will Hines (whines@gmail.com)
-Venmo link: <a href='http://venmo.com/willhines?txn=pay&share=friends&note=improv%20workshop'>http://venmo.com/willhines?txn=pay&share=friends&note=improv%20workshop</a></dd>
+<dt>How should I pay?</dt>
+<dd>Venmo @willhines<br>
+Paypal whines@gmail.com.</dd>
 
 <dt>What if I'm on a waiting list?</dt>
 <dd>You'll get an email the moment a spot opens up, with a link to ACCEPT or DECLINE.</dd>
@@ -302,7 +319,7 @@ Venmo link: <a href='http://venmo.com/willhines?txn=pay&share=friends&note=impro
 <dd>Arriving late or leaving early is fine. If you're late I might ask you to wait to join in until I say so.</dd>
 
 <dt>What levels?</dt>
-<dd>Anyone can sign up. The description may recommend a level but I won't enforce it.</dd>
+<dd>Each workshop/course has a reccomended pre-requiste. But I won't really check. Take the ones you think you can contribute to and get something from.</dd>
 </dl>";
 }	
 	

@@ -124,8 +124,8 @@ function login_prompt() {
 	$f .= "<p>Submit your name and email and the site will email you a link to log in:</p>
 	<form id='log_in' action='$sc' method='post' novalidate>".
 	\Wbhkit\hidden('ac', 'link').
-	\Wbhkit\texty('display_name', '', 'Real Name', 'Jane Doe', 'We list who is registered in the workshop description.').		
-	\Wbhkit\texty('email', $email, 'Email', 'something@something.com', 'We send a log in link to this address.', 'This must be a valid email', ' required ', 'email').
+	\Wbhkit\texty('display_name', '', 'Real Name', 'Jane Doe', 'Can be a nickname, does not have to match what you have used before.').		
+	\Wbhkit\texty('email', $email, 'Email', 'something@something.com', 'We send a confirmation link to this address.', 'Must be a valid email you have access to', ' required ', 'email').
 	\Wbhkit\submit('Log In').
 	"</form>";
 	

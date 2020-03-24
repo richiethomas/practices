@@ -1,14 +1,27 @@
+
+		<div class="row">					
+			<div class="col-md-3">
+				<img src="assets/headshot20194.jpg" class="img-fluid" alt="Will Hines photo"><br><small>Photo by: <a href="http://www.claylarsen.net/">Clay Larsen</a></small>
+			</div>
+			
+			<div class="col"> 
+<p class="lead">Hi, I'm Will! I'm one of the top improv teachers in the whole world, can you believe it? I've taught all experience levels for 20 years, have written a <a href="https://www.amazon.com/dp/0982625723">best-selling book</a> on the subject, and managed to be a <a href="https://www.imdb.com/name/nm2654402/">working comedic actor</a> at the same time.</p>
+
+<p class="lead">These online workshops will focus on the fundamentals so you can use them no matter what kind of improv you do, or how much experience you have.</p>
+			</div>
+		</div>
+
 <?php if (Users\logged_in() && !$u['display_name']) { ?>	
 			
 				<div class="alert alert-info" role="alert">
-				<p>Would you mind entering a real human name? It's helpful for people to see who is signed up. Your email isn't shown, just this name.</p>
+				<p>Would you mind entering a name? Nickname is fine.</p>
 			<?php echo Users\edit_display_name($u); ?>
 				</div>
 <?php 		}  ?>
 		
 	
 <div class='row mb-md-4'><div class='col-md-12'>
-			<div id='login_prompt' class='card bg-success'>
+			<div id='login_prompt' class='card bg-info'>
 			<div class='card-body'>
 	
 <?php 		if (Users\logged_in()) { 
@@ -23,15 +36,9 @@
     <a class='nav-link btn btn-outline-light m-2' href='' data-toggle="modal" data-target="#textModal"><span class="oi oi-phone" title="phone" aria-hidden="true"></span> update text notifications</a>
   </li>
   <li class="nav-item">
-    <a class='nav-link btn btn-outline-light m-2' href="index.php?ac=lo" class="btn btn-warning btn-sm m-2"><span class="oi oi-account-logout" title="account-logout" aria-hidden="true"></span> log out</a>
+    <a class='nav-link btn btn-outline-light m-2' href="index.php?ac=lo"><span class="oi oi-account-logout" title="account-logout" aria-hidden="true"></span> log out</a>
   </li>
 </ul>	
-				
-
-
-				 <!--  <button type="button" class="btn btn-warning btn-sm m-2" data-toggle="modal" data-target="#nameEmailModal"><span class="oi oi-person" title="person" aria-hidden="true"></span> update name and email</button>
-				  <button type="button" class="btn btn-warning btn-sm m-2" data-toggle="modal" data-target="#textModal"><span class="oi oi-phone" title="phone" aria-hidden="true"></span> update text notifications </button>				  
-				  <a href="index.php?ac=lo" class="btn btn-warning btn-sm m-2"><span class="oi oi-account-logout" title="account-logout" aria-hidden="true"></span> log out</a>-->
 							  	  
 			
 <?php 		} else { ?>
@@ -42,6 +49,23 @@
 		</div></div></div></div> <!--// end two card divs, then column, then row-->
 
 
+			<div class='row mb-md-4'><div class='col'>
+		<h2>Available Workshops</h2> 
+		<?php echo $upcoming_workshops; ?>
+		</div></div> <!-- end of col and row -->
+		
+		
+		<div class='row mb-md-4'><div class='col'>
+		<h2>Your Workshops</h2>
+		<?php if (Users\logged_in()) {
+			echo $transcript; 
+		} else {
+			echo "<p>You're not logged in, so I can't list your workshops. Log in further up this page.</p>";
+		}
+		?>
+		</div></div> <!-- end of col and row -->
+
+
 		<div class="row justify-content-center mb-md-4">
 		
 			<div class="col-md-4">
@@ -49,8 +73,8 @@
 		      <div class="card-body">
 		        <h2 class="card-title"><span class="oi oi-dollar" title="dollar" aria-hidden="true"></span><br>Paying</h2>
 		        <p class="card-text text-dark">
-				Pay in person or with Venmo to @willhines. On the day of the workshop is fine.</p>
-		        <a href="http://venmo.com/willhines?txn=pay&share=friends&amount=25&note=improv%20workshop"  class="btn btn-outline-light">Venmo @willhines</a>
+				Venmo to @willhines, or Paypal to whines@gmail.com</p>
+		        <a href="http://venmo.com/willhines?txn=pay&share=friends&amount=30&note=improv%20workshop"  class="btn btn-outline-light">Venmo @willhines</a>
 		      </div> <!-- end of card body -->
 		    </div> <!-- end of card -->
 		</div> <!-- end of col -->		
@@ -67,32 +91,18 @@
 			
 			
 			<div class="col-md-4">
-			<div class="card text-center text-white bg-info">
+			<div class="card text-center text-white bg-success">
 			      <div class="card-body">
 			        <h2 class="card-title"><span class="oi oi-question-mark" title="question-mark" aria-hidden="true"></span><br>Common Questions</h2>
-			        <p class="card-text text-dark">You can arrive late and leave early. Pre-reqs are not enforced. Click below to see other common questions.</p>
+			        <p class="card-text text-dark">We use the <a class="text-dark font-weight-bold" href="http://www.zoom.us/">Zoom app</a>.</p>
 			        <a href="<?php echo $sc; ?>?ac=faq" class="btn btn-outline-light">More Common Questions</a>
 			      </div> <!-- end of card body -->
 			    </div> <!-- end of card -->
 			</div> <!-- end of col -->
 
 			</div> <!-- end of row -->
-
-			<div class='row mb-md-4'><div class='col'>
-		<h2>Enroll In A Workshop</h2> 
-		<?php echo $upcoming_workshops; ?>
-		</div></div> <!-- end of col and row -->
-		
-		
-		<div class='row mb-md-4'><div class='col'>
-		<h2>Your Current/Past Workshops</h2>
-		<?php if (Users\logged_in()) {
-			echo $transcript; 
-		} else {
-			echo "<p>You're not logged in, so I can't list your workshops. Log in further up this page.</p>";
-		}
-		?>
-		</div></div> <!-- end of col and row -->
+			
+			
 		
 <?php if (Users\logged_in()) { ?>		
 				  <?php echo Wbhkit\get_modal('textModal', '<span class="oi oi-phone" title="phone" aria-hidden="true"></span> Text Notifications', Users\edit_text_preferences($u)); ?>

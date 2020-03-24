@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Wbhkit;
 
 // version 1.1 - added checkbox, option to remove colon from label

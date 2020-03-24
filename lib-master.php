@@ -1,34 +1,38 @@
 <?php
 /*
-using Bootstrap 4.0
-tested on PHP 7.0.15
+using Bootstrap 4.4
+tested on PHP 7.4.2
 */
 
-require "vendor/autoload.php";
+require "vendor/autoload.php"; // i barely understand this; might not have enough classes to justify it
 
 date_default_timezone_set ( 'America/Los_Angeles' );
 session_start();
 
-// maybe i don't need these next two anymore? i dnuno :(
-ini_set("include_path", '/home/whines/php:' . ini_get("include_path") );
-ini_set("include_path", '/Applications/MAMP/bin/php/php7.0.15/lib/php:' . ini_get("include_path") );
+// maybe i don't need these next three anymore? i dnuno :(
+ini_set("include_path", '/home/whines/php:' . ini_get("include_path") ); // willhines.net
+ini_set("include_path", '/home/willfahg/php:' . ini_get("include_path") ); // willhinesimprov.com
+ini_set("include_path", '/Applications/MAMP/bin/php/php7.4.2/lib/php:' . ini_get("include_path") ); // local laptop
 
 // set function for autoloading classes
 spl_autoload_register(function ($className) {
         $className = str_replace('\\', DIRECTORY_SEPARATOR, $className); // for subdirectories in 'classes'
         $file = __DIR__.DIRECTORY_SEPARATOR."classes".DIRECTORY_SEPARATOR."{$className}.class.php";
-		//echo "$file\n";
-		//die;
         if (is_readable($file)) require_once $file;
 });
 
 // some constants
+define('LOCAL', ($_SERVER['SERVER_NAME'] == 'localhost') ? true : false);
 define('DEBUG_MODE', true);
 define('ERROR_LOG', 'info.txt');
-define('URL', "http://{$_SERVER['HTTP_HOST']}/practices/");
+define('URL', "http://{$_SERVER['HTTP_HOST']}/");
 
-define('WEBMASTER', "will@willhines.net");
-//define('WEBMASTER', "whines@gmail.com");
+
+if (LOCAL) {
+	define('WEBMASTER', "will@willhines.net");	
+} else {
+	define('WEBMASTER', "will@willhinesimprov.com");
+}
 
 
 // set objects, code, etc
@@ -43,6 +47,7 @@ include 'libs/lib-workshops.php';
 include 'libs/lib-enrollments.php';
 include 'libs/lib-lookups.php';
 include 'libs/lib-emails.php';
+
 
 $statuses = Lookups\get_statuses();
 $locations = Lookups\get_locations();

@@ -19,13 +19,15 @@ CREATE TABLE `locations` (
   `lwhere` text NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
-INSERT INTO `locations` (`id`, `place`, `lwhere`) VALUES
-(1, 'UCB Classes-NY (Old)', '145 West 30th Street, 4th Floor\r\nNY, NY'),
-(2, 'Simple Studios', '134 W 29th St\r\nNY, NY'),
-(3, 'UCB Classes-NY (New)', '520 8th Ave 9th Floor\r\nNY, NY'),
-(4, 'The Complex', '6476 Santa Monica Blvd, Los Angeles, CA 90038'),
-(5, 'Clubhouse Downstairs', '1607 N. Vermont Ave.'),
-(6, 'Clubhouse Upstairs', '1607 N. Vermont Ave.');
+INSERT INTO `locations` (`id`, `place`, `address`, `city`, `state`, `zip`) VALUES
+(1, 'UCB Classes-NY (Old)', '145 West 30th Street, 4th Floor', 'NY', 'NY', '10001'),
+(2, 'Simple Studios', '134 W 29th St', 'NY', 'NY', '10001'),
+(3, 'UCB Classes-NY (New)', '520 8th Ave 9th Floor', 'NY', 'NY', '10018'),
+(4, 'The Complex', '6476 Santa Monica Blvd', 'LA', 'CA', '90038'),
+(5, 'Clubhouse Downstairs', '1607 N. Vermont Ave.', 'LA', 'CA', '90027'),
+(6, 'Clubhouse Upstairs', '1607 N. Vermont Ave.', 'LA', 'CA', '90027'),
+(7, 'UCB Sunset (LA)', '5419 Sunset Blvd.', 'LA', 'CA', '90027'),
+(8, 'Online', '', '', '', '');
 
 CREATE TABLE `registrations` (
   `id` int(11) NOT NULL,
