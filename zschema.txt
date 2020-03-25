@@ -1,5 +1,23 @@
+-- phpMyAdmin SQL Dump
+-- version 4.9.3
+-- https://www.phpmyadmin.net/
+--
+-- Host: localhost:8889
+-- Generation Time: Mar 25, 2020 at 07:55 PM
+-- Server version: 5.7.26
+-- PHP Version: 7.4.2
+
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
+
+--
+-- Database: `whines_workshops`
+--
+
+
+--
+-- Table structure for table `carriers`
+--
 
 CREATE TABLE `carriers` (
   `id` int(11) NOT NULL,
@@ -7,17 +25,51 @@ CREATE TABLE `carriers` (
   `email` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+--
+-- Dumping data for table `carriers`
+--
+
 INSERT INTO `carriers` (`id`, `network`, `email`) VALUES
 (1, 'AT&T', 'txt.att.net'),
 (2, 'Verizon', 'vtext.com'),
 (3, 'Sprint', 'messaging.sprintpcs.com'),
 (4, 'T-Mobile', 'tmomail.net');
 
+
+--
+-- Table structure for table `groups`
+--
+
+CREATE TABLE `groups` (
+  `id` int(10) UNSIGNED NOT NULL,
+  `name` varchar(20) NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `groups`
+--
+
+INSERT INTO `groups` (`id`, `name`) VALUES
+(1, 'admin'),
+(2, 'members');
+
+
+--
+-- Table structure for table `locations`
+--
+
 CREATE TABLE `locations` (
   `id` int(11) NOT NULL,
   `place` varchar(255) NOT NULL,
-  `lwhere` text NOT NULL
+  `address` varchar(100) NOT NULL,
+  `city` varchar(50) NOT NULL,
+  `state` varchar(2) NOT NULL,
+  `zip` varchar(10) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `locations`
+--
 
 INSERT INTO `locations` (`id`, `place`, `address`, `city`, `state`, `zip`) VALUES
 (1, 'UCB Classes-NY (Old)', '145 West 30th Street, 4th Floor', 'NY', 'NY', '10001'),
@@ -29,27 +81,47 @@ INSERT INTO `locations` (`id`, `place`, `address`, `city`, `state`, `zip`) VALUE
 (7, 'UCB Sunset (LA)', '5419 Sunset Blvd.', 'LA', 'CA', '90027'),
 (8, 'Online', '', '', '', '');
 
+
+--
+-- Table structure for table `registrations`
+--
+
 CREATE TABLE `registrations` (
   `id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
   `workshop_id` int(11) NOT NULL,
   `status_id` int(11) NOT NULL,
   `attended` tinyint(4) NOT NULL DEFAULT '0',
-  `registered` datetime NOT NULL,
-  `last_modified` datetime NOT NULL,
-  `while_soldout` tinyint(4) NOT NULL
+  `registered` datetime DEFAULT NULL,
+  `last_modified` datetime DEFAULT NULL,
+  `while_soldout` tinyint(4) DEFAULT '0'
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+
+
+--
+-- Table structure for table `statuses`
+--
 
 CREATE TABLE `statuses` (
   `id` int(11) NOT NULL,
   `status_name` varchar(15) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+--
+-- Dumping data for table `statuses`
+--
+
 INSERT INTO `statuses` (`id`, `status_name`) VALUES
 (1, 'enrolled'),
 (2, 'waiting'),
 (3, 'dropped'),
 (4, 'invited');
+
+
+--
+-- Table structure for table `status_change_log`
+--
 
 CREATE TABLE `status_change_log` (
   `id` int(11) NOT NULL,
@@ -58,6 +130,12 @@ CREATE TABLE `status_change_log` (
   `status_id` int(11) NOT NULL,
   `happened` datetime DEFAULT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+
+
+--
+-- Table structure for table `users`
+--
 
 CREATE TABLE `users` (
   `id` int(11) NOT NULL,
@@ -73,6 +151,12 @@ CREATE TABLE `users` (
   `joined` datetime NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
+
+
+--
+-- Table structure for table `workshops`
+--
+
 CREATE TABLE `workshops` (
   `id` int(11) NOT NULL,
   `title` varchar(255) NOT NULL,
@@ -84,38 +168,95 @@ CREATE TABLE `workshops` (
   `revenue` int(10) UNSIGNED NOT NULL,
   `expenses` int(10) UNSIGNED NOT NULL,
   `location_id` int(11) NOT NULL,
+  `online_url` varchar(255) DEFAULT NULL,
+  `cancelled` tinyint(1) NOT NULL DEFAULT '0',
   `sold_out_late` tinyint(4) NOT NULL DEFAULT '-1',
-  `when_public` datetime NOT NULL
+  `when_public` datetime DEFAULT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
+--
+-- Indexes for dumped tables
+--
 
+--
+-- Indexes for table `groups`
+--
+ALTER TABLE `groups`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `locations`
+--
 ALTER TABLE `locations`
   ADD PRIMARY KEY (`id`);
 
+--
+-- Indexes for table `registrations`
+--
 ALTER TABLE `registrations`
   ADD PRIMARY KEY (`id`);
 
+--
+-- Indexes for table `statuses`
+--
 ALTER TABLE `statuses`
   ADD PRIMARY KEY (`id`);
 
+--
+-- Indexes for table `status_change_log`
+--
 ALTER TABLE `status_change_log`
   ADD PRIMARY KEY (`id`);
 
+--
+-- Indexes for table `users`
+--
 ALTER TABLE `users`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `email` (`email`);
 
+--
+-- Indexes for table `workshops`
+--
 ALTER TABLE `workshops`
   ADD PRIMARY KEY (`id`);
 
+--
+-- AUTO_INCREMENT for dumped tables
+--
 
+--
+-- AUTO_INCREMENT for table `groups`
+--
+ALTER TABLE `groups`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT for table `locations`
+--
 ALTER TABLE `locations`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+
+--
+-- AUTO_INCREMENT for table `registrations`
+--
 ALTER TABLE `registrations`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1875;
+
+--
+-- AUTO_INCREMENT for table `status_change_log`
+--
 ALTER TABLE `status_change_log`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1775;
+
+--
+-- AUTO_INCREMENT for table `users`
+--
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=771;
+
+--
+-- AUTO_INCREMENT for table `workshops`
+--
 ALTER TABLE `workshops`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=104;

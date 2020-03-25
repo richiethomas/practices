@@ -7,8 +7,11 @@ include 'libs/validate.php';
 $mess_vars = array('st', 'note', 'subject', 'sms', 'cancellation');
 Wbhkit\set_vars($mess_vars);
 
+$short_where = $wk['place'];
+$long_where = "{$wk['place']} {$wk['lwhere']}";
+
 switch ($ac) {
-	
+			
 	case 'sendmsg':
 
 		if (!$st) {
@@ -25,16 +28,16 @@ switch ($ac) {
 		$note = preg_replace('/TITLE/', $wk['showtitle'], $note);
 		$sms = preg_replace('/TITLE/', $wk['showtitle'], $sms);
 
+		$base_msg =	$note."
+<p><b>Practice details:</b><br>
+Title: {$wk['showtitle']}<br>
+$long_where
+When: {$wk['when']}</p>\n";
+
 		foreach ($stds as $std) {
 			$key = Users\get_key($std['id']);
 			$trans = URL."index.php?key=$key";
-			$msg = $note;
-			$msg .= "
-<p><b>Practice details:</b><br>
-Title: {$wk['showtitle']}<br>
-Where: {$wk['place']}<br>
-When: {$wk['when']}</p>\n";
-$msg .= "<p>Log in or drop out here:<br>$trans</p>\n";
+			$msg = $base_msg."<p>Log in or drop out here:<br>$trans</p>\n";
 
 			if ($cancellation) {
 				$e = \Enrollments\get_an_enrollment($wk, $std); 
@@ -52,19 +55,28 @@ $msg .= "<p>Log in or drop out here:<br>$trans</p>\n";
 		break;
 
 	case 'remind':
-		$subject = "REMINDER: workshop {$wk['friendly_when']} at {$wk['place']}";
+		$subject = "REMINDER: {$wk['title']} {$wk['friendly_when']} at $short_where";
 		$note = "Hey! You're enrolled in this workshop. ";
 		if ($wk['type'] == 'past') {
 			$note .= "Actually, it looks like this workshop is in the past, which means this reminder was probably sent in error. But since I'm just a computer, then maybe there's something going on that I don't quite grasp. At any rate, this is a reminder. ";
 		} else {
 			$note .= "It starts ".nicetime($wk['start']).".";
+			if ($wk['location_id'] == ONLINE_LOCATION_ID && $wk['online_url']) {
+				$note .= "
+					
+Here's the link:
+{$wk['online_url']}
+
+"; 
+			}
 		}
 		$note .=" If you think you're not going to make it, that's fine but use the link below to drop out. ";
 		if ($wk['waiting'] > 0) {
 			$note .= "There are currently people on the waiting list who might want to go. ";
 		}
 		$note .= " Okay, see you soon!";
-		$sms = "Reminder: workshop {$wk['friendly_when']} at {$wk['place']}";
+		
+		$sms = "Reminder: {$wk['title']} workshop, {$wk['friendly_when']} at $short_where";
 		$st = ENROLLED; // pre-populating the status drop in 'send message' form
 		break;
 

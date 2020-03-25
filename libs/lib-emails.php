@@ -132,16 +132,16 @@ function confirm_email($wk, $u, $status_id = ENROLLED) {
 	}
 	
 	
-	$zoom ='';
-	if ($wk['where'] == 'Online') {
-		$zoom = "This is an online class. You need the Zoom app. It's free. Get it at http://www.zoom.us/";
-	}
-	
 	$notifcations = '';
 	if (!$u['send_text']) {
 		$notifications = "<p>Would you want to be notified via text? You can set text preferences:<br>".$textpref."</p>";
 	}
 
+
+	$zoom ='';
+	if ($wk['where'] == 'Online') {
+		$zoom = "This is an online class. You need the Zoom app. It's free. Get it at http://www.zoom.us/";
+	}
 
 	$where = '';
 	if ($wk['location_id'] == ONLINE_LOCATION_ID) {
