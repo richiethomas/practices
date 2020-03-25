@@ -42,7 +42,7 @@ function get_carriers($update = 0) {
 
 function get_carriers_drop() {
 	$carriers = get_carriers();
-	$cardrop = '';
+	$cardrop = array();
 	foreach ($carriers as $c) {
 		$cardrop[$c['id']] = $c['network'];
 	}

@@ -317,6 +317,7 @@ function change_email($ouid, $newe) {
 function edit_text_preferences($u) {
 	global $sc, $ac;
 	$carriers = \Lookups\get_carriers_drop();
+	
 	$body = '';
 	$body .= "";
 		
@@ -344,7 +345,7 @@ function update_text_preferences(&$u,  &$message, &$error) {
 	$carrier_id = $u['carrier_id'];
 	$phone = $u['phone'];
 	$phone = preg_replace('/\D/', '', $phone); // just numbers for phone
-	$send_text = $u['send_text'];
+	$send_text = $u['send_text'] ? $u['send_text'] : 0;
 
 	// only validate data if they want texts, else who cares?
 	if ($send_text == 1) {

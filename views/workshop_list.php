@@ -35,7 +35,7 @@
 				? "<a href='$sc?wid={$row['id']}&ac=ed'>{$row['title']}</a>"
 				: "<a href='$sc?wid={$row['id']}'>{$row['title']} <span class=\"oi oi-info\" title=\"info\" aria-hidden=\"true\"></span></a>");
 			
-			echo "<td>{$titlelink}".($row['notes'] ? "<p class='small text-muted'>{$row['notes']}</p>" : '')."</td>
+			echo "<td><span class='workshoptitle'>{$titlelink}</span>".($row['notes'] ? "<p class='small text-muted'>{$row['notes']}</p>" : '')."</td>
 			<td>{$row['when']}{$public}</td>
 			<td>{$row['place']}</td>
 			<td>{$row['costdisplay']}</td>
@@ -44,7 +44,7 @@
 			if ($admin) {
 				echo "<td><a href=\"$sc?wid={$row['id']}\">Clone</a></td></tr>\n";
 			} else {
-				echo "<td><a href=\"{$sc}?wid={$row['id']}&v=winfo\"><span class=\"oi oi-info\" title=\"info\" aria-hidden=\"true\"></span> Enroll</a></td></tr>\n";
+				echo "<td><a href=\"{$sc}?wid={$row['id']}&v=winfo\"><span class=\"oi oi-info\" title=\"info\" aria-hidden=\"true\"></span> Go to Sign Up Page</a></td></tr>\n";
 			}
 		}
 

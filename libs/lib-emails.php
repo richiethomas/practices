@@ -90,7 +90,7 @@ function confirm_email($wk, $u, $status_id = ENROLLED) {
 			$textpoint = $point." ";
 			$call = "To DROP, click here:\n{$drop}";
 			if ($wk['cost'] > 0) {
-				$call .= "<br><br>Pay in person or venmo. On the day of the workshop is fine.<br>Venmo link:\nhttp://venmo.com/willhines?txn=pay&share=friends&amount={$wk['cost']}&note=improv%20workshop";
+				$call .= "<br><br>To pay, venmo @willhines or PayPal whines@gmail.com.";
 			}
 			$send_faq = false;
 			$email_markup = set_email_markup($e, $wk, $u);
@@ -134,12 +134,21 @@ function confirm_email($wk, $u, $status_id = ENROLLED) {
 	
 	$zoom ='';
 	if ($wk['where'] == 'Online') {
-		$zoom = "This is an online class. You need the Zoom app. You will get a link to a Zoom meeting room the day of the workshop, or maybe the day before.";
+		$zoom = "This is an online class. You need the Zoom app. It's free. Get it at http://www.zoom.us/";
 	}
 	
 	$notifcations = '';
 	if (!$u['send_text']) {
 		$notifications = "<p>Would you want to be notified via text? You can set text preferences:<br>".$textpref."</p>";
+	}
+
+
+	$where = '';
+	if ($wk['location_id'] == ONLINE_LOCATION_ID) {
+		$where = "<b>Where:</b> {$wk['place']}<br>
+Link for online class: {$wk['online_url']}<br>";
+	} else {
+		$where = "<b>Where:</b> {$wk['place']} {$wk['lwhere']}<br>";
 	}
 
 	$body = "<p>$point $late</p>
@@ -150,7 +159,7 @@ function confirm_email($wk, $u, $status_id = ENROLLED) {
 
 <p><b>Title:</b> {$wk['title']}<br>
 <b>When:</b> {$wk['when']}<br>
-<b>Where:</b> {$wk['place']} {$wk['lwhere']}<br>
+$where
 <b>Cost:</b> {$wk['cost']}</p>
 <b>Description:</b> {$wk['notes']}</p>
 
@@ -255,7 +264,7 @@ function shorten_link($link) {
 	// bit.ly registered token is: 5d58679014e86b8b31cd124ed31185fa799980e7
 	// under whines@gmail.com / meet1962
 	
-	$link = preg_replace('/localhost:8888/', 'www.willhines.net', $link);
+	$link = preg_replace('/localhost:8888/', 'www.willhinesimprov.com', $link);
 	$link = urlencode($link);
 	$to_bitly = "https://api-ssl.bitly.com/v3/shorten?access_token=5d58679014e86b8b31cd124ed31185fa799980e7&longUrl={$link}&format=txt";
 

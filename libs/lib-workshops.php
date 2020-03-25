@@ -24,7 +24,7 @@ function fill_out_workshop_row($row, $force_enrollment_stats = false) {
 	foreach (array('address', 'city', 'state', 'zip', 'place', 'lwhere') as $loc_field) {
 		$row[$loc_field] = $locations[$row['location_id']][$loc_field];
 	}
-	
+		
 	if ($row['when_public'] == 0 ) {
 		$row['when_public'] = '';
 	}
@@ -234,6 +234,7 @@ function empty_workshop() {
 		'id' => '',
 		'title' => '',
 		'location_id' => '',
+		'online_url' => '',
 		'start' => '',
 		'end' => '',
 		'cost' => '',
@@ -260,6 +261,7 @@ function add_workshop_form($wk) {
 function workshop_fields($wk) {
 	return \Wbhkit\texty('title', $wk['title'], null, null, null, 'Required', ' required ').
 	\Lookups\locations_drop($wk['location_id']).
+	\Wbhkit\texty('online_url', $wk['online_url'], 'Online URL').	
 	\Wbhkit\texty('start', $wk['start'], null, null, null, 'Required', ' required ').
 	\Wbhkit\texty('end', $wk['end'], null, null, null, 'Required', ' required ').
 	\Wbhkit\texty('cost', $wk['cost']).
@@ -277,12 +279,25 @@ function add_update_workshop($wk, $ac = 'up') {
 	
 	global $last_insert_id;
 	
+	// fussy MySQL 5.7
+	if (!$wk['cancelled']) { $wk['cancelled'] = 0; }
+	if (!$wk['revenue']) { $wk['revenue'] = 0; }
+	if (!$wk['expenses']) { $wk['expenses'] = 0; }
+	if (!$wk['cost']) { $wk['cost'] = 0; }
+	if (!$wk['capacity']) { $wk['capacity'] = 0; }
+	if (!$wk['when_public']) { $wk['when_public'] = NULL; }
+	if (!$wk['start']) { $wk['start'] = NULL; }
+	if (!$wk['end']) { $wk['end'] = NULL; }
+	
+	
+		
 	$params = array(':title' => $wk['title'],
 		':start' => date('Y-m-d H:i:s', strtotime($wk['start'])),
 		':end' => date('Y-m-d H:i:s', strtotime($wk['end'])),
 		':cost' => $wk['cost'],
 		':capacity' => $wk['capacity'],
 		':lid' => $wk['location_id'],
+		':online_url' => $wk['online_url'],
 		':notes' => $wk['notes'],
 		':revenue' => $wk['revenue'],
 		':expenses' => $wk['expenses'],
@@ -291,11 +306,11 @@ function add_update_workshop($wk, $ac = 'up') {
 		
 		if ($ac == 'up') {
 			$params[':wid'] = $wk['id'];
-			$stmt = \DB\pdo_query("update workshops set title = :title, start = :start, end = :end, cost = :cost, capacity = :capacity, location_id = :lid, notes = :notes, revenue = :revenue, expenses = :expenses, when_public = :public, cancelled = :cancelled where id = :wid", $params);
+			$stmt = \DB\pdo_query("update workshops set title = :title, start = :start, end = :end, cost = :cost, capacity = :capacity, location_id = :lid, online_url = :online_url, notes = :notes, revenue = :revenue, expenses = :expenses, when_public = :public, cancelled = :cancelled where id = :wid", $params);
 			return $wk['id'];
 		} elseif ($ac = 'ad') {
-			$stmt = \DB\pdo_query("insert into workshops (title, start, end, cost, capacity, location_id, notes, revenue, expenses, when_public, cancelled)
-			VALUES (:title, :start, :end, :cost, :capacity, :lid, :notes, :revenue, :expenses, :public, :cancelled)",
+			$stmt = \DB\pdo_query("insert into workshops (title, start, end, cost, capacity, location_id, online_url, notes, revenue, expenses, when_public, cancelled)
+			VALUES (:title, :start, :end, :cost, :capacity, :lid, :online_url, :notes, :revenue, :expenses, :public, :cancelled)",
 			$params);
 			return $last_insert_id; // set as a global by my dbo routines
 		}

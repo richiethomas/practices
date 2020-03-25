@@ -4,7 +4,7 @@ $heading = "practices: admin";
 include 'lib-master.php';
 include 'libs/validate.php';
 
-$wk_vars = array('wid', 'title', 'notes', 'start', 'end', 'lid', 'cost', 'capacity', 'notes', 'revenue', 'expenses', 'when_public', 'email', 'con', 'cancelled');
+$wk_vars = array('wid', 'title', 'notes', 'start', 'end', 'lid', 'online_url', 'cost', 'capacity', 'notes', 'revenue', 'expenses', 'when_public', 'email', 'con', 'cancelled');
 Wbhkit\set_vars($wk_vars);
 
 $change_status_vars = array('st', 'con', 'lmod');
