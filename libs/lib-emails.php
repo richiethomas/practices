@@ -191,11 +191,7 @@ function set_email_markup($e, $wk, $u, $cancel = false) {
 		$status = "http://schema.org/Cancelled";
 	} else {
 		$status = "http://schema.org/Confirmed";
-	}
-
-	// QR code thing
-	$url = "http://www.willhines.net/practices/code.php?wid={$wk['id']}&key={$u['ukey']}&v=winfo";
-	
+	}	
 
 	// make start/end ISO friendly
 	$wk['start'] = date(DATE_ISO8601, strtotime($wk['start']));
@@ -235,9 +231,6 @@ function set_email_markup($e, $wk, $u, $cancel = false) {
        }
      }
    },
-    \"ticketToken\": \"$url\",
-    \"ticketNumber\": \"{$e['rank']}\",
-    \"numSeats\": \"1\",
    \"modifiedTime\": \"".date("Y-m-d H:i:s")."\",
    \"modifyReservationUrl\": \"http://willhines.net/practices/index.php?wid={$wk['id']}&key={$u['ukey']}\"
  }

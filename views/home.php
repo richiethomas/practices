@@ -5,9 +5,7 @@
 			</div>
 			
 			<div class="col"> 
-<p class="lead">Hi, I'm Will! I'm one of the top improv teachers in the whole world, can you believe it? I've taught all experience levels for 20 years, have written a <a href="https://www.amazon.com/dp/0982625723">best-selling book</a> on the subject, and managed to be a <a href="https://www.imdb.com/name/nm2654402/">working comedic actor</a> at the same time.</p>
-
-<p class="lead">These online workshops will focus on the fundamentals so you can use them no matter what kind of improv you do, or how much experience you have.</p>
+<p class="lead">Hi, I'm Will! I'm one of the top improv teachers in the whole world, can you believe it? I've taught all experience levels for 20 years, have written a <a href="https://www.amazon.com/dp/0982625723">best-selling book</a> on the subject, and am a <a href="https://www.imdb.com/name/nm2654402/">working comedic actor</a>.</p>
 			</div>
 		</div>
 

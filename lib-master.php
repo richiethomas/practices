@@ -65,14 +65,14 @@ $body = '';
 
 Wbhkit\set_vars(array('ac', 'wid', 'uid', 'key', 'page'));
 
-// workshop info
+// set workshop info into memory
 if ($wid) {
 	$wk = Workshops\get_workshop_info($wid);
 } else {
 	$wk = Workshops\empty_workshop();
 }
 
-// user info
+// set user info into memory
 $already_here_key = (isset($_SESSION['s_key']) ? $_SESSION['s_key'] : null);
 
 $key = Users\current_key(); // checks for key in REQUEST and SESSION and COOKIE, not logged in otherwise
