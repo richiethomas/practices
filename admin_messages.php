@@ -31,7 +31,7 @@ switch ($ac) {
 		$base_msg =	$note."
 <p><b>Practice details:</b><br>
 Title: {$wk['showtitle']}<br>
-$long_where
+$long_where<br>
 When: {$wk['when']}</p>\n";
 
 		foreach ($stds as $std) {
@@ -62,15 +62,10 @@ When: {$wk['when']}</p>\n";
 		} else {
 			$note .= "It starts ".nicetime($wk['start']).".";
 			if ($wk['location_id'] == ONLINE_LOCATION_ID && $wk['online_url']) {
-				$note .= "
-					
-Here's the link:
-{$wk['online_url']}
-
-"; 
+				$note .= "Here's the link: {$wk['online_url']}\n"; 
 			}
 		}
-		$note .=" If you think you're not going to make it, that's fine but use the link below to drop out. ";
+		$note .="If you think you're not going to make it, that's fine but use the link below to drop out. ";
 		if ($wk['waiting'] > 0) {
 			$note .= "There are currently people on the waiting list who might want to go. ";
 		}
@@ -95,9 +90,7 @@ No worries if you'd rather not answer! Thank you all again for taking it!
 
 	case 'cancel':
 		$subject = "{$wk['showtitle']}";
-		$note = "I had to cancel this workshop! I'm so sorry.
-
--Will";
+		$note = "<p>I had to cancel this workshop! I'm so sorry.<br>-Will</p>";
 		$st = ENROLLED; // pre-populating the status drop in 'send message' form
 		$sms = "Workshop cancelled: {$wk['showtitle']}";
 		$cancellation = 1;
