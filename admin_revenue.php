@@ -33,7 +33,14 @@ if ($searchstart) { $searchstart = date('Y-m-d H:i:s', strtotime($searchstart));
 if ($searchend) { $searchend = date('Y-m-d H:i:s', strtotime($searchend)); }
 $view->add_globals($vars);	
 
-$view->data['workshops_list'] = Workshops\get_workshops_list_bydate($searchstart, $searchend);
+$view->data['workshops_list'] = Workshops\get_workshops_list_bydate($searchstart, $searchend, true);
+
+// count attended - doing this here, and not in "get_workshops_list_bydate" since this is the only place I need this info
+foreach ($view->data['workshops_list'] as $workshop) {
+	$total_attended= Workshops\how_many_attended($workshop);
+	$view->data['workshops_list'][$workshop['id']]['attended'] = $total_attended;
+}
+
 $view->renderPage('admin_revenue');
 
 

@@ -215,8 +215,15 @@ function get_workshops_list($admin = 0, $page = 1) {
 	return $view->renderSnippet('workshop_list');
 }
 
+function how_many_attended($wk) {
+	$stmt = \DB\pdo_query("select count(*) as total_attended from registrations where workshop_id = :wid and status_id = :sid and attended = 1", array(':wid' => $wk['id'], ':sid' => ENROLLED));
+	while ($row = $stmt->fetch()) {
+		return $row['total_attended'];
+	}
+	return 0;
+}
 
-function get_workshops_list_bydate($start = null, $end = null) {
+function get_workshops_list_bydate($start = null, $end = null, $force_enrollment_stats = false) {
 	if (!$start) { $start = "Jan 1 1000"; }
 	if (!$end) { $end = "Dec 31 9000"; }
 	
@@ -224,7 +231,7 @@ function get_workshops_list_bydate($start = null, $end = null) {
 	
 	$workshops = array();
 	while ($row = $stmt->fetch()) {
-		$workshops[$row['id']] = fill_out_workshop_row($row);
+		$workshops[$row['id']] = fill_out_workshop_row($row, $force_enrollment_stats);
 	}
 	return $workshops;
 }	

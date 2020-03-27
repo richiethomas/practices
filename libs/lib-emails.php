@@ -154,7 +154,7 @@ function confirm_email($wk, $u, $status_id = ENROLLED) {
 <p>Full info:</p>
 
 <p><b>Title:</b> {$wk['title']}<br>
-<b>When:</b> {$wk['when']}<br>
+<b>When:</b> {$wk['when']} (PST - California time)<br>
 <b>Where:</b> {$where}<br>
 <b>Cost:</b> \${$wk['cost']} USD<br>
 <b>Description:</b> {$wk['notes']}</p>
