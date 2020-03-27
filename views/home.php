@@ -47,6 +47,17 @@
 		</div></div></div></div> <!--// end two card divs, then column, then row-->
 
 
+<div class="row justify-content-center"><div class="col-md-6 border border-info">
+<h2>How This Works</h2>
+<ul>
+	<li>All class times are PST - California time.</li>
+	<li>You log in with your email, a link gets emailed to you, you click it</li>
+	<li>Then you can enroll in classes, drop out, join waiting lists</li>
+	<li>Most are $30/session, payable with Venmo or Paypal</li>
+	<li>Classes are held over Zoom</li>
+</ul>
+</div></div>
+
 			<div class='row mb-md-4'><div class='col'>
 		<h2>Available Workshops</h2> 
 		<?php echo $upcoming_workshops; ?>

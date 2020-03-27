@@ -53,8 +53,8 @@ function handle_enroll($wk, $u, $confirm = true) {
 		
 		return false;
 	}
-	if (!$u && !$email) {
-		$error = 'We need a logged in user or an email.';
+	if (!$u) {
+		$error = 'We need a user.';
 		$logger->notice('handle_enroll:'.$error);
 		return false;
 	}
@@ -289,7 +289,7 @@ function get_transcript_tabled($u, $admin = false, $page = 1) {
 		
 		
 		// build a workshop array from data we have
-		$wk_fields = \Workshops\empty_workshop();
+		$wk_fields = \Workshops\get_empty_workshop();
 		foreach ($wk_fields as $field => $fieldvalue) {
 			$wk[$field] = $d[$field];
 		}

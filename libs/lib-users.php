@@ -2,6 +2,26 @@
 namespace Users;
 	
 // users
+
+function get_empty_user() {
+		
+	return array(
+	'id' => null,
+	'email' => null,
+	'display_name' => null,
+	'ukey' => null,
+	'send_text'=> null,
+	'carrier_id' => null,
+	'phone' => null,
+	'new_email' => null,
+	'temp_ukey' => null,
+	'group_id' => null,
+	'joined' => null,
+	'nice_name' => null,
+	'fullest_name' => null	
+	);
+}
+
 function get_user_by_email($email) {
 	global $last_insert_id;
 	
@@ -10,6 +30,7 @@ function get_user_by_email($email) {
 		return add_extra_user_info($row);
 	}
 	
+	$new_user_id = null;
 	// didn't find one? make one
 	if (validate_email($email)) {
 		$stmt = \DB\pdo_query("insert into users (email, joined) VALUES (:email, '".date("Y-m-d H:i:s")."')", array(':email' => $email));

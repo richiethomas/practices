@@ -26,7 +26,7 @@ switch ($ac) {
 		// build a workshop array from data we have
 		$id = $wid ? $wid : null; // so the next bit can find the id
 		$location_id = $lid;
-		$wk_fields = \Workshops\empty_workshop();
+		$wk_fields = \Workshops\get_empty_workshop();
 		foreach ($wk_fields as $field => $fieldvalue) {
 			$wk[$field] = $$field;
 		}

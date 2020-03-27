@@ -229,21 +229,22 @@ function get_workshops_list_bydate($start = null, $end = null) {
 	return $workshops;
 }	
 
-function empty_workshop() {
+function get_empty_workshop() {
 	return array(
-		'id' => '',
-		'title' => '',
-		'location_id' => '',
-		'online_url' => '',
-		'start' => '',
-		'end' => '',
-		'cost' => '',
-		'capacity' => '',
-		'notes' => '',
-		'revenue' => '',
-		'expenses' => '',
-		'when_public' => '',
-		'cancelled' => ''
+		'id' => null,
+		'title' => null,
+		'location_id' => null,
+		'online_url' => null,
+		'start' => null,
+		'end' => null,
+		'cost' => null,
+		'capacity' => null,
+		'notes' => null,
+		'revenue' => null,
+		'expenses' => null,
+		'when_public' => null,
+		'sold_out_late' => null,
+		'cancelled' => null
 	);
 }
 function add_workshop_form($wk) {

@@ -69,7 +69,7 @@ Wbhkit\set_vars(array('ac', 'wid', 'uid', 'key', 'page'));
 if ($wid) {
 	$wk = Workshops\get_workshop_info($wid);
 } else {
-	$wk = Workshops\empty_workshop();
+	$wk = Workshops\get_empty_workshop();
 }
 
 // set user info into memory
@@ -81,7 +81,7 @@ if ($uid) {
 } elseif ($key) {
 	$u = Users\key_to_user($key);
 } else {
-	$u = array();
+	$u = Users\get_empty_user();
 }
 
 if (isset($u['ukey']) && $u['ukey'] != $already_here_key) {

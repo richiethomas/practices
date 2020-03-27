@@ -138,17 +138,13 @@ function confirm_email($wk, $u, $status_id = ENROLLED) {
 	}
 
 
-	$zoom ='';
-	if ($wk['where'] == 'Online') {
-		$zoom = "This is an online class. You need the Zoom app. It's free. Get it at http://www.zoom.us/";
-	}
-
+	$zoom = '';
 	$where = '';
 	if ($wk['location_id'] == ONLINE_LOCATION_ID) {
-		$where = "<b>Where:</b> {$wk['place']}<br>
-Link for online class: {$wk['online_url']}<br>";
+		$where = "{$wk['place']} {$wk['online_url']}";
+		$zoom = "<p>This is an online class. You will need the Zoom app. You can download that at http://www.zoom.us/<br>The link for this class is: {$wk['online_url']}</p>\n";
 	} else {
-		$where = "<b>Where:</b> {$wk['place']} {$wk['lwhere']}<br>";
+		$where = "{$wk['place']} {$wk['lwhere']}";
 	}
 
 	$body = "<p>$point $late</p>
@@ -159,8 +155,8 @@ Link for online class: {$wk['online_url']}<br>";
 
 <p><b>Title:</b> {$wk['title']}<br>
 <b>When:</b> {$wk['when']}<br>
-$where
-<b>Cost:</b> {$wk['cost']}</p>
+<b>Where:</b> {$where}<br>
+<b>Cost:</b> \${$wk['cost']} USD<br>
 <b>Description:</b> {$wk['notes']}</p>
 
 $zoom

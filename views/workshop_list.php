@@ -36,7 +36,7 @@
 				: "<a href='$sc?wid={$row['id']}'>{$row['title']} <span class=\"oi oi-info\" title=\"info\" aria-hidden=\"true\"></span></a>");
 			
 			echo "<td><span class='workshoptitle'>{$titlelink}</span>".($row['notes'] ? "<p class='small text-muted'>{$row['notes']}</p>" : '')."</td>
-			<td>{$row['when']}{$public}</td>
+			<td>{$row['when']} (PST) {$public}</td>
 			<td>{$row['place']}</td>
 			<td>{$row['costdisplay']}</td>
 			<td>".number_format($row['open'], 0)." of ".number_format($row['capacity'], 0).",<br> ".number_format($row['waiting']+$row['invited'])." waiting</td>

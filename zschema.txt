@@ -140,17 +140,16 @@ CREATE TABLE `status_change_log` (
 CREATE TABLE `users` (
   `id` int(11) NOT NULL,
   `email` varchar(255) NOT NULL,
-  `display_name` text NOT NULL,
-  `ukey` varchar(255) NOT NULL,
-  `send_text` tinyint(1) NOT NULL,
-  `carrier_id` int(11) NOT NULL,
-  `phone` varchar(20) NOT NULL,
-  `new_email` varchar(255) NOT NULL,
-  `temp_ukey` varchar(255) NOT NULL,
+  `display_name` text,
+  `ukey` varchar(255) DEFAULT NULL,
+  `send_text` tinyint(1) NOT NULL DEFAULT '0',
+  `carrier_id` int(11) NOT NULL DEFAULT '0',
+  `phone` varchar(20) DEFAULT NULL,
+  `new_email` varchar(255) DEFAULT NULL,
+  `temp_ukey` varchar(255) DEFAULT NULL,
   `group_id` int(10) UNSIGNED NOT NULL DEFAULT '2',
-  `joined` datetime NOT NULL
+  `joined` datetime DEFAULT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
-
 
 
 --

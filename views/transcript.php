@@ -26,7 +26,7 @@
 		} else {
 			echo "<a href=\"index.php?wid={$t['workshop_id']}\">{$t['title']}</a>";
 		}
-		echo "</td><td>{$t['when']}</td><td>{$t['place']}</td><td>";
+		echo "</td><td>{$t['when']} (PST)</td><td>{$t['place']}</td><td>";
 		echo "{$statuses[$t['status_id']]}";
 		if ($t['status_id'] == WAITING) {
 			echo " (spot {$t['rank']})";
