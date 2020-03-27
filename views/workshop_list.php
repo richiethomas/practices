@@ -5,7 +5,7 @@
 			<th scope="col"><span class="oi oi-calendar" title="calendar" aria-hidden="true"></span> When (PST)</th>
 			<th scope="col"><span class="oi oi-map" title="map" aria-hidden="true"></span> Where</th>
 			<th scope="col"><span class="oi oi-dollar" title="dollar" aria-hidden="true"></span> Cost</th>
-			<th scope="col"><span class="oi oi-clipboard" title="clipboard" aria-hidden="true"></span> Spots</th>
+			<th scope="col"><span class="oi oi-clipboard" title="clipboard" aria-hidden="true"></span> Enrolled</th>
 			<th scope="col"><span class="oi oi-task" title="task" aria-hidden="true"></span> Action</th>
 		</tr></thead>
 			<tbody>
@@ -39,7 +39,7 @@
 			<td>{$row['when']} (PST) {$public}</td>
 			<td>{$row['place']}</td>
 			<td>{$row['costdisplay']}</td>
-			<td>".number_format($row['open'], 0)." of ".number_format($row['capacity'], 0).",<br> ".number_format($row['waiting']+$row['invited'])." waiting</td>
+			<td>".number_format($row['enrolled'], 0)." of ".number_format($row['capacity'], 0).",<br> ".number_format($row['waiting']+$row['invited'])." waiting</td>
 	";
 			if ($admin) {
 				echo "<td><a href=\"$sc?wid={$row['id']}\">Clone</a></td></tr>\n";
