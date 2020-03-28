@@ -230,7 +230,7 @@ function get_status_change_log($wk = null) {
 			}
 		}
 		if ($row['status_id'] == DROPPED) {
-			$row['last_enrolled'] = get_last_enrolled($row['workshop_id'], $row['user_id']);
+			$row['last_enrolled'] = get_last_enrolled($row['workshop_id'], $row['user_id'], $row['happened']);
 		}
 		$log[] = $row;
 	}
@@ -256,8 +256,11 @@ function get_students($wid, $status_id = ENROLLED) {
 }
 
 
-function get_last_enrolled($wid = 0, $uid = 0) {
-	$stmt = \DB\pdo_query("select * from  status_change_log scl where workshop_id = :wid and user_id = :uid order by happened desc", array(':wid' => $wid, ':uid' => $uid));	
+function get_last_enrolled($wid = 0, $uid = 0, $before = null) {
+	if (!$before) { 
+		$before = "now()"; 
+	}
+	$stmt = \DB\pdo_query("select * from  status_change_log scl where workshop_id = :wid and user_id = :uid and happened <= :before order by happened desc", array(':wid' => $wid, ':uid' => $uid, ':before' => $before));	
 	while ($row = $stmt->fetch()) {
 		if ($row['status_id'] == ENROLLED) {
 			return $row['happened'];

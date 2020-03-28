@@ -142,7 +142,7 @@ function confirm_email($wk, $u, $status_id = ENROLLED) {
 	$where = '';
 	if ($wk['location_id'] == ONLINE_LOCATION_ID) {
 		$where = "{$wk['place']} {$wk['online_url']}";
-		$zoom = "<p>This is an online class. You will need the Zoom app. You can download that at http://www.zoom.us/<br>The link for this class is: {$wk['online_url']}</p>\n";
+		$zoom = "<p>This is an online class. You will need the Zoom app.<br>You can download that at http://www.zoom.us/<br>The link for this class is: {$wk['online_url']}<br>If possible, wear headphones during the workshop.</p>\n";
 	} else {
 		$where = "{$wk['place']} {$wk['lwhere']}";
 	}
@@ -157,6 +157,7 @@ function confirm_email($wk, $u, $status_id = ENROLLED) {
 <b>When:</b> {$wk['when']} (PST - California time)<br>
 <b>Where:</b> {$where}<br>
 <b>Cost:</b> \${$wk['cost']} USD<br>
+(Pay with venmo @willhines or PayPal whines@gmail.com)<br>
 <b>Description:</b> {$wk['notes']}</p>
 
 $zoom

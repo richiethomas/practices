@@ -32,7 +32,9 @@ switch ($ac) {
 <p><b>Practice details:</b><br>
 Title: {$wk['showtitle']}<br>
 $long_where<br>
-When: {$wk['when']}</p>\n";
+When: {$wk['when']}<br>
+Pay via Venmo @willhines or PayPal whines@gmail.com</p>\n";
+
 
 		foreach ($stds as $std) {
 			$key = Users\get_key($std['id']);
@@ -71,7 +73,7 @@ When: {$wk['when']}</p>\n";
 		}
 		$note .= " Okay, see you soon!";
 		
-		$sms = "Reminder: {$wk['title']} workshop, {$wk['friendly_when']} at $short_where";
+		$sms = "Reminder: {$wk['title']} workshop, {$wk['friendly_when']}, ".URL;
 		$st = ENROLLED; // pre-populating the status drop in 'send message' form
 		break;
 

@@ -55,6 +55,7 @@
 	<li>Then you can enroll in classes, drop out, join waiting lists</li>
 	<li>Most are $30/session, payable with Venmo or Paypal</li>
 	<li>Classes are held over Zoom</li>
+	<li>If possible, wear headphones during the workshop.</li>
 </ul>
 </div></div>
 
