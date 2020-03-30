@@ -51,11 +51,10 @@
 <h2>How This Works</h2>
 <ul>
 	<li>All class times are PST - California time.</li>
-	<li>You log in with your email, a link gets emailed to you, you click it</li>
-	<li>Then you can enroll in classes, drop out, join waiting lists</li>
+	<li>You log in with your email, a link gets emailed to you, you click it. Then you can enroll in classes, drop out, join waiting lists</li>
 	<li>Most are $30/session, payable with Venmo or Paypal</li>
-	<li>Classes are held over Zoom</li>
-	<li>If possible, wear headphones during the workshop.</li>
+	<li>Classes are held over <a href="http://www.zoom.us/">Zoom</a></li>
+	<li>Wear headphones during the workshop.</li>
 </ul>
 </div></div>
 

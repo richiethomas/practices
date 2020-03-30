@@ -207,13 +207,30 @@ function get_workshops_list($admin = 0, $page = 1) {
 	} else {
 		return "<p>No upcoming workshops!</p>\n";	// this skips $body variable contents	
 	}
-	
+		
 	// prep view
 	$view->data['links'] = $links;
 	$view->data['admin'] = $admin;
 	$view->data['rows'] = $workshops;
 	return $view->renderSnippet('workshop_list');
 }
+
+
+// data only, for admin_calendar
+function get_workshops_to_come() {
+	
+	// get IDs of workshops
+	$mysqlnow = date("Y-m-d H:i:s");
+	$stmt = \DB\pdo_query("select w.* from workshops w where date(start) >= date('$mysqlnow') order by start asc"); // get public ones to come
+		
+	$workshops = array();
+	while ($row = $stmt->fetch()) {
+		$workshops[$row['id']] = fill_out_workshop_row($row, true);
+	}
+		
+	return $workshops;
+}
+
 
 function how_many_attended($wk) {
 	$stmt = \DB\pdo_query("select count(*) as total_attended from registrations where workshop_id = :wid and status_id = :sid and attended = 1", array(':wid' => $wk['id'], ':sid' => ENROLLED));

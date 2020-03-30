@@ -47,6 +47,7 @@ if (strpos($sc, 'admin') !== false ) {
 	echo nav_link($sc, 'admin_search.php', 'find students', 'magnifying-glass');
 	echo nav_link($sc, 'admin_status.php', 'status log', 'graph');
 	echo nav_link($sc, 'admin_mail_log.php', 'error log', 'clipboard');
+	echo nav_link($sc, 'admin_calendar.php', 'upcoming', 'calendar');
 	echo "</ul>\n";
 	
 } else {

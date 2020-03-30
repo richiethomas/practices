@@ -23,7 +23,7 @@ spl_autoload_register(function ($className) {
 
 // some constants
 define('LOCAL', ($_SERVER['SERVER_NAME'] == 'localhost') ? true : false);
-define('DEBUG_MODE', true);
+define('DEBUG_MODE', false);
 define('ERROR_LOG', 'info.txt');
 define('URL', "http://{$_SERVER['HTTP_HOST']}/");
 define('ONLINE_LOCATION_ID', 8);

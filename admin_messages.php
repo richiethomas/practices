@@ -10,6 +10,10 @@ Wbhkit\set_vars($mess_vars);
 $short_where = $wk['place'];
 $long_where = "{$wk['place']} {$wk['lwhere']}";
 
+if ($wk['location_id'] == ONLINE_LOCATION_ID) {
+	$long_where .= "<br>If possible, wear headphones for the session.<br>\n";
+}
+
 switch ($ac) {
 			
 	case 'sendmsg':
