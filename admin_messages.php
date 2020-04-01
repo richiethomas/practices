@@ -37,7 +37,8 @@ switch ($ac) {
 Title: {$wk['showtitle']}<br>
 $long_where<br>
 When: {$wk['when']}<br>
-Pay via Venmo @willhines or PayPal whines@gmail.com</p>\n";
+Pay via Venmo @willhines or PayPal whines@gmail.com<br>
+<b>LATE DROP POLICY:</b> If you drop within ".LATE_HOURS." hours of the start, you must still pay for your spot.</p>\n";
 
 
 		foreach ($stds as $std) {

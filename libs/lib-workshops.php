@@ -69,14 +69,13 @@ function check_last_minuteness($wk) {
 	
 	/* 
 		there's two flags:
-			1) workshops have "sold_out_late" meaning the workshop was sold out within $late_hours of the start. We update this to 1 or 0 everytime the web site selects the workshop info from the db.
+			1) workshops have "sold_out_late" meaning the workshop was sold out within LATE_HOURS of the start. We update this to 1 or 0 everytime the web site selects the workshop info from the db.
 			2) registrations have a "while_sold_out" flag. if it is set to 1, then you were enrolled in this workshop while it was sold_out_late (i.e. sold out within $late_hours of its start). we also check this every time we select the workshop info. but this never gets set back to zero. 
 			If a "while sold out" person drops, that's not cool. They held a spot during a sold out time close to the start of the workshop.
 	*/ 
 			
-	global $late_hours;
 	$hours_left = (strtotime($wk['start']) - strtotime('now')) / 3600;
-	if ($hours_left > 0 && $hours_left < $late_hours) {
+	if ($hours_left > 0 && $hours_left < LATE_HOURS) {
 		// have we never checked if it's sold out
 		if ($wk['sold_out_late'] == -1) {
 			if ($wk['type'] == 'soldout') {
@@ -220,8 +219,8 @@ function get_workshops_list($admin = 0, $page = 1) {
 function get_workshops_to_come() {
 	
 	// get IDs of workshops
-	$mysqlnow = date("Y-m-d H:i:s");
-	$stmt = \DB\pdo_query("select w.* from workshops w where date(start) >= date('$mysqlnow') order by start asc"); // get public ones to come
+	$mysqlnow = date("Y-m-d H:i:s", strtotime("-3 hours"));
+	$stmt = \DB\pdo_query("select w.* from workshops w where date(w.start) >= date('$mysqlnow') order by start asc"); // get public ones to come
 		
 	$workshops = array();
 	while ($row = $stmt->fetch()) {

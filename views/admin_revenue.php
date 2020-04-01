@@ -23,7 +23,7 @@
 			'suggested_enrolled' => 0
 		);
 		foreach ($workshops_list as $wid => $wk) {
-			echo "<tr><td>({$wk['id']}) {$wk['showtitle']}<br><span class='text-secondary'>{$wk['place']}</span></td>
+			echo "<tr><td>({$wk['id']}) <a href='admin.php?wid={$wk['id']}&ac=ed'>{$wk['showtitle']}</a><br><span class='text-secondary'>{$wk['place']}</span></td>
 			<td>{$wk['attended']} / {$wk['enrolled']} / {$wk['capacity']}</td>
 			<td>{$wk['cost']}</td>
 			<td>".($wk['cost']*$wk['attended'])." / ".($wk['cost']*$wk['enrolled'])."</td>

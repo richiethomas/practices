@@ -208,7 +208,7 @@ function update_change_log($wk, $u, $status_id) {
 
 function get_status_change_log($wk = null) {
 
-	global $sc, $late_hours;
+	global $sc;
 	
 	$sql = "select s.*, u.email, u.display_name, st.status_name, wk.title, wk.start, wk.end, wk.cancelled from status_change_log s, users u, statuses st, workshops wk where WORKSHOPMAYBE  s.workshop_id = wk.id and s.user_id = u.id and s.status_id = st.id order by happened desc";
 	if ($wk) { 

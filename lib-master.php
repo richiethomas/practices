@@ -56,7 +56,7 @@ define('WAITING', Lookups\find_status_by_value('waiting'));
 define('DROPPED', Lookups\find_status_by_value('dropped'));
 define('INVITED', Lookups\find_status_by_value('invited'));
 $late_hours = '24'; // deprecated, use contant in next line
-define('LATE_HOURS', 24);
+define('LATE_HOURS', 12);
 $carriers = array();
 $error = '';
 $message = '';

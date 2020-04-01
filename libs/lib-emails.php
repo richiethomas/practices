@@ -158,7 +158,9 @@ function confirm_email($wk, $u, $status_id = ENROLLED) {
 <b>Where:</b> {$where}<br>
 <b>Cost:</b> \${$wk['cost']} USD<br>
 (Pay with venmo @willhines or PayPal whines@gmail.com)<br>
+<b>LATE DROP POLICY:</b> If you drop within ".LATE_HOURS." hours of the start, you must still pay for your spot.<br>
 <b>Description:</b> {$wk['notes']}</p>
+
 
 $zoom
 
@@ -274,8 +276,7 @@ function shorten_link($link) {
 
 
 function get_dropping_late_warning() {
-	global $late_hours;
-	return "NOTE: You are dropping within {$late_hours} hours of the start, and there was a waiting list. Is there a way you could find someone to take your spot?";
+	return "NOTE: You are dropping within ".LATE_HOURS." hours of the start. Please still pay for your spot!";
 	
 }
 
@@ -305,7 +306,7 @@ Zoom available at: http://www.zoom.us/</dd>
 
 
 <dt>Can I drop out?</dt>
-<dd>Yes, use the link in your confirmation email to go to the web site, where you can drop out.</dd>
+<dd>Yes, use the link in your confirmation email to go to the web site, where you can drop out. If you drop within ".LATE_HOURS." of the start of class, you must still pay for your spot.</dd>
 
 <dt>How should I pay?</dt>
 <dd>Venmo @willhines<br>
