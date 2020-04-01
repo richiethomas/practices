@@ -232,7 +232,7 @@ function get_workshops_to_come() {
 
 
 function how_many_attended($wk) {
-	$stmt = \DB\pdo_query("select count(*) as total_attended from registrations where workshop_id = :wid and status_id = :sid and attended = 1", array(':wid' => $wk['id'], ':sid' => ENROLLED));
+	$stmt = \DB\pdo_query("select count(*) as total_attended from registrations where workshop_id = :wid and attended = 1", array(':wid' => $wk['id']));
 	while ($row = $stmt->fetch()) {
 		return $row['total_attended'];
 	}

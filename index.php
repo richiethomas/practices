@@ -120,7 +120,7 @@ switch ($ac) {
 		if ($e['status_id'] == INVITED) {
 			Enrollments\change_status($wk, $u, ENROLLED, 1);
 			Enrollments\check_waiting($wk);
-			$message = "You are now enrolled in '{$wk['showtitle']}'!";
+			$message = "You are now enrolled in '{$wk['showtitle']}'! Info emailed to <b>{$u['email']}</b>";
 			
 		} else {
 			$error = "You tried to accept an invitation to '{$wk['showtitle']}', but I don't see that there is an open spot.";

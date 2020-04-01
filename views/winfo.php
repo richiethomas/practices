@@ -20,14 +20,14 @@ if ($wk['type'] == 'past') {
 				$point = "A spot opened up in the practice listed below. Would you like to <a class='btn btn-primary' href='$sc?ac=accept&wid={$wk['id']}&key={$key}&v=winfo'>accept</a> it, or <a class='btn btn-primary' href='$sc?ac=decline&wid={$wk['id']}&key={$key}&v=winfo'>decline</a> it?";
 				break;
 			case DROPPED:
-				$point = "You have dropped out of the practice listed below. Would you like to <a class='btn btn-primary'  href='$enroll_link'>re-enroll</a>?";
+				$point = "You have dropped out of the practice listed below. Would you like to <a class='btn btn-primary'  href='$enroll_link'>re-enroll</a>? Info will be sent to <b>{$u['email']}</b>.";
 				break;
 			default:
 	
 				$point = "You are not currenty signed up for the practice listed below. ".
 					($wk['type'] == 'soldout' 
 					? "It is full. Want to <a class='btn btn-primary' href='$enroll_link'>join the wait list</a>?"
-					: "Want to <a class='btn btn-primary' href='$enroll_link'>enroll</a>?");
+					: "Want to <a class='btn btn-primary' href='$enroll_link'>enroll</a>?  Info will be sent to <b>{$u['email']}</b>.");
 	
 				break;
 		}

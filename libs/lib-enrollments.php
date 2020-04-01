@@ -73,7 +73,7 @@ function handle_enroll($wk, $u, $confirm = true) {
 		} else {
 			$keyword = 'is now';
 		}
-		$message = "'{$u['nice_name']}' $keyword enrolled in '{$wk['title']}'!";
+		$message = "'{$u['nice_name']}' $keyword enrolled in '{$wk['title']}'!  Info emailed to <b>{$u['email']}</b>.";
 	} elseif ($status_id == WAITING) {
 		if (!$before) {
 			$keyword = 'has been added to';
