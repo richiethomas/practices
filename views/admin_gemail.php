@@ -18,6 +18,15 @@
 				echo Wbhkit\textarea($status_name, $es, 0);
 
 			}
+			
+			echo "<h3>Enrolled and Unattended</h3>\n";
+			$unat = '';
+			foreach ($unattended as $unattended_email) {
+				$unat .= "{$unattended_email}\n";
+			}
+			echo Wbhkit\textarea('unattended', $unat, 0);
+			
+			
 			echo "</div>\n";
 		}
 		
