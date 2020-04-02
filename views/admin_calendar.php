@@ -1,6 +1,9 @@
 <?php
 	
-	
+
+echo "<h2>Upcoming Workshops</h2>\n";
+echo "<p>Numbers in parenthesis are: <i>(paid / enrolled / capacity / waiting)</i></p>\n";
+
 $current_date = null;
 foreach ($workshops as $wk) {
 
@@ -20,10 +23,7 @@ foreach ($workshops as $wk) {
 	$start = Workshops\friendly_time($wk['start']);
 	$end = Workshops\friendly_time($wk['end']);
 	
-	echo "<li><a href='admin.php?wid={$wk['id']}&ac=ed'>{$wk['title']}</a>, $start-$end (".number_format($wk['enrolled'], 0)." /  ".number_format($wk['capacity'], 0)." / ".number_format($wk['waiting']+$wk['invited']).")";
-	if ($wk['online_url']) {
-		echo " <a href='{$wk['online_url']}'>online link</a>";
-	}
+	echo "<li><a href='admin.php?wid={$wk['id']}&ac=ed'>{$wk['title']}</a>, $start-$end (".number_format($wk['attended'], 0)." / ".number_format($wk['enrolled'], 0)." /  ".number_format($wk['capacity'], 0)." / ".number_format($wk['waiting']+$wk['invited']).")";
 	echo "</li>\n";
 	
 }	

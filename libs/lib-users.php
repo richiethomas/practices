@@ -210,9 +210,10 @@ function find_students($needle = 'everyone', $sort = 'n') {
 	} else {
 		$where = "where a.email like :needle1";
 		$where .= " or a.phone like :needle2";
+		$where .= " or a.display_name like :needle3";
 		
 		$sql = preg_replace('/WHERECLAUSE/', $where, $sql);
-		$stmt = \DB\pdo_query($sql, array(':needle1' => "%$needle%", ':needle2' => "%$needle%" ));
+		$stmt = \DB\pdo_query($sql, array(':needle1' => "%$needle%", ':needle2' => "%$needle%", ':needle3' => "%$needle%" ));
 	}
 	
 	$stds = array();

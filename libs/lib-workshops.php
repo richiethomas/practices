@@ -43,6 +43,7 @@ function fill_out_workshop_row($row, $force_enrollment_stats = false) {
 		foreach ($statuses as $sid => $sname) {
 			$row[$sname] = $enrollments[$sid];
 		}	
+		$row['attended'] = how_many_attended($row);
 		$row['open'] = ($row['enrolled'] >= $row['capacity'] ? 0 : $row['capacity'] - $row['enrolled']);
 		$row = set_workshop_type($row);
 		$row = check_last_minuteness($row);
