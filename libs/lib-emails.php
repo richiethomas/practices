@@ -90,7 +90,7 @@ function confirm_email($wk, $u, $status_id = ENROLLED) {
 			$textpoint = $point." ";
 			$call = "To DROP, click here:\n{$drop}";
 			if ($wk['cost'] > 0) {
-				$call .= "<br><br>To pay, venmo @willhines or PayPal whines@gmail.com.";
+				$call .= "<br><br>Please pay now! Venmo @willhines or PayPal whines@gmail.com.";
 			}
 			$send_faq = false;
 			$email_markup = set_email_markup($e, $wk, $u);
