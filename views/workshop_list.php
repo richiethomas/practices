@@ -31,11 +31,8 @@
 			}
 		
 			echo "<tr class='$cl'>";
-			$titlelink = ($admin 
-				? "<a href='$sc?wid={$row['id']}&ac=ed'>{$row['title']}</a>"
-				: "<a href='$sc?wid={$row['id']}'>{$row['title']} <span class=\"oi oi-info\" title=\"info\" aria-hidden=\"true\"></span></a>");
 			
-			echo "<td><span class='workshoptitle'>{$titlelink}</span>".($row['notes'] ? "<p class='small text-muted'>{$row['notes']}</p>" : '')."</td>
+			echo "<td><span class='workshoptitle'>".($row['type'] == 'soldout' ? 'SOLD OUT: ' : '')."<a href='$sc?wid={$row['id']}".($admin ? '&ac=ed' : '')."'>{$row['title']}</a></span>".($row['notes'] ? "<p class='small text-muted'>{$row['notes']}</p>" : '')."</td>
 			<td>{$row['when']} (PST) {$public}</td>
 			<td>{$row['place']}</td>
 			<td>{$row['costdisplay']}</td>
@@ -44,7 +41,11 @@
 			if ($admin) {
 				echo "<td><a href=\"$sc?wid={$row['id']}\">Clone</a></td></tr>\n";
 			} else {
-				echo "<td><a href=\"{$sc}?wid={$row['id']}&v=winfo\"><span class=\"oi oi-info\" title=\"info\" aria-hidden=\"true\"></span> Go to Sign Up Page</a></td></tr>\n";
+				echo "<td><a href=\"{$sc}?wid={$row['id']}&v=winfo\"><span class=\"oi oi-info\" title=\"info\" aria-hidden=\"true\"></span> Go to Sign Up Page</a>";
+				if ($row['type'] == 'soldout') {
+					echo " to join waiting list";
+				}
+				echo "</td></tr>\n";
 			}
 		}
 

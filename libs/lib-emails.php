@@ -88,6 +88,11 @@ function confirm_email($wk, $u, $status_id = ENROLLED) {
 			$sub = "ENROLLED: {$wk['showtitle']}";
 			$point = "You are ENROLLED in {$wk['showtitle']}.";
 			$textpoint = $point." ";
+
+			if ($wk['location_id'] == ONLINE_LOCATION_ID) {
+				$point .= "\nThe link to your workshop is: {$wk['online_url']}.\nYou will need the Zoom app which you can get for free at http://www.zoom.us/\nPlease wear headphones for the workshop.";
+			}
+
 			$call = "To DROP, click here:\n{$drop}";
 			if ($wk['cost'] > 0) {
 				$call .= "<br><br>Please pay now! Venmo @willhines or PayPal whines@gmail.com.";
@@ -138,15 +143,6 @@ function confirm_email($wk, $u, $status_id = ENROLLED) {
 	}
 
 
-	$zoom = '';
-	$where = '';
-	if ($wk['location_id'] == ONLINE_LOCATION_ID) {
-		$where = "{$wk['place']} {$wk['online_url']}";
-		$zoom = "<p>This is an online class. You will need the Zoom app.<br>You can download that at http://www.zoom.us/<br>The link for this class is: {$wk['online_url']}<br>If possible, wear headphones during the workshop.</p>\n";
-	} else {
-		$where = "{$wk['place']} {$wk['lwhere']}";
-	}
-
 	$body = "<p>$point $late</p>
 
 <p>$call</p>
@@ -155,14 +151,12 @@ function confirm_email($wk, $u, $status_id = ENROLLED) {
 
 <p><b>Title:</b> {$wk['title']}<br>
 <b>When:</b> {$wk['when']} (PST - California time)<br>
-<b>Where:</b> {$where}<br>
+<b>Where:</b> {$wk['place']} {$wk['lwhere']}<br>
 <b>Cost:</b> \${$wk['cost']} USD<br>
-(Pay with venmo @willhines or PayPal whines@gmail.com)<br>
+(Once ENROLLED, pay with venmo @willhines or PayPal whines@gmail.com)<br>
 <b>LATE DROP POLICY:</b> If you drop within ".LATE_HOURS." hours of the start, you must still pay for your spot.<br>
 <b>Description:</b> {$wk['notes']}</p>
 
-
-$zoom
 
 $notifications
 
