@@ -6,6 +6,10 @@ define('EMAIL_PASSWORD', EMAIL PASSWORD HERE);
 
 $db = null;
 
+function get_admin_password() {
+	return ""; // put admin password here  
+}
+
 function pdo_query($sql, $params = null) {
 	global $last_insert_id, $logger;
 	$db = get_connection();

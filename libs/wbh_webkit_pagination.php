@@ -63,13 +63,19 @@ class Paginator {
 
 		$last       = ceil( $this->_total / $this->_limit );
 
-		$start      = ( ( $this->_page - $links ) > 0 ) ? $this->_page - $links : 1;
-		$end        = ( ( $this->_page + $links ) < $last ) ? $this->_page + $links : $last;
+		if ($this->_page == 'all') {
+			$start = 1;
+			$end = $last;
+		} else {
+			$start      = ( ( $this->_page - $links ) > 0 ) ? $this->_page - $links : 1;
+			$end        = ( ( $this->_page + $links ) < $last ) ? $this->_page + $links : $last;
+		}
 
 		$html       = '<nav aria-label="{$aria_label}"><ul class="pagination">'."\n";
 
-		$class      = ( $this->_page == 1 ) ? "disabled" : "";
-		$html       .= '<li class="page-item '.$class.'"><a class="page-link" href="?limit=' . $this->_limit . '&page=' . ( $this->_page - 1 ) . '">&laquo;</a></li>'."\n";
+		$class      = ( $this->_page == 1  || $this->_page == 'all') ? "disabled" : "";
+		$previous_page = ($this->_page == 'all') ? $start : $this->_page - 1;
+		$html       .= '<li class="page-item '.$class.'"><a class="page-link" href="?limit=' . $this->_limit . '&page=' . ( $previous_page ) . '">&laquo;</a></li>'."\n";
 
 		if ( $start > 1 ) {
 			$html   .= '<li class="page-item"><a class="page-link" href="?limit=' . $this->_limit . '&page=1">1</a></li>'."\n";
@@ -86,8 +92,9 @@ class Paginator {
 			$html   .= '<li class="page-item"><a class="page-link" href="?limit=' . $this->_limit . '&page=' . $last . '">' . $last . '</a></li>'."\n";
 		}
 
-		$class      = ( $this->_page == $last ) ? "disabled" : "";
-		$html       .= '<li class="page-item '.$class.'"><a class="page-link" href="?limit=' . $this->_limit . '&page=' . ( $this->_page + 1 ) . '">&raquo;</a></li>'."\n";
+		$class      = ( $this->_page == $last || $this->_page == 'all') ? "disabled" : "";
+		$next_page = ($this->_page == 'all') ? $end : $this->page + 1;
+		$html       .= '<li class="page-item '.$class.'"><a class="page-link" href="?limit=' . $this->_limit . '&page=' . ( $next_page ) . '">&raquo;</a></li>'."\n";
 		
 		$class      = ( $this->_page == 'all') ? "active" : "";
 		$html .= '<li class="page-item '.$class.'"><a class="page-link" href="?page=all">all</a></li>';

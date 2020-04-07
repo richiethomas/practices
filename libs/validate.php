@@ -13,9 +13,7 @@ namespace Validate;
 
 
 
-function get_actual_password() {
-	return '1234';  
-}
+
 
 function get_submitted_password() {
 	if (isset($_POST['talentPass102']) && $_POST['talentPass102'])
@@ -31,7 +29,8 @@ function get_submitted_password() {
 
 
 function is_validated() {
-	if (get_submitted_password() == get_actual_password()) {
+	
+	if (get_submitted_password() == \DB\get_admin_password()) {
 		//redirect if we have JUST validated, 
 		//it avoids going to the page off a form submission
 		if (isset($_REQUEST['validating']) && $_REQUEST['validating'] == 'true') {
@@ -57,7 +56,7 @@ function invalidate() {
 function validate_user() {
 
 	$pass102 = get_submitted_password();
-	$password_to_use = get_actual_password();
+	$password_to_use = \DB\get_admin_password();
 
 	if ($pass102 != $password_to_use) {
 
