@@ -2,6 +2,7 @@
 	
 /*
 * WBH - december 2017, now intertwined with 'db_pdo.php' routines
+* march 2020, added in "all" as an option for page, handled places that bit it on 'non-numeric' values for that
 * 
 * the "createLinks" method builds the parameter "limit" into each link
 * but the rest of my code (the other files) ignores it and does not specify a limit
