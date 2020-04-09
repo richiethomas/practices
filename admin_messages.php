@@ -67,16 +67,13 @@ Pay via Venmo @willhines or PayPal whines@gmail.com<br>
 		if ($wk['type'] == 'past') {
 			$note .= "Actually, it looks like this workshop is in the past, which means this reminder was probably sent in error. But since I'm just a computer, then maybe there's something going on that I don't quite grasp. At any rate, this is a reminder. ";
 		} else {
-			$note .= "It starts ".nicetime($wk['start']).".";
+			$note .= "It starts ".nicetime($wk['start']).". ";
 			if ($wk['location_id'] == ONLINE_LOCATION_ID && $wk['online_url']) {
-				$note .= "Here's the link: {$wk['online_url']}\n"; 
+				$note .= "Here's the link: {$wk['online_url']} \n"; 
 			}
 		}
-		$note .="If you think you're not going to make it, that's fine but use the link below to drop out. ";
-		if ($wk['waiting'] > 0) {
-			$note .= "There are currently people on the waiting list who might want to go. ";
-		}
-		$note .= " Okay, see you soon!";
+		
+		$note .= " See you soon!";
 		
 		$sms = "Reminder: {$wk['title']} workshop, {$wk['friendly_when']}, ".URL;
 		$st = ENROLLED; // pre-populating the status drop in 'send message' form

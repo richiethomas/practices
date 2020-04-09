@@ -1,11 +1,10 @@
 <?php
-$sc = "admin.php";
+$sc = "admin_revenue.php";
 $heading = "practices: admin";
 include 'lib-master.php';
 include 'libs/validate.php';
 
 $v = null;
-
 switch ($ac) {
 	
 	case 'rev':
@@ -27,23 +26,37 @@ switch ($ac) {
 						
 }
 
-$vars = array('searchstart', 'searchend');
+$vars = array('searchstart', 'searchend', 'lastweekstart', 'lastweekend', 'nextweekstart', 'nextweekend');
 Wbhkit\set_vars($vars);
-if ($searchstart) { $searchstart = date('Y-m-d H:i:s', strtotime($searchstart)); }
-if ($searchend) { $searchend = date('Y-m-d H:i:s', strtotime($searchend)); }
+
+// search defaults to current week
+if (!$searchstart && !$searchend) {
+	$searchstart = (date("l") == 'Sunday' ? 'today' : 'last Sunday');
+	$searchend = (date("l") == 'Saturday' ? 'today' : 'next Saturday');
+}
+
+if ($searchstart) { $searchstart = date('Y-m-d 00:00:00', strtotime($searchstart)); }
+if ($searchend) { $searchend = date('Y-m-d 23:59:59', strtotime($searchend)); }
+
+
+
+$lastweekstart = change_date_string($searchstart, '-7 days');
+$lastweekend = change_date_string($searchend, '-7 days');
+$nextweekstart = change_date_string($searchstart, '+7 days');
+$nextweekend = change_date_string($searchend, '+7 days');
+
+
 $view->add_globals($vars);	
 
 $view->data['workshops_list'] = Workshops\get_workshops_list_bydate($searchstart, $searchend, true);
 
-// count attended - doing this here, and not in "get_workshops_list_bydate" since this is the only place I need this info
-foreach ($view->data['workshops_list'] as $workshop) {
-	$total_attended= Workshops\how_many_attended($workshop);
-	$view->data['workshops_list'][$workshop['id']]['attended'] = $total_attended;
-}
-
 $view->renderPage('admin_revenue');
 
 
-
+function change_date_string($timestring, $change) {
+	$lastweek = date_create($timestring);
+	date_modify($lastweek, $change);
+	return date_format($lastweek, 'Y-m-d');
+}
 
 

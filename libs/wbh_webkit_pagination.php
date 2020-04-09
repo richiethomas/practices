@@ -94,7 +94,7 @@ class Paginator {
 		}
 
 		$class      = ( $this->_page == $last || $this->_page == 'all') ? "disabled" : "";
-		$next_page = ($this->_page == 'all') ? $end : $this->page + 1;
+		$next_page = ($this->_page == 'all') ? $end : $this->_page + 1;
 		$html       .= '<li class="page-item '.$class.'"><a class="page-link" href="?limit=' . $this->_limit . '&page=' . ( $next_page ) . '">&raquo;</a></li>'."\n";
 		
 		$class      = ( $this->_page == 'all') ? "active" : "";

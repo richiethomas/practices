@@ -3,6 +3,14 @@
 <?php echo \Wbhkit\texty('searchstart', $searchstart, 'Search Start'); ?>
 <?php echo \Wbhkit\texty('searchend', $searchend, 'Search End'); ?>
 <?php echo \Wbhkit\submit('Update'); ?>
+
+
+<?php
+$weeknav = "<p><a href='admin_revenue.php?searchstart=$lastweekstart&searchend=$lastweekend'>last week</a> | <a href='admin_revenue.php'>this week</a> | <a href='admin_revenue.php?searchstart=$nextweekstart&searchend=$nextweekend'>next week</a></p>\n";
+echo $weeknav;
+?>
+
+
 <?php echo \Wbhkit\hidden('ac', 'rev'); ?>
 
 <table class='table table-striped'>
@@ -37,6 +45,9 @@
 		}
 		echo "<tr><td>Totals:</td><td colspan=2>&nbsp;</td><td>{$totals['suggested_attended']} / {$totals['suggested_enrolled']}</td><td>{$totals['revenue']}</td><td>{$totals['expenses']}</td><td>".($totals['revenue']-$totals['expenses'])."</td></tr>\n";
 		echo "</tbody></table>".Wbhkit\submit('Also Update')."</form>\n";
+		echo $weeknav; 
+		
+		
 		echo "</div></div>\n";
 		
 ?>
