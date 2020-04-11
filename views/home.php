@@ -50,7 +50,7 @@
 <div class="row justify-content-center"><div class="col-md-6 border border-info">
 <h2>How This Works</h2>
 <ul>
-	<li>All class times are PST - California time.</li>
+	<li>All class times are California local time.</li>
 	<li>You log in with your email, a link gets emailed to you, you click it. Then you can enroll in classes, drop out, join waiting lists</li>
 	<li>Pay with Venmo or Paypal</li>
 	<li>Classes are held over <a href="http://www.zoom.us/">Zoom</a></li>
@@ -104,7 +104,7 @@
 			<div class="card text-center text-white bg-success">
 			      <div class="card-body">
 			        <h2 class="card-title"><span class="oi oi-question-mark" title="question-mark" aria-hidden="true"></span><br>Common Questions</h2>
-			        <p class="card-text text-dark">We use the <a class="text-dark font-weight-bold" href="http://www.zoom.us/">Zoom app</a>. Please note the <b>time zone (PST)</b>!</p>
+			        <p class="card-text text-dark">We use the <a class="text-dark font-weight-bold" href="http://www.zoom.us/">Zoom app</a>. Please note the <b>time zone ()</b>!</p>
 			        <a href="<?php echo $sc; ?>?ac=faq" class="btn btn-outline-light">More Common Questions</a>
 			      </div> <!-- end of card body -->
 			    </div> <!-- end of card -->

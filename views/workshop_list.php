@@ -2,7 +2,7 @@
 <table class="table table-striped table-bordered"><thead class="thead-dark">
 		<tr>
 			<th class="workshop-name" scope="col"><span class="oi oi-people" title="people" aria-hidden="true"></span> Workshop</th>
-			<th scope="col"><span class="oi oi-calendar" title="calendar" aria-hidden="true"></span> When (PST)</th>
+			<th scope="col"><span class="oi oi-calendar" title="calendar" aria-hidden="true"></span> When (<?php echo TIMEZONE; ?>)</th>
 			<th scope="col"><span class="oi oi-map" title="map" aria-hidden="true"></span> Where</th>
 			<th scope="col"><span class="oi oi-dollar" title="dollar" aria-hidden="true"></span> Cost</th>
 			<th scope="col"><span class="oi oi-clipboard" title="clipboard" aria-hidden="true"></span> Enrolled</th>
@@ -33,7 +33,7 @@
 			echo "<tr class='$cl'>";
 			
 			echo "<td><span class='workshoptitle'>".($row['type'] == 'soldout' ? 'SOLD OUT: ' : '')."<a href='$sc?wid={$row['id']}".($admin ? '&ac=ed' : '')."'>{$row['title']}</a></span>".($row['notes'] ? "<p class='small text-muted'>{$row['notes']}</p>" : '')."</td>
-			<td>{$row['when']} (PST) {$public}</td>
+			<td>{$row['when']} (".TIMEZONE.") {$public}</td>
 			<td>{$row['place']}</td>
 			<td>{$row['costdisplay']}</td>
 			<td>".number_format($row['enrolled'], 0)." of ".number_format($row['capacity'], 0).",<br> ".number_format($row['waiting']+$row['invited'])." waiting</td>

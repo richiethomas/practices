@@ -150,7 +150,7 @@ function confirm_email($wk, $u, $status_id = ENROLLED) {
 <p>Full info:</p>
 
 <p><b>Title:</b> {$wk['title']}<br>
-<b>When:</b> {$wk['when']} (PST - California time)<br>
+<b>When:</b> {$wk['when']} (California time)<br>
 <b>Where:</b> {$wk['place']} {$wk['lwhere']}<br>
 <b>Cost:</b> \${$wk['cost']} USD<br>
 (Once ENROLLED, pay with venmo @willhines or PayPal whines@gmail.com)<br>

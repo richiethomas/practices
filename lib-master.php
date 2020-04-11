@@ -27,6 +27,7 @@ define('DEBUG_MODE', false);
 define('ERROR_LOG', 'info.txt');
 define('URL', "http://{$_SERVER['HTTP_HOST']}/");
 define('ONLINE_LOCATION_ID', 8);
+define('TIMEZONE', 'PDT');
 
 if (LOCAL) {
 	define('WEBMASTER', "will@willhines.net");	
