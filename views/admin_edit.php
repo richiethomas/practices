@@ -1,6 +1,6 @@
 <?php
 	
-echo "<h2>{$wk['showtitle']}</h2>\n";
+echo "<h2>{$wk['title']}</h2>\n";
 echo "<div class='row mt-md-3 admin-edit-workshop'>\n";
 
 		// enrollment column
@@ -28,12 +28,12 @@ echo "<div class='row mt-md-3 admin-edit-workshop'>\n";
 
 		echo  "</div>"; // end of column
 		
-		//session column
+		//main info column
 		echo  \Wbhkit\form_validation_javascript('wk_edit');
 		echo  "<div class='col-md-5'>
 		<h2>Session Info</h2>
 		<form id='wk_edit' action='$sc' method='post' novalidate>
-		<fieldset name=\"session_edit\">".
+		<fieldset name=\"workshop_edit\">".
 		Workshops\workshop_fields($wk).
 		Wbhkit\hidden('ac', 'up').
 		Wbhkit\hidden('wid', $wk['id']).
@@ -41,7 +41,29 @@ echo "<div class='row mt-md-3 admin-edit-workshop'>\n";
 		"<a class='btn btn-outline-primary' href=\"{$sc}?wid={$wk['id']}&ac=cdel\">Delete This Practice</a>".
 		"</fieldset></form>\n";
 	
+
+		//xtra sessions 
+		echo  \Wbhkit\form_validation_javascript('xtra_edit');
+		echo  "<h2>Xtra Sessions</h2>";
+		if (!empty($wk['sessions'])) {
+			echo "<ul>\n";
+			foreach ($wk['sessions'] as $s) {
+				echo "<li>{$s['friendly_when']} <a href='$sc?ac=delxtra&xtraid={$s['id']}&wid={$wk['id']}'>delete</a></li>\n";
+			}
+			echo "</ul>\n";
+		}
 		
+		echo "<form id='xtra_edit' action='$sc' method='post' novalidate>
+		<fieldset name=\"sessions_edit\">".
+		Wbhkit\texty('start', null, null, null, null, 'Required', ' required ').
+		Wbhkit\texty('end', null, null, null, null, 'Required', ' required ').
+		Wbhkit\hidden('ac', 'adxtra').
+		Wbhkit\hidden('wid', $wk['id']).
+		Wbhkit\submit('Add Session');
+
+		echo "</fieldset></form>\n";
+		
+
 	echo  \Wbhkit\form_validation_javascript('add_student');
 	echo  "<h2>Add Student</h2><form id='add_student' class='form-inline' action='$sc' method='post' novalidate><fieldset name='new_student'>".
 	Wbhkit\hidden('ac', 'enroll').

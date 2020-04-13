@@ -112,7 +112,7 @@ switch ($ac) {
 		}
 		if ($wk['cancelled']) {
 			$error = 'Cannot accept invite. This workshop has been cancelled.';
-			$logger->debug("Rejected invite for {$u['nice_name']} since {$wk['showtitle']} is cancelled.");
+			$logger->debug("Rejected invite for {$u['nice_name']} since {$wk['title']} is cancelled.");
 			
 			break;
 		}
@@ -120,11 +120,11 @@ switch ($ac) {
 		if ($e['status_id'] == INVITED) {
 			Enrollments\change_status($wk, $u, ENROLLED, 1);
 			Enrollments\check_waiting($wk);
-			$message = "You are now enrolled in '{$wk['showtitle']}'! Info emailed to <b>{$u['email']}</b>.";
+			$message = "You are now enrolled in '{$wk['title']}'! Info emailed to <b>{$u['email']}</b>.";
 			
 		} else {
-			$error = "You tried to accept an invitation to '{$wk['showtitle']}', but I don't see that there is an open spot.";
-			$logger->debug("Rejected invite for {$u['nice_name']} since {$wk['showtitle']} is full.");
+			$error = "You tried to accept an invitation to '{$wk['title']}', but I don't see that there is an open spot.";
+			$logger->debug("Rejected invite for {$u['nice_name']} since {$wk['title']} is full.");
 		}
 		break;
 
@@ -136,7 +136,7 @@ switch ($ac) {
 		}
 		if ($wk['cancelled']) {
 			$error = 'This workshop has been cancelled.';
-			$logger->debug("Rejected decline for {$u['nice_name']} since {$wk['showtitle']} is cancelled.");
+			$logger->debug("Rejected decline for {$u['nice_name']} since {$wk['title']} is cancelled.");
 			break;
 		}
 	
@@ -144,10 +144,10 @@ switch ($ac) {
 		if ($e['status_id'] == INVITED) {
 			Enrollments\change_status($wk, $u, DROPPED, 1);
 			Enrollments\check_waiting($wk);
-			$message = "You have dropped out of the waiting list for '{$wk['showtitle']}'.";			
+			$message = "You have dropped out of the waiting list for '{$wk['title']}'.";			
 		} else {
-			$error = "You tried to decline an invitation to '{$wk['showtitle']}', but I don't see that there was an open spot.";
-			$logger->debug("Rejected decline for {$u['nice_name']} since {$wk['showtitle']} is full.");
+			$error = "You tried to decline an invitation to '{$wk['title']}', but I don't see that there was an open spot.";
+			$logger->debug("Rejected decline for {$u['nice_name']} since {$wk['title']} is full.");
 			
 		}
 		break;
@@ -155,7 +155,7 @@ switch ($ac) {
 	case 'enroll':
 		if ($wk['cancelled']) {
 			$error = 'This workshop has been cancelled.';
-			$logger->debug("{$u['nice_name']} cannot enroll since {$wk['showtitle']} is cancelled.");
+			$logger->debug("{$u['nice_name']} cannot enroll since {$wk['title']} is cancelled.");
 			
 			break;
 		}	
@@ -181,7 +181,7 @@ switch ($ac) {
 		}
 		if ($wk['cancelled']) {
 			$error = 'This workshop has been cancelled.';
-			$logger->debug("{$u['nice_name']} tried to drop from {$wk['showtitle']} but it's cancelled.");
+			$logger->debug("{$u['nice_name']} tried to drop from {$wk['title']} but it's cancelled.");
 			
 			break;
 		}
@@ -246,7 +246,7 @@ switch ($ac) {
 
 // if a $wid was passed in, we'll show that page
 if ($wid) {
-	$wk = Workshops\fill_out_workshop_row($wk, true);
+	$wk = Workshops\fill_out_workshop_row($wk);
 	$view->data['e'] = Enrollments\get_an_enrollment($wk, $u);
 	$view->data['workshop_tabled'] = Workshops\get_workshop_info_tabled($wk);
 	$view->renderPage('winfo');

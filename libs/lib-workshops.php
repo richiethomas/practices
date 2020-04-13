@@ -1,24 +1,21 @@
 <?php
 namespace Workshops;
 	
-
-
 // workshops
-function get_workshop_info($id, $force_enrollment_stats = false) {
+function get_workshop_info($id) {
 	$statuses = \Lookups\get_statuses();
 	$locations = \Lookups\get_locations();
 	
 	$stmt = \DB\pdo_query("select w.* from workshops w where w.id = :id", array(':id' => $id));
 	while ($row = $stmt->fetch()) {
-		$row = fill_out_workshop_row($row, $force_enrollment_stats);
+		$row = fill_out_workshop_row($row);
 		return $row;
 
 	}
 	return false;
 }
 
-function fill_out_workshop_row($row, $force_enrollment_stats = false) {
-	$statuses = \Lookups\get_statuses();
+function fill_out_workshop_row($row) {
 	$locations = \Lookups\get_locations();
 	
 	foreach (array('address', 'city', 'state', 'zip', 'place', 'lwhere') as $loc_field) {
@@ -38,19 +35,43 @@ function fill_out_workshop_row($row, $force_enrollment_stats = false) {
 	
 	$row['costdisplay'] = $row['cost'] ? $row['cost'] : 'Pay what you can / donation';
 	
-	if ($row['type'] != 'past' || $force_enrollment_stats) {
-		$enrollments = \Enrollments\get_enrollments($row['id']);
-		foreach ($statuses as $sid => $sname) {
-			$row[$sname] = $enrollments[$sid];
-		}	
-		$row['attended'] = how_many_attended($row);
-		$row['open'] = ($row['enrolled'] >= $row['capacity'] ? 0 : $row['capacity'] - $row['enrolled']);
-		$row = set_workshop_type($row);
-		$row = check_last_minuteness($row);
+	$row['sessions'] = \XtraSessions\get_xtra_sessions($row['id']);	
+	
+	// when is the next starting sessions
+	// if all are in past, set this to most recent one
+	$row['nextstart'] = $row['start'];
+	$row['nextend'] = $row['end'];
+	if (!is_future($row['nextstart'])) {
+		foreach ($row['sessions'] as $s) {
+			if (is_future($s['start'])) {
+				$row['nextstart'] = $s['start'];
+				$row['nextend'] = $s['end'];
+				break; // found the next start
+			}
+		}
 	}
+	
+	$row = set_enrollment_stats($row);
+	$row = set_workshop_type($row);
+	$row = check_last_minuteness($row);
 	
 	return $row;
 	
+}
+
+
+// used in fill_out_workshop_row and also get_sessions_to_come
+// expects 'id' and 'capacity' to be set
+function set_enrollment_stats($row) {
+	$statuses = \Lookups\get_statuses();
+	
+	$enrollments = \Enrollments\get_enrollments($row['id']);
+	foreach ($statuses as $sid => $sname) {
+		$row[$sname] = $enrollments[$sid];
+	}	
+	$row['attended'] = how_many_attended($row);
+	$row['open'] = ($row['enrolled'] >= $row['capacity'] ? 0 : $row['capacity'] - $row['enrolled']);
+	return $row;
 }
 
 function set_workshop_type($row) {
@@ -131,50 +152,19 @@ function get_workshops_dropdown($start = null, $end = null) {
 	$workshops = array();
 	while ($row = $stmt->fetch()) {
 		$row = format_workshop_startend($row);
-		$workshops[$row['id']] = $row['showtitle'];
+		$workshops[$row['id']] = $row['title'];
 	}
 	return $workshops;
 }
 
-function friendly_time($time_string) {
-	$ts = strtotime($time_string);
-	$minutes = date('i', $ts);
-	if ($minutes == 0) {
-		return date('ga', $ts);
-	} else {
-		return date('g:ia', $ts);
-	}
-}
-
-function friendly_date($time_string) {
-	$now_doy = date('z'); // day of year
-	$wk_doy = date('z', strtotime($time_string)); // workshop day of year
-	
-	if ($wk_doy - $now_doy < 7) {
-		return date('l', strtotime($time_string)); // Monday, Tuesday, Wednesday
-	} elseif (date('Y', strtotime($time_string)) != date('Y')) {  
-		return date('D M j, Y', strtotime($time_string));
-	} else {
-		return date('D M j', strtotime($time_string));
-	}
-}	
-	
-	
-
 // pass in the workshop row as it comes from the database table
 // add some columns with date / time stuff figured out
 function format_workshop_startend($row) {
-	if (date('Y', strtotime($row['start'])) != date('Y')) {
-		$row['showstart'] = date('D M j, Y - g:ia', strtotime($row['start']));
-	} else {
-		$row['showstart'] = date('D M j - g:ia', strtotime($row['start']));
-	}
+	$row['showstart'] = friendly_date($row['start']).' '.friendly_time($row['start']);
 	$row['showend'] = friendly_time($row['end']);
-	$row['friendly_when'] = friendly_date($row['start']).' '.friendly_time($row['start']);
 	if ($row['cancelled']) {
 		$row['title'] = "CANCELLED: {$row['title']}";
 	}
-	$row['showtitle'] = "{$row['title']} - {$row['showstart']}-{$row['showend']}";
 	$row['when'] = "{$row['showstart']}-{$row['showend']}";
 		
 	return $row;
@@ -202,7 +192,7 @@ function get_workshops_list($admin = 0, $page = 1) {
 	if ($rows->total > 0) {
 		$workshops = array();
 		foreach ($rows->data as $row ) {
-			$workshops[] = fill_out_workshop_row($row, true);
+			$workshops[] = fill_out_workshop_row($row);
 		}
 	} else {
 		return "<p>No upcoming workshops!</p>\n";	// this skips $body variable contents	
@@ -217,18 +207,22 @@ function get_workshops_list($admin = 0, $page = 1) {
 
 
 // data only, for admin_calendar
-function get_workshops_to_come() {
+function get_sessions_to_come() {
 	
 	// get IDs of workshops
 	$mysqlnow = date("Y-m-d H:i:s", strtotime("-3 hours"));
-	$stmt = \DB\pdo_query("select w.* from workshops w where date(w.start) >= date('$mysqlnow') order by start asc"); // get public ones to come
+	
+	$stmt = \DB\pdo_query("
+(select id, title, start, end, capacity from workshops where date(start) >= date('$mysqlnow'))
+union
+(select x.workshop_id, w.title, x.start, x.end, w.capacity from xtra_sessions x, workshops w where w.id = x.workshop_id and date(x.start) >= date('$mysqlnow'))
+order by start asc"); 
 		
-	$workshops = array();
+	$sessions = array();
 	while ($row = $stmt->fetch()) {
-		$workshops[$row['id']] = fill_out_workshop_row($row, true);
+		$sessions[] = set_enrollment_stats($row);
 	}
-		
-	return $workshops;
+	return $sessions;
 }
 
 
@@ -240,7 +234,7 @@ function how_many_attended($wk) {
 	return 0;
 }
 
-function get_workshops_list_bydate($start = null, $end = null, $force_enrollment_stats = false) {
+function get_workshops_list_bydate($start = null, $end = null) {
 	if (!$start) { $start = "Jan 1 1000"; }
 	if (!$end) { $end = "Dec 31 9000"; }
 	
@@ -248,7 +242,7 @@ function get_workshops_list_bydate($start = null, $end = null, $force_enrollment
 	
 	$workshops = array();
 	while ($row = $stmt->fetch()) {
-		$workshops[$row['id']] = fill_out_workshop_row($row, $force_enrollment_stats);
+		$workshops[$row['id']] = fill_out_workshop_row($row);
 	}
 	return $workshops;
 }	
@@ -271,6 +265,7 @@ function get_empty_workshop() {
 		'cancelled' => null
 	);
 }
+
 function add_workshop_form($wk) {
 	global $sc;
 	return "<form id='add_wk' action='$sc' method='post' novalidate>".
@@ -339,9 +334,52 @@ function add_update_workshop($wk, $ac = 'up') {
 			$params);
 			return $last_insert_id; // set as a global by my dbo routines
 		}
-
-
-		
 	
+}
+
+function delete_workshop($workshop_id) {
+	$stmt = \DB\pdo_query("delete from registrations where workshop_id = :wid", array(':wid' => $workshop_id));
+	$stmt = \DB\pdo_query("delete from xtra_sessions where workshop_id = :wid", array(':wid' => $workshop_id));
+	$stmt = \DB\pdo_query("delete from workshops where id = :wid", array(':wid' => $workshop_id));
+
+}
+
+/*
+* time date functions
+*/
+
+function friendly_time($time_string) {
+	$ts = strtotime($time_string);
+	$minutes = date('i', $ts);
+	if ($minutes == 0) {
+		return date('ga', $ts);
+	} else {
+		return date('g:ia', $ts);
+	}
+}
+
+function friendly_date($time_string) {
+	$now_doy = date('z'); // day of year
+	$wk_doy = date('z', strtotime($time_string)); // workshop day of year
+
+	if ($wk_doy - $now_doy < 7) {
+		return date('l', strtotime($time_string)); // Monday, Tuesday, Wednesday
+	} elseif (date('Y', strtotime($time_string)) != date('Y')) {  
+		return date('D M j, Y', strtotime($time_string));
+	} else {
+		return date('D M j', strtotime($time_string));
+	}
+}	
+
+function friendly_when($time_string) {
+	return friendly_date($time_string).' '.friendly_time($time_string);
+}
+
+function is_future($time_string) {
+	if (strtotime($time_string) > strtotime('now')) {
+		return 1;
+	} else {
+		return 0;
+	}
 }
 

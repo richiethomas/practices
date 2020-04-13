@@ -1,5 +1,18 @@
 <?php
 	
+	
+	
+$sessions = '';
+if (!empty($wk['sessions'])) {
+	$sessions ="<p>\n";
+	$sessions .= "{$wk['when']}";
+	foreach ($wk['sessions'] as $s) {
+		$sessions .= "<br>\n{$s['friendly_when']}";
+	}
+	$sessions .= "</p>\n";
+	$wk['when'] = $sessions; // replace the when variable 
+}	
+	
 echo "<table class=\"table table-striped table-bordered\">
 		<tbody>
 		<tr><td scope=\"row\"><span class='oi oi-people' title='people' aria-hidden='true'></span> Workshop:</td><td>{$wk['title']}</tr>

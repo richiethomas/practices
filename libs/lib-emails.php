@@ -80,13 +80,25 @@ function confirm_email($wk, $u, $status_id = ENROLLED) {
 	}
 	
 	
+	
+	//multiple sessions
+	$sessions = '';
+	if (!empty($wk['sessions'])) {
+		$sessions = "{$wk['when']}";
+		foreach ($wk['sessions'] as $s) {
+			$sessions .= "<br>\n{$s['friendly_when']}";
+		}
+		$sessions .= "<br>\n";
+		$wk['when'] = $sessions; // replace the when variable 
+	}
+	
+	
 	$send_faq = false;
-	$email_markup = null;
 	switch ($status_id) {
 		case 'already':
 		case ENROLLED:
-			$sub = "ENROLLED: {$wk['showtitle']}";
-			$point = "You are ENROLLED in {$wk['showtitle']}.";
+			$sub = "ENROLLED: {$wk['title']}";
+			$point = "You are ENROLLED in {$wk['title']}.";
 			$textpoint = $point." ";
 
 			if ($wk['location_id'] == ONLINE_LOCATION_ID) {
@@ -98,33 +110,31 @@ function confirm_email($wk, $u, $status_id = ENROLLED) {
 				$call .= "<br><br>Please pay now! Venmo @willhines or PayPal whines@gmail.com.";
 			}
 			$send_faq = false;
-			$email_markup = set_email_markup($e, $wk, $u);
 			break;
 		case WAITING:
-			$sub = "WAIT LIST: {$wk['showtitle']}";
-			$point = "You are wait list spot {$e['rank']} for {$wk['showtitle']}:";
+			$sub = "WAIT LIST: {$wk['title']}";
+			$point = "You are wait list spot {$e['rank']} for {$wk['title']}:";
 			$textpoint = $point." ";
 			$call = "To DROP, click here:\n{$drop}";
 			break;
 		case INVITED:
-			$sub = "INVITED: {$wk['showtitle']} -- PLEASE RESPOND";
-			$point = "A spot opened up in ({$wk['showtitle']}.";
+			$sub = "INVITED: {$wk['title']} -- PLEASE RESPOND";
+			$point = "A spot opened up in ({$wk['title']}.";
 			$textpoint = $point." ACCEPT or DECLINE: ";
 			$call = "To ACCEPT, click here:\n{$accept}<br><br>To DECLINE, click here:\n{$decline}";
 			break;
 		case DROPPED:
-			$sub = "DROPPED: {$wk['showtitle']}";
-			$point = "You have dropped out of {$wk['showtitle']}";
+			$sub = "DROPPED: {$wk['title']}";
+			$point = "You have dropped out of {$wk['title']}";
 			$textpoint = $point." ";
 			if ($e['while_soldout'] == 1) {
 				$late .= "<br><i>".get_dropping_late_warning()."</i>";
 			}
 			$call = "If you change your mind, re-enroll here:\n{$enroll}";
-			$email_markup = set_email_markup($e, $wk, $u, true); // cancel event
 			break;
 		default:
-			$sub = "{$statuses[$status_id]}: {$wk['showtitle']}";
-			$point = "You are a status of '{$statuses[$status_id]}' for {$wk['showtitle']}";
+			$sub = "{$statuses[$status_id]}: {$wk['title']}";
+			$point = "You are a status of '{$statuses[$status_id]}' for {$wk['title']}";
 			$textpoint = $point." ";
 			break;
 	}
@@ -149,86 +159,19 @@ function confirm_email($wk, $u, $status_id = ENROLLED) {
 
 <p>Full info:</p>
 
-<p><b>Title:</b> {$wk['title']}<br>
-<b>When:</b> {$wk['when']} (California time)<br>
-<b>Where:</b> {$wk['place']} {$wk['lwhere']}<br>
-<b>Cost:</b> \${$wk['cost']} USD<br>
+<p><b>Title:</b> {$wk['title']}</p>
+<p><b>When:</b> {$wk['when']} (California time)</p>
+<p>Where:</b> {$wk['place']} {$wk['lwhere']}</p>
+<p>Cost:</b> \${$wk['cost']} USD</p>
 (Once ENROLLED, pay with venmo @willhines or PayPal whines@gmail.com)<br>
-<b>LATE DROP POLICY:</b> If you drop within ".LATE_HOURS." hours of the start, you must still pay for your spot.<br>
-<b>Description:</b> {$wk['notes']}</p>
-
+<p>LATE DROP POLICY:</b> If you drop within ".LATE_HOURS." hours of the start, you must still pay for your spot.</p>
+<p>Description:</b> {$wk['notes']}</p>
 
 $notifications
 
 ".email_footer($send_faq);	
 
-
-if ($email_markup) {
-	$body = "<html>
-<head>
-{$email_markup}
-</head>
-<body>
-{$body}
-</body>
-</html>\n";
-}
-	
 	return centralized_email($u['email'], "{$sub}", $body);
-}
-
-
-function set_email_markup($e, $wk, $u, $cancel = false) {
-
-	if ($cancel) {
-		$status = "http://schema.org/Cancelled";
-	} else {
-		$status = "http://schema.org/Confirmed";
-	}	
-
-	// make start/end ISO friendly
-	$wk['start'] = date(DATE_ISO8601, strtotime($wk['start']));
-	$wk['end'] = date(DATE_ISO8601, strtotime($wk['end']));
-
-
- return "<script type=\"application/ld+json\">
- {
-   \"@context\": \"http://schema.org\",
-   \"@type\": \"EventReservation\",
-   \"reservationNumber\": \"wbhwk{$e['id']}\",
-    \"reservationStatus\": \"{$status}\",
-   \"underName\": {
-     \"@type\": \"Person\",
-     \"name\": \"{$u['nice_name']}\"
-   },
-   \"reservationFor\": {
-     \"@type\": \"Event\",
-     \"name\": \"{$wk['title']}\",
-     \"startDate\": \"{$wk['start']}\",
- 	 \"endDate\": \"{$wk['end']}\",
-     \"performer\": {
-          \"@type\": \"Person\",
-          \"name\": \"Will Hines\",
-          \"image\": \"http://willhines.net/home_files/wh_clay_med.jpg\"
-        },
-     \"location\": {
-       \"@type\": \"Place\",
-       \"name\": \"{$wk['place']}\",
-       \"address\": {
-         \"@type\": \"PostalAddress\",
-         \"streetAddress\": \"{$wk['address']}\",
-         \"addressLocality\": \"{$wk['city']}\",
-         \"addressRegion\": \"{$wk['state']}\",
-         \"postalCode\": \"{$wk['zip']}\",
-         \"addressCountry\": \"US\"
-       }
-     }
-   },
-   \"modifiedTime\": \"".date("Y-m-d H:i:s")."\",
-   \"modifyReservationUrl\": \"http://willhines.net/practices/index.php?wid={$wk['id']}&key={$u['ukey']}\"
- }
- </script>";
-	
 }
 
 

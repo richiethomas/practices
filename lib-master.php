@@ -48,7 +48,7 @@ include 'libs/lib-workshops.php';
 include 'libs/lib-enrollments.php';
 include 'libs/lib-lookups.php';
 include 'libs/lib-emails.php';
-
+include 'libs/lib-xtra-sessions.php';
 
 $statuses = Lookups\get_statuses();
 $locations = Lookups\get_locations();

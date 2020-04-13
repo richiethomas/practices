@@ -173,6 +173,29 @@ CREATE TABLE `workshops` (
   `when_public` datetime DEFAULT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
+
+
+CREATE TABLE `xtra_sessions` (
+  `id` int(11) NOT NULL,
+  `workshop_id` int(11) DEFAULT NULL,
+  `start` datetime DEFAULT NULL,
+  `end` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+ALTER TABLE `xtra_sessions`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `xtra_sessions`
+--
+ALTER TABLE `xtra_sessions`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- Indexes for dumped tables
 --

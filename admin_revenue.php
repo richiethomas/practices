@@ -48,7 +48,7 @@ $nextweekend = change_date_string($searchend, '+7 days');
 
 $view->add_globals($vars);	
 
-$view->data['workshops_list'] = Workshops\get_workshops_list_bydate($searchstart, $searchend, true);
+$view->data['workshops_list'] = Workshops\get_workshops_list_bydate($searchstart, $searchend);
 
 $view->renderPage('admin_revenue');
 

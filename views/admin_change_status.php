@@ -1,5 +1,5 @@
 <?php
-		echo  "<div class='row'><div class='col-md-5'><h2><a href='$sc?ac=ed&wid={$wk['id']}'>{$wk['showtitle']}</a></h2>".
+		echo  "<div class='row'><div class='col-md-5'><h2><a href='$sc?ac=ed&wid={$wk['id']}'>{$wk['title']}</a></h2>".
 		"<p>Email: {$u['email']}</p>
 		<p>Display Name: {$u['display_name']}</p>
 		<p>Status: {$e['status_name']}</p>";
