@@ -1,4 +1,4 @@
-<div class='row'><div class='col-md-9'><h2>attendance for <a href='admin.php?ac=ed&wid=<?php echo $wk['id']; ?>'><?php echo $wk['showtitle']; ?></a></h2>
+<div class='row'><div class='col-md-9'><h2>attendance for <a href='admin.php?ac=ed&wid=<?php echo $wk['id']; ?>'><?php echo $wk['title']; ?></a></h2>
 	
 <div id='emaillists'>
 <form action='<?php echo $sc; ?>?' method='post'>

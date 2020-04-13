@@ -4,7 +4,7 @@ $heading = "practices: admin";
 include 'lib-master.php';
 include 'libs/validate.php';
 
-$wk_vars = array('wid', 'title', 'notes', 'start', 'end', 'lid', 'online_url', 'cost', 'capacity', 'notes', 'revenue', 'expenses', 'when_public', 'email', 'con', 'cancelled');
+$wk_vars = array('wid', 'title', 'notes', 'start', 'end', 'lid', 'online_url', 'cost', 'capacity', 'notes', 'revenue', 'expenses', 'when_public', 'email', 'con', 'cancelled', 'xtraid');
 Wbhkit\set_vars($wk_vars);
 
 $change_status_vars = array('st', 'con', 'lmod');
@@ -53,7 +53,7 @@ switch ($ac) {
 
 	case 'conrem':
 		Enrollments\drop_session($wk, $u);
-		$message = "Removed user ({$u['email']}) from practice '{$wk['showtitle']}'";
+		$message = "Removed user ({$u['email']}) from practice '{$wk['title']}'";
 		$logger->info($message);
 		$v = 'ed';
 		break;
@@ -84,8 +84,7 @@ switch ($ac) {
 		break;
 	
 	case 'del':
-		$stmt = \DB\pdo_query("delete from registrations where workshop_id = :wid", array(':wid' => $wk['id']));
-		$stmt = \DB\pdo_query("delete from workshops where id = :wid", array(':wid' => $wk['id']));
+		Workshops\delete_workshop($wk['id']);
 		$message = "Deleted '{$wk['title']}'";
 		$logger->info($message);
 		$v= 'home';
@@ -95,7 +94,20 @@ switch ($ac) {
 		if ($st) {
 			$message = Enrollments\change_status($wk, $u, $st, $con);
 		}
-		break;						
+		break;	
+		
+	case 'adxtra':	
+		XtraSessions\add_xtra_session($wid, $start, $end);
+		$wk = Workshops\fill_out_workshop_row($wk);
+		$v = 'ed';
+		break;
+		
+	case 'delxtra':
+		XtraSessions\delete_xtra_session($xtraid);
+		$wk = Workshops\fill_out_workshop_row($wk);
+		$v = 'ed';
+		break;
+							
 }
 
 if (!$v && $ac) { 
@@ -121,7 +133,7 @@ switch ($v) {
 		$data['log'] = Enrollments\get_status_change_log($wk);
 		$status_log = $view->renderSnippet('admin_status', $data);
 		
-		$view->add_globals(array('stats', 'statuses', 'lists', 'status_log'));		
+		$view->add_globals(array('stats', 'statuses', 'lists', 'status_log'));	
 		$view->renderPage('admin_edit');
 		break;
 

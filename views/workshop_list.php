@@ -16,6 +16,17 @@
 			if ($admin && $row['when_public']) {
 				$public = "<br><small>Public: ".date('D M j - g:ia', strtotime($wk['when_public']))."</small>\n";
 			}	
+			
+			$sessions = '';
+			if (!empty($row['sessions'])) {
+				$sessions ="<p>\n";
+				$sessions .= "{$row['when']}";
+				foreach ($row['sessions'] as $s) {
+					$sessions .= "<br>\n{$s['friendly_when']}";
+				}
+				$sessions .= "</p>\n";
+				$row['when'] = $sessions; // replace the when variable 
+			}
 					
 			$cl = 'table-';
 			if (date('z', strtotime($row['start'])) == date('z')) { // today

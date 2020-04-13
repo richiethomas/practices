@@ -20,6 +20,18 @@
 			$cl .= 'warning';
 		}
 		
+		
+		$sessions = '';
+		if (!empty($t['sessions'])) {
+			$sessions ="<p>\n";
+			$sessions .= "{$t['when']}";
+			foreach ($t['sessions'] as $s) {
+				$sessions .= "<br>\n{$s['friendly_when']}";
+			}
+			$sessions .= "</p>\n";
+			$t['when'] = $sessions; // replace the when variable 
+		}
+		
 		echo "<tr class='$cl'><td>";
 		if ($admin) {
 			echo "<a href=\"admin.php?wid={$t['workshop_id']}&ac=ed\">{$t['title']}</a>";
