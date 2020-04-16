@@ -27,5 +27,24 @@ foreach ($workshops as $wk) {
 	echo "</li>\n";
 	
 }	
+
+
+
 echo "</ul>\n";
+
+
+echo "<h2>First Sesssions</h2>\n";
+echo "<h5>All times PDT - California time</h5>\n";
+echo "<ul>\n";
+foreach ($workshops as $wk) {
+	if ($wk['xtra']) { continue; } // first sessoins only
+	$wkdate = date("l F j", strtotime($wk['start']));
+	$start = Workshops\friendly_time($wk['start']);
+	$end = Workshops\friendly_time($wk['end']);
+	
+	echo "<li>$wkdate: {$wk['title']}, $start-$end \${$wk['cost']} (USD)</li>\n";
+	
+}	
+echo "</ul>\n";
+
 ?>
