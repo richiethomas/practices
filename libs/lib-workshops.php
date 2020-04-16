@@ -213,9 +213,9 @@ function get_sessions_to_come() {
 	$mysqlnow = date("Y-m-d H:i:s", strtotime("-3 hours"));
 	
 	$stmt = \DB\pdo_query("
-(select id, title, start, end, capacity from workshops where date(start) >= date('$mysqlnow'))
+(select id, title, start, end, capacity, 0 as xtra from workshops where date(start) >= date('$mysqlnow'))
 union
-(select x.workshop_id, w.title, x.start, x.end, w.capacity from xtra_sessions x, workshops w where w.id = x.workshop_id and date(x.start) >= date('$mysqlnow'))
+(select x.workshop_id, w.title, x.start, x.end, w.capacity, 1 as xtra from xtra_sessions x, workshops w where w.id = x.workshop_id and date(x.start) >= date('$mysqlnow'))
 order by start asc"); 
 		
 	$sessions = array();
