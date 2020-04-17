@@ -41,6 +41,15 @@ function get_an_enrollment($wk, $u) {
 }
 
 
+function get_enrollment_ids_for_user($uid) {
+	$stmt = \DB\pdo_query("select * from registrations where user_id = :uid", array(':uid' => $uid));
+	$es = array();
+	while ($row = $stmt->fetch()) {
+		$es[] = $row['id'];
+	}
+	return $es;	
+}
+
 // figures what the user should be
 // figures if there's been a previous registration
 function handle_enroll($wk, $u, $confirm = true) {
@@ -166,10 +175,16 @@ function check_waiting($wk) {
 	return "No invites sent.";
 }
 
-function update_attendance($wid, $uid, $attended = 1) {
+function update_paid($wid, $uid, $attended = 1) {
 	$stmt = \DB\pdo_query("update registrations set attended = :attended where workshop_id = :wid and user_id = :uid", array(':attended' => $attended, ':wid' => $wid, ':uid' => $uid));
 	return "Updated user ($uid) workshop ($wid) to attended: $attended";
 }
+
+function update_paid_by_enrollment_id($eid, $attended = 1) {
+	$stmt = \DB\pdo_query("update registrations set attended = :attended where id = :rid", array(':attended' => $attended, ':rid' => $eid));
+	return "Updated enrollment id ($eid) to attended: $attended";
+}
+
 
 function change_status($wk, $u, $status_id = ENROLLED, $confirm = true) {
 				
@@ -274,7 +289,7 @@ function get_transcript_tabled($u, $admin = false, $page = 1) {
 	if (!$u || !isset($u['id'])) {
 		return "<p>Not logged in!</p>\n";
 	}
-	$sql = "select * from registrations r, workshops w, locations l where r.workshop_id = w.id and w.location_id = l.id and r.user_id = :uid order by w.start desc";
+	$sql = "select *, r.id as enrollment_id from registrations r, workshops w, locations l where r.workshop_id = w.id and w.location_id = l.id and r.user_id = :uid order by w.start desc";
 	$params = array(':uid' => $u['id']);
 	
 	// rank
@@ -309,6 +324,7 @@ function get_transcript_tabled($u, $admin = false, $page = 1) {
 		$past_classes[] = $d;
 	}
 	
+	$view->data['uid'] = $u['id'];
 	$view->data['statuses'] = \Lookups\get_statuses();
 	$view->data['admin'] = $admin;
 	$view->data['links'] = $links;

@@ -1,7 +1,18 @@
-<?php echo $links; ?>
+<?php 
+echo $links; 
+
+
+if ($admin) {
+	echo "<form action='$sc' method='post'>\n";
+	echo Wbhkit\hidden('ac', 'at'); 	
+	echo Wbhkit\hidden('uid', "$uid"); 	
+}
+
+?>
+
 <table class="table table-striped table-bordered"><thead class="thead-dark">
 		<tr>
-			<th class="workshop-name" scope="col"><span class="oi oi-people" title="people" aria-hidden="true"></span> Workshop</th>
+			<th class="workshop-name" scope="col"><span class="oi oi-people" title="people" aria-hidden="true"></span> <?php if ($admin) { echo "(paid?) "; } ?>Workshop</th>
 			<th scope="col"><span class="oi oi-calendar" title="calendar" aria-hidden="true"></span> When (<?php echo TIMEZONE; ?>)</th>
 			<th scope="col"><span class="oi oi-map" title="map" aria-hidden="true"></span> Where</th>
 			<th scope="col"><span class="oi oi-pulse" title="pulse" aria-hidden="true"></span> Status</th>
@@ -34,7 +45,7 @@
 		
 		echo "<tr class='$cl'><td>";
 		if ($admin) {
-			echo "<a href=\"admin.php?wid={$t['workshop_id']}&ac=ed\">{$t['title']}</a>";
+			echo Wbhkit\checkbox('paids', $t['enrollment_id'], "<a href=\"admin.php?wid={$t['workshop_id']}&ac=ed\">{$t['title']}</a>", $t['attended'], true);
 		} else {
 			echo "<a href=\"index.php?wid={$t['workshop_id']}\">{$t['title']}</a>";
 		}
@@ -48,4 +59,10 @@
 	
 ?>
 </tbody></table>
-<?php echo $links; ?>
+<?php 
+if ($admin) {
+	echo Wbhkit\submit("update paid");
+	echo "</form>\n";
+}
+echo $links; 
+?>

@@ -212,7 +212,7 @@ function get_workshops_list($admin = 0, $page = 1) {
 
 function get_unavailable_workshops() {
 	
-	$mysqlnow = date("Y-m-d H:i:s", strtotime("-3 hours"));
+	$mysqlnow = date("Y-m-d H:i:s");
 	
 	$stmt = \DB\pdo_query("
 select id, title, start, end, capacity, cost, when_public from workshops where date(start) >= :when1 and when_public >= :when2 order by when_public asc", array(":when1" => $mysqlnow, ":when2" => $mysqlnow)); 

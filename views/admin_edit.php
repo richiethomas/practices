@@ -6,23 +6,29 @@ echo "<div class='row mt-md-3 admin-edit-workshop'>\n";
 		// enrollment column
 		echo "<div class='col-md-7'><h2>Enrollment Info <small><br>
 			<a class='btn btn-primary' href='admin_messages.php?wid={$wk['id']}'><span class='oi oi-envelope-closed' title='envelope-closed' aria-hidden='true'></span> message</a> 
-			<a class='btn btn-primary'  href='admin_attendance.php?wid={$wk['id']}'><span class='oi oi-clipboard' title='clipboard' aria-hidden='true'></span> attendance</a> 
 			<a class='btn btn-primary'  href='$sc?ac=cw&wid={$wk['id']}'><span class='oi oi-clock' title='clock' aria-hidden='true'></span> check waiting</a>
 			</small></h2>\n";
 		
 		//show enrollment totals at top
 		echo  "<p>totals: (".implode(" / ", array_values($stats)).")<p>\n";
 		
+		echo "<form action='$sc' method='post'>\n";
+		echo Wbhkit\hidden('wid', $wk['id']);
+		echo Wbhkit\hidden('ac', 'at'); 
+		
 		// list students for each status
 		foreach ($statuses as $stid => $status_name) {
 			echo  "<h4>{$status_name} (".$stats[$stid].")</h4>\n";
 			foreach ($lists[$stid] as $s) {
-				echo "<div class='row'><div class='col-md-6'><a href='admin_student.php?uid={$s['id']}&wid={$wk['id']}'>{$s['nice_name']}</a> <small>".date('M j g:ia', strtotime($s['last_modified']))."</small></div>".
+				echo "<div class='row'><div class='col-md-6'>".Wbhkit\checkbox('users', $s['id'], "<a href='admin_student.php?uid={$s['id']}&wid={$wk['id']}'>{$s['nice_name']}</a> <small>".date('M j g:ia', strtotime($s['last_modified']))."</small>", $s['attended'], true)."</div>".
 				"<div class='col-md-6'>
 				<a class='btn btn-primary' href='admin.php?ac=cs&wid={$wk['id']}&uid={$s['id']}'>change status</a> <a class='btn btn-danger' href='admin.php?ac=conrem&uid={$s['id']}&wid={$wk['id']}'>remove</a></div>".
 				"</div>\n";
 			}
 		}
+		echo Wbhkit\submit("update paid");
+		echo "</form>\n";
+		
 		
 		echo  $status_log; // from a snippet "admin_status"
 

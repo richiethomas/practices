@@ -107,6 +107,23 @@ switch ($ac) {
 		$wk = Workshops\fill_out_workshop_row($wk);
 		$v = 'ed';
 		break;
+		
+		
+	case 'at':
+		if (isset($_REQUEST['users']) && is_array($_REQUEST['users']) && $wid) {
+			$users = $_REQUEST['users'];
+			foreach ($statuses as $sid => $sts) {
+				$stds = Enrollments\get_students($wid, $sid);
+				foreach ($stds as $as) {
+					if (in_array($as['id'], $users)) {
+						Enrollments\update_paid($wid, $as['id'], 1);
+					} else {
+						Enrollments\update_paid($wid, $as['id'], 0);
+					}
+				}
+			}		
+		}
+		$v = 'ed';
 							
 }
 

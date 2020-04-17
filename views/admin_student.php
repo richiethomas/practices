@@ -8,16 +8,16 @@ if ($needle) {
 }
 ?>
 
-<h3>Transcripts</h3>
+<h3 class="my-3">Transcripts</h3>
 <?php echo $transcripts; ?>
 
-<h3>Change Email</h3>
+<h3 class="my-3">Change Email</h3>
 <?php echo $change_email_form; ?>
 
-<h3>Text Preferences</h3>
+<h3 class="my-3">Text Preferences</h3>
 <?php echo $text_preferences; ?>
 
-<h3>Display Name</h3>
+<h3 class="my-3">Display Name</h3>
 <?php echo $display_name_form; ?>
 
 <p>or</p>
