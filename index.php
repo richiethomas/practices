@@ -254,6 +254,7 @@ if ($wid) {
 	// if nothing else happens, we'll render 'home'
 	$view->data['upcoming_workshops'] = Workshops\get_workshops_list(0, $page);
 	$view->data['transcript'] = Enrollments\get_transcript_tabled($u, 0, $page); 
+	$view->data['unavailable_workshops'] = Workshops\get_unavailable_workshops(); 
 	$view->renderPage('home');
 	
 }

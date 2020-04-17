@@ -50,6 +50,11 @@ function fill_out_workshop_row($row) {
 			}
 		}
 	}
+	// now that we've found it, format it nicely
+	$row['nextstart'] = friendly_when($row['nextstart']);
+	$row['nextend'] = friendly_when($row['nextend']);
+	
+	
 	
 	$row = set_enrollment_stats($row);
 	$row = set_workshop_type($row);
@@ -205,6 +210,20 @@ function get_workshops_list($admin = 0, $page = 1) {
 	return $view->renderSnippet('workshop_list');
 }
 
+function get_unavailable_workshops() {
+	
+	$mysqlnow = date("Y-m-d H:i:s", strtotime("-3 hours"));
+	
+	$stmt = \DB\pdo_query("
+select id, title, start, end, capacity, cost, when_public from workshops where date(start) >= :when1 and when_public >= :when2 order by when_public asc", array(":when1" => $mysqlnow, ":when2" => $mysqlnow)); 
+		
+	$sessions = array();
+	while ($row = $stmt->fetch()) {
+		$sessions[] = $row;
+	}
+	return $sessions;
+	
+}
 
 // data only, for admin_calendar
 function get_sessions_to_come() {
@@ -236,7 +255,9 @@ function how_many_attended($wk) {
 
 function get_workshops_list_bydate($start = null, $end = null) {
 	if (!$start) { $start = "Jan 1 1000"; }
-	if (!$end) { $end = "Dec 31 9000"; }
+	if (!$end) { $end = "Dec 31 3000"; }
+	
+	//echo "select w.* from workshops w WHERE w.start >= '".date('Y-m-d H:i:s', strtotime($start))."' and w.end <= '".date('Y-m-d H:i:s', strtotime($end))."' order by start desc";
 	
 	$stmt = \DB\pdo_query("select w.* from workshops w WHERE w.start >= :start and w.end <= :end order by start desc", array(':start' => date('Y-m-d H:i:s', strtotime($start)), ':end' => date('Y-m-d H:i:s', strtotime($end))));
 	
@@ -359,15 +380,15 @@ function friendly_time($time_string) {
 }
 
 function friendly_date($time_string) {
-	$now_doy = date('z'); // day of year
+	$now_doy = date('z'); // current day of year
 	$wk_doy = date('z', strtotime($time_string)); // workshop day of year
 
-	if ($wk_doy - $now_doy < 7) {
+	if (($wk_doy - $now_doy) < 7 && ($wk_doy - $now_doy) >= 0) {
 		return date('l', strtotime($time_string)); // Monday, Tuesday, Wednesday
 	} elseif (date('Y', strtotime($time_string)) != date('Y')) {  
-		return date('D M j, Y', strtotime($time_string));
+		return date('l M j, Y', strtotime($time_string));
 	} else {
-		return date('D M j', strtotime($time_string));
+		return date('l M j', strtotime($time_string));
 	}
 }	
 

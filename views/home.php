@@ -57,12 +57,64 @@
 	<li>Wear headphones during the workshop.</li>
 	<li><b>LATE DROP POLICY: If you drop within <?php echo LATE_HOURS; ?> hours of the start of the workshop, you still must pay.</b></li>
 </ul>
-</div></div>
+</div>
+</div>
+
+
+
+
+<?php
+if (count($unavailable_workshops) > 0) {
+	
+echo "<div class=\"row justify-content-center my-3\">\n";
+echo "<div class=\"col-md-6 border border-info\">\n";
+echo "<h2>Classes Going Live Soon</h2>\n";
+
+$current_date = null;
+foreach ($unavailable_workshops as $wk) {
+
+	// update date?
+	$next_date = Workshops\friendly_date($wk['when_public']).' '.Workshops\friendly_time($wk['when_public']);
+	
+	if ($next_date != $current_date) {
+		
+		if ($current_date) {
+			echo "</ul>\n";
+		}
+		
+		echo "<h6>Going live: $next_date</h6>\n<ul>";
+		$current_date = $next_date;
+	}
+	
+	$wkdate = date("l F j", strtotime($wk['start']));
+	$start = Workshops\friendly_time($wk['start']);
+	$end = Workshops\friendly_time($wk['end']);	
+	echo "<li>$wkdate: {$wk['title']}, $start-$end \${$wk['cost']} (USD)</li>\n";	
+}	
+
+echo "</ul>\n";
+echo "<p class=\"font-weight-light\">(All times PDT - California time)</p></div></div>\n";
+} // end 'if unavailable workhops > 0'
+?>
+
+
 
 			<div class='row mb-md-4'><div class='col'>
 		<h2>Available Workshops</h2> 
 		<?php echo $upcoming_workshops; ?>
 		</div></div> <!-- end of col and row -->
+	
+	
+			<div class="row border-top border-bottom py-3 bg-light">					
+				<div class="col"> 
+					<h2>Buy My Book</h2>
+	<p class="lead">If the workshops are sold out, you could buy my improv book, sensibly titled "How to Be the Greatest Improviser on Earth." It's consistently amongst the bestselling books on Amazon in the "acting and auditioning" category, and has sold all over the world. Tips on being present, being authentic, being funny and being healthy. There are print and digital versions <a href="https://www.amazon.com/dp/0982625723">on Amazon</a>. You could also buy a much prettier digital version from my <a href="http://www.improvnonsense.com/">personal online bookstore</a>.</p>
+				</div>
+				<div class="col-md-3">
+					<a href="https://www.amazon.com/dp/0982625723"><img src="assets/htbtgioe_cover.jpg" class="img-fluid" alt="How to Be The Greatest Improviser on Earth"></a>
+				</div>
+			</div>
+	
 		
 		
 		<div class='row mb-md-4'><div class='col'>
@@ -93,7 +145,7 @@
 			<div class="card text-center text-white bg-danger">
 			      <div class="card-body">
 			        <h2 class="card-title"><span class="oi oi-envelope-closed" title="envelope-closed" aria-hidden="true"></span><br>Mailing List</h2>
-			        <p class="card-text text-dark">You are NOT automatically put on my mailing list for these workshops. If you WANT to be on that mailing list, sign up right here.</p>
+			        <p class="card-text text-dark">If you want to know about classes the minute the go online, join my mailing. You are NOT automatically put on my mailing list for these workshops. You have to explicitly join by clicking the link/button below.</p>
 			        <a href="http://eepurl.com/R2Ytz" class="btn btn-outline-light">Join Mailing List</a>
 			      </div> <!-- end of card body -->
 			    </div> <!-- end of card -->

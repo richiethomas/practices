@@ -7,3 +7,4 @@ include 'libs/validate.php';
 
 $view->data['workshops'] = Workshops\get_sessions_to_come(); 
 $view->renderPage('admin_calendar');
+
