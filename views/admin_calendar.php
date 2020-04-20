@@ -20,8 +20,8 @@ foreach ($workshops as $wk) {
 		$current_date = $next_date;
 	}
 	
-	$start = Workshops\friendly_time($wk['start']);
-	$end = Workshops\friendly_time($wk['end']);
+	$start = Wbhkit\friendly_time($wk['start']);
+	$end = Wbhkit\friendly_time($wk['end']);
 	
 	echo "<li><a href='admin.php?wid={$wk['id']}&ac=ed'>{$wk['title']}</a>, $start-$end (".number_format($wk['attended'], 0)." / ".number_format($wk['enrolled'], 0)." /  ".number_format($wk['capacity'], 0)." / ".number_format($wk['waiting']+$wk['invited']).")";
 	echo "</li>\n";
@@ -36,8 +36,8 @@ echo "<ul>\n";
 foreach ($workshops as $wk) {
 	if ($wk['xtra']) { continue; } // first sessoins only
 	$wkdate = date("l F j", strtotime($wk['start']));
-	$start = Workshops\friendly_time($wk['start']);
-	$end = Workshops\friendly_time($wk['end']);	
+	$start = Wbhkit\friendly_time($wk['start']);
+	$end = Wbhkit\friendly_time($wk['end']);	
 	echo "<li>$wkdate: {$wk['title']}, $start-$end \${$wk['cost']} (USD)</li>\n";
 }	
 echo "</ul>\n";

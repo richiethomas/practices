@@ -256,3 +256,42 @@ function parse_path() {
 return $path;
 }
 
+
+/*
+* time date functions
+*/
+
+function friendly_time($time_string) {
+	$ts = strtotime($time_string);
+	$minutes = date('i', $ts);
+	if ($minutes == 0) {
+		return date('ga', $ts);
+	} else {
+		return date('g:ia', $ts);
+	}
+}
+
+function friendly_date($time_string) {
+	$now_doy = date('z'); // current day of year
+	$wk_doy = date('z', strtotime($time_string)); // workshop day of year
+
+	if (($wk_doy - $now_doy) < 7 && ($wk_doy - $now_doy) >= 0) {
+		return date('l', strtotime($time_string)); // Monday, Tuesday, Wednesday
+	} elseif (date('Y', strtotime($time_string)) != date('Y')) {  
+		return date('l M j, Y', strtotime($time_string));
+	} else {
+		return date('l M j', strtotime($time_string));
+	}
+}	
+
+function friendly_when($time_string) {
+	return friendly_date($time_string).' '.friendly_time($time_string);
+}
+
+function is_future($time_string) {
+	if (strtotime($time_string) > strtotime('now')) {
+		return 1;
+	} else {
+		return 0;
+	}
+}

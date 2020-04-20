@@ -8,7 +8,7 @@ function get_xtra_sessions($workshop_id) {
 	$stmt = \DB\pdo_query("select * from xtra_sessions where workshop_id = :id order by start", array(':id' => $workshop_id));
 	$sessions = array();
 	while ($row = $stmt->fetch()) {
-		$row['friendly_when'] = \Workshops\friendly_when($row['start']).'-'.\Workshops\friendly_time($row['end']);
+		$row['friendly_when'] = \Wbhkit\friendly_when($row['start']).'-'.\Wbhkit\friendly_time($row['end']);
 		$sessions[] = $row;
 	}
 	return $sessions;

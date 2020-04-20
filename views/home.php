@@ -74,7 +74,7 @@ $current_date = null;
 foreach ($unavailable_workshops as $wk) {
 
 	// update date?
-	$next_date = Workshops\friendly_date($wk['when_public']).' '.Workshops\friendly_time($wk['when_public']);
+	$next_date = Wbhkit\friendly_date($wk['when_public']).' '.Wbhkit\friendly_time($wk['when_public']);
 	
 	if ($next_date != $current_date) {
 		
@@ -87,8 +87,8 @@ foreach ($unavailable_workshops as $wk) {
 	}
 	
 	$wkdate = date("l F j", strtotime($wk['start']));
-	$start = Workshops\friendly_time($wk['start']);
-	$end = Workshops\friendly_time($wk['end']);	
+	$start = Wbhkit\friendly_time($wk['start']);
+	$end = Wbhkit\friendly_time($wk['end']);	
 	echo "<li>$wkdate: {$wk['title']}, $start-$end \${$wk['cost']} (USD)</li>\n";	
 }	
 

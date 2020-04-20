@@ -41,9 +41,9 @@ function fill_out_workshop_row($row) {
 	// if all are in past, set this to most recent one
 	$row['nextstart'] = $row['start'];
 	$row['nextend'] = $row['end'];
-	if (!is_future($row['nextstart'])) {
+	if (!\Wbhkit\is_future($row['nextstart'])) {
 		foreach ($row['sessions'] as $s) {
-			if (is_future($s['start'])) {
+			if (\Wbhkit\is_future($s['start'])) {
 				$row['nextstart'] = $s['start'];
 				$row['nextend'] = $s['end'];
 				break; // found the next start
@@ -51,8 +51,8 @@ function fill_out_workshop_row($row) {
 		}
 	}
 	// now that we've found it, format it nicely
-	$row['nextstart'] = friendly_when($row['nextstart']);
-	$row['nextend'] = friendly_when($row['nextend']);
+	$row['nextstart'] = \Wbhkit\friendly_when($row['nextstart']);
+	$row['nextend'] = \Wbhkit\friendly_when($row['nextend']);
 	
 	
 	
@@ -165,8 +165,8 @@ function get_workshops_dropdown($start = null, $end = null) {
 // pass in the workshop row as it comes from the database table
 // add some columns with date / time stuff figured out
 function format_workshop_startend($row) {
-	$row['showstart'] = friendly_date($row['start']).' '.friendly_time($row['start']);
-	$row['showend'] = friendly_time($row['end']);
+	$row['showstart'] = \Wbhkit\friendly_date($row['start']).' '.\Wbhkit\friendly_time($row['start']);
+	$row['showend'] = \Wbhkit\friendly_time($row['end']);
 	if ($row['cancelled']) {
 		$row['title'] = "CANCELLED: {$row['title']}";
 	}
@@ -365,42 +365,5 @@ function delete_workshop($workshop_id) {
 
 }
 
-/*
-* time date functions
-*/
 
-function friendly_time($time_string) {
-	$ts = strtotime($time_string);
-	$minutes = date('i', $ts);
-	if ($minutes == 0) {
-		return date('ga', $ts);
-	} else {
-		return date('g:ia', $ts);
-	}
-}
-
-function friendly_date($time_string) {
-	$now_doy = date('z'); // current day of year
-	$wk_doy = date('z', strtotime($time_string)); // workshop day of year
-
-	if (($wk_doy - $now_doy) < 7 && ($wk_doy - $now_doy) >= 0) {
-		return date('l', strtotime($time_string)); // Monday, Tuesday, Wednesday
-	} elseif (date('Y', strtotime($time_string)) != date('Y')) {  
-		return date('l M j, Y', strtotime($time_string));
-	} else {
-		return date('l M j', strtotime($time_string));
-	}
-}	
-
-function friendly_when($time_string) {
-	return friendly_date($time_string).' '.friendly_time($time_string);
-}
-
-function is_future($time_string) {
-	if (strtotime($time_string) > strtotime('now')) {
-		return 1;
-	} else {
-		return 0;
-	}
-}
 
