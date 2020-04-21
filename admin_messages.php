@@ -44,6 +44,11 @@ switch ($ac) {
 		$note = preg_replace('/TITLE/', $wk['title'], $note);
 		$sms = preg_replace('/TITLE/', $wk['title'], $sms);
 
+
+		$note = preg_replace('/\R/', "<br>", $note);
+		
+
+
 		$base_msg =	$note."
 <p><b>Practice details:</b><br>
 Title: {$wk['title']}<br>
@@ -57,7 +62,8 @@ Pay via Venmo @willhines or PayPal whines@gmail.com<br>
 			$key = Users\get_key($std['id']);
 			$trans = URL."index.php?key=$key";
 			$msg = $base_msg."<p>Log in or drop out here:<br>$trans</p>\n";
-			\Emails\centralized_email($std['email'], $subject, $msg);
+			
+			Emails\centralized_email($std['email'], $subject, $msg);
 			$sent .= "{$std['email']}, ";
 		
 			Emails\send_text($std, $sms); // routine will check if they want texts and have proper info

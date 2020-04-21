@@ -6,6 +6,9 @@ include 'libs/validate.php';
 
 $vars = array('needle', 'sort');
 Wbhkit\set_vars($vars);
+
+$needle = trim($needle);
+
 if ($sort != 'n' && $sort != 't' && $sort != 'd') {
 	$sort = 'n';
 }

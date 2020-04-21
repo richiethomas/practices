@@ -64,7 +64,7 @@ if (!$u['id']) {
 	$view->renderPage('admin_error');	
 } else {
 	$view->data['key'] = Users\get_key($u['id']);
-	$view->data['needle'] = $needle;
+	$view->data['needle'] = trim($needle);
 	$view->data['transcripts'] = Enrollments\get_transcript_tabled($u, true, $page);	
 	$view->data['change_email_form'] = Users\edit_change_email($u);
 	$view->data['text_preferences'] =  Users\edit_text_preferences($u);
