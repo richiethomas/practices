@@ -158,7 +158,7 @@ function enroll($wk, $u) {
 function check_waiting($wk) {
 	$wk = \Workshops\fill_out_workshop_row($wk); // make sure it's up to date
 	$msg = '';
-	if ($wk['type'] == 'past') {
+	if ($wk['upcoming'] == 0) {
 		return 'Workshop is in the past';
 	}
 	while (($wk['enrolled']+$wk['invited']) < $wk['capacity'] && $wk['waiting'] > 0) {
@@ -313,7 +313,8 @@ function get_transcript_tabled($u, $admin = false, $page = 1) {
 		}
 		$wk['id'] = $d['workshop_id']; // make sure id is correct
 		$wk = \Workshops\fill_out_workshop_row($wk);
-		$d['type'] = $wk['type'];
+		$d['soldout'] = $wk['soldout'];
+		$d['upcoming'] = $wk['upcoming'];
 		$d['when'] = $wk['when'];
 		if ($d['status_id'] == WAITING) {
 			$e = get_an_enrollment($wk, $u); 

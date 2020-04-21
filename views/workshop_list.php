@@ -31,19 +31,17 @@
 			$cl = 'table-';
 			if (date('z', strtotime($row['start'])) == date('z')) { // today
 				$cl .= 'info'; 
-			} elseif ($row['type'] == 'soldout') {
+			} elseif ($row['soldout'] == 1) {
 				$cl .= 'danger';
-			} elseif ($row['type'] == 'open') {
+			} elseif ($row['upcoming'] == 1) {
 				$cl .= 'success';
-			} elseif ($row['type'] == 'past') {
+			} else { // past workshops
 				$cl .= 'light';
-			} else  {
-				$cl = '';
 			}
 		
 			echo "<tr class='$cl'>";
 			
-			echo "<td><span class='workshoptitle'>".($row['type'] == 'soldout' ? 'SOLD OUT: ' : '')."<a href='$sc?wid={$row['id']}".($admin ? '&ac=ed' : '')."'>{$row['title']}</a></span>".($row['notes'] ? "<p class='small text-muted'>{$row['notes']}</p>" : '')."</td>
+			echo "<td><span class='workshoptitle'>".($row['soldout'] == 1 ? 'SOLD OUT: ' : '')."<a href='$sc?wid={$row['id']}".($admin ? '&ac=ed' : '')."'>{$row['title']}</a></span>".($row['notes'] ? "<p class='small text-muted'>{$row['notes']}</p>" : '')."</td>
 			<td>{$row['when']} (".TIMEZONE.") {$public}</td>
 			<td>{$row['place']}</td>
 			<td>{$row['costdisplay']}</td>
@@ -53,7 +51,7 @@
 				echo "<td><a href=\"$sc?wid={$row['id']}\">Clone</a></td></tr>\n";
 			} else {
 				echo "<td><a href=\"{$sc}?wid={$row['id']}&v=winfo\"><span class=\"oi oi-info\" title=\"info\" aria-hidden=\"true\"></span> Go to Sign Up Page</a>";
-				if ($row['type'] == 'soldout') {
+				if ($row['soldout'] == 1) {
 					echo " to join waiting list";
 				}
 				echo "</td></tr>\n";

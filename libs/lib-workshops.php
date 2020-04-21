@@ -27,12 +27,6 @@ function fill_out_workshop_row($row) {
 	}
 	$row = format_workshop_startend($row);	
 	
-	if (strtotime($row['start']) < strtotime('now')) { 
-		$row['type'] = 'past'; 
-	} else {
-		$row['type'] = null;
-	}
-	
 	$row['costdisplay'] = $row['cost'] ? $row['cost'] : 'Pay what you can / donation';
 	
 	$row['sessions'] = \XtraSessions\get_xtra_sessions($row['id']);	
@@ -54,10 +48,20 @@ function fill_out_workshop_row($row) {
 	$row['nextstart'] = \Wbhkit\friendly_when($row['nextstart']);
 	$row['nextend'] = \Wbhkit\friendly_when($row['nextend']);
 	
-	
-	
 	$row = set_enrollment_stats($row);
-	$row = set_workshop_type($row);
+	
+	if ($row['enrolled'] >= $row['capacity'] || $row['waiting'] > 0 || $row['invited'] > 0) { 
+		$row['soldout'] = 1;
+	} else {
+		$row['soldout'] = 0;
+	}	
+	
+	if (strtotime($row['end']) >= strtotime('now')) { 
+		$row['upcoming'] = 1; 
+	} else {
+		$row['upcoming'] = 0;
+	}
+	
 	$row = check_last_minuteness($row);
 	
 	return $row;
@@ -79,18 +83,6 @@ function set_enrollment_stats($row) {
 	return $row;
 }
 
-function set_workshop_type($row) {
-	
-	if (strtotime($row['start']) < strtotime('now')) { 
-		$row['type'] = 'past'; 
-	} elseif ($row['enrolled'] >= $row['capacity'] || $row['waiting'] > 0 || $row['invited'] > 0) { 
-		$row['type'] = 'soldout'; 
-	} else {
-		$row['type'] = 'open';
-	}
-	return $row;
-}
-
 
 function check_last_minuteness($wk) {
 	
@@ -105,7 +97,7 @@ function check_last_minuteness($wk) {
 	if ($hours_left > 0 && $hours_left < LATE_HOURS) {
 		// have we never checked if it's sold out
 		if ($wk['sold_out_late'] == -1) {
-			if ($wk['type'] == 'soldout') {
+			if ($wk['soldout'] == 1) {
 				
 				$stmt = \DB\pdo_query("update workshops set sold_out_late = 1 where id = :wid", array(':wid' => $wk['id']));				
 

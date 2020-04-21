@@ -1,6 +1,6 @@
 <?php
 	
-if ($wk['type'] == 'past') {
+if ($wk['upcoming'] == 0) {
 	$point = "This workshop is IN THE PAST.";
 } elseif ($wk['cancelled'] == true) {
 	$point = "This workshop is CANCELLED.";
@@ -25,7 +25,7 @@ if ($wk['type'] == 'past') {
 			default:
 	
 				$point = "You are not currenty signed up for the practice listed below. ".
-					($wk['type'] == 'soldout' 
+					($wk['soldout'] == 1
 					? "It is full. Want to <a class='btn btn-primary' href='$enroll_link'>join the wait list</a>?"
 					: "Want to <a class='btn btn-primary' href='$enroll_link'>enroll</a>?  Info will be sent to <b>{$u['email']}</b>.");
 	

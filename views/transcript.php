@@ -23,7 +23,7 @@ if ($admin) {
 		
 	foreach ($rows as $t) {
 		$cl = 'table-';
-		if ($t['type'] == 'past') {
+		if ($t['upcoming'] == 0) {
 			$cl .= 'light';
 		} elseif ($t['status_id'] == ENROLLED) {
 			$cl .= 'success';
