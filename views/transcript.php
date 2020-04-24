@@ -10,19 +10,10 @@ if ($admin) {
 
 ?>
 
-<table class="table table-striped table-bordered"><thead class="thead-dark">
-		<tr>
-			<th class="workshop-name" scope="col"><span class="oi oi-people" title="people" aria-hidden="true"></span> <?php if ($admin) { echo "(paid?) "; } ?>Workshop</th>
-			<th scope="col"><span class="oi oi-calendar" title="calendar" aria-hidden="true"></span> When (<?php echo TIMEZONE; ?>)</th>
-			<th scope="col"><span class="oi oi-map" title="map" aria-hidden="true"></span> Where</th>
-			<th scope="col"><span class="oi oi-pulse" title="pulse" aria-hidden="true"></span> Status</th>
-			<th scope="col"><span class="oi oi-task" title="task" aria-hidden="true"></span> Action</th>
-		</tr></thead>
-			<tbody>
 <?php
 		
 	foreach ($rows as $t) {
-		$cl = 'table-';
+		$cl = '';
 		if ($t['upcoming'] == 0) {
 			$cl .= 'light';
 		} elseif ($t['status_id'] == ENROLLED) {
@@ -43,22 +34,31 @@ if ($admin) {
 			$t['when'] = $sessions; // replace the when variable 
 		}
 		
-		echo "<tr class='$cl'><td>";
-		if ($admin) {
-			echo Wbhkit\checkbox('paids', $t['enrollment_id'], "<a href=\"admin.php?wid={$t['workshop_id']}&ac=ed\">{$t['title']}</a>", $t['attended'], true);
-		} else {
-			echo "<a href=\"index.php?wid={$t['workshop_id']}\">{$t['title']}</a>";
-		}
-		echo "</td><td>{$t['when']} (".TIMEZONE.")</td><td>{$t['place']}</td><td>";
-		echo "{$statuses[$t['status_id']]}";
-		if ($t['status_id'] == WAITING) {
-			echo " (spot {$t['rank']})";
-		}
-		echo "</td><td><a href='index.php?wid={$t['workshop_id']}'><span class=\"oi oi-info\" title=\"info\" aria-hidden=\"true\"></span> info</a></td></tr>\n";
+		
+		echo "<div class='row workshop-row workshop-$cl my-3 py-3 border-top'>\n"; // workshop row start
+				
+			echo "	<div class='col-sm'>";
+			if ($admin) {
+				echo Wbhkit\checkbox('paids', $t['enrollment_id'], "<a href=\"admin.php?wid={$t['workshop_id']}&ac=ed\">{$t['title']}</a>", $t['attended'], true);
+			} else {
+				echo "<a href=\"index.php?wid={$t['workshop_id']}\">{$t['title']}</a>";
+			}
+			echo "</div>\n";  // title cell
+			
+		
+				echo "	<div class='col-sm'>{$t['when']} (".TIMEZONE.")</div>\n"; // when col	
+				if ($admin) { echo "<div class='col-sm my-2'>{$t['place']}</div>\n"; } // where col
+				echo "	<div class='col-sm'>{$statuses[$t['status_id']]}";
+				if ($t['status_id'] == WAITING) {
+					echo " (spot {$t['rank']})";
+				}
+				echo "</div>\n"; // status and rank col
+				echo "	<div class='col-sm'><a href='index.php?wid={$t['workshop_id']}'><span class=\"oi oi-info\" title=\"info\" aria-hidden=\"true\"></span> info</a></div>\n";			
+			echo "</div>\n\n"; // end of row
+		
 	}
 	
 ?>
-</tbody></table>
 <?php 
 if ($admin) {
 	echo Wbhkit\submit("update paid");

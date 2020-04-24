@@ -19,9 +19,19 @@
 
 
 <style>
+	
+	
+	
 table th.workshop-name {
 	width: 300px;
 }
+
+
+div.workshop-info { background-color: #bee5eb; }
+div.workshop-danger { background-color: #f5c6cb; }
+div.workshop-success { background-color: #c3e6cb; }
+div.workshop-light { background-color: #fdfdfe; }
+
 
 div.admin-edit-workshop h2,
 div.admin-edit-workshop h3,

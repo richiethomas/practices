@@ -4,27 +4,29 @@
 	
 $sessions = '';
 if (!empty($wk['sessions'])) {
-	$sessions ="<p>\n";
 	$sessions .= "{$wk['when']}";
 	foreach ($wk['sessions'] as $s) {
 		$sessions .= "<br>\n{$s['friendly_when']}";
 	}
-	$sessions .= "</p>\n";
 	$wk['when'] = $sessions; // replace the when variable 
 }	
 	
-echo "<table class=\"table table-striped table-bordered\">
-		<tbody>
-		<tr><td scope=\"row\"><span class='oi oi-people' title='people' aria-hidden='true'></span> Workshop:</td><td>{$wk['title']}</tr>
-		<tr><td scope=\"row\"><span class='oi oi-book' title='book' aria-hidden='true'></span> Description:</td><td>{$wk['notes']}</td></tr>
-		<tr><td scope=\"row\"><span class='oi oi-calendar' title='calendar' aria-hidden='true'></span> When:</td><td>{$wk['when']} (".TIMEZONE.")</tr>
-		<tr><td scope=\"row\"><span class='oi oi-map title='map' aria-hidden='true'></span> Where:</td><td>{$wk['place']} {$wk['lwhere']}</tr>
-		<tr><td scope=\"row\"><span class='oi oi-dollar' title='dollar' aria-hidden='true'></span> Cost:</td><td>{$wk['costdisplay']}</td></tr>
-		<tr><td scope=\"row\"><span class='oi oi-clipboard' title='clipboard' aria-hidden='true'></span> Enrolled:</td><td>{$wk['enrolled']} (of {$wk['capacity']})</td></tr>
-		<tr><td scope=\"row\"><span class='oi oi-clock' title='clock' aria-hidden='true'></span> Waiting:</td><td>".($wk['waiting']+$wk['invited'])."</td></tr>
-		$names_list
-		
-		</tbody>
-		</table>\n";
+echo "
+<div class='row'><div class='col'>
+<h2>{$wk['title']}</h2>
+<p>{$wk['notes']}</p>
+</div></div>
+
+<div class='row'>
+<div class='col'>
+{$wk['when']} (".TIMEZONE.")<br><br>
+".($admin ? "{$wk['place']} {$wk['lwhere']}<br><br>" : '').
+"{$wk['costdisplay']}, {$wk['enrolled']} (of {$wk['capacity']}) enrolled, ".($wk['waiting']+$wk['invited'])." waiting
+</div>
+
+<div class='col'>$names_list</div>
+
+</div>
+";
 		
 ?>

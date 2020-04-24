@@ -27,7 +27,7 @@ function fill_out_workshop_row($row) {
 	}
 	$row = format_workshop_startend($row);	
 	
-	$row['costdisplay'] = $row['cost'] ? $row['cost'] : 'Pay what you can / donation';
+	$row['costdisplay'] = $row['cost'] ? "\${$row['cost']} USD" : 'Pay what you can / donation';
 	
 	$row['sessions'] = \XtraSessions\get_xtra_sessions($row['id']);	
 	
@@ -136,7 +136,7 @@ function get_workshop_info_tabled($wk) {
 		if ($known < $wk['enrolled']) {
 			$names_list .= "<br>plus ".($wk['enrolled']-$known)." more.";
 		}
-		$names_list = "<tr><td scope=\"row\">Currently Registered:</td><td>{$names_list}</td></tr>";
+		$names_list = "Currently Registered:<br>{$names_list}";
 	}
 	$view->data['names_list'] = $names_list;
 	return $view->renderSnippet('workshop_info');
@@ -207,7 +207,7 @@ function get_unavailable_workshops() {
 	$mysqlnow = date("Y-m-d H:i:s");
 	
 	$stmt = \DB\pdo_query("
-select id, title, start, end, capacity, cost, when_public from workshops where date(start) >= :when1 and when_public >= :when2 order by when_public asc", array(":when1" => $mysqlnow, ":when2" => $mysqlnow)); 
+select id, title, start, end, capacity, cost, when_public from workshops where date(start) >= :when1 and when_public >= :when2 order by when_public asc, start asc", array(":when1" => $mysqlnow, ":when2" => $mysqlnow)); 
 		
 	$sessions = array();
 	while ($row = $stmt->fetch()) {

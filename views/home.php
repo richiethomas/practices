@@ -114,18 +114,14 @@ echo "<p class=\"font-weight-light\">(All times PDT - California time)</p></div>
 					<a href="https://www.amazon.com/dp/0982625723"><img src="assets/htbtgioe_cover.jpg" class="img-fluid" alt="How to Be The Greatest Improviser on Earth"></a>
 				</div>
 			</div>
-	
 		
-		
-		<div class='row mb-md-4'><div class='col'>
-		<h2>Your Workshops</h2>
 		<?php if (Users\logged_in()) {
+			echo "<div class='row mb-md-4'><div class='col'>\n";
+			echo "<h2>Your Workshops</h2>\n";
 			echo $transcript; 
-		} else {
-			echo "<p>You're not logged in, so I can't list your workshops. Log in further up this page.</p>";
-		}
+			echo "</div></div> <!-- end of col and row -->\n";
+		} 
 		?>
-		</div></div> <!-- end of col and row -->
 
 
 		<div class="row justify-content-center mb-md-4">
@@ -145,7 +141,7 @@ echo "<p class=\"font-weight-light\">(All times PDT - California time)</p></div>
 			<div class="card text-center text-white bg-danger">
 			      <div class="card-body">
 			        <h2 class="card-title"><span class="oi oi-envelope-closed" title="envelope-closed" aria-hidden="true"></span><br>Mailing List</h2>
-			        <p class="card-text text-dark">If you want to know about classes the minute the go online, join my mailing. You are NOT automatically put on my mailing list for these workshops. You have to explicitly join by clicking the link/button below.</p>
+			        <p class="card-text text-dark">If you want to know about classes the minute the go online, join my mailing list. You are NOT automatically put on my mailing list for these workshops. You have to explicitly join by clicking the link/button below.</p>
 			        <a href="http://eepurl.com/R2Ytz" class="btn btn-outline-light">Join Mailing List</a>
 			      </div> <!-- end of card body -->
 			    </div> <!-- end of card -->
@@ -156,7 +152,7 @@ echo "<p class=\"font-weight-light\">(All times PDT - California time)</p></div>
 			<div class="card text-center text-white bg-success">
 			      <div class="card-body">
 			        <h2 class="card-title"><span class="oi oi-question-mark" title="question-mark" aria-hidden="true"></span><br>Common Questions</h2>
-			        <p class="card-text text-dark">We use the <a class="text-dark font-weight-bold" href="http://www.zoom.us/">Zoom app</a>. Please note the <b>time zone ()</b>!</p>
+			        <p class="card-text text-dark">We use the <a class="text-dark font-weight-bold" href="http://www.zoom.us/">Zoom app</a>. Please note the <b>time zone (<?php echo TIMEZONE; ?>)</b>!</p>
 			        <a href="<?php echo $sc; ?>?ac=faq" class="btn btn-outline-light">More Common Questions</a>
 			      </div> <!-- end of card body -->
 			    </div> <!-- end of card -->

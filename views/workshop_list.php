@@ -1,34 +1,22 @@
 <?php echo $links; ?>
-<table class="table table-striped table-bordered"><thead class="thead-dark">
-		<tr>
-			<th class="workshop-name" scope="col"><span class="oi oi-people" title="people" aria-hidden="true"></span> Workshop</th>
-			<th scope="col"><span class="oi oi-calendar" title="calendar" aria-hidden="true"></span> When (<?php echo TIMEZONE; ?>)</th>
-			<th scope="col"><span class="oi oi-map" title="map" aria-hidden="true"></span> Where</th>
-			<th scope="col"><span class="oi oi-dollar" title="dollar" aria-hidden="true"></span> Cost</th>
-			<th scope="col"><span class="oi oi-clipboard" title="clipboard" aria-hidden="true"></span> Enrolled</th>
-			<th scope="col"><span class="oi oi-task" title="task" aria-hidden="true"></span> Action</th>
-		</tr></thead>
-			<tbody>
 				
 <?php				
 		foreach ( $rows as $row ) {
 			$public = '';
 			if ($admin && $row['when_public']) {
-				$public = "<br><small>Public: ".date('D M j - g:ia', strtotime($wk['when_public']))."</small>\n";
+				$public = "<br><small>Public: ".date('D M j - g:ia', strtotime($row['when_public']))."</small>\n";
 			}	
 			
 			$sessions = '';
 			if (!empty($row['sessions'])) {
-				$sessions ="<p>\n";
 				$sessions .= "{$row['when']}";
 				foreach ($row['sessions'] as $s) {
 					$sessions .= "<br>\n{$s['friendly_when']}";
 				}
-				$sessions .= "</p>\n";
 				$row['when'] = $sessions; // replace the when variable 
 			}
 					
-			$cl = 'table-';
+			$cl = '';
 			if (date('z', strtotime($row['start'])) == date('z')) { // today
 				$cl .= 'info'; 
 			} elseif ($row['soldout'] == 1) {
@@ -39,23 +27,33 @@
 				$cl .= 'light';
 			}
 		
-			echo "<tr class='$cl'>";
+			echo "<div class='row workshop-row workshop-$cl my-3 py-3 border-top'>\n"; // workshop row start
 			
-			echo "<td><span class='workshoptitle'>".($row['soldout'] == 1 ? 'SOLD OUT: ' : '')."<a href='$sc?wid={$row['id']}".($admin ? '&ac=ed' : '')."'>{$row['title']}</a></span>".($row['notes'] ? "<p class='small text-muted'>{$row['notes']}</p>" : '')."</td>
-			<td>{$row['when']} (".TIMEZONE.") {$public}</td>
-			<td>{$row['place']}</td>
-			<td>{$row['costdisplay']}</td>
-			<td>".number_format($row['enrolled'], 0)." of ".number_format($row['capacity'], 0).",<br> ".number_format($row['waiting']+$row['invited'])." waiting</td>
-	";
-			if ($admin) {
-				echo "<td><a href=\"$sc?wid={$row['id']}\">Clone</a></td></tr>\n";
-			} else {
-				echo "<td><a href=\"{$sc}?wid={$row['id']}&v=winfo\"><span class=\"oi oi-info\" title=\"info\" aria-hidden=\"true\"></span> Go to Sign Up Page</a>";
-				if ($row['soldout'] == 1) {
-					echo " to join waiting list";
-				}
-				echo "</td></tr>\n";
-			}
+			echo "<div class='col-md-6'>".($row['soldout'] == 1 ? 'SOLD OUT: ' : '')."<a href='$sc?wid={$row['id']}".($admin ? '&ac=ed' : '')."'>{$row['title']}</a></span>".($row['notes'] ? "<p class='small text-muted'>{$row['notes']}</p>" : '')."</div>"; // title cell
+				
+			echo "<div class='col-md-6'>\n"; // start of big crammed info cell wrapper
+			echo "<div class='row row-cols-1'>\n"; // row within info cell
+			
+				echo "<div class='col my-2'>{$row['when']} (".TIMEZONE.") {$public}</div>\n"; // when col	
+				if ($admin) { echo "<div class='col my-2'>{$row['place']}</div>\n"; } // where col
+				echo "<div class='col my-2'>{$row['costdisplay']}</div>\n"; // cost cell
+				echo "<div class='col my-2'>".number_format($row['enrolled'], 0)." of ".number_format($row['capacity'], 0)." filled,<br> ".number_format($row['waiting']+$row['invited'])." waiting</div>\n"; // enrollments
+				
+				echo "<div class='col my-2'>\n";
+				if ($admin) {
+					echo "<a href=\"$sc?wid={$row['id']}\">Clone</a>\n";
+				} else {
+					echo "<a class='btn btn-primary btn-sm' href=\"{$sc}?wid={$row['id']}&v=winfo\"><span class=\"oi oi-info\" title=\"info\" aria-hidden=\"true\"></span> Go to Sign Up Page</a>";
+					if ($row['soldout'] == 1) {
+						echo " to join waiting list";
+					}
+				}					
+				echo "</div>\n"; // end of action col cel
+				echo "</div>\n"; // end of big info cel row
+				echo "</div>\n"; // end of big info cell wrapper
+			echo "</div>\n"; // end of row
+								
+
 		}
 
 ?>
