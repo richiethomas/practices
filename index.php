@@ -108,12 +108,6 @@ switch ($ac) {
 			
 		}
 		break;
-		
-	case 'faq':
-	 
-		$view->data['faq'] = Emails\get_faq();
-		$view->renderPage('faq');
-		die;
 	
 	// log out	
 	case 'lo':

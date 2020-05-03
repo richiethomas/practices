@@ -38,36 +38,8 @@
 
 <?php
 if (count($unavailable_workshops) > 0) {
-	
-echo "<div class=\"row justify-content-center my-3\">\n";
-echo "<div class=\"col-md-6 border border-info\">\n";
-echo "<h2>Classes Going Live Soon</h2>\n";
-
-$current_date = null;
-foreach ($unavailable_workshops as $wk) {
-
-	// update date?
-	$next_date = Wbhkit\friendly_date($wk['when_public']).' '.Wbhkit\friendly_time($wk['when_public']);
-	
-	if ($next_date != $current_date) {
-		
-		if ($current_date) {
-			echo "</ul>\n";
-		}
-		
-		echo "<h6>Going live: $next_date</h6>\n<ul>";
-		$current_date = $next_date;
-	}
-	
-	$wkdate = date("l F j", strtotime($wk['start']));
-	$start = Wbhkit\friendly_time($wk['start']);
-	$end = Wbhkit\friendly_time($wk['end']);	
-	echo "<li>$wkdate: {$wk['title']}, $start-$end \${$wk['cost']} (USD)</li>\n";	
-}	
-
-echo "</ul>\n";
-echo "<p class=\"font-weight-light\">(All times PDT - California time)</p></div></div>\n";
-} // end 'if unavailable workhops > 0'
+	include 'unavailable_workshops.php';	
+} 
 ?>
 
 
@@ -89,20 +61,10 @@ echo "<p class=\"font-weight-light\">(All times PDT - California time)</p></div>
 			</div>
 
 		<div class="row justify-content-center mb-md-4">
-		
-			<div class="col-md-4">
-			<div class="card text-center text-white bg-warning">
-		      <div class="card-body">
-		        <h2 class="card-title"><span class="oi oi-dollar" title="dollar" aria-hidden="true"></span><br>Paying</h2>
-		        <p class="card-text text-dark">
-				Venmo to @willhines, or Paypal to whines@gmail.com</p>
-		        <a href="http://venmo.com/willhines?txn=pay&share=friends&amount=30&note=improv%20workshop"  class="btn btn-outline-light">Venmo @willhines</a>
-		      </div> <!-- end of card body -->
-		    </div> <!-- end of card -->
-		</div> <!-- end of col -->		
+	
 					
-			<div class="col-md-4">
-			<div class="card text-center text-white bg-danger">
+			<div class="col-sm-6 my-4">
+			<div class="card text-center text-white bg-success">
 			      <div class="card-body">
 			        <h2 class="card-title"><span class="oi oi-envelope-closed" title="envelope-closed" aria-hidden="true"></span><br>Mailing List</h2>
 			        <p class="card-text text-dark">If you want to know about classes the minute the go online, join my mailing list. You are NOT automatically put on my mailing list for these workshops. You have to explicitly join by clicking the link/button below.</p>
@@ -112,15 +74,6 @@ echo "<p class=\"font-weight-light\">(All times PDT - California time)</p></div>
 			</div> <!-- end of col -->
 			
 			
-			<div class="col-md-4">
-			<div class="card text-center text-white bg-success">
-			      <div class="card-body">
-			        <h2 class="card-title"><span class="oi oi-question-mark" title="question-mark" aria-hidden="true"></span><br>Common Questions</h2>
-			        <p class="card-text text-dark">We use the <a class="text-dark font-weight-bold" href="http://www.zoom.us/">Zoom app</a>. Please note the <b>time zone (<?php echo TIMEZONE; ?>)</b>!</p>
-			        <a href="<?php echo $sc; ?>?ac=faq" class="btn btn-outline-light">More Common Questions</a>
-			      </div> <!-- end of card body -->
-			    </div> <!-- end of card -->
-			</div> <!-- end of col -->
 
 			</div> <!-- end of row -->
 
@@ -143,6 +96,34 @@ echo "<p class=\"font-weight-light\">(All times PDT - California time)</p></div>
     <a class='nav-link btn btn-outline-light m-2' href="index.php?ac=lo"><span class="oi oi-account-logout" title="account-logout" aria-hidden="true"></span> log out</a>
   </li>
 </ul>
+
+
+// old boxes from bottom of page
+
+
+			<div class="col-md-4">
+			<div class="card text-center text-white bg-warning">
+		      <div class="card-body">
+		        <h2 class="card-title"><span class="oi oi-dollar" title="dollar" aria-hidden="true"></span><br>Paying</h2>
+		        <p class="card-text text-dark">
+				Venmo to @willhines, or Paypal to whines@gmail.com</p>
+		        <a href="http://venmo.com/willhines?txn=pay&share=friends&amount=30&note=improv%20workshop"  class="btn btn-outline-light">Venmo @willhines</a>
+		      </div> <!-- end of card body -->
+		    </div> <!-- end of card -->
+		</div> <!-- end of col -->		
+
+			<div class="col-md-4">
+			<div class="card text-center text-white bg-success">
+			      <div class="card-body">
+			        <h2 class="card-title"><span class="oi oi-question-mark" title="question-mark" aria-hidden="true"></span><br>Common Questions</h2>
+			        <p class="card-text text-dark">We use the <a class="text-dark font-weight-bold" href="http://www.zoom.us/">Zoom app</a>. Please note the <b>time zone (<?php echo TIMEZONE; ?>)</b>!</p>
+			        <a href="<?php echo $sc; ?>?ac=faq" class="btn btn-outline-light">More Common Questions</a>
+			      </div> <!-- end of card body -->
+			    </div> <!-- end of card -->
+			</div> <!-- end of col -->
+
+
+
 */
 	
 ?>
