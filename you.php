@@ -47,7 +47,6 @@ switch ($ac) {
 
 		Wbhkit\set_vars(array('carrier_id', 'phone', 'send_text'));
 	
-
 		if (!Users\logged_in()) {
 			$error = 'You are not logged in! You have to be logged in to update your text preferences.';
 			break;
@@ -61,7 +60,16 @@ switch ($ac) {
 		
 }
 
-$view->data['transcript'] = Enrollments\get_transcript_tabled($u, 0, $page); 
-$view->data['admin'] = false;
-$view->renderPage('you');
+if (!Users\logged_in()) {
+	$view->data['error_message'] = "<h1>Whoops!</h1><p>You are asking to look at info about a student, probably you, but I (the computer) cannot tell which student you mean. Sorry!</p>\n";
+	$view->renderPage('admin_error');
+	exit();
+} else {
+
+
+	$view->data['transcript'] = Enrollments\get_transcript_tabled($u, 0, $page); 
+	$view->data['admin'] = false;
+	$view->renderPage('you');
+	
+}
 

@@ -17,11 +17,19 @@
     <!-- iconic (open source version) -->
     <link href="open-iconic/font/css/open-iconic-bootstrap.css" rel="stylesheet">
 
+	<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans&family=Poppins:wght@500&display=swap" rel="stylesheet">
 
 <style>
 	
+
+body {
+	font-family: 'Open Sans', sans-serif;
+}	
 	
-	
+h1, h2, h3, h4, h5, h6 {
+	font-family: 'Poppins', sans-serif;
+}
 table th.workshop-name {
 	width: 300px;
 }

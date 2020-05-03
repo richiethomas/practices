@@ -1,5 +1,5 @@
 <?php
-$sc = "admin.php";
+$sc = "admin_listall.php";
 $heading = "practices: admin";
 include 'lib-master.php';
 include 'libs/validate.php';
