@@ -75,14 +75,12 @@ Pay via Venmo @willhines or PayPal whines@gmail.com<br>
 
 	case 'remind':
 		$subject = "REMINDER: {$wk['title']} {$wk['nextstart']} at $short_where";
-		$note = "Hey! You're enrolled in this workshop. ";
+		$note = "Greetings. You're enrolled in this workshop. ";
 		$note .= "It starts ".nicetime($wk['nextstart']).". ";
 		if ($wk['location_id'] == ONLINE_LOCATION_ID && $wk['online_url']) {
 			$note .= "Here's the link: {$wk['online_url']} \n"; 
 		}
-		
-		$note .= " See you soon!";
-		
+				
 		$sms = "Reminder: {$wk['title']} workshop, {$wk['nextstart']}, ".URL;
 		$st = ENROLLED; // pre-populating the status drop in 'send message' form
 		break;

@@ -2,6 +2,6 @@
 	
 <?php echo $workshops_list; ?>
 
-<a id='add'></a><div class='row'><div class='col-md-4'>
+<a id='addworkshop'></a><div class='row'><div class='col-md-4'>
 <?php echo $add_workshop_form; ?>
 </div></div>

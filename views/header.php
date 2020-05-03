@@ -51,18 +51,18 @@ echo "<div class=\"container-fluid\">\n";
 if (strpos($sc, 'admin') !== false ) {
 	echo "<h1><a href=\"admin.php\">{$heading}</a> <small><a class='text-muted' href='index.php'>(user side)</a></small></h1>\n";
 	echo "<ul class='nav nav-pills nav-fill'>\n";
-	echo nav_link($sc, 'admin.php', 'list workshops', 'people');
+	echo nav_link($sc, 'admin.php', 'upcoming', 'calendar');
 	echo nav_link($sc, 'admin_emails.php', 'get emails', 'envelope-closed');
 	echo nav_link($sc, 'admin_revenue.php', 'revenues', 'dollar');
 	echo nav_link($sc, 'admin_search.php', 'find students', 'magnifying-glass');
 	echo nav_link($sc, 'admin_status.php', 'status log', 'graph');
 	echo nav_link($sc, 'admin_mail_log.php', 'error log', 'clipboard');
-	echo nav_link($sc, 'admin_calendar.php', 'upcoming', 'calendar');
+	echo nav_link($sc, 'admin_listall.php', 'all workshops', 'book');
 	echo "</ul>\n";
 	
 } else {
 	echo "<div class=\"my-3 p-3 bg-info text-light\">";
-	echo "<h1 class=\"display-1\"><a class=\"text-light\" href=\"{$sc}\">{$heading}</a></h1>\n";	
+	echo "<h1 class=\"display-1\"><a class=\"text-light\" href=\"index.php\">{$heading}</a></h1>\n";	
 	echo "<p class=\"lead text-dark\">These workshops are taught online using the <a class='text-dark' href='http://www.zoom.us/'>Zoom</a> app.";
 	echo "</div>\n";
 }

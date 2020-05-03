@@ -23,7 +23,7 @@ foreach ($workshops as $wk) {
 	$start = Wbhkit\friendly_time($wk['start']);
 	$end = Wbhkit\friendly_time($wk['end']);
 	
-	echo "<li><a href='admin.php?wid={$wk['id']}&ac=ed'>{$wk['title']}</a>, $start-$end (".number_format($wk['attended'], 0)." / ".number_format($wk['enrolled'], 0)." /  ".number_format($wk['capacity'], 0)." / ".number_format($wk['waiting']+$wk['invited']).")";
+	echo "<li><a href='admin_edit.php?wid={$wk['id']}'>{$wk['title']}</a>, $start-$end (".number_format($wk['attended'], 0)." / ".number_format($wk['enrolled'], 0)." /  ".number_format($wk['capacity'], 0)." / ".number_format($wk['waiting']+$wk['invited']).")";
 	echo "</li>\n";
 	
 }	

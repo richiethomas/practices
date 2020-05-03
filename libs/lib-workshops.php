@@ -47,7 +47,7 @@ function fill_out_workshop_row($row) {
 	// now that we've found it, format it nicely
 	$row['nextstart'] = \Wbhkit\friendly_when($row['nextstart']);
 	$row['nextend'] = \Wbhkit\friendly_when($row['nextend']);
-	
+		
 	$row = set_enrollment_stats($row);
 	
 	if ($row['enrolled'] >= $row['capacity'] || $row['waiting'] > 0 || $row['invited'] > 0) { 
@@ -281,9 +281,9 @@ function get_empty_workshop() {
 
 function add_workshop_form($wk) {
 	global $sc;
-	return "<form id='add_wk' action='$sc' method='post' novalidate>".
+	return "<form id='add_wk' action='admin_edit.php' method='post' novalidate>".
 	\Wbhkit\form_validation_javascript('add_wk').
-	"<fieldset name='session_add'><legend>Add Session</legend>".
+	"<fieldset name='session_add'><legend>Add Workshop</legend>".
 	\Wbhkit\hidden('ac', 'ad').
 	workshop_fields($wk).
 	\Wbhkit\submit('Add').

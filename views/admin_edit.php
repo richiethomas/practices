@@ -54,7 +54,7 @@ echo "<div class='row mt-md-3 admin-edit-workshop'>\n";
 		if (!empty($wk['sessions'])) {
 			echo "<ul>\n";
 			foreach ($wk['sessions'] as $s) {
-				echo "<li>{$s['friendly_when']} <a href='$sc?ac=delxtra&xtraid={$s['id']}&wid={$wk['id']}'>delete</a></li>\n";
+				echo "<li>{$s['friendly_when']} <a href='admin.php?ac=delxtra&xtraid={$s['id']}&wid={$wk['id']}'>delete</a></li>\n";
 			}
 			echo "</ul>\n";
 		}

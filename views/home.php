@@ -1,4 +1,3 @@
-
 		<div class="row">					
 			<div class="col-md-3">
 				<img src="assets/headshot20194.jpg" class="img-fluid" alt="Will Hines photo"><br><small>Photo by: <a href="http://www.claylarsen.net/">Clay Larsen</a></small>
@@ -22,22 +21,11 @@
 			<div id='login_prompt' class='card bg-info'>
 			<div class='card-body'>
 	
-<?php 		if (Users\logged_in()) { 
-			
-			echo "<p>Welcome, you are logged in as <strong>{$u['nice_name']}</strong>.</p>";
-?>		
-<ul class="nav">
-  <li class="nav-item">
-    <a class='nav-link btn btn-outline-light m-2' href='' data-toggle="modal" data-target="#nameEmailModal"><span class="oi oi-person" title="person" aria-hidden="true"></span> update name and email</a>
-  </li>
-  <li class="nav-item">
-    <a class='nav-link btn btn-outline-light m-2' href='' data-toggle="modal" data-target="#textModal"><span class="oi oi-phone" title="phone" aria-hidden="true"></span> update text notifications</a>
-  </li>
-  <li class="nav-item">
-    <a class='nav-link btn btn-outline-light m-2' href="index.php?ac=lo"><span class="oi oi-account-logout" title="account-logout" aria-hidden="true"></span> log out</a>
-  </li>
-</ul>	
-							  	  
+<?php 		if (Users\logged_in()) { ?>		
+   <p>Welcome, you are logged in as <strong><?php echo $u['nice_name']; ?></strong>.
+   <a class='btn btn-outline-light m-2' href='you.php'><span class="oi oi-person" title="person" aria-hidden="true"></span> edit your info</a>
+    <a class='btn btn-outline-light m-2' href="index.php?ac=lo"><span class="oi oi-account-logout" title="account-logout" aria-hidden="true"></span> log out</a></p>
+							
 			
 <?php 		} else { ?>
 			<h2 class='card-title'>Log In To This Site</h2>
@@ -45,21 +33,6 @@
 			<?php echo Users\login_prompt(); ?>
 <?php		} ?>
 		</div></div></div></div> <!--// end two card divs, then column, then row-->
-
-
-<div class="row justify-content-center"><div class="col-md-6 border border-info">
-<h2>How This Works</h2>
-<ul>
-	<li>All class times are California local time.</li>
-	<li>You log in with your email, a link gets emailed to you, you click it. Then you can enroll in classes, drop out, join waiting lists</li>
-	<li>Pay with Venmo or Paypal</li>
-	<li>Classes are held over <a href="http://www.zoom.us/">Zoom</a></li>
-	<li>Wear headphones during the workshop.</li>
-	<li><b>LATE DROP POLICY: If you drop within <?php echo LATE_HOURS; ?> hours of the start of the workshop, you still must pay.</b></li>
-</ul>
-</div>
-</div>
-
 
 
 
@@ -99,7 +72,7 @@ echo "<p class=\"font-weight-light\">(All times PDT - California time)</p></div>
 
 
 
-			<div class='row mb-md-4'><div class='col'>
+		<div class='row mb-md-4'><div class='col'>
 		<h2>Available Workshops</h2> 
 		<?php echo $upcoming_workshops; ?>
 		</div></div> <!-- end of col and row -->
@@ -114,15 +87,6 @@ echo "<p class=\"font-weight-light\">(All times PDT - California time)</p></div>
 					<a href="https://www.amazon.com/dp/0982625723"><img src="assets/htbtgioe_cover.jpg" class="img-fluid" alt="How to Be The Greatest Improviser on Earth"></a>
 				</div>
 			</div>
-		
-		<?php if (Users\logged_in()) {
-			echo "<div class='row mb-md-4'><div class='col'>\n";
-			echo "<h2>Your Workshops</h2>\n";
-			echo $transcript; 
-			echo "</div></div> <!-- end of col and row -->\n";
-		} 
-		?>
-
 
 		<div class="row justify-content-center mb-md-4">
 		
@@ -159,13 +123,26 @@ echo "<p class=\"font-weight-light\">(All times PDT - California time)</p></div>
 			</div> <!-- end of col -->
 
 			</div> <!-- end of row -->
-			
-			
-		
-<?php if (Users\logged_in()) { ?>		
-				  <?php echo Wbhkit\get_modal('textModal', '<span class="oi oi-phone" title="phone" aria-hidden="true"></span> Text Notifications', Users\edit_text_preferences($u)); ?>
 
-				  <?php echo Wbhkit\get_modal('nameEmailModal', '<span class="oi oi-person" title="person" aria-hidden="true"></span> Name and Email', Users\edit_display_name($u).'<br><br>'.Users\edit_change_email($u)); ?>
+<?php
+	
+/*
+//old modal buttons saving this HTML
 
-<?php } ?>
-
+<ul class="nav">
+  <li class="nav-item">
+    <a class='nav-link btn btn-outline-light m-2' href='' data-toggle="modal" data-target="#nameEmailModal"><span class="oi oi-person" title="person" aria-hidden="true"></span> update name and email</a>
+  </li>
+  <li class="nav-item">
+    <a class='nav-link btn btn-outline-light m-2' href='' data-toggle="modal" data-target="#textModal"><span class="oi oi-phone" title="phone" aria-hidden="true"></span> update text notifications</a>
+  </li>
+ <li class="nav-item">
+   <a class='nav-link btn btn-outline-light m-2' href='you.php'><span class="oi oi-book" title="book" aria-hidden="true"></span> your workshops</a>
+ </li> 
+  <li class="nav-item">
+    <a class='nav-link btn btn-outline-light m-2' href="index.php?ac=lo"><span class="oi oi-account-logout" title="account-logout" aria-hidden="true"></span> log out</a>
+  </li>
+</ul>
+*/
+	
+?>

@@ -29,7 +29,7 @@
 		
 			echo "<div class='row workshop-row workshop-$cl my-3 py-3 border-top'>\n"; // workshop row start
 			
-			echo "<div class='col-md-6'>".($row['soldout'] == 1 ? 'SOLD OUT: ' : '')."<a href='$sc?wid={$row['id']}".($admin ? '&ac=ed' : '')."'>{$row['title']}</a></span>".($row['notes'] ? "<p class='small text-muted'>{$row['notes']}</p>" : '')."</div>"; // title cell
+			echo "<div class='col-md-6'>".($row['soldout'] == 1 ? 'SOLD OUT: ' : '')."<a href='".($admin ? 'admin_edit.php' : 'workshop.php')."?wid={$row['id']}'>{$row['title']}</a></span>".($row['notes'] ? "<p class='small text-muted'>{$row['notes']}</p>" : '')."</div>"; // title cell
 				
 			echo "<div class='col-md-6'>\n"; // start of big crammed info cell wrapper
 			echo "<div class='row row-cols-1'>\n"; // row within info cell
@@ -41,9 +41,9 @@
 				
 				echo "<div class='col my-2'>\n";
 				if ($admin) {
-					echo "<a href=\"$sc?wid={$row['id']}\">Clone</a>\n";
+					echo "<a href=\"admin_listall.php?wid={$row['id']}#addworkshop\">Clone</a>\n";
 				} else {
-					echo "<a class='btn btn-primary btn-sm' href=\"{$sc}?wid={$row['id']}&v=winfo\"><span class=\"oi oi-info\" title=\"info\" aria-hidden=\"true\"></span> Go to Sign Up Page</a>";
+					echo "<a class='btn btn-primary btn-sm' href=\"workshop.php?wid={$row['id']}\"><span class=\"oi oi-info\" title=\"info\" aria-hidden=\"true\"></span> Go to Sign Up Page</a>";
 					if ($row['soldout'] == 1) {
 						echo " to join waiting list";
 					}

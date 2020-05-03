@@ -9,7 +9,7 @@ if (count($log) == 0) {
 		<tr><th>user</th>".(isset($wk['id']) && $wk['id'] ? '' : '<th>workshop</th>')."<th>status</th><th>changed /<br>last enrolled<br>(hours before)</th></tr>\n";
 			
 	foreach ($log as $row) {
-		$wkname = "<a href='admin.php?ac=ed&wid={$row['workshop_id']}'>{$row['title']}</a><br><small>{$row['showstart']}</small>";
+		$wkname = "<a href='admin_edit.php?wid={$row['workshop_id']}'>{$row['title']}</a><br><small>{$row['showstart']}</small>";
 		$row_class = '';
 		$last_enrolled = '';
 

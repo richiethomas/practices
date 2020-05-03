@@ -166,7 +166,7 @@ function email_link($u) {
 
 function logged_in() {
 	global $u, $key;
-	if (isset($u) && $u && verify_key($key, $u['ukey'], $error, 0)) {
+	if (isset($u) && $u && verify_key($key, $u['ukey'], $error, 0) && isset($u['id']) && $u['id'] > 0) {
 		return true;
 	} else {
 		return false;
@@ -394,7 +394,7 @@ function update_text_preferences(&$u,  &$message, &$error) {
 		foreach (['send_text', 'phone', 'carrier_id'] as $key) {
 			$u[$key] = $$key;
 		}
-		$message = 'Preferences updated!';
+		$message = 'Text preferences updated!';
 		$logger->debug($message." for user {$u['id']}");
 		
 		return true;

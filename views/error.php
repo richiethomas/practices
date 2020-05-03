@@ -8,4 +8,4 @@ if (isset($error_message)) {
 
 <?php } ?>
 
-<p>Return to the <a href='admin.php'>front</a>.</p>
+<p>Return to the <a href='index.php'>front</a>.</p>
