@@ -22,7 +22,7 @@ echo "<div class='row mt-md-3 admin-edit-workshop'>\n";
 			foreach ($lists[$stid] as $s) {
 				echo "<div class='row my-3'><div class='col-md-6'>".Wbhkit\checkbox('users', $s['id'], "<a href='admin_student.php?uid={$s['id']}&wid={$wk['id']}'>{$s['nice_name']}</a> <small>".date('M j g:ia', strtotime($s['last_modified']))."</small>", $s['attended'], true)."</div>".
 				"<div class='col-md-6'>
-				<a class='btn btn-outline-secondary btn-sm' href='admin.php?ac=cs&wid={$wk['id']}&uid={$s['id']}'>change status</a>  <a  class='btn btn-outline-secondary btn-sm' href='admin.php?ac=conrem&uid={$s['id']}&wid={$wk['id']}'>remove</a></div>".
+				<a class='btn btn-outline-secondary btn-sm' href='admin_change_status.php?wid={$wk['id']}&uid={$s['id']}'>change status</a>  <a  class='btn btn-outline-secondary btn-sm' href='admin_edit.php?ac=conrem&uid={$s['id']}&wid={$wk['id']}'>remove</a></div>".
 				"</div>\n";
 			}
 		}

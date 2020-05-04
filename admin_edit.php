@@ -68,13 +68,7 @@ switch ($ac) {
 	case 'cdel':
 		$error = "Are you sure you want to delete '{$wk['title']}'? <a class='btn btn-danger' href='admin.php?ac=del&wid={$wk['id']}'>delete</a>";
 		break;
-	
-	
-	case 'cs':
-		if ($st) {
-			$message = Enrollments\change_status($wk, $u, $st, $con);
-		}
-		break;	
+
 		
 	case 'adxtra':	
 		XtraSessions\add_xtra_session($wid, $start, $end);
