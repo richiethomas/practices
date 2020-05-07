@@ -7,14 +7,8 @@
 				$public = "<br><small>Public: ".date('D M j - g:ia', strtotime($row['when_public']))."</small>\n";
 			}	
 			
-			$sessions = '';
-			if (!empty($row['sessions'])) {
-				$sessions .= "{$row['when']}";
-				foreach ($row['sessions'] as $s) {
-					$sessions .= "<br>\n{$s['friendly_when']}";
-				}
-				$row['when'] = $sessions; // replace the when variable 
-			}
+			
+			$row['when'] = \XtraSessions\add_sessions_to_when($row['when'], $row['sessions']);
 					
 			$cl = '';
 			if (date('z', strtotime($row['start'])) == date('z')) { // today

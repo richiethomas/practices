@@ -54,7 +54,7 @@ echo "<div class='row mt-md-3 admin-edit-workshop'>\n";
 		if (!empty($wk['sessions'])) {
 			echo "<ul>\n";
 			foreach ($wk['sessions'] as $s) {
-				echo "<li>{$s['friendly_when']} <a href='admin.php?ac=delxtra&xtraid={$s['id']}&wid={$wk['id']}'>delete</a></li>\n";
+				echo "<li>{$s['friendly_when']}".($s['class_show'] ? ' <b>(show)</b> ': '')." <a href='$sc?ac=delxtra&xtraid={$s['id']}&wid={$wk['id']}'>delete</a></li>\n";
 			}
 			echo "</ul>\n";
 		}
@@ -63,10 +63,10 @@ echo "<div class='row mt-md-3 admin-edit-workshop'>\n";
 		<fieldset name=\"sessions_edit\">".
 		Wbhkit\texty('start', null, null, null, null, 'Required', ' required ').
 		Wbhkit\texty('end', null, null, null, null, 'Required', ' required ').
+		Wbhkit\checkbox('class_show', 1, 'Class Show?', 0).				
 		Wbhkit\hidden('ac', 'adxtra').
 		Wbhkit\hidden('wid', $wk['id']).
 		Wbhkit\submit('Add Session');
-
 		echo "</fieldset></form>\n";
 		
 

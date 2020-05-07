@@ -14,17 +14,8 @@ if ($wk['location_id'] == ONLINE_LOCATION_ID) {
 	$long_where .= "<br>If possible, wear headphones for the session.<br>\n";
 }
 
-
-$sessions = '';
-if (!empty($wk['sessions'])) {
-	$sessions ="<p>\n";
-	$sessions .= "{$wk['when']}";
-	foreach ($wk['sessions'] as $s) {
-		$sessions .= "<br>\n{$s['friendly_when']}";
-	}
-	$sessions .= "</p>\n";
-	$wk['when'] = $sessions; // replace the when variable 
-}
+// multiple sessions?
+$wk['when'] = \XtraSessions\add_sessions_to_when($wk['when'], $wk['sessions']);
 
 switch ($ac) {
 			

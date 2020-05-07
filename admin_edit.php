@@ -5,7 +5,7 @@ include 'lib-master.php';
 include 'libs/validate.php';
 
 
-$wk_vars = array('wid', 'title', 'notes', 'start', 'end', 'lid', 'online_url', 'cost', 'capacity', 'notes', 'revenue', 'expenses', 'when_public', 'email', 'con', 'cancelled', 'xtraid');
+$wk_vars = array('wid', 'title', 'notes', 'start', 'end', 'lid', 'online_url', 'cost', 'capacity', 'notes', 'revenue', 'expenses', 'when_public', 'email', 'con', 'cancelled', 'xtraid', 'class_show');
 Wbhkit\set_vars($wk_vars);
 
 
@@ -71,7 +71,7 @@ switch ($ac) {
 
 		
 	case 'adxtra':	
-		XtraSessions\add_xtra_session($wid, $start, $end);
+		XtraSessions\add_xtra_session($wid, $start, $end, $class_show);
 		$wk = Workshops\fill_out_workshop_row($wk);
 		break;
 		

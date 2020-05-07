@@ -23,18 +23,9 @@ if ($admin) {
 		}
 		
 		
-		$sessions = '';
-		if (!empty($t['sessions'])) {
-			$sessions ="<p>\n";
-			$sessions .= "{$t['when']}";
-			foreach ($t['sessions'] as $s) {
-				$sessions .= "<br>\n{$s['friendly_when']}";
-			}
-			$sessions .= "</p>\n";
-			$t['when'] = $sessions; // replace the when variable 
-		}
 		
-		
+		$t['when'] = \XtraSessions\add_sessions_to_when($t['when'], $t['sessions']);
+				
 		echo "<div class='row workshop-row workshop-$cl my-3 py-3 border-top'>\n"; // workshop row start
 				
 			echo "	<div class='col-sm'>";

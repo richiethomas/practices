@@ -81,17 +81,8 @@ function confirm_email($wk, $u, $status_id = ENROLLED) {
 	
 	
 	
-	//multiple sessions
-	$sessions = '';
-	if (!empty($wk['sessions'])) {
-		$sessions = "{$wk['when']}";
-		foreach ($wk['sessions'] as $s) {
-			$sessions .= "<br>\n{$s['friendly_when']}";
-		}
-		$sessions .= "<br>\n";
-		$wk['when'] = $sessions; // replace the when variable 
-	}
-	
+	//multiple sessions?
+	$wk['when'] = \XtraSessions\add_sessions_to_when($wk['when'], $wk['sessions']);	
 	
 	$send_faq = false;
 	switch ($status_id) {
