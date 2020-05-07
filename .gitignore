@@ -9,6 +9,7 @@ db_pdo.php
 mail_log.txt
 .git-ftp-ignore
 .gitignore
+zschema.txt
 
 # Compiled source #
 ###################
