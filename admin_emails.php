@@ -10,7 +10,7 @@ $results = null;
 $all_workshops = Workshops\get_workshops_dropdown();
 
 
-$unattended = array();
+$unpaid = array();
 $students = array();
 if (is_array($workshops)) {
 	$statuses[0] = 'all'; // modifying global $statuses
@@ -23,9 +23,9 @@ if (is_array($workshops)) {
 					// track students by status		
 					$students[] = $as['email'];
 					
-					// also tally who attended
-					if ($as['status_id'] == ENROLLED and $as['attended'] == 0) {
-						$unattended[] = $as['email'];
+					// also tally who paid
+					if ($as['status_id'] == ENROLLED and $as['paid'] == 0) {
+						$unpaid[] = $as['email'];
 					}
 
 				}
@@ -36,14 +36,14 @@ if (is_array($workshops)) {
 		natcasesort($students);
 		$results[$stid] = $students; // attach list of students
 		
-		// also attended
-		$unattended = array_unique($unattended);
-		natcasesort($unattended);
+		// also unpaid
+		$unpaid = array_unique($unpaid);
+		natcasesort($unpaid);
 		
 	}
 }
 
-$view->add_globals(array('all_workshops', 'workshops', 'statuses', 'results', 'unattended'));
+$view->add_globals(array('all_workshops', 'workshops', 'statuses', 'results', 'unpaid'));
 $view->renderPage('admin_gemail');
 
 

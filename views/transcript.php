@@ -23,14 +23,13 @@ if ($admin) {
 		}
 		
 		
-		
 		$t['when'] = \XtraSessions\add_sessions_to_when($t['when'], $t['sessions']);
 				
 		echo "<div class='row workshop-row workshop-$cl my-3 py-3 border-top'>\n"; // workshop row start
 				
 			echo "	<div class='col-sm'>";
 			if ($admin) {
-				echo Wbhkit\checkbox('paids', $t['enrollment_id'], "<a href=\"admin_edit.php?wid={$t['workshop_id']}\">{$t['title']}</a>", $t['attended'], true);
+				echo Wbhkit\checkbox('paids', $t['enrollment_id'], "<a href=\"admin_edit.php?wid={$t['workshop_id']}\">{$t['title']}</a>", $t['paid'], true);
 			} else {
 				echo "<a href=\"workshop.php?wid={$t['workshop_id']}\">{$t['title']}</a>";
 			}

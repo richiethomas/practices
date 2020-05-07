@@ -175,14 +175,14 @@ function check_waiting($wk) {
 	return "No invites sent.";
 }
 
-function update_paid($wid, $uid, $attended = 1) {
-	$stmt = \DB\pdo_query("update registrations set attended = :attended where workshop_id = :wid and user_id = :uid", array(':attended' => $attended, ':wid' => $wid, ':uid' => $uid));
-	return "Updated user ($uid) workshop ($wid) to attended: $attended";
+function update_paid($wid, $uid, $paid = 1) {
+	$stmt = \DB\pdo_query("update registrations set paid = :paid where workshop_id = :wid and user_id = :uid", array(':paid' => $paid, ':wid' => $wid, ':uid' => $uid));
+	return "Updated user ($uid) workshop ($wid) to paid status: $paid";
 }
 
-function update_paid_by_enrollment_id($eid, $attended = 1) {
-	$stmt = \DB\pdo_query("update registrations set attended = :attended where id = :rid", array(':attended' => $attended, ':rid' => $eid));
-	return "Updated enrollment id ($eid) to attended: $attended";
+function update_paid_by_enrollment_id($eid, $paid = 1) {
+	$stmt = \DB\pdo_query("update registrations set paid = :paid where id = :rid", array(':paid' => $paid, ':rid' => $eid));
+	return "Updated enrollment id ($eid) to paid status: $paid";
 }
 
 
@@ -253,7 +253,7 @@ function get_status_change_log($wk = null) {
 }
 
 function get_students($wid, $status_id = ENROLLED) {
-	$sql = "select u.*, r.status_id,  r.attended, r.registered, r.last_modified  from registrations r, users u where r.workshop_id = :wid";
+	$sql = "select u.*, r.status_id,  r.paid, r.registered, r.last_modified  from registrations r, users u where r.workshop_id = :wid";
 	if ($status_id) { 
 		$sql .= " and status_id = :sid and r.user_id = u.id order by last_modified"; 
 		$stmt = \DB\pdo_query($sql, array(':wid' => $wid, ':sid' => $status_id));
@@ -316,6 +316,7 @@ function get_transcript_tabled($u, $admin = false, $page = 1) {
 		$d['soldout'] = $wk['soldout'];
 		$d['upcoming'] = $wk['upcoming'];
 		$d['when'] = $wk['when'];
+		$d['sessions'] = $wk['sessions'];
 		if ($d['status_id'] == WAITING) {
 			$e = get_an_enrollment($wk, $u); 
 			$d['rank'] = $e['rank']; 

@@ -19,12 +19,12 @@
 
 			}
 			
-			echo "<h3>Enrolled and Unattended</h3>\n";
-			$unat = '';
-			foreach ($unattended as $unattended_email) {
-				$unat .= "{$unattended_email}\n";
+			echo "<h3>Enrolled and Unpaid</h3>\n";
+			$unpaid_list = '';
+			foreach ($unpaid as $unpaid_email) {
+				$unpaid_list .= "{$unpaid_email}\n";
 			}
-			echo Wbhkit\textarea('unattended', $unat, 0);
+			echo Wbhkit\textarea('unpaid', $unpaid_list, 0);
 			
 			
 			echo "</div>\n";

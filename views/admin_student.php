@@ -11,14 +11,23 @@ if ($needle) {
 <h3 class="my-3">Transcripts</h3>
 <?php echo $transcripts; ?>
 
+<div class='row justify-content-center'><div class='col-sm-6'>
+
+<div class='card my-5 bg-light'><div class='card-body'>
 <h3 class="my-3">Change Email</h3>
 <?php echo $change_email_form; ?>
+</div></div> <!-- end of card -->
 
+<div class='card my-5 bg-light'><div class='card-body'>
 <h3 class="my-3">Text Preferences</h3>
 <?php echo $text_preferences; ?>
+</div></div> <!-- end of card -->
 
+<div class='card my-5 bg-light'><div class='card-body'>
 <h3 class="my-3">Display Name</h3>
 <?php echo $display_name_form; ?>
+</div></div> <!-- end of card -->
+</div></div> <!-- end of 6 col row -->
 
 <p>or</p>
 

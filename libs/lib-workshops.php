@@ -78,7 +78,7 @@ function set_enrollment_stats($row) {
 	foreach ($statuses as $sid => $sname) {
 		$row[$sname] = $enrollments[$sid];
 	}	
-	$row['attended'] = how_many_attended($row);
+	$row['paid'] = how_many_paid($row);
 	$row['open'] = ($row['enrolled'] >= $row['capacity'] ? 0 : $row['capacity'] - $row['enrolled']);
 	return $row;
 }
@@ -237,10 +237,10 @@ order by start asc");
 }
 
 
-function how_many_attended($wk) {
-	$stmt = \DB\pdo_query("select count(*) as total_attended from registrations where workshop_id = :wid and attended = 1", array(':wid' => $wk['id']));
+function how_many_paid($wk) {
+	$stmt = \DB\pdo_query("select count(*) as total_paid from registrations where workshop_id = :wid and paid = 1", array(':wid' => $wk['id']));
 	while ($row = $stmt->fetch()) {
-		return $row['total_attended'];
+		return $row['total_paid'];
 	}
 	return 0;
 }
