@@ -42,6 +42,15 @@ foreach ($workshops as $wk) {
 }	
 echo "</ul>\n";
 
+echo "<h2>Descriptions</h2>\n";
+echo "<ul>\n";
+foreach ($workshops as $wk) {
+	if ($wk['xtra']) { continue; } // first sessoins only
+	echo "<li><b>{$wk['title']}</b> - {$wk['notes']}</li>\n";
+}	
+echo "</ul>\n";
+
+
 
 
 ?>

@@ -1,4 +1,4 @@
-<h2>All Workshops <small><a href='#add'>add a workshop</a></small></h2>
+<h2>All Workshops <small><a href='#addworkshop'>add a workshop</a></small></h2>
 	
 <?php echo $workshops_list; ?>
 
