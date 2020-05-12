@@ -64,12 +64,12 @@ function confirm_email($wk, $u, $status_id = ENROLLED) {
 		$key = $u['key'];
 	}
 	$e = \Enrollments\get_an_enrollment($wk, $u); 
-	$drop = URL."index.php?key=$key&ac=drop&wid={$wk['id']}";
-	$trans = URL."index.php?key=$key&wid={$wk['id']}";
-	$accept = URL."index.php?ac=accept&wid={$wk['id']}&key=$key";
-	$decline = URL."index.php?ac=decline&wid={$wk['id']}&key=$key";
-	$enroll = URL."index.php?key=$key&ac=enroll&wid={$wk['id']}";
-	$textpref = URL."index.php?key=$key";
+	$drop = URL."workshop.php?key=$key&ac=drop&wid={$wk['id']}";
+	$trans = URL."workshop.php?key=$key&wid={$wk['id']}";
+	$accept = URL."workshop.php?ac=accept&wid={$wk['id']}&key=$key";
+	$decline = URL."workshop.php?ac=decline&wid={$wk['id']}&key=$key";
+	$enroll = URL."workshop.php?key=$key&ac=enroll&wid={$wk['id']}";
+	$textpref = URL."you.php?key=$key";
 	$call = '';
 	$late = '';
 	$textpoint = '';
@@ -93,7 +93,7 @@ function confirm_email($wk, $u, $status_id = ENROLLED) {
 			$textpoint = $point." ";
 
 			if ($wk['location_id'] == ONLINE_LOCATION_ID) {
-				$point .= "\nThe link to your workshop is: {$wk['online_url']}.\nYou will need the Zoom app which you can get for free at http://www.zoom.us/\nPlease wear headphones for the workshop.";
+				$point .= "<p>The link to your workshop is: {$wk['online_url']}.</p><p>You will need the Zoom app which you can get for free at http://www.zoom.us/</p><p>Please wear headphones for the workshop.</p>";
 			}
 
 			$call = "To DROP, click here:\n{$drop}";

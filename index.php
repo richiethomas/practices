@@ -59,56 +59,6 @@ switch ($ac) {
 		break;		
 	
 	
-	// accept an invite to a workshop
-	case 'accept':
-		if (!Users\logged_in()) {
-			$error = 'You are not logged in! You have to be logged in to accept an invite.';
-			$logger->debug($error);
-			
-			break;
-		}
-		if ($wk['cancelled']) {
-			$error = 'Cannot accept invite. This workshop has been cancelled.';
-			$logger->debug("Rejected invite for {$u['nice_name']} since {$wk['title']} is cancelled.");
-			
-			break;
-		}
-		$e = Enrollments\get_an_enrollment($wk, $u);
-		if ($e['status_id'] == INVITED) {
-			Enrollments\change_status($wk, $u, ENROLLED, 1);
-			Enrollments\check_waiting($wk);
-			$message = "You are now enrolled in '{$wk['title']}'! Info emailed to <b>{$u['email']}</b>.";
-			
-		} else {
-			$error = "You tried to accept an invitation to '{$wk['title']}', but I don't see that there is an open spot.";
-			$logger->debug("Rejected invite for {$u['nice_name']} since {$wk['title']} is full.");
-		}
-		break;
-
-	case 'decline':
-		if (!Users\logged_in()) {
-			$error = 'You are not logged in! You have to be logged in to decline an invite.';
-			$logger->debug($error);
-			break;
-		}
-		if ($wk['cancelled']) {
-			$error = 'This workshop has been cancelled.';
-			$logger->debug("Rejected decline for {$u['nice_name']} since {$wk['title']} is cancelled.");
-			break;
-		}
-	
-		$e = Enrollments\get_an_enrollment($wk, $u);
-		if ($e['status_id'] == INVITED) {
-			Enrollments\change_status($wk, $u, DROPPED, 1);
-			Enrollments\check_waiting($wk);
-			$message = "You have dropped out of the waiting list for '{$wk['title']}'.";			
-		} else {
-			$error = "You tried to decline an invitation to '{$wk['title']}', but I don't see that there was an open spot.";
-			$logger->debug("Rejected decline for {$u['nice_name']} since {$wk['title']} is full.");
-			
-		}
-		break;
-	
 	// log out	
 	case 'lo':
 		$logger->info("{$u['nice_name']} logging out.");

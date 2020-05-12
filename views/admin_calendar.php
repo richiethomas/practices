@@ -30,7 +30,7 @@ foreach ($workshops as $wk) {
 
 echo "</ul>\n";
 
-echo "<h2>Upcoming, cut-and-paste format</h2>\n";
+echo "<h2>Upcoming Classes</h2>\n";
 echo "<h5>All times PDT - California time</h5>\n";
 echo "<ul>\n";
 foreach ($workshops as $wk) {
@@ -41,6 +41,7 @@ foreach ($workshops as $wk) {
 	echo "<li>$wkdate: {$wk['title']}, $start-$end \${$wk['cost']} (USD)</li>\n";
 }	
 echo "</ul>\n";
+echo "<p>All times PDT - California time</p>\n";
 
 echo "<h2>Descriptions</h2>\n";
 echo "<ul>\n";
