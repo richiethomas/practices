@@ -272,16 +272,19 @@ function friendly_time($time_string) {
 }
 
 function friendly_date($time_string) {
+	
+	$ts = strtotime($time_string);
+	
 	$now_doy = date('z'); // current day of year
 	$wk_doy = date('z', strtotime($time_string)); // workshop day of year
 
 
 	if (($wk_doy - $now_doy) < 7 && ($wk_doy - $now_doy) >= 0) {
-		return date('l', strtotime($time_string)); // Monday, Tuesday, Wednesday
-	} elseif (date('Y', strtotime($time_string)) != date('Y')) {  
-		return date('l M j, Y', strtotime($time_string));
+		return date('l', $ts); // Monday, Tuesday, Wednesday
+	} elseif (date('Y', $ts) != date('Y')) {  
+		return date('l M j, Y', $ts);
 	} else {
-		return date('l M j', strtotime($time_string));
+		return date('l M j', $ts);
 	}
 }	
 
@@ -295,4 +298,9 @@ function is_future($time_string) {
 	} else {
 		return 0;
 	}
+}
+
+function binary_yesno($field) {
+	if ($field == 1) { return 'yes'; }
+	return 'no';
 }

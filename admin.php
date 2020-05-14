@@ -1,5 +1,5 @@
 <?php
-$sc = "admin_calendar.php";
+$sc = "admin.php";
 $heading = "practices: admin";
 include 'lib-master.php';
 

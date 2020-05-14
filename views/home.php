@@ -31,7 +31,7 @@
 	   <?php } ?>
 	   
    <a class='btn btn-outline-light m-2' href='you.php'><span class="oi oi-person" title="person" aria-hidden="true"></span> edit your info</a>
-    <a class='btn btn-outline-light m-2' href="$sc.php?ac=lo"><span class="oi oi-account-logout" title="account-logout" aria-hidden="true"></span> log out</a></p>
+    <a class='btn btn-outline-light m-2' href="<?php echo $sc; ?>?ac=lo"><span class="oi oi-account-logout" title="account-logout" aria-hidden="true"></span> log out</a></p>
 							
 			
 <?php 		} else { ?>

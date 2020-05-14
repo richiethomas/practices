@@ -7,8 +7,10 @@ echo "<div class='row mt-md-3 admin-edit-workshop'>\n";
 		echo "<div class='col-md-7'><h2>Enrollment Info <small><br>
 			<a class='btn btn-primary' href='admin_messages.php?wid={$wk['id']}'><span class='oi oi-envelope-closed' title='envelope-closed' aria-hidden='true'></span> message</a> 
 			<a class='btn btn-primary'  href='$sc?ac=cw&wid={$wk['id']}'><span class='oi oi-clock' title='clock' aria-hidden='true'></span> check waiting</a>
+
+			<a class='btn btn-primary'  href='$sc?ac=sar&wid={$wk['id']}'><span class='oi oi-clock' title='clock' aria-hidden='true'></span> send all reminders</a>
 			</small></h2>\n";
-		
+
 		//show enrollment totals at top
 		echo  "<p>totals: (".implode(" / ", array_values($stats)).")<p>\n";
 		
@@ -54,7 +56,7 @@ echo "<div class='row mt-md-3 admin-edit-workshop'>\n";
 		if (!empty($wk['sessions'])) {
 			echo "<ul>\n";
 			foreach ($wk['sessions'] as $s) {
-				echo "<li>{$s['friendly_when']}".($s['class_show'] ? ' <b>(show)</b> ': '')." <a href='$sc?ac=delxtra&xtraid={$s['id']}&wid={$wk['id']}'>delete</a></li>\n";
+				echo "<li>{$s['friendly_when']}".($s['class_show'] ? ' <b>(show)</b> ': '')." <a href='$sc?ac=delxtra&xtraid={$s['id']}&wid={$wk['id']}'>delete</a>".($s['reminder_sent'] ? ' <em>- reminder sent</em>' : '')."</li>\n";
 			}
 			echo "</ul>\n";
 		}

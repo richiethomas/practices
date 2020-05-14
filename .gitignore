@@ -10,6 +10,7 @@ mail_log.txt
 .git-ftp-ignore
 .gitignore
 zschema.txt
+info.txt
 
 # Compiled source #
 ###################

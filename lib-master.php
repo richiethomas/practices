@@ -23,11 +23,13 @@ spl_autoload_register(function ($className) {
 
 // some constants
 define('LOCAL', ($_SERVER['SERVER_NAME'] == 'localhost') ? true : false);
-define('DEBUG_MODE', false);
+define('DEBUG_MODE', true);
 define('ERROR_LOG', 'info.txt');
 define('URL', "http://{$_SERVER['HTTP_HOST']}/");
 define('ONLINE_LOCATION_ID', 8);
 define('TIMEZONE', 'PDT');
+define('LATE_HOURS', 12);
+define('REMINDER_HOURS', 24);
 
 if (LOCAL) {
 	define('WEBMASTER', "will@willhines.net");	
@@ -56,8 +58,6 @@ define('ENROLLED', Lookups\find_status_by_value('enrolled'));
 define('WAITING', Lookups\find_status_by_value('waiting'));
 define('DROPPED', Lookups\find_status_by_value('dropped'));
 define('INVITED', Lookups\find_status_by_value('invited'));
-$late_hours = '24'; // deprecated, use contant in next line
-define('LATE_HOURS', 12);
 $carriers = array();
 $error = '';
 $message = '';
@@ -92,8 +92,9 @@ if (isset($u['ukey']) && $u['ukey'] != $already_here_key) {
 $view = new View();
 
 // group 2 or higher for admin pasges
-if (strpos($sc, 'admin')) {
+if (strpos($sc, 'admin') !== false) {
 	Users\reject_user_below(2); // group 2 or higher for admin
 }
 
+Emails\check_reminder(); // every single time anyone loads a page, sheesh
 

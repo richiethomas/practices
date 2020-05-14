@@ -35,6 +35,8 @@ function centralized_email($to, $sub, $body) {
 	  if (LOCAL) {
 	  	 $sent = $smtp->send($to, $headers, $body);  // laptop can use the SMTP server on willhines.net
  	  } else {
+		  unset($headers['Subject']);
+		  unset($headers['To']);
 	  	 $sent = mail($to, $sub, $body, $headers); // willhinesimprov.com uses local server
  	  }
 	
@@ -93,7 +95,7 @@ function confirm_email($wk, $u, $status_id = ENROLLED) {
 			$textpoint = $point." ";
 
 			if ($wk['location_id'] == ONLINE_LOCATION_ID) {
-				$point .= "<p>The link to your workshop is: {$wk['online_url']}.</p><p>You will need the Zoom app which you can get for free at http://www.zoom.us/</p><p>Please wear headphones for the workshop.</p>";
+				$point .= "<p>The link to your workshop is: {$wk['online_url']}.</p><p>You will need the Zoom app which you can get for free at http://www.zoom.us/</p>";
 			}
 
 			$call = "To DROP, click here:\n{$drop}";
@@ -250,4 +252,123 @@ Paypal whines@gmail.com.</dd>
 <dd>Each workshop/course has a reccomended pre-requiste. But I won't really check. Take the ones you think you can contribute to and get something from.</dd>
 </dl>";
 }	
+
+
+function get_reminder_message_data($wk) {
 	
+	$subject = "REMINDER: {$wk['title']} {$wk['nextstart']}";
+	if ($wk['location_id'] != ONLINE_LOCATION_ID) {
+		$subject .= " at {$wk['place']}";	
+	}
+	$note = "Greetings. You're enrolled in this workshop. ";
+	$note .= "It starts ".\TimeDifference\nicetime($wk['nextstart_raw']).". ";
+	if ($wk['location_id'] == ONLINE_LOCATION_ID && $wk['online_url']) {
+		$note .= "<p>Here's the link: {$wk['online_url']}</p>\n"; 
+	}			
+	$sms = "Reminder: {$wk['title']} workshop, {$wk['nextstart']}, ".URL;
+	
+	return array(
+	 'subject' => $subject,
+	 'note' => $note,
+	 'sms' => $sms	
+	);
+	
+}
+
+
+
+function get_workshop_summary($wk) {
+		return "
+<p><b>Practice details:</b><br>
+Title: {$wk['title']}<br>
+{$wk['place']} {$wk['lwhere']}<br>
+When: {$wk['when']}<br>
+Pay via Venmo @willhines or PayPal whines@gmail.com<br>
+<b>LATE DROP POLICY:</b> If you drop within ".LATE_HOURS." hours of the start, you must still pay for your spot.</p>\n";
+	
+}
+
+function remind_enrolled($wk) {
+	$reminder = get_reminder_message_data($wk);
+	$subject = $reminder['subject'];
+	$note = $reminder['note'];
+	$sms = $reminder['sms'];
+	
+	$stds = \Enrollments\get_students($wk['id'], ENROLLED);
+
+	$base_msg =	$note.get_workshop_summary($wk);
+
+	foreach ($stds as $std) {
+		$key = \Users\get_key($std['id']);
+		$trans = URL."index.php?key=$key";
+		$msg = $base_msg."<p>Log in or drop out here:<br>$trans</p>\n";
+		
+		//admin_log("reminder for {$std['email']} -- $subject");
+		
+		\Emails\centralized_email($std['email'], $subject, $msg);
+		\Emails\send_text($std, $sms); // routine will check if they want texts and have proper info
+		//\Emails\centralized_email('whines@gmail.com', $subject, $msg); // for testing, i get everything
+	
+	}
+}
+
+function check_reminder() {
+	
+	/*
+delete from reminder_checks;
+update workshops set reminder_sent = 0;
+update xtra_sessions set reminder_sent = 0;
+	*/
+
+	// check reminder database -- has it been an hour?
+	$stmt = \DB\pdo_query("select * from reminder_checks order by id desc limit 1"); // most recent check
+	while ($row = $stmt->fetch()) {
+		admin_log("<p class='m-3'>hours since reminder check: ".((time() - strtotime($row['time_checked'])) / 3600))."</p>";
+		if ((time() - strtotime($row['time_checked'])) / 3600 <= 1) { return false; } // checked less than an hour ago
+		 
+	}
+	
+	// if yes, get a list of all workshops that have yet to start within REMINDER_HOURS
+	$workshops_to_remind = array();
+	$mysqlnow = date("Y-m-d H:i:s");
+	
+	//admin_log("select id, start from workshops where start > '$mysqlnow' and reminder_sent = 0");
+	$stmt = \DB\pdo_query("select id, start from workshops where start > :now and reminder_sent = 0", array(':now' => $mysqlnow)); // workshops in the future
+	while ($row = $stmt->fetch()) {
+		if ((strtotime($row['start']) - time()) / 3600 < REMINDER_HOURS) {
+			$workshops_to_remind[] = array($row['id'], 0); // first number id, second number xtra_session row id (0 if not an xtra session)
+		}
+	}
+	
+	//admin_log("select id, workshop_id, start from xtra_sessions where start > '$mysqlnow' and reminder_sent = 0");
+	$stmt = \DB\pdo_query("select id, workshop_id, start from xtra_sessions where start > :now and reminder_sent = 0", array(':now' => $mysqlnow)); // workshops in the future
+	while ($row = $stmt->fetch()) {
+		if ((strtotime($row['start']) - time()) / 3600 < REMINDER_HOURS) {
+			$workshops_to_remind[] = array($row['workshop_id'], $row['id']); // first number id, second number xtra_session row id (0 if not an xtra session)
+		}
+	}
+	
+	// go through each workshop thast start in that windew, and send remidners
+	$wk = array();
+	foreach ($workshops_to_remind as $wk_id_info) {
+		$wk = \Workshops\get_workshop_info($wk_id_info[0]);
+		remind_enrolled($wk);
+		if ($wk_id_info[1] > 0) {
+			$stmt = \DB\pdo_query("update xtra_sessions set reminder_sent = 1 where id = :id", array(':id' => $wk_id_info[1])); // most recent check
+		} else {
+			$stmt = \DB\pdo_query("update workshops set reminder_sent = 1 where id = :id", array(':id' => $wk_id_info[0])); // most recent check
+		}
+	}
+	
+	// add a row to reminder check
+	$stmt = \DB\pdo_query("insert into reminder_checks (time_checked, reminders_sent) VALUES (:now, :rsent)", array(':now' => $mysqlnow, ':rsent' => count($workshops_to_remind))); // most recent check
+
+}
+
+
+function admin_log($st) {
+	global $sc;
+	if (isset($sc) && strpos($sc,'admin') !== false) {
+		echo "$st<br>\n";
+	}
+}

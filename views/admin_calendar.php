@@ -4,6 +4,8 @@
 echo "<h2>Upcoming Workshops</h2>\n";
 echo "<p>Numbers in parenthesis are: <i>(paid / enrolled / capacity / waiting)</i></p>\n";
 
+echo "<p class='alert alert-primary'>Hi! You are logged in as <b>{$u['nice_name']}</b>.</p>\n";
+
 $current_date = null;
 foreach ($workshops as $wk) {
 

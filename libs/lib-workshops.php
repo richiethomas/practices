@@ -33,20 +33,20 @@ function fill_out_workshop_row($row) {
 	
 	// when is the next starting sessions
 	// if all are in past, set this to most recent one
-	$row['nextstart'] = $row['start'];
-	$row['nextend'] = $row['end'];
-	if (!\Wbhkit\is_future($row['nextstart'])) {
+	$row['nextstart_raw'] = $row['start'];
+	$row['nextend_raw'] = $row['end'];
+	if (!\Wbhkit\is_future($row['nextstart_raw'])) {
 		foreach ($row['sessions'] as $s) {
 			if (\Wbhkit\is_future($s['start'])) {
-				$row['nextstart'] = $s['start'];
-				$row['nextend'] = $s['end'];
+				$row['nextstart_raw'] = $s['start'];
+				$row['nextend_raw'] = $s['end'];
 				break; // found the next start
 			}
 		}
 	}
 	// now that we've found it, format it nicely
-	$row['nextstart'] = \Wbhkit\friendly_when($row['nextstart']);
-	$row['nextend'] = \Wbhkit\friendly_when($row['nextend']);
+	$row['nextstart'] = \Wbhkit\friendly_when($row['nextstart_raw']);
+	$row['nextend'] = \Wbhkit\friendly_when($row['nextend_raw']);
 		
 	$row = set_enrollment_stats($row);
 	
@@ -68,6 +68,18 @@ function fill_out_workshop_row($row) {
 	
 }
 
+// pass in the workshop row as it comes from the database table
+// add some columns with date / time stuff figured out
+function format_workshop_startend($row) {
+	$row['showstart'] = \Wbhkit\friendly_date($row['start']).' '.\Wbhkit\friendly_time($row['start']);
+	$row['showend'] = \Wbhkit\friendly_time($row['end']);
+	if ($row['cancelled']) {
+		$row['title'] = "CANCELLED: {$row['title']}";
+	}
+	$row['when'] = "{$row['showstart']}-{$row['showend']}";
+		
+	return $row;
+}
 
 // used in fill_out_workshop_row and also get_sessions_to_come
 // expects 'id' and 'capacity' to be set
@@ -154,18 +166,7 @@ function get_workshops_dropdown($start = null, $end = null) {
 	return $workshops;
 }
 
-// pass in the workshop row as it comes from the database table
-// add some columns with date / time stuff figured out
-function format_workshop_startend($row) {
-	$row['showstart'] = \Wbhkit\friendly_date($row['start']).' '.\Wbhkit\friendly_time($row['start']);
-	$row['showend'] = \Wbhkit\friendly_time($row['end']);
-	if ($row['cancelled']) {
-		$row['title'] = "CANCELLED: {$row['title']}";
-	}
-	$row['when'] = "{$row['showstart']}-{$row['showend']}";
-		
-	return $row;
-}
+
 
 function get_workshops_list($admin = 0, $page = 1) {
 	
@@ -224,9 +225,9 @@ function get_sessions_to_come() {
 	$mysqlnow = date("Y-m-d H:i:s", strtotime("-3 hours"));
 	
 	$stmt = \DB\pdo_query("
-(select id, title, start, end, capacity, cost, 0 as xtra, notes from workshops where date(start) >= date('$mysqlnow'))
+(select id, title, start, end, capacity, cost, 0 as xtra, notes from workshops where start >= date('$mysqlnow'))
 union
-(select x.workshop_id, w.title, x.start, x.end, w.capacity, w.cost, 1 as xtra, w.notes from xtra_sessions x, workshops w where w.id = x.workshop_id and date(x.start) >= date('$mysqlnow'))
+(select x.workshop_id, w.title, x.start, x.end, w.capacity, w.cost, 1 as xtra, w.notes from xtra_sessions x, workshops w where w.id = x.workshop_id and x.start >= date('$mysqlnow'))
 order by start asc"); 
 		
 	$sessions = array();
@@ -275,7 +276,9 @@ function get_empty_workshop() {
 		'expenses' => null,
 		'when_public' => null,
 		'sold_out_late' => null,
-		'cancelled' => null
+		'cancelled' => null,
+		'teacher_id' => 1,
+		'reminder_sent' => 0
 	);
 }
 
@@ -303,7 +306,8 @@ function workshop_fields($wk) {
 	\Wbhkit\texty('revenue', $wk['revenue']).
 	\Wbhkit\texty('expenses', $wk['expenses']).
 	\Wbhkit\checkbox('cancelled', 1, null, $wk['cancelled']).	
-	\Wbhkit\texty('when_public', $wk['when_public'], 'When Public');
+	\Wbhkit\texty('when_public', $wk['when_public'], 'When Public').
+	\Wbhkit\checkbox('reminder_sent', 1, 'Reminder sent?', $wk['reminder_sent']);
 	
 }
 
@@ -321,6 +325,9 @@ function add_update_workshop($wk, $ac = 'up') {
 	if (!$wk['when_public']) { $wk['when_public'] = NULL; }
 	if (!$wk['start']) { $wk['start'] = NULL; }
 	if (!$wk['end']) { $wk['end'] = NULL; }
+	if (!$wk['teacher_id']) { $wk['teacher_id'] = 1; }
+	if (!$wk['reminder_sent']) { $wk['reminder_sent'] = 0; }
+	
 	
 	
 		
@@ -335,15 +342,16 @@ function add_update_workshop($wk, $ac = 'up') {
 		':revenue' => $wk['revenue'],
 		':expenses' => $wk['expenses'],
 		':public' => date('Y-m-d H:i:s', strtotime($wk['when_public'])),
-		':cancelled' => $wk['cancelled']);
+		':cancelled' => $wk['cancelled'],
+		':reminder_sent' => $wk['reminder_sent']);
 		
 		if ($ac == 'up') {
 			$params[':wid'] = $wk['id'];
-			$stmt = \DB\pdo_query("update workshops set title = :title, start = :start, end = :end, cost = :cost, capacity = :capacity, location_id = :lid, online_url = :online_url, notes = :notes, revenue = :revenue, expenses = :expenses, when_public = :public, cancelled = :cancelled where id = :wid", $params);
+			$stmt = \DB\pdo_query("update workshops set title = :title, start = :start, end = :end, cost = :cost, capacity = :capacity, location_id = :lid, online_url = :online_url, notes = :notes, revenue = :revenue, expenses = :expenses, when_public = :public, cancelled = :cancelled, reminder_sent = :reminder_sent where id = :wid", $params);
 			return $wk['id'];
 		} elseif ($ac = 'ad') {
-			$stmt = \DB\pdo_query("insert into workshops (title, start, end, cost, capacity, location_id, online_url, notes, revenue, expenses, when_public, cancelled)
-			VALUES (:title, :start, :end, :cost, :capacity, :lid, :online_url, :notes, :revenue, :expenses, :public, :cancelled)",
+			$stmt = \DB\pdo_query("insert into workshops (title, start, end, cost, capacity, location_id, online_url, notes, revenue, expenses, when_public, cancelled, reminder_sent)
+			VALUES (:title, :start, :end, :cost, :capacity, :lid, :online_url, :notes, :revenue, :expenses, :public, :cancelled, :reminder_sent)",
 			$params);
 			return $last_insert_id; // set as a global by my dbo routines
 		}

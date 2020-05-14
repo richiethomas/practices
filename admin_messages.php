@@ -6,12 +6,7 @@ include 'lib-master.php';
 $mess_vars = array('st', 'note', 'subject', 'sms', 'cancellation');
 Wbhkit\set_vars($mess_vars);
 
-$short_where = $wk['place'];
 $long_where = "{$wk['place']} {$wk['lwhere']}";
-
-if ($wk['location_id'] == ONLINE_LOCATION_ID) {
-	$long_where .= "<br>If possible, wear headphones for the session.<br>\n";
-}
 
 // multiple sessions?
 $wk['when'] = \XtraSessions\add_sessions_to_when($wk['when'], $wk['sessions']);
@@ -38,14 +33,7 @@ switch ($ac) {
 		$note = preg_replace('/\R/', "<br>", $note);
 		
 
-
-		$base_msg =	$note."
-<p><b>Practice details:</b><br>
-Title: {$wk['title']}<br>
-$long_where<br>
-When: {$wk['when']}<br>
-Pay via Venmo @willhines or PayPal whines@gmail.com<br>
-<b>LATE DROP POLICY:</b> If you drop within ".LATE_HOURS." hours of the start, you must still pay for your spot.</p>\n";
+		$base_msg = $note.Emails\get_workshop_summary($wk);
 
 
 		foreach ($stds as $std) {
@@ -64,14 +52,10 @@ Pay via Venmo @willhines or PayPal whines@gmail.com<br>
 		break;
 
 	case 'remind':
-		$subject = "REMINDER: {$wk['title']} {$wk['nextstart']} at $short_where";
-		$note = "Greetings. You're enrolled in this workshop. ";
-		$note .= "It starts ".nicetime($wk['nextstart']).". ";
-		if ($wk['location_id'] == ONLINE_LOCATION_ID && $wk['online_url']) {
-			$note .= "Here's the link: {$wk['online_url']} \n"; 
-		}
-				
-		$sms = "Reminder: {$wk['title']} workshop, {$wk['nextstart']}, ".URL;
+		$reminder = Emails\get_reminder_message_data($wk);
+		$subject = $reminder['subject'];
+		$note = $reminder['note'];
+		$sms = $reminder['sms'];
 		$st = ENROLLED; // pre-populating the status drop in 'send message' form
 		break;
 

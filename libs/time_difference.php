@@ -1,5 +1,5 @@
 <?php
-
+namespace TimeDifference;
 /**
  * Get human readable time difference between 2 dates
  *
@@ -93,8 +93,7 @@ function nicetime($date)
     if(empty($date)) {
         return "No date provided";
     }
-    
-	
+    	
     $periods         = array("second", "minute", "hour", "day", "week", "month", "year", "decade");
     $lengths         = array("60","60","24","7","4.35","12","10");
     

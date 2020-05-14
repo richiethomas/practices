@@ -147,7 +147,6 @@ function login_prompt() {
 	$f .= "<p>Submit your name and email and the site will email you a link to log in:</p>
 	<form id='log_in' action='$sc' method='post' novalidate>".
 	\Wbhkit\hidden('ac', 'link').
-	\Wbhkit\texty('display_name', '', 'Real Name', 'Jane Doe', 'Can be a nickname, does not have to match what you have used before.').		
 	\Wbhkit\texty('email', $email, 'Email', 'something@something.com', 'We send a confirmation link to this address.', 'Must be a valid email you have access to', ' required ', 'email').
 	\Wbhkit\submit('Log In').
 	"</form>";
@@ -246,7 +245,7 @@ function edit_display_name($u) {
 	$body .= "<form action='$sc' method='post'>\n";
 	$body .= \Wbhkit\hidden('guest_id', $u['id']);
 	$body .= \Wbhkit\hidden('ac', 'updatedn');
-	$body .= \Wbhkit\texty('display_name', $u['display_name'], 'Real name', 'Jane Doe', 'We list who is registered in the workshop description.');
+	$body .= \Wbhkit\texty('display_name', $u['display_name'], 'Real name', 'Jane Doe', 'Can be a nickname.');
 	$body .= \Wbhkit\submit('Update Real Name');
 	$body .= "</form>\n";
 	
