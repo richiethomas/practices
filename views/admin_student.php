@@ -1,8 +1,12 @@
-<div class='row'><div class='col-md-12'><h2>Transcript for <?php echo $u['email']; ?></h2>
+<div class='row'><div class='col-md-12'><h2>Transcript for <?php echo $guest['email']; ?></h2>
 
-<p><a href='<?php echo URL."index.php?key=$key"; ?>'>Log in as <?php echo $u['email']; ?></a></p>
 
-<?php
+<?php 
+if (Users\check_user_level(3)) {
+	echo "<p><a href='<?php echo URL.'index.php?key=$key'; ?>'>Log in as {$guest['email']}</a></p>\n";
+} 
+
+
 if ($needle) {
 	echo "<p>Return to <a href='admin_search.php?needle=$needle'>search results</a></p>\n";
 }

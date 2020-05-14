@@ -23,8 +23,15 @@
 	
 <?php 		if (Users\logged_in()) { ?>		
    <p>Welcome, you are logged in as <strong><?php echo $u['nice_name']; ?></strong>.
+	   
+	   <?php if (Users\check_user_level(2)) { ?>
+	   
+	      <a class='btn btn-outline-light m-2' href='admin.php'><span class="oi oi-clipboard" title="clipboard" aria-hidden="true"></span> admin site</a>
+		  
+	   <?php } ?>
+	   
    <a class='btn btn-outline-light m-2' href='you.php'><span class="oi oi-person" title="person" aria-hidden="true"></span> edit your info</a>
-    <a class='btn btn-outline-light m-2' href="index.php?ac=lo"><span class="oi oi-account-logout" title="account-logout" aria-hidden="true"></span> log out</a></p>
+    <a class='btn btn-outline-light m-2' href="$sc.php?ac=lo"><span class="oi oi-account-logout" title="account-logout" aria-hidden="true"></span> log out</a></p>
 							
 			
 <?php 		} else { ?>

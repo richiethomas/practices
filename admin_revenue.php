@@ -2,7 +2,8 @@
 $sc = "admin_revenue.php";
 $heading = "practices: admin";
 include 'lib-master.php';
-include 'libs/validate.php';
+
+Users\reject_user_below(3); // group 3 or higher
 
 $v = null;
 switch ($ac) {

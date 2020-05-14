@@ -2,7 +2,6 @@
 $sc = "admin_emails.php";
 $heading = "practices: admin";
 include 'lib-master.php';
-include 'libs/validate.php';
 
 
 Wbhkit\set_vars(array('workshops'));

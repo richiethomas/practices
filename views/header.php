@@ -61,7 +61,9 @@ if (strpos($sc, 'admin') !== false ) {
 	echo "<ul class='nav nav-pills nav-fill'>\n";
 	echo nav_link($sc, 'admin.php', 'upcoming', 'calendar');
 	echo nav_link($sc, 'admin_emails.php', 'get emails', 'envelope-closed');
-	echo nav_link($sc, 'admin_revenue.php', 'revenues', 'dollar');
+	
+	if (Users\check_user_level(3)) { echo nav_link($sc, 'admin_revenue.php', 'revenues', 'dollar'); }
+	
 	echo nav_link($sc, 'admin_search.php', 'find students', 'magnifying-glass');
 	echo nav_link($sc, 'admin_status.php', 'status log', 'graph');
 	echo nav_link($sc, 'admin_mail_log.php', 'error log', 'clipboard');

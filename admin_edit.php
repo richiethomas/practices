@@ -2,11 +2,17 @@
 $sc = "admin_edit.php";
 $heading = "practices: admin edit";
 include 'lib-master.php';
-include 'libs/validate.php';
 
 
-$wk_vars = array('wid', 'title', 'notes', 'start', 'end', 'lid', 'online_url', 'cost', 'capacity', 'notes', 'revenue', 'expenses', 'when_public', 'email', 'con', 'cancelled', 'xtraid', 'class_show');
+$wk_vars = array('wid', 'title', 'notes', 'start', 'end', 'lid', 'online_url', 'cost', 'capacity', 'notes', 'revenue', 'expenses', 'when_public', 'email', 'con', 'cancelled', 'xtraid', 'class_show', 'guest_id');
 Wbhkit\set_vars($wk_vars);
+
+
+$guest = array(); // the user we're going to change
+if ($guest_id > 0) {
+	$guest = Users\get_user_by_id($guest_id, 0); // second parameter means "don't save this in the cookie"
+}
+
 
 
 switch ($ac) {
@@ -47,21 +53,21 @@ switch ($ac) {
 		break;
 
 	case 'conrem':
-		Enrollments\drop_session($wk, $u);
-		$message = "Removed user ({$u['email']}) from practice '{$wk['title']}'";
+		Enrollments\drop_session($wk, $guest);
+		$message = "Removed user ({$guest['email']}) from practice '{$wk['title']}'";
 		$logger->info($message);
 		break;
 
 	case 'enroll':
 		Wbhkit\set_vars(array('email', 'con'));
-		$u = Users\get_user_by_email($email);
-		$message = Enrollments\handle_enroll($wk, $u, $con); 
+		$guest = Users\get_user_by_email($email);
+		$message = Enrollments\handle_enroll($wk, $guest, $con); 
 		break;
 
 	// initially called in admin_student.php
 	// but it comes here to finish the job
 	case 'delstudentconfirm':
-		Users\delete_student($u['id']);
+		Users\delete_student($guest['id']);
 		break;
 
 	

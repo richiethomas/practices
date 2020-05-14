@@ -42,17 +42,17 @@ function get_user_by_email($email) {
 }
 
 
-function get_user_by_id($id) {
+function get_user_by_id($id, $remember = 1) {
 	$stmt = \DB\pdo_query("select u.* from users u where u.id = :id", array(":id" => $id));
 	while ($row = $stmt->fetch()) {
-		return add_extra_user_info($row);
+		return add_extra_user_info($row, $remember);
 	}
 	return false;
 }
 
-function add_extra_user_info($row) {	
+function add_extra_user_info($row, $remember = 1) {	
 	// expecting variable $row which is a row of table 'user'
-	$row['ukey'] = check_key($row['ukey'], $row['id']);
+	$row['ukey'] = check_key($row['ukey'], $row['id'], $remember);
 	return set_nice_name($row);
 }
 
@@ -83,11 +83,11 @@ function current_key() {
 	return $key;
 }
 
-function check_key($key, $uid) {
+function check_key($key, $uid, $remember = 1) {
 	if ($key) { 
 		return $key;
 	} else {
-		return get_key($uid); 
+		return get_key($uid, $remember); 
 	}
 }
 
@@ -103,19 +103,21 @@ function verify_key($passed, $true, &$error, $show_error = 1) {
 	}
 }
 
-function gen_key($uid) {
+function gen_key($uid, $remember = 1) {
 	$key = substr(md5(uniqid(mt_rand(), true)), 0, 16);
 	$stmt = \DB\pdo_query("update users set ukey = :ukey where id = :uid", array(':ukey' => $key, ':uid' => $uid));
-	$_SESSION['s_key'] = $key;
+	if ($remember) {
+		$_SESSION['s_key'] = $key;
+	}
 	return $key;
 }
 
-function get_key($uid) {
+function get_key($uid, $remember = 1) {
 	$stmt = \DB\pdo_query("select ukey from users where id = :uid", array(':uid' => $uid));
 	while ($row = $stmt->fetch()) {
 		if ($row['ukey']) { return $row['ukey']; }
 	}
-	return gen_key($uid);
+	return gen_key($uid, $remember);
 }
 
 function key_to_user($key) {
@@ -242,7 +244,7 @@ function edit_display_name($u) {
 	global $sc;
 	$body = '';
 	$body .= "<form action='$sc' method='post'>\n";
-	$body .= \Wbhkit\hidden('uid', $u['id']);
+	$body .= \Wbhkit\hidden('guest_id', $u['id']);
 	$body .= \Wbhkit\hidden('ac', 'updatedn');
 	$body .= \Wbhkit\texty('display_name', $u['display_name'], 'Real name', 'Jane Doe', 'We list who is registered in the workshop description.');
 	$body .= \Wbhkit\submit('Update Real Name');
@@ -274,7 +276,7 @@ function change_email_phase_one($u, $new_email) {
 	$stmt = \DB\pdo_query("update users set new_email = :email where id = :uid", array(':email' => $new_email, ':uid' => $u['id']));
 	
 	$sub = 'email update at will hines practices';
-	$link = URL."index.php?key={$u['ukey']}&ac=concemail";
+	$link = URL."you.php?key={$u['ukey']}&ac=concemail";
 	$ebody = "<p>You requested to change what email you use at the Will Hines practices web site. Use the link below to do that:</p><p>$link</p>";
 	\Emails\centralized_email($new_email, $sub, $ebody);
 
@@ -288,8 +290,8 @@ function edit_change_email($u) {
 	$body .= \Wbhkit\form_validation_javascript('changeEmail');
 	$body .= "<form id='changeEmail' action='$sc' method='post' novalidate>\n";
 	$body .= \Wbhkit\hidden('ac', 'cemail');
-	$body .= \Wbhkit\hidden('uid', $u['id']);
-	$body .= \Wbhkit\texty('newemail', null, 'New email', $u['email'], 'We will email a login link to this address', 'Must be a valid email', ' required ', 'email');
+	$body .= \Wbhkit\hidden('guest_id', $u['id']);
+	$body .= \Wbhkit\texty('newemail', $u['email'], 'New email', null, 'We will email a login link to this address', 'Must be a valid email', ' required ', 'email');
 	$body .= \Wbhkit\submit('Change Email');
 	$body .= "</form>";
 	return $body;	
@@ -346,7 +348,7 @@ function edit_text_preferences($u) {
 	$body .= \Wbhkit\form_validation_javascript('edit_text_preferences');
 	$body .= "<div class='row'><div class='col'>\n";
 	$body .= "<form id='edit_text_preferences' action='$sc' method='post' novalidate>\n";
-	$body .= \Wbhkit\hidden('uid', $u['id']);
+	$body .= \Wbhkit\hidden('guest_id', $u['id']);
 	$body .= \Wbhkit\hidden('ac', 'updateu');
 	$body .= \Wbhkit\checkbox('send_text', 1, 'Send text updates?', $u['send_text']);
 	$body .= \Wbhkit\drop('carrier_id', $carriers, $u['carrier_id'], 'phone network', null, "You must pick a carrier if you want text updates.", ' required ');
@@ -400,4 +402,22 @@ function update_text_preferences(&$u,  &$message, &$error) {
 		return true;
 	}
 
+}
+
+function check_user_level($level) {
+	global $u;
+	if (isset($u) && isset($u['group_id']) && $u['group_id'] >= $level) {
+		return true;
+	}
+	return false;
+}
+
+function reject_user_below($at_least) {
+	global $u, $view;
+	if (!isset ($u) || !isset($u['id']) || !isset($u['group_id']) || $u['group_id'] < $at_least) {
+		$view->renderPage('admin_notcleared');
+		exit();
+		return false;
+	}
+	return true;
 }

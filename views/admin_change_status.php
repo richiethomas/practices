@@ -1,12 +1,12 @@
 <?php
 		echo  "<div class='row'><div class='col-md-5'><h2><a href='admin_edit.php?wid={$wk['id']}'>{$wk['title']}</a></h2>".
-		"<p>Email: {$u['email']}</p>
-		<p>Display Name: {$u['display_name']}</p>
+		"<p>Email: {$guest['email']}</p>
+		<p>Display Name: {$guest['display_name']}</p>
 		<p>Status: {$e['status_name']}</p>";
 
 		echo  "<form action ='$sc' method='post'>".
 		Wbhkit\hidden('wid', $wk['id']).
-		Wbhkit\hidden('uid', $u['id']).
+		Wbhkit\hidden('guest_id', $guest['id']).
 		Wbhkit\hidden('ac', 'cs').
 		Wbhkit\drop('st', $statuses, $e['status_id'], 'to status').
 		Wbhkit\drop('con', array('1' => 'confirm', '0' => 'don\'t'), 0, 'confirm').
@@ -16,7 +16,7 @@
 
 		echo  "<form action ='$sc' method='post'>".
 		Wbhkit\hidden('wid', $wk['id']).
-		Wbhkit\hidden('uid', $u['id']).
+		Wbhkit\hidden('guest_id', $guest['id']).
 		Wbhkit\hidden('ac', 'cr').
 		Wbhkit\texty('lmod', $e['last_modified'], 'Last modified').
 		Wbhkit\submit('update').

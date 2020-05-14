@@ -2,7 +2,6 @@
 $sc = "admin_messages.php";
 $heading = "practices: admin";
 include 'lib-master.php';
-include 'libs/validate.php';
 
 $mess_vars = array('st', 'note', 'subject', 'sms', 'cancellation');
 Wbhkit\set_vars($mess_vars);

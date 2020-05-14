@@ -91,5 +91,9 @@ if (isset($u['ukey']) && $u['ukey'] != $already_here_key) {
 
 $view = new View();
 
+// group 2 or higher for admin pasges
+if (strpos($sc, 'admin')) {
+	Users\reject_user_below(2); // group 2 or higher for admin
+}
 
 

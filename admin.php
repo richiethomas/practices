@@ -2,7 +2,7 @@
 $sc = "admin_calendar.php";
 $heading = "practices: admin";
 include 'lib-master.php';
-include 'libs/validate.php';
+
 
 if ($ac && $ac=='del' && isset($wk) && isset($wk['id'])) {
 	
