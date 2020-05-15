@@ -5,7 +5,7 @@ echo $links;
 if ($admin) {
 	echo "<form action='$sc' method='post'>\n";
 	echo Wbhkit\hidden('ac', 'at'); 	
-	echo Wbhkit\hidden('uid', "$uid"); 	
+	echo Wbhkit\hidden('guest_id', "$guest_id"); 	
 }
 
 ?>

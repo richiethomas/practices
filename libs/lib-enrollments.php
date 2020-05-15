@@ -175,15 +175,58 @@ function check_waiting($wk) {
 	return "No invites sent.";
 }
 
+
+
 function update_paid($wid, $uid, $paid = 1) {
+		
+	
+	if ($paid == 1) {
+		send_payment_confirmation_email($uid, $wid);
+	}
 	$stmt = \DB\pdo_query("update registrations set paid = :paid where workshop_id = :wid and user_id = :uid", array(':paid' => $paid, ':wid' => $wid, ':uid' => $uid));
+	
 	return "Updated user ($uid) workshop ($wid) to paid status: $paid";
 }
 
 function update_paid_by_enrollment_id($eid, $paid = 1) {
+	
+	if ($paid == 1) {
+		$stmt = \DB\pdo_query("select user_id, workshop_id from registrations where id = :rid", array(':rid' => $eid));
+		while ($row = $stmt->fetch()) {
+			send_payment_confirmation_email($row['user_id'], $row['workshop_id']);
+		}
+	}
 	$stmt = \DB\pdo_query("update registrations set paid = :paid where id = :rid", array(':paid' => $paid, ':rid' => $eid));
+	
 	return "Updated enrollment id ($eid) to paid status: $paid";
 }
+
+function send_payment_confirmation_email($uid, $wid) {
+	
+	
+	// get paid status before
+	$paid_before = 0;
+	$stmt = \DB\pdo_query("select paid from registrations where workshop_id = :wid and user_id = :uid", array(':wid' => $wid, ':uid' => $uid));
+	while ($row = $stmt->fetch()) {
+		$paid_before = $row['paid'];
+	}
+	
+	if ($paid_before == 0) {
+		// send payment confirmation
+		$payee = \Users\get_user_by_id($uid);
+		$workshop = \Workshops\get_workshop_info($wid);
+		
+		$body = "<p>This is automated email to confirm that I've received your payment for class.</p>";
+		$body .= "<p>Class: {$workshop['title']} {$workshop['showstart']} (California time, PDT)</p>\n";
+		$body .= "<p>Student: {$payee['nice_name']}</p>";
+		$body .= "<p>Amount: \${$workshop['cost']} (USD)</p>\n";
+		$body .= "<p>Thanks!<br>-Will</p>\n";
+				
+		\Emails\centralized_email($payee['email'], "Payment received for {$workshop['title']} {$workshop['showstart']} (PDT)", $body); 
+		
+	}
+}
+
 
 
 function change_status($wk, $u, $status_id = ENROLLED, $confirm = true) {
@@ -335,7 +378,7 @@ function get_transcript_tabled($u, $admin = false, $page = 1) {
 		$past_classes[] = $d;
 	}
 	
-	$view->data['uid'] = $u['id'];
+	$view->data['guest_id'] = $u['id'];
 	$view->data['statuses'] = \Lookups\get_statuses();
 	$view->data['admin'] = $admin;
 	$view->data['links'] = $links;
@@ -351,5 +394,6 @@ function drop_session($wk, $u) {
 	check_waiting($wk);
 	return true;
 }	
+	
 	
 	

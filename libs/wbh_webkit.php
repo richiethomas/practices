@@ -279,9 +279,7 @@ function friendly_date($time_string) {
 	$wk_doy = date('z', strtotime($time_string)); // workshop day of year
 
 
-	if (($wk_doy - $now_doy) < 7 && ($wk_doy - $now_doy) >= 0) {
-		return date('l', $ts); // Monday, Tuesday, Wednesday
-	} elseif (date('Y', $ts) != date('Y')) {  
+	if (date('Y', $ts) != date('Y')) {  
 		return date('l M j, Y', $ts);
 	} else {
 		return date('l M j', $ts);

@@ -35,6 +35,6 @@ if ($needle) {
 
 <p>or</p>
 
-<p><a class='btn btn-danger' href='<?php echo "$sc?ac=delstudent&uid={$u['id']}" ?>'>remove this student</a></p>
+<p><a class='btn btn-danger' href='<?php echo "$sc?ac=delstudent&guest_id={$guest['id']}" ?>'>remove this student</a></p>
 
 </div></div>

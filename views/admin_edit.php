@@ -1,6 +1,5 @@
 <?php
-	
-echo "<h2>{$wk['title']}</h2>\n";
+echo "<h2><a href='$sc?wid={$wk['id']}'>{$wk['title']}</a></h2>\n";
 echo "<div class='row mt-md-3 admin-edit-workshop'>\n";
 
 		// enrollment column
@@ -29,7 +28,27 @@ echo "<div class='row mt-md-3 admin-edit-workshop'>\n";
 			}
 		}
 		echo Wbhkit\submit("update paid");
-		echo "</form>\n";
+		echo "</form>\n";		
+		
+		
+		//cut-and-paste roster
+		$names = array();
+		$just_emails = array();
+		foreach ($lists[ENROLLED] as $s) {
+			$names[] = "{$s['nice_name']} {$s['email']}";
+			$just_emails[] = "{$s['email']}";
+		}
+		sort($names);
+		sort($just_emails);
+		
+		echo  "<h3>Cut-and-paste roster</h3>\n";
+		echo  Wbhkit\textarea('roster',
+			"{$wk['title']} - {$wk['showstart']}\n".
+			($wk['location_id'] == ONLINE_LOCATION_ID ? "{$wk['online_url']}\n" : '').
+			"\n".
+			implode("\n", $names).
+			"\n\n".implode("\n", $just_emails), 
+		0);			
 		
 		
 		echo  $status_log; // from a snippet "admin_status"

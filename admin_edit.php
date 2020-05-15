@@ -40,7 +40,8 @@ switch ($ac) {
 			$wk[$field] = $$field;
 		}
 	
-		$wid = Workshops\add_update_workshop($wk, $ac);
+		$wk['id'] = $wid = Workshops\add_update_workshop($wk, $ac);
+		
 		
 		// fill out $wk array
 		$wk = Workshops\fill_out_workshop_row($wk);
@@ -94,8 +95,9 @@ switch ($ac) {
 		
 		
 	case 'at':
-		if (isset($_REQUEST['users']) && is_array($_REQUEST['users']) && $wid) {
-			$users = $_REQUEST['users'];
+		$users = (isset($_REQUEST['users']) && is_array($_REQUEST['users'])) ? $_REQUEST['users'] : array();
+
+		if ($wid) {
 			foreach ($statuses as $sid => $sts) {
 				$stds = Enrollments\get_students($wid, $sid);
 				foreach ($stds as $as) {

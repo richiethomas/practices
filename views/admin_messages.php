@@ -21,11 +21,12 @@
 		foreach ($statuses as $stid => $status_name) {
 			$stds = $students[$stid];
 			$es = '';
+			$names = '';
 			foreach ($stds as $as) {
 				$es .= "{$as['email']}\n";
 			}
 			echo  "<h3>{$status_name} (".count($stds).")</h3>\n";
-			echo  Wbhkit\textarea($status_name, $es, 0);
+			echo  Wbhkit\textarea($status_name, $es, 0);			
 		}
 		echo  "</div>\n";
 		echo  "</div></div>\n";

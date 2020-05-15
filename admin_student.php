@@ -50,17 +50,16 @@ switch ($ac) {
 		
 		
 	case 'at':
-		if (isset($_REQUEST['paids']) && is_array($_REQUEST['paids'])) {
-			$paids = $_REQUEST['paids'];
-			$all_enrollments = Enrollments\get_enrollment_ids_for_user($guest['id']);
-			foreach ($all_enrollments as $eid) {
-				if (in_array($eid, $paids)) {
-					Enrollments\update_paid_by_enrollment_id($eid, 1);
-				} else {
-					Enrollments\update_paid_by_enrollment_id($eid, 0);
-				}
-			}		
-		}
+	
+		$paids = (isset($_REQUEST['paids']) && is_array($_REQUEST['paids'])) ? $_REQUEST['paids'] : array();
+		$all_enrollments = Enrollments\get_enrollment_ids_for_user($guest['id']);
+		foreach ($all_enrollments as $eid) {
+			if (in_array($eid, $paids)) {
+				Enrollments\update_paid_by_enrollment_id($eid, 1);
+			} else {
+				Enrollments\update_paid_by_enrollment_id($eid, 0);
+			}
+		}		
 		$v = 'ed';
 		
 }

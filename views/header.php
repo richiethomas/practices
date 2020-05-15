@@ -54,7 +54,7 @@ div.admin-edit-workshop h4
 <?php
 echo "<div class=\"container-fluid\">\n";
 
-if (strpos($sc, 'admin') !== false ) {
+if (strpos($sc, 'admin') !== false && \Users\check_user_level(2)) {
 	echo "<h1><a href=\"admin.php\">{$heading}</a> <small><a class='text-muted' href='index.php'>(user side)</a></small></h1>\n";
 	echo "<ul class='nav nav-pills nav-fill'>\n";
 	echo nav_link($sc, 'admin.php', 'upcoming', 'calendar');
