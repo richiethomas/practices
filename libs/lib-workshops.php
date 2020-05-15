@@ -365,5 +365,10 @@ function delete_workshop($workshop_id) {
 
 }
 
-
+function is_public($wk) {
+	if (isset($wk['when_public']) && $wk['when_public'] && strtotime($wk['when_public']) > time()) {
+		return false;
+	}
+	return true;
+}
 

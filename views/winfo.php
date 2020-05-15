@@ -1,6 +1,8 @@
 <?php
 	
-if ($wk['upcoming'] == 0) {
+if (!\Workshops\is_public($wk)) {
+	$point = "This workshop is not available for signups yet. It will be available at <b>".date("l M j, g:ia", strtotime($wk['when_public']))."</b> California time (PDT)";
+} elseif ($wk['upcoming'] == 0) {
 	$point = "This workshop is IN THE PAST.";
 } elseif ($wk['cancelled'] == true) {
 	$point = "This workshop is CANCELLED.";

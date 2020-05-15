@@ -1,46 +1,63 @@
-		<div class="row">					
-			<div class="col-md-3">
-				<img src="assets/headshot20194.jpg" class="img-fluid" alt="Will Hines photo"><br><small>Photo by: <a href="http://www.claylarsen.net/">Clay Larsen</a></small>
-			</div>
-			
-			<div class="col"> 
-<p class="lead">Hi, I'm Will! I'm one of the top improv teachers in the whole world, can you believe it? I've taught all experience levels for 20 years, have written a <a href="https://www.amazon.com/dp/0982625723">best-selling book</a> on the subject, and am a <a href="https://www.imdb.com/name/nm2654402/">working comedic actor</a>.</p>
-			</div>
+
+<?php if ($link_email_sent_flag) { ?>
+	
+<script type="text/javascript">
+    $(window).on('load',function(){
+        $('#checkYourEmail').modal('show');
+    });
+</script>	
+<?php } ?>
+	
+
+
+	<div class="row">					
+		<div class="col-md-3">
+			<img src="assets/headshot20194.jpg" class="img-fluid" alt="Will Hines photo"><br><small>Photo by: <a href="http://www.claylarsen.net/">Clay Larsen</a></small>
 		</div>
+		<div class="col"> 
+<p class="lead">Hi, I'm Will! I'm one of the top improv teachers in the whole world, can you believe it? I've taught all experience levels for 20 years, have written a <a href="https://www.amazon.com/dp/0982625723">best-selling book</a> on the subject, and am a <a href="https://www.imdb.com/name/nm2654402/">working comedic actor</a>.</p>
+		</div>
+	</div>
 
 <?php if (Users\logged_in() && !$u['display_name']) { ?>	
-			
-				<div class="alert alert-info" role="alert">
-				<p>Would you mind entering a name? Nickname is fine.</p>
-			<?php echo Users\edit_display_name($u); ?>
-				</div>
-<?php 		}  ?>
 		
+			<div class="alert alert-info" role="alert">
+			<p>Would you mind entering a name? Nickname is fine.</p>
+		<?php echo Users\edit_display_name($u); ?>
+			</div>
+<?php 		}  ?>
 	
-<div class='row mb-md-4'><div class='col-md-12'>
-			<div id='login_prompt' class='card bg-info'>
-			<div class='card-body'>
-	
-<?php 		if (Users\logged_in()) { ?>		
-   <p>Welcome, you are logged in as <strong><?php echo $u['nice_name']; ?></strong>.
-	   
-	   <?php if (Users\check_user_level(2)) { ?>
-	   
-	      <a class='btn btn-outline-light m-2' href='admin.php'><span class="oi oi-clipboard" title="clipboard" aria-hidden="true"></span> admin site</a>
-		  
-	   <?php } ?>
-	   
-   <a class='btn btn-outline-light m-2' href='you.php'><span class="oi oi-person" title="person" aria-hidden="true"></span> edit your info</a>
-    <a class='btn btn-outline-light m-2' href="<?php echo $sc; ?>?ac=lo"><span class="oi oi-account-logout" title="account-logout" aria-hidden="true"></span> log out</a></p>
-							
-			
-<?php 		} else { ?>
-			<h2 class='card-title'>Log In To This Site</h2>
-			<p>First you must log in. We do that via email.</p>
-			<?php echo Users\login_prompt(); ?>
-<?php		} ?>
-		</div></div></div></div> <!--// end two card divs, then column, then row-->
 
+<div class='row mb-md-4'><div class='col-md-12'>
+		<div id='login_prompt' class='card bg-info'>
+		<div class='card-body'>
+
+<?php 		
+
+
+if (Users\logged_in()) { ?>		
+<p>Welcome, you are logged in as <strong><?php echo $u['nice_name']; ?></strong>.
+   
+   <?php if (Users\check_user_level(2)) { ?>
+   
+      <a class='btn btn-outline-light m-2' href='admin.php'><span class="oi oi-clipboard" title="clipboard" aria-hidden="true"></span> admin site</a> 
+	  
+   <?php } // end of check user level 2
+   ?> 
+   
+<a class='btn btn-outline-light m-2' href='you.php'><span class="oi oi-person" title="person" aria-hidden="true"></span> edit your info</a>
+<a class='btn btn-outline-light m-2' href="<?php echo $sc; ?>?ac=lo"><span class="oi oi-account-logout" title="account-logout" aria-hidden="true"></span> log out</a></p>				
+		
+<?php } else { ?>
+
+	<h2 class='card-title'>Log In To This Site</h2>
+	<p>First you must log in. We do that via email.</p>
+	<?php echo Users\login_prompt(); ?>
+
+<?php } // end of "is user logged in?"
+?>
+
+	</div></div></div></div> <!--// end two card divs, then column, then row-->
 
 
 <?php
@@ -53,7 +70,7 @@ if (count($unavailable_workshops) > 0) {
 
 		<div class='row mb-md-4'><div class='col'>
 		<h2>Available Workshops</h2> 
-		<p class='mx-4''>New workshops go up 10am Fridays.<br>Join the mailing list (bottom of page) for an email on Thursday saying what's coming.</p>
+		<p class='mx-4''>New workshops go up 9:30am Fridays (California time, PDT).<br>Join the mailing list (bottom of page) for an email on Thursday saying what's coming.</p>
 		<?php echo $upcoming_workshops; ?>
 		</div></div> <!-- end of col and row -->
 	
@@ -84,6 +101,28 @@ if (count($unavailable_workshops) > 0) {
 			
 
 			</div> <!-- end of row -->
+
+
+<!-- check your email modal -->
+<div class="modal" tabindex="-1" role="dialog" id="checkYourEmail">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Check your email, <?php echo $email; ?>!</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+			<p>We JUST sent an email to you at <b><?php echo $email; ?></b>. In that email is a link to log in. Click that link!</p>
+			<p>If you didn't get an email, refresh the home page and try again.</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 <?php
 	

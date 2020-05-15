@@ -289,8 +289,17 @@ function get_transcript_tabled($u, $admin = false, $page = 1) {
 	if (!$u || !isset($u['id'])) {
 		return "<p>Not logged in!</p>\n";
 	}
-	$sql = "select *, r.id as enrollment_id from registrations r, workshops w, locations l where r.workshop_id = w.id and w.location_id = l.id and r.user_id = :uid order by w.start desc";
-	$params = array(':uid' => $u['id']);
+	
+	$mysqlnow = date("Y-m-d H:i:s");
+	
+	$sql = "select *, r.id as enrollment_id 
+	from registrations r, workshops w, locations l 
+	where r.workshop_id = w.id 
+	and w.location_id = l.id 
+	and r.user_id = :uid 
+	and ( (w.start >= :now) || (r.status_id = :enrolled_id) ) 
+	order by w.start desc";
+	$params = array(':uid' => $u['id'], ':now' => $mysqlnow, ':enrolled_id' => ENROLLED);
 	
 	// rank
 

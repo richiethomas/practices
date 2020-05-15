@@ -3,7 +3,7 @@
 
 <?php 
 if (Users\check_user_level(3)) {
-	echo "<p><a href='<?php echo URL.'index.php?key=$key'; ?>'>Log in as {$guest['email']}</a></p>\n";
+	echo "<p><a href='".URL."index.php?key=$key'>Log in as {$guest['email']}</a></p>\n";
 } 
 
 

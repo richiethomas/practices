@@ -1,5 +1,7 @@
 <?php
 
+$link_email_sent_flag = false;
+
 switch ($ac) {
 
 
@@ -20,17 +22,13 @@ switch ($ac) {
 
 		// send log in link to that user
 		if (Users\email_link($u)) {
-			$message = "Thanks! I've sent a link to your {$u['email']}. Click it! (check your spam folder, too)";
+			$message = "Thanks! I've sent a link to your {$u['email']}. If you don't see it <a href='index.php'>click here to refresh the page</a> and try again.";
+			$link_email_sent_flag = true;
 			$logger->debug($message);
 			
 		} else {
 			$error = "I was unable to email a link to {$u['email']}! Sorry.";
 			$logger->debug($error);
-		}
-		
-		if ($display_name) {
-			$u['display_name'] = $display_name;
-			Users\update_display_name($u, $message, $error);
 		}
 		
 		break;		

@@ -18,7 +18,7 @@ if (!empty($wk['sessions'])) {
 		<li>You log in with your email, a link gets emailed to you, you click it. Then you can enroll in classes, drop out, join waiting lists</li>
 		<li>Pay with Venmo or Paypal</li>
 		<li>Classes are held over <a href="http://www.zoom.us/">Zoom</a></li>
-		<li><b>LATE DROP POLICY: If you drop within <?php echo LATE_HOURS; ?> hours of the start of the workshop, you still must pay.</b></li>
+		<li><b>LATE DROP POLICY: If you drop within <?php echo LATE_HOURS; ?> hours of the start of the workshop, you still must pay. Before that, full refund available.</b></li>
 	</ul>
 	</div>
 	</div>

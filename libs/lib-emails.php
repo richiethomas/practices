@@ -157,7 +157,7 @@ function confirm_email($wk, $u, $status_id = ENROLLED) {
 <p>Where:</b> {$wk['place']} {$wk['lwhere']}</p>
 <p>Cost:</b> \${$wk['cost']} USD</p>
 (Once ENROLLED, pay with venmo @willhines or PayPal whines@gmail.com)<br>
-<p>LATE DROP POLICY:</b> If you drop within ".LATE_HOURS." hours of the start, you must still pay for your spot.</p>
+<p>LATE DROP POLICY:</b> If you drop within ".LATE_HOURS." hours of the start, you must still pay for your spot. Before that, full refund available.</p>
 <p>Description:</b> {$wk['notes']}</p>
 
 $notifications
@@ -284,7 +284,7 @@ Title: {$wk['title']}<br>
 {$wk['place']} {$wk['lwhere']}<br>
 When: {$wk['when']}<br>
 Pay via Venmo @willhines or PayPal whines@gmail.com<br>
-<b>LATE DROP POLICY:</b> If you drop within ".LATE_HOURS." hours of the start, you must still pay for your spot.</p>\n";
+<b>LATE DROP POLICY:</b> If you drop within ".LATE_HOURS." hours of the start, you must still pay for your spot. Before that, full refund available.</p>\n";
 	
 }
 
@@ -323,8 +323,8 @@ update xtra_sessions set reminder_sent = 0;
 	// check reminder database -- has it been an hour?
 	$stmt = \DB\pdo_query("select * from reminder_checks order by id desc limit 1"); // most recent check
 	while ($row = $stmt->fetch()) {
-		admin_log("<p class='m-3'>hours since reminder check: ".((time() - strtotime($row['time_checked'])) / 3600))."</p>";
-		if ((time() - strtotime($row['time_checked'])) / 3600 <= 1) { return false; } // checked less than an hour ago
+		//admin_log("<p class='m-3'>hours since reminder check: ".((time() - strtotime($row['time_checked'])) / 3600))."</p>";
+		if ((time() - strtotime($row['time_checked'])) / 3600 <= 6) { return false; } // checked less than six hours ago
 		 
 	}
 	
