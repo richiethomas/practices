@@ -42,17 +42,17 @@ function get_user_by_email($email) {
 }
 
 
-function get_user_by_id($id, $remember = 1) {
+function get_user_by_id($id) {
 	$stmt = \DB\pdo_query("select u.* from users u where u.id = :id", array(":id" => $id));
 	while ($row = $stmt->fetch()) {
-		return add_extra_user_info($row, $remember);
+		return add_extra_user_info($row);
 	}
 	return false;
 }
 
-function add_extra_user_info($row, $remember = 1) {	
+function add_extra_user_info($row) {	
 	// expecting variable $row which is a row of table 'user'
-	$row['ukey'] = check_key($row['ukey'], $row['id'], $remember);
+	$row['ukey'] = check_key($row['ukey'], $row['id']);
 	return set_nice_name($row);
 }
 
@@ -67,7 +67,7 @@ function set_nice_name($row) {
 	return $row;
 }
 
-function current_key() {
+function check_for_stored_or_passed_key() {
 	global $key;
 	if (isset($_REQUEST['key']) && $_REQUEST['key']) {
 		$key = $_REQUEST['key'];
@@ -78,16 +78,20 @@ function current_key() {
 	}
 
 	// remember it
+	return remember_key($key);
+}
+
+function remember_key($key) {
 	$_SESSION['s_key'] = $key;
 	setcookie('c_key', $key, time() + 31449600); // a year!
 	return $key;
 }
 
-function check_key($key, $uid, $remember = 1) {
+function check_key($key, $uid) {
 	if ($key) { 
 		return $key;
 	} else {
-		return get_key($uid, $remember); 
+		return get_key($uid); 
 	}
 }
 
@@ -103,21 +107,18 @@ function verify_key($passed, $true, &$error, $show_error = 1) {
 	}
 }
 
-function gen_key($uid, $remember = 1) {
+function gen_key($uid) {
 	$key = substr(md5(uniqid(mt_rand(), true)), 0, 16);
 	$stmt = \DB\pdo_query("update users set ukey = :ukey where id = :uid", array(':ukey' => $key, ':uid' => $uid));
-	if ($remember) {
-		$_SESSION['s_key'] = $key;
-	}
 	return $key;
 }
 
-function get_key($uid, $remember = 1) {
+function get_key($uid) {
 	$stmt = \DB\pdo_query("select ukey from users where id = :uid", array(':uid' => $uid));
 	while ($row = $stmt->fetch()) {
 		if ($row['ukey']) { return $row['ukey']; }
 	}
-	return gen_key($uid, $remember);
+	return gen_key($uid);
 }
 
 function key_to_user($key) {

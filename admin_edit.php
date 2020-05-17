@@ -40,8 +40,7 @@ switch ($ac) {
 			$wk[$field] = $$field;
 		}
 	
-		$wk['id'] = $wid = Workshops\add_update_workshop($wk, $ac);
-		
+		$wid = Workshops\add_update_workshop($wk, $ac);
 		
 		// fill out $wk array
 		$wk = Workshops\fill_out_workshop_row($wk);

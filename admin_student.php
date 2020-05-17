@@ -13,7 +13,7 @@ if ($guest_id > 0) {
 switch ($ac) {
 	
  	case 'delstudent':
-		$message = "Really delete '{$guest['email']}'? <a class='btn btn-danger' href='admin.php?ac=delstudentconfirm&uid={$guest['id']}'>yes delete</a> or <a class='btn btn-primary' href='$sc?uid={$guest['id']}'>cancel</a>";
+		$message = "Really delete '{$guest['email']}'? <a class='btn btn-danger' href='admin.php?ac=delstudentconfirm&guest_id={$guest['id']}'>yes delete</a> or <a class='btn btn-primary' href='$sc?guest_id={$guest['id']}'>cancel</a>";
 		break;
 			
 	case 'updateu':

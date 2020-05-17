@@ -44,7 +44,7 @@ if (Workshops\is_public($wk)) {
 			if ($u) {
 				if (Users\verify_key($key, $u['ukey'], $error)) {
 								
-					$message = "Do you really want to drop '{$wk['title']}'? Then click <a class='btn btn-warning' href=\"$sc?ac=condrop&uid={$u['id']}&wid={$wid}\">confirm drop</a>";
+					$message = "Do you really want to drop '{$wk['title']}'? Then click <a class='btn btn-warning' href=\"$sc?ac=condrop&key={$u['ukey']}&wid={$wid}\">confirm drop</a>";
 				
 					$e = Enrollments\get_an_enrollment($wk, $u);
 					if ($e['while_soldout']) { 

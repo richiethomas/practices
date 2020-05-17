@@ -76,15 +76,14 @@ if ($wid) {
 // set user info into memory
 $already_here_key = (isset($_SESSION['s_key']) ? $_SESSION['s_key'] : null);
 
-$key = Users\current_key(); // checks for key in REQUEST and SESSION and COOKIE, not logged in otherwise
-if ($uid) {
-	$u = Users\get_user_by_id($uid);
-} elseif ($key) {
+$key = Users\check_for_stored_or_passed_key(); // checks for key in REQUEST and SESSION and COOKIE, not logged in otherwise
+if ($key) {
 	$u = Users\key_to_user($key);
 } else {
 	$u = Users\get_empty_user();
 }
 
+// is this the first page this visitor has visited
 if (isset($u['ukey']) && $u['ukey'] != $already_here_key) {
 	$logger->info("{$u['fullest_name']} logged in.");
 }
