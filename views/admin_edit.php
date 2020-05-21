@@ -1,5 +1,5 @@
 <?php
-echo "<h2><a href='$sc?wid={$wk['id']}'>{$wk['title']}</a></h2>\n";
+echo "<h2><a href='$sc?wid={$wk['id']}'>{$wk['title']}</a></h2><p class='small'><a href='admin_listall.php?wid={$wk['id']}#addworkshop'>(Clone this workshop)</a></p>\n";
 echo "<div class='row mt-md-3 admin-edit-workshop'>\n";
 
 		// enrollment column
