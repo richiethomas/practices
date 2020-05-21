@@ -38,8 +38,8 @@ switch ($ac) {
 
 		foreach ($stds as $std) {
 			$key = Users\get_key($std['id']);
-			$trans = URL."index.php?key=$key";
-			$msg = $base_msg."<p>Log in or drop out here:<br>$trans</p>\n";
+			$trans = URL."workshop.php?key=$key&wid={$wk['id']}";
+			$msg = $base_msg."<p>Drop/re-enroll/see more info here:<br>$trans</p>\n";
 			
 			Emails\centralized_email($std['email'], $subject, $msg);
 			$sent .= "{$std['email']}, ";

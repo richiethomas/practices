@@ -50,7 +50,7 @@ if (Users\logged_in()) { ?>
 	<a class='btn btn-outline-light m-2' href="<?php echo $sc; ?>?ac=lo"><span class="oi oi-account-logout" title="account-logout" aria-hidden="true"></span> log out of willhinesimprov.com</a></p>				
 	</div>
 
-</div></div> <!--// end of logged in -->
+</div> <!--// end of logged in -->
 
 
 <?php } else { ?>
@@ -109,7 +109,7 @@ if (Users\logged_in()) { ?>
   }
 </script>
   
-</div></div> <!--// end of login prompt-->
+</div> <!--// end of login prompt-->
   
 <?php } // end of "is user logged in?"
 ?>

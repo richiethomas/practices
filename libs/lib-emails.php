@@ -75,13 +75,7 @@ function confirm_email($wk, $u, $status_id = ENROLLED) {
 	$call = '';
 	$late = '';
 	$textpoint = '';
-	$notifications = '';
-		
-	if ($e['while_soldout']) { 
-		$message .= '<br><br>'.get_dropping_late_warning();
-	}
-	
-	
+	$notifications = '';	
 	
 	//multiple sessions?
 	$wk['when'] = \XtraSessions\add_sessions_to_when($wk['when'], $wk['sessions']);	
@@ -91,34 +85,36 @@ function confirm_email($wk, $u, $status_id = ENROLLED) {
 		case 'already':
 		case ENROLLED:
 			$sub = "ENROLLED: {$wk['title']}";
-			$point = "You are ENROLLED in {$wk['title']}.";
+			$point = "You are ENROLLED in the workshop \"{$wk['title']}\".";
 			$textpoint = $point." ";
 
 			if ($wk['location_id'] == ONLINE_LOCATION_ID) {
-				$point .= "<p>The link to your workshop is: {$wk['online_url']}.</p><p>You will need the Zoom app which you can get for free at http://www.zoom.us/</p>";
+				$point .= "<p>The Zoom link to your workshop is: {$wk['online_url']}. That should start working about five minutes before your class starts.</p>";
+			}
+			
+			if ($wk['cost'] > 0) {
+				$point .= "<p>Please pay now! Send \${$wk['cost']} (USD) via Venmo @willhines or PayPal whines@gmail.com</p>";
 			}
 
-			$call = "To DROP, click here:\n{$drop}";
-			if ($wk['cost'] > 0) {
-				$call .= "<br><br>Please pay now! Venmo @willhines or PayPal whines@gmail.com.";
-			}
+			$call = "To DROP, click here:\n{$drop}<br>Since you are enrolled, if you drop within ".LATE_HOURS." hours of the start, you must still pay for your spot. Before that, full refund available.";
+
 			$send_faq = false;
 			break;
 		case WAITING:
 			$sub = "WAIT LIST: {$wk['title']}";
-			$point = "You are wait list spot {$e['rank']} for {$wk['title']}:";
+			$point = "You are WAIT LIST spot {$e['rank']} for \"{$wk['title']}\".";
 			$textpoint = $point." ";
 			$call = "To DROP, click here:\n{$drop}";
 			break;
 		case INVITED:
 			$sub = "INVITED: {$wk['title']} -- PLEASE RESPOND";
-			$point = "A spot opened up in ({$wk['title']}.";
+			$point = "You are INVITED to enroll in ({$wk['title']}.";
 			$textpoint = $point." ACCEPT or DECLINE: ";
 			$call = "To ACCEPT, click here:\n{$accept}<br><br>To DECLINE, click here:\n{$decline}";
 			break;
 		case DROPPED:
 			$sub = "DROPPED: {$wk['title']}";
-			$point = "You have dropped out of {$wk['title']}";
+			$point = "You have DROPPED out of {$wk['title']}";
 			$textpoint = $point." ";
 			if ($e['while_soldout'] == 1) {
 				$late .= "<br><i>".get_dropping_late_warning()."</i>";
@@ -150,26 +146,24 @@ function confirm_email($wk, $u, $status_id = ENROLLED) {
 
 <p>$call</p>
 
-<p>Full info:</p>
-
-<p><b>Title:</b> {$wk['title']}</p>
-<p><b>When:</b> {$wk['when']} (California time)</p>
-<p>Where:</b> {$wk['place']} {$wk['lwhere']}</p>
-<p>Cost:</b> \${$wk['cost']} USD</p>
-(Once ENROLLED, pay with venmo @willhines or PayPal whines@gmail.com)<br>
-<p>LATE DROP POLICY:</b> If you drop within ".LATE_HOURS." hours of the start, you must still pay for your spot. Before that, full refund available.</p>
-<p>Description:</b> {$wk['notes']}</p>
+<p>Summary of class infomation:<br>
+--------------------------------<br>
+<b>Title:</b> {$wk['title']}<br>
+<b>When:</b> {$wk['when']} (PDT - California time)<br>
+<b>Cost:</b> \${$wk['cost']} USD<br>".
+($status_id == ENROLLED ? "<b>Zoom link:</b> {$wk['online_url']}" : "<b>Zoom link</b>: We'll email you the zoom link if/once you are enrolled.")."<br>
+<b>Description:</b> {$wk['notes']}</p>
 
 $notifications
 
-".email_footer($send_faq);	
+";	
 
 	return centralized_email($u['email'], "{$sub}", $body);
 }
 
 
 function send_text($u, $msg) {
-	if (!$u['send_text'] || !$u['carrier_id'] || !$u['phone'] || strlen($u['phone']) != 10) {
+	if (!$u['send_text'] || !$u['carrier_id'] || !$u['phone'] || strlen($u['phone']) != 10 || (!trim($msg))) {
 		return false;
 	}
 	
@@ -228,19 +222,17 @@ HQ: 1948 Hillhurst Ave. Los Angeles, CA 90027</p>";
 
 function get_faq() {
 	
-return "<h2>Questions</h2>
+return "<h2>Some Things To Know</h2>
 <dl>
 <dt>How does online work?</dt>
 <dd>You need the Zoom app, which is free. On the day of the workshop, or maybe the day before you'll get a link to a Zoom meeting.<br>
 Zoom available at: http://www.zoom.us/</dd>
 
-
 <dt>Can I drop out?</dt>
 <dd>Yes, use the link in your confirmation email to go to the web site, where you can drop out. If you drop within ".LATE_HOURS." of the start of class, you must still pay for your spot.</dd>
 
 <dt>How should I pay?</dt>
-<dd>Venmo @willhines<br>
-Paypal whines@gmail.com.</dd>
+<dd>Venmo @willhines, or paypal whines@gmail.com.</dd>
 
 <dt>What if I'm on a waiting list?</dt>
 <dd>You'll get an email the moment a spot opens up, with a link to ACCEPT or DECLINE.</dd>
@@ -278,14 +270,12 @@ function get_reminder_message_data($wk) {
 
 
 function get_workshop_summary($wk) {
-		return "
-<p><b>Practice details:</b><br>
-Title: {$wk['title']}<br>
-{$wk['place']} {$wk['lwhere']}<br>
-When: {$wk['when']}<br>
-Pay via Venmo @willhines or PayPal whines@gmail.com<br>
-<b>LATE DROP POLICY:</b> If you drop within ".LATE_HOURS." hours of the start, you must still pay for your spot. Before that, full refund available.</p>\n";
-	
+		return "<br>
+<p>-----------------------------<br>
+<b>Class information:</b><br>
+<b>Title:</b> {$wk['title']}<br>
+<b>When:</b> {$wk['when']} (California time)";
+
 }
 
 function remind_enrolled($wk) {
@@ -320,7 +310,7 @@ update workshops set reminder_sent = 0;
 update xtra_sessions set reminder_sent = 0;
 	*/
 
-	// check reminder database -- has it been an hour?
+	// check reminder database -- has it been 6 hours?
 	$stmt = \DB\pdo_query("select * from reminder_checks order by id desc limit 1"); // most recent check
 	while ($row = $stmt->fetch()) {
 		//admin_log("<p class='m-3'>hours since reminder check: ".((time() - strtotime($row['time_checked'])) / 3600))."</p>";

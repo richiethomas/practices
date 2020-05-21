@@ -11,14 +11,13 @@ if (!empty($wk['sessions'])) {
 	$wk['when'] = $sessions; // replace the when variable 
 }	
 ?>
-	<div class="row justify-content-center"><div class="col-md-6 border border-info">
+	<div class="row m-3 p-3"><div class="col-md-6 border border-info">
 	<h2>How This Works</h2>
 	<ul>
-		<li>All class times are California local time.</li>
-		<li>You log in with your email, a link gets emailed to you, you click it. Then you can enroll in classes, drop out, join waiting lists</li>
-		<li>Pay with Venmo or Paypal</li>
+		<li>All listed times are California local time.</li>
+		<li>Pay with Venmo (@willhines) or Paypal (@whines@gmail.com)</li>
 		<li>Classes are held over <a href="http://www.zoom.us/">Zoom</a></li>
-		<li><b>LATE DROP POLICY: If you drop within <?php echo LATE_HOURS; ?> hours of the start of the workshop, you still must pay. Before that, full refund available.</b></li>
+		<li><b>LATE DROP POLICY: If you are enrolled, and you drop within <?php echo LATE_HOURS; ?> hours of the start of the workshop, you still must pay. Before that, full refund available.</b></li>
 	</ul>
 	</div>
 	</div>
@@ -26,21 +25,14 @@ if (!empty($wk['sessions'])) {
 	
 	
 echo "	
-<div class='row'><div class='col'>
+<div class='row my-3 py-3'><div class='col-sm-6'>
 <h2>{$wk['title']}</h2>
 <p>{$wk['notes']}</p>
-</div></div>
-
-<div class='row'>
-<div class='col'>
 {$wk['when']} (".TIMEZONE.")<br><br>
-{$wk['costdisplay']}, {$wk['enrolled']} (of {$wk['capacity']}) enrolled, ".
-($wk['waiting']+$wk['invited'])." waiting
-</div>
+{$wk['costdisplay']}, {$wk['enrolled']} (of {$wk['capacity']}) enrolled, ".($wk['waiting']+$wk['invited'])." waiting<br><br>
 
-<div class='col'>$names_list</div>
-
-</div>
+$names_list
+</div></div>
 ";
 		
 ?>
