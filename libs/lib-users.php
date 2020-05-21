@@ -140,20 +140,7 @@ function validate_email($emailaddress) {
 	}
 }
 
-function login_prompt() {
-	global $sc, $email;
-	
-	$f = \Wbhkit\form_validation_javascript('log_in');
-	
-	$f .= "<p>Submit your name and email and the site will email you a link to log in:</p>
-	<form id='log_in' action='$sc' method='post' novalidate>".
-	\Wbhkit\hidden('ac', 'link').
-	\Wbhkit\texty('email', $email, 'Email', 'something@something.com', 'We send a confirmation link to this address.', 'Must be a valid email you have access to', ' required ', 'email').
-	\Wbhkit\submit('Log In').
-	"</form>";
-	
-	return $f;
-}
+
 
 function email_link($u) {
 		if (!isset($u['id'])) {

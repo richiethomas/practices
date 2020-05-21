@@ -28,36 +28,92 @@
 <?php 		}  ?>
 	
 
-<div class='row mb-md-4'><div class='col-md-12'>
-		<div id='login_prompt' class='card bg-info'>
-		<div class='card-body'>
+
+<!-- Log in section -->
+
 
 <?php 		
 
-
 if (Users\logged_in()) { ?>		
-<p>Welcome, you are logged in as <strong><?php echo $u['nice_name']; ?></strong>.
+<div id= "login_prompt" class='row mb-md-4 bg-info p-3'>
+	<div class='col-md-12'>
+		<p>Welcome, you are logged in as <strong><?php echo $u['nice_name']; ?></strong>.
    
    <?php if (Users\check_user_level(2)) { ?>
    
-      <a class='btn btn-outline-light m-2' href='admin.php'><span class="oi oi-clipboard" title="clipboard" aria-hidden="true"></span> admin site</a> 
+      	<a class='btn btn-outline-light m-2' href='admin.php'><span class="oi oi-clipboard" title="clipboard" aria-hidden="true"></span> admin site</a> 
 	  
    <?php } // end of check user level 2
    ?> 
    
-<a class='btn btn-outline-light m-2' href='you.php'><span class="oi oi-person" title="person" aria-hidden="true"></span> edit your info</a>
-<a class='btn btn-outline-light m-2' href="<?php echo $sc; ?>?ac=lo"><span class="oi oi-account-logout" title="account-logout" aria-hidden="true"></span> log out</a></p>				
-		
+	<a class='btn btn-outline-light m-2' href='you.php'><span class="oi oi-person" title="person" aria-hidden="true"></span> edit your info</a>
+	<a class='btn btn-outline-light m-2' href="<?php echo $sc; ?>?ac=lo"><span class="oi oi-account-logout" title="account-logout" aria-hidden="true"></span> log out of willhinesimprov.com</a></p>				
+	</div>
+
+</div></div> <!--// end of logged in -->
+
+
 <?php } else { ?>
 
-	<h2 class='card-title'>Log In To This Site</h2>
-	<p>First you must log in. We do that via email.</p>
-	<?php echo Users\login_prompt(); ?>
+<div id= "login_prompt" class='row bg-info p-3'>
+	<div class="col-sm-12">
+		<h2 class="text-center">Two Ways to Log In</h2>
+	</div>
+</div>
+<div id= "login_prompt" class='row bg-info p-3'>
+	<div class="col p-3 bg-warning">
+		<h2>We Email You A Link</h2>
+		<?php echo \Wbhkit\form_validation_javascript('log_in'); ?>
+	
+		<form id='log_in' action='<?php echo $sc; ?>' method='post' novalidate>
+		<?php echo \Wbhkit\hidden('ac', 'link').
+		\Wbhkit\texty('email', $email, 'Email', 'something@something.com', 'We will send you a email, click the link there.', 'Must be a valid email you have access to', ' required ', 'email').
+		\Wbhkit\submit('Log In'); ?>
+		</form>
+	</div>
+	<div class="col-sm-1 align-self-center">
+		<h3>Or</h3>
+	</div>
+	<div class="col p-3 bg-warning">
+		<h2>Sign in Via Google</h2>
+		<div id="google-signinbutton"class="g-signin2" data-onsuccess="onSignIn"></div> <p id="google-signout" class="my-3">Want to sign-out of Google? <a class="text-dark" href="#" onclick="signOut();">(Click here)</a></p>
+		<div id="google-authenticated"></div>
+	</div>
 
+<script>
+	function onSignIn(googleUser) {
+	  var id_token = googleUser.getAuthResponse().id_token;
+	  var xhr = new XMLHttpRequest();
+	  xhr.open('POST', 'https://www.willhinesimprov.com/gsign.php');
+	  xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+	  xhr.onload = function() {
+	    console.log('Signed in as: ' + xhr.responseText);
+		console.log("index.php?key="+xhr.responseText);
+		createInput(xhr.responseText);
+		$("#google-signinbutton").hide();
+		$("#google-signout").show();
+	  };
+	  xhr.send('idtoken=' + id_token);
+	}
+
+	function createInput(key){
+	    var $input = $('<p>Connected to Google! <a class="btn btn-primary" href="index.php?key='+key+'">Log in to willhinesimprov.com</a></p>');
+	    $input.appendTo($("#google-authenticated"));
+	}
+
+  function signOut() {
+    var auth2 = gapi.auth2.getAuthInstance();
+    auth2.signOut().then(function () {
+      console.log('User signed out.');
+    });
+  }
+</script>
+  
+</div></div> <!--// end of login prompt-->
+  
 <?php } // end of "is user logged in?"
 ?>
 
-	</div></div></div></div> <!--// end two card divs, then column, then row-->
 
 
 <?php

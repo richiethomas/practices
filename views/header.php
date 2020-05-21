@@ -1,4 +1,4 @@
-<?php $heading = isset($heading) ? $heading: 'will hines online workshops'; ?>
+<?php $heading = isset($heading) ? $heading: 'will hines improv'; ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -17,6 +17,10 @@
 
 	<!-- Google Fonts -->
 	<link href="https://fonts.googleapis.com/css2?family=Open+Sans&family=Poppins:wght@500&display=swap" rel="stylesheet">
+
+<meta name="google-signin-client_id" content="989168310652-2mk8v22d2vone6maq7jcumb9il0r9r2o.apps.googleusercontent.com">
+<script src="https://apis.google.com/js/platform.js" async defer></script>
+
 
 <style>
 	
