@@ -23,7 +23,7 @@
 			$es = '';
 			$names = '';
 			foreach ($stds as $as) {
-				$es .= "{$as['email']}\n";
+				$es .= "{$as['email']},\n"; // the comma is for better cutting-and-pasting into gmail
 			}
 			echo  "<h3>{$status_name} (".count($stds).")</h3>\n";
 			echo  Wbhkit\textarea($status_name, $es, 0);			

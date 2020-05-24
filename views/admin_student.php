@@ -1,4 +1,4 @@
-<div class='row'><div class='col-md-12'><h2>Transcript for <?php echo $guest['email']; ?></h2>
+<div class='row'><div class='col-md-12'><h2>Transcript for <a href='<?php echo "$sc?guest_id={$guest['id']}&needle=".$needle; ?>'><?php echo $guest['email']; ?></a></h2>
 
 
 <?php 

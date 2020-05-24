@@ -1,4 +1,11 @@
 <h2>All Workshops <small><a href='#addworkshop'>add a workshop</a></small></h2>
+
+<form action="<?php echo $sc; ?>" method="post">
+<?php
+echo \Wbhkit\texty('needle', $needle, 'Search by title');
+echo \Wbhkit\submit();
+?>
+</form>
 	
 <?php echo $workshops_list; ?>
 

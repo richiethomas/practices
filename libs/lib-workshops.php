@@ -29,7 +29,17 @@ function fill_out_workshop_row($row) {
 	
 	$row['costdisplay'] = $row['cost'] ? "\${$row['cost']} USD" : 'Pay what you can / donation';
 	
+	// xtra session info
 	$row['sessions'] = \XtraSessions\get_xtra_sessions($row['id']);	
+	$row['total_class_sessions'] = 1;
+	$row['total_show_sessions'] = 0;
+	foreach ($row['sessons'] as $sess) {
+		if ($sess['class_show']) {
+			$row['total_show_sessions']++;
+		} else {
+			$row['total_class_sessions']++;
+		}
+	}
 	
 	// when is the next starting sessions
 	// if all are in past, set this to most recent one
@@ -166,6 +176,36 @@ function get_workshops_dropdown($start = null, $end = null) {
 	return $workshops;
 }
 
+
+// for admins eyes only
+function get_search_results($page = 1, $needle = null) {
+	global $view;
+	
+	// get IDs of workshops
+	$sql = "select w.* from workshops w ";
+	if ($needle) { $sql .= "where w.title like '%$needle%' "; }
+	$sql .= " order by start desc"; // get all
+		
+	// prep paginator
+	$paginator  = new \Paginator( $sql );
+	$rows = $paginator->getData($page);
+	$links = $paginator->createLinks();
+
+	// calculate enrollments, ranks, etc
+	if ($rows->total > 0) {
+		$workshops = array();
+		foreach ($rows->data as $row ) {
+			$workshops[] = fill_out_workshop_row($row);
+		}
+	} else {
+		return "<p>No upcoming workshops!</p>\n";	// this skips $body variable contents	
+	}
+		
+	// prep view
+	$view->data['links'] = $links;
+	$view->data['rows'] = $workshops;
+	return $view->renderSnippet('admin_search_results');	
+}
 
 
 function get_workshops_list($admin = 0, $page = 1) {

@@ -36,12 +36,11 @@ function add_sessions_to_when($when, $sessions) {
 	
 	$sessions_list = '';
 	if (!empty($sessions)) {
-		$sessions_list ="<p>\n";
-		$sessions_list .= "{$when}"; // first session is the $when
+		$sessions_list = "{$when}"; // first session is the $when
 		foreach ($sessions as $s) {
 			$sessions_list .= "<br>\n{$s['friendly_when']}".($s['class_show'] ? ' <b>(show)</b> ': '')."";
 		}
-		$sessions_list .= "</p>\n";
+		$sessions_list .= "<br>\n";
 		return $sessions_list; // return the list of sessions, which includes the $when
 	}
 	return $when; // if sessions is empty, return just the $when

@@ -3,7 +3,10 @@ $sc = "admin_listall.php";
 $heading = "practices: admin";
 include 'lib-master.php';
 
-$view->data['workshops_list'] = Workshops\get_workshops_list(1, $page);
+Wbhkit\set_vars(array('needle')); // search term, if any
+
+$view->data['needle'] = $needle;
+$view->data['workshops_list'] = Workshops\get_search_results($page, $needle);
 $view->data['add_workshop_form'] = Workshops\add_workshop_form($wk);
 
 $view->renderPage('admin_listall');
