@@ -21,7 +21,7 @@
 				
 			echo "<div class='col-md-6'>\n"; // start of big crammed info cell wrapper
 			
-				echo "{$row['when']} (".TIMEZONE.") {$public}<br><br>\n"; // when col	
+				echo "{$row['when']} (".TIMEZONE.")<br><br>\n"; // when col	
 				echo "{$row['costdisplay']}<br>\n"; // cost cell
 				echo number_format($row['enrolled'], 0)." of ".number_format($row['capacity'], 0)." filled,  ".number_format($row['waiting']+$row['invited'])." waiting<br>\n"; // enrollments
 				

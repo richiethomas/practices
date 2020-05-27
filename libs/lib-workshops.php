@@ -33,7 +33,7 @@ function fill_out_workshop_row($row) {
 	$row['sessions'] = \XtraSessions\get_xtra_sessions($row['id']);	
 	$row['total_class_sessions'] = 1;
 	$row['total_show_sessions'] = 0;
-	foreach ($row['sessons'] as $sess) {
+	foreach ($row['sessions'] as $sess) {
 		if ($sess['class_show']) {
 			$row['total_show_sessions']++;
 		} else {
@@ -189,7 +189,7 @@ function get_search_results($page = 1, $needle = null) {
 	// prep paginator
 	$paginator  = new \Paginator( $sql );
 	$rows = $paginator->getData($page);
-	$links = $paginator->createLinks();
+	$links = $paginator->createLinks(7, 'search results', "&needle=".urlencode($needle));
 
 	// calculate enrollments, ranks, etc
 	if ($rows->total > 0) {
@@ -410,5 +410,12 @@ function is_public($wk) {
 		return false;
 	}
 	return true;
+}
+
+function is_complete_workshop($wk) {
+	if (is_array($wk) && isset($wk['id']) && $wk['id']) {
+		return true;
+	}
+	return false;
 }
 

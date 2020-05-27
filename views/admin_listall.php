@@ -3,6 +3,7 @@
 <form action="<?php echo $sc; ?>" method="post">
 <?php
 echo \Wbhkit\texty('needle', $needle, 'Search by title');
+echo \Wbhkit\hidden('page', 'all');
 echo \Wbhkit\submit();
 ?>
 </form>

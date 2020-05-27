@@ -56,13 +56,13 @@ function handle_enroll($wk, $u, $confirm = true) {
 	global $error, $logger;
 	
 	// check incoming data
-	if (!$wk) {
+	if (!\Workshops\is_complete_workshop($wk)) {
 		$error = 'The workshop ID was not passed along.';
 		$logger->notice('handle_enroll:'.$error);
 		
 		return false;
 	}
-	if (!$u) {
+	if (!\Users\is_complete_user($u)) {
 		$error = 'We need a user.';
 		$logger->notice('handle_enroll:'.$error);
 		return false;
@@ -79,6 +79,7 @@ function handle_enroll($wk, $u, $confirm = true) {
 			$keyword = 'has been';
 		} elseif ($before['status_id'] == ENROLLED) {
 			$keyword = 'is still';
+			$confirm = false; // no need for an email message
 		} else {
 			$keyword = 'is now';
 		}
@@ -88,15 +89,18 @@ function handle_enroll($wk, $u, $confirm = true) {
 			$keyword = 'has been added to';
 		} elseif ($before['status_id'] == WAITING) {
 			$keyword = 'is still on';
+			$confirm = false; // no need for an email message
 		} else {
 			$keyword = 'is now on';
 		}		
 		$message = "This practice is full. '{$u['nice_name']}' $keyword the waiting list.";
 	} elseif ($status_id == 'already') {
 		$message = "'{$u['nice_name']}' has already been registered.";
+		$confirm = false; // no need for an email message		
 	} else {
 		$message = "Not sure what happened. Tried to enroll and got this status id: ".$status_id;
-	}		
+	}
+			
 	if ($confirm) { \Emails\confirm_email($wk, $u, $status_id); }
 	return $message;
 }

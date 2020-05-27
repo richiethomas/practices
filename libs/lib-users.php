@@ -408,3 +408,10 @@ function reject_user_below($at_least) {
 	}
 	return true;
 }
+
+function is_complete_user($u) {
+	if (is_array($u) && isset($u['id']) && $u['id']) {
+		return true;
+	}
+	return false;
+}
