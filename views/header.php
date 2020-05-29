@@ -68,7 +68,7 @@ if (strpos($sc, 'admin') !== false && \Users\check_user_level(2)) {
 	
 	echo nav_link($sc, 'admin_search.php', 'find students', 'magnifying-glass');
 	echo nav_link($sc, 'admin_status.php', 'status log', 'graph');
-	echo nav_link($sc, 'admin_mail_log.php', 'error log', 'clipboard');
+	echo nav_link($sc, 'admin_mail_log.php', 'debug log', 'clipboard');
 	echo nav_link($sc, 'admin_listall.php', 'all workshops', 'book');
 	echo "</ul>\n";
 	

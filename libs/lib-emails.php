@@ -12,33 +12,29 @@ function centralized_email($to, $sub, $body) {
 	global $logger;	
 		
 	// connect to SMTP
-	$params = array();
-	$params["host"] = "mail.willhines.net";
-	$params["port"] = '26';
-	$params["auth"] = "PLAIN";
-	$params["username"] = 'will@willhines.net';
-	$params["password"] = EMAIL_PASSWORD;
-	$smtp = \Mail::factory('smtp', $params);
+	$smtp = get_smtp_object();
 	
 	$crlf = "\n";
-	 $headers = array(
-                     'From'       => WEBMASTER,
-                     'Reply-To'   => WEBMASTER,
-					 'Return-Path' => WEBMASTER,
-                     'Subject'       => $sub,
-					 'To'			=> $to);
+	$headers = array(
+                    'From'       => WEBMASTER,
+                    'Reply-To'   => WEBMASTER,
+					'Return-Path' => WEBMASTER,
+                    'Subject'       => $sub,
+					'To'			=> $to);
 
 	  $headers['MIME-Version'] = "1.0";
 	  $headers['Content-Type'] = "text/html";
 	  $headers['charset'] = "ISO-8859-1";
 
+  	 $sent = $smtp->send($to, $headers, $body);  // laptop can use the SMTP server on willhines.net
+	 /*
 	  if (LOCAL) {
-	  	 $sent = $smtp->send($to, $headers, $body);  // laptop can use the SMTP server on willhines.net
  	  } else {
 		  unset($headers['Subject']);
 		  unset($headers['To']);
 	  	 $sent = mail($to, $sub, $body, $headers); // willhinesimprov.com uses local server
  	  }
+	 */
 	
 	$ts = date("Y-m-d H:i:s").' ';
 	$mail_activity = "emailed '$to', '$sub'\n";
@@ -295,9 +291,11 @@ function remind_enrolled($wk) {
 		
 		//admin_log("reminder for {$std['email']} -- $subject");
 		
-		\Emails\centralized_email($std['email'], $subject, $msg);
-		\Emails\send_text($std, $sms); // routine will check if they want texts and have proper info
-		//\Emails\centralized_email('whines@gmail.com', $subject, $msg); // for testing, i get everything
+		if (!LOCAL) {
+			\Emails\centralized_email($std['email'], $subject, $msg);
+			\Emails\send_text($std, $sms); // routine will check if they want texts and have proper info
+			//\Emails\centralized_email('whines@gmail.com', $subject, $msg); // for testing, i get everything
+		}
 	
 	}
 }
@@ -361,4 +359,31 @@ function admin_log($st) {
 	if (isset($sc) && strpos($sc,'admin') !== false) {
 		echo "$st<br>\n";
 	}
+}
+
+
+function get_smtp_object() {
+	global $smtp;
+	
+	if (isset($smtp) && is_object($smtp)) {
+		return $smtp;
+	}
+	
+	$params = array();
+	if (LOCAL) {
+		$params["host"] = "mail.willhines.net";
+		$params["port"] = '26';
+		$params["auth"] = "PLAIN";
+		$params["username"] = 'will@willhines.net';
+		$params["password"] = EMAIL_PASSWORD_LOCAL;
+	} else {
+		$params["host"] = "ssl://premium44.web-hosting.com";
+		$params["port"] = '465';
+		$params["auth"] = "PLAIN";
+		$params["username"] = 'will@willhinesimprov.com';
+		$params["password"] = EMAIL_PASSWORD_PRODUCTION;
+	}
+	$smtp = \Mail::factory('smtp', $params); // should now be set globally
+	return $smtp;
+	
 }

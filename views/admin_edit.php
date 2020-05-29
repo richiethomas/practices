@@ -47,7 +47,7 @@ echo "<div class='row mt-md-3 admin-edit-workshop'>\n";
 			($wk['location_id'] == ONLINE_LOCATION_ID ? "{$wk['online_url']}\n" : '').
 			"\n".
 			implode("\n", $names).
-			"\n\n".implode("\n", $just_emails), 
+			"\n\n".implode(",\n", $just_emails), 
 		0);			
 		
 		

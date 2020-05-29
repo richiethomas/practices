@@ -52,6 +52,7 @@ include 'libs/lib-lookups.php';
 include 'libs/lib-emails.php';
 include 'libs/lib-xtra-sessions.php';
 
+
 $statuses = Lookups\get_statuses();
 $locations = Lookups\get_locations();
 define('ENROLLED', Lookups\find_status_by_value('enrolled'));
@@ -62,7 +63,7 @@ $carriers = array();
 $error = '';
 $message = '';
 $body = '';
-
+$smtp = null; // global smtp object for sending mail, keeping connection open
 
 Wbhkit\set_vars(array('ac', 'wid', 'uid', 'key', 'page'));
 
