@@ -3,7 +3,7 @@
 <?php	
 	echo Wbhkit\hidden('ac', 'search');
 	echo Wbhkit\texty('needle', $needle, 'Enter an email or part of an email:');
-	echo Wbhkit\radio('sort', $search_opts, $sort);
+	echo "Sort by: ".Wbhkit\radio('sort', $search_opts, $sort);
 ?>
 <div class="clearfix"><?php echo Wbhkit\submit('search'); ?></div>
 </form>
@@ -20,10 +20,13 @@ if ($needle) {
 	echo "<h3>Matches for '$needle'</h3>\n";
 	if (count($all) == 0) {
 		echo "<p>No matches!</p>";
+		if (\Users\validate_email($needle)) {
+			echo "<p>Would you like to add <a class='btn btn-primary' href='admin_user.php?ac=adduser&needle=$needle'>{$needle}</a> as a user?</p>\n";
+		}
 	} else {
 		echo "<ul>\n";
 		foreach ($all as $s) {
-			echo "<li><a href=\"admin_student.php?guest_id={$s['id']}&needle={$needle}\">{$s['fullest_name']}</a> ".($s['phone'] ? ", {$s['phone']}" : '')." ({$s['classes']}) ".($needle == 'everyone' ? date ('Y M j, g:ia', strtotime($s['joined'])) : '')."</li>\n";
+			echo "<li><a href=\"admin_user.php?guest_id={$s['id']}&needle={$needle}\">{$s['fullest_name']}</a> ".($s['phone'] ? ", {$s['phone']}" : '')." ({$s['classes']}) ".($needle == 'everyone' ? date ('Y M j, g:ia', strtotime($s['joined'])) : '')."</li>\n";
 		}
 		echo "</ul>\n";
 	}

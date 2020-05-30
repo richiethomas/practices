@@ -15,7 +15,7 @@ if ($needle) {
 <h3 class="my-3">Transcripts</h3>
 <?php echo $transcripts; ?>
 
-<div class='row justify-content-center'><div class='col-sm-6'>
+<div class='row'><div class='col-sm-6'>
 
 <div class='card my-5 bg-light'><div class='card-body'>
 <h3 class="my-3">Change Email</h3>

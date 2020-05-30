@@ -242,11 +242,10 @@ function change_status($wk, $u, $status_id = ENROLLED, $confirm = true) {
 		$stmt = \DB\pdo_query("update registrations set status_id = :status_id,  last_modified = '".date("Y-m-d H:i:s")."' where workshop_id = :wid and user_id = :uid", array(':status_id' => $status_id, ':wid' => $wk['id'], ':uid' => $u['id']));
 		
 		update_change_log($wk, $u, $status_id);	
+		if ($confirm) { \Emails\confirm_email($wk, $u, $status_id); }
+		return "Updated user ({$u['email']}) to status '{$statuses[$status_id]}' for {$wk['title']}.";
 	}
-	
-	if ($confirm) { \Emails\confirm_email($wk, $u, $status_id); }
-	$return_msg = "Updated user ({$u['email']}) to status '{$statuses[$status_id]}' for {$wk['title']}.";
-	return $return_msg;
+	return "User ({$u['email']}) was already status '{$statuses[$status_id]}' for {$wk['title']}.";
 }
 
 function update_change_log($wk, $u, $status_id) {

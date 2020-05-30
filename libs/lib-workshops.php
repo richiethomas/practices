@@ -204,7 +204,7 @@ function get_search_results($page = 1, $needle = null) {
 	// prep view
 	$view->data['links'] = $links;
 	$view->data['rows'] = $workshops;
-	return $view->renderSnippet('admin_search_results');	
+	return $view->renderSnippet('admin_search_workshops');	
 }
 
 

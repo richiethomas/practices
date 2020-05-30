@@ -128,7 +128,7 @@ function figure_label($label, $key, $colon = false) {
 	if ($label === 0) { 
 		return '';
 	} else {
-		return ($label ? $label : ucwords($key)).($colon ? ': ' : '');
+		return ($label ? $label : ucwords(str_replace("_"," ",$key)).($colon ? ': ' : '');
 	}	
 }
 

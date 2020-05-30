@@ -13,7 +13,6 @@ if ($sort != 'n' && $sort != 't' && $sort != 'd') {
 }
 
 switch ($ac) {
-
 	
 	case 'zeroconfirm':
 

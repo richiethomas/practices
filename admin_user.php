@@ -1,5 +1,5 @@
 <?php
-$sc = "admin_student.php";
+$sc = "admin_user.php";
 $heading = "practices: admin";
 include 'lib-master.php';
 
@@ -11,6 +11,12 @@ if ($guest_id > 0) {
 }
 
 switch ($ac) {
+
+	case 'adduser':
+		if (Users\validate_email($needle)) {
+			$guest = Users\get_user_by_email($needle);
+		}
+		break;
 	
  	case 'delstudent':
 		$message = "Really delete '{$guest['email']}'? <a class='btn btn-danger' href='admin.php?ac=delstudentconfirm&guest_id={$guest['id']}'>yes delete</a> or <a class='btn btn-primary' href='$sc?guest_id={$guest['id']}'>cancel</a>";
@@ -73,7 +79,7 @@ if (!$guest['id']) {
 	$view->data['change_email_form'] = Users\edit_change_email($guest);
 	$view->data['text_preferences'] =  Users\edit_text_preferences($guest);
 	$view->data['display_name_form'] = Users\edit_display_name($guest);
-	$view->renderPage('admin_student');
+	$view->renderPage('admin_user');
 }
 
 	

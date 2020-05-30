@@ -70,7 +70,7 @@ switch ($ac) {
 		$message = Enrollments\handle_enroll($wk, $guest, $con); 
 		break;
 
-	// initially called in admin_student.php
+	// initially called in admin_user.php
 	// but it comes here to finish the job
 	case 'delstudentconfirm':
 		Users\delete_student($guest['id']);
