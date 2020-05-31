@@ -41,10 +41,8 @@ switch ($ac) {
 		}
 	
 		$wid = Workshops\add_update_workshop($wk, $ac);
-		
-		// fill out $wk array
-		$wk = Workshops\fill_out_workshop_row($wk);
-		
+		$wk = Workshops\get_workshop_info($wid); // re-fetch workshop info from database - inefficient, but only done by admins;
+				
 		if ($ac == 'up') {
 			$message = "Updated practice ({$wid}) - {$wk['title']}";
 			$logger->info($message);
