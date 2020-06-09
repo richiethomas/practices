@@ -11,6 +11,7 @@ mail_log.txt
 .gitignore
 zschema.txt
 info.txt
+photos/*
 
 # Compiled source #
 ###################
