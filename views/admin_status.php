@@ -24,7 +24,7 @@ if (count($log) == 0) {
 		}
 	
 		echo "<tr class='$row_class'>
-			<td><a href=\"admin_user.php?guest_id={$row['user_id']}\">{$row['nice_name']}</a></td>
+			<td><a href=\"admin_users.php?guest_id={$row['user_id']}\">{$row['nice_name']}</a></td>
 			".(isset($wk['id']) && $wk['id'] ? '' : "<td>$wkname</td>")."
 			<td>{$row['status_name']}</td>
 			<td><small>".date('j-M-y g:ia', strtotime($row['happened']))."{$last_enrolled}</small></td>

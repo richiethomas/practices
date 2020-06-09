@@ -5,6 +5,28 @@ include 'lib-master.php';
 
 Users\reject_user_below(3); // group 3 or higher
 
+$v = null;
+switch ($ac) {
+	
+	case 'rev':
+
+		foreach ($_REQUEST as $key => $value) {
+			$exp = null;
+			$rev = null;
+			if (substr($key, 0, 8) == 'revenue_') {
+				$id = substr($key, 8);
+				$stmt = \DB\pdo_query("update workshops set revenue = :revenue where id = :wid", array(':revenue' => $value, ':wid' => $id));
+			}
+			if (substr($key, 0, 9) == 'expenses_') {
+				$id = substr($key, 9);
+				$stmt = \DB\pdo_query("update workshops set expenses = :expenses where id = :wid", array(':expenses' => $value, ':wid' => $id));
+			}
+		}
+		break;
+		
+						
+}
+
 $vars = array('searchstart', 'searchend', 'lastweekstart', 'lastweekend', 'nextweekstart', 'nextweekend');
 Wbhkit\set_vars($vars);
 

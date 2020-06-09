@@ -372,6 +372,8 @@ function get_transcript_tabled($u, $admin = false, $page = 1) {
 		$d['upcoming'] = $wk['upcoming'];
 		$d['when'] = $wk['when'];
 		$d['sessions'] = $wk['sessions'];
+		$d['teacher_name'] = $wk['teacher_name'];
+		$d['teacher_id'] = $wk['teacher_id'];
 		if ($d['status_id'] == WAITING) {
 			$e = get_an_enrollment($wk, $u); 
 			$d['rank'] = $e['rank']; 

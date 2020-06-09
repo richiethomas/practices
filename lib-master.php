@@ -30,6 +30,7 @@ define('ONLINE_LOCATION_ID', 8);
 define('TIMEZONE', 'PDT');
 define('LATE_HOURS', 12);
 define('REMINDER_HOURS', 24);
+define('USER_PHOTO_MAX_BYTES', 5000000);
 
 if (LOCAL) {
 	define('WEBMASTER', "will@willhines.net");	
@@ -51,6 +52,7 @@ include 'libs/lib-enrollments.php';
 include 'libs/lib-lookups.php';
 include 'libs/lib-emails.php';
 include 'libs/lib-xtra-sessions.php';
+include 'libs/lib-teachers.php';
 
 
 $statuses = Lookups\get_statuses();

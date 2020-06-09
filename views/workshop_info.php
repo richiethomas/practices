@@ -28,6 +28,7 @@ echo "
 <div class='row my-3 py-3'><div class='col-sm-6'>
 <h2>{$wk['title']}</h2>
 <p>{$wk['notes']}</p>
+<p><b>Teacher: {$wk['teacher_name']}</b></p>
 {$wk['when']} (".TIMEZONE.")<br><br>
 {$wk['costdisplay']}, {$wk['enrolled']} (of {$wk['capacity']}) enrolled, ".($wk['waiting']+$wk['invited'])." waiting<br><br>
 

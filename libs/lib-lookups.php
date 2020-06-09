@@ -71,4 +71,13 @@ function locations_drop($lid = null) {
 	return \Wbhkit\drop('lid', $opts, $lid, 'Location', null, 'Required', ' required ');
 }
 
+
+function groups_drop() {
+	$stmt = \DB\pdo_query("select * from groups order by id");
+	$opts = array();
+	while ($row = $stmt->fetch()) {
+		$opts[$row['id']] = $row['name'];
+	}
+	return $opts;
+}
 	

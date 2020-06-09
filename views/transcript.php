@@ -36,7 +36,8 @@ if ($admin) {
 			echo "</div>\n";  // title cell
 			
 		
-			echo "	<div class='col-sm'>{$t['when']} (".TIMEZONE.")</div>\n"; // when col	
+			echo "	<div class='col-sm'>{$t['when']} (".TIMEZONE.")<br>
+				Instructor: <a href=\"teachers.php?tid={$t['teacher_id']}\">{$t['teacher_name']}</a></div>\n"; // when col	
 			if ($admin) { echo "<div class='col-sm my-2'>{$t['place']}</div>\n"; } // where col
 			echo "	<div class='col-sm'>{$statuses[$t['status_id']]}";
 			if ($t['status_id'] == WAITING) {

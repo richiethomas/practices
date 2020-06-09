@@ -4,13 +4,13 @@ $heading = "practices: admin edit";
 include 'lib-master.php';
 
 
-$wk_vars = array('wid', 'title', 'notes', 'start', 'end', 'lid', 'online_url', 'cost', 'capacity', 'notes', 'revenue', 'expenses', 'when_public', 'email', 'con', 'cancelled', 'xtraid', 'class_show', 'guest_id', 'reminder_sent', 'sold_out_late', 'teacher_id');
+$wk_vars = array('wid', 'title', 'notes', 'start', 'end', 'lid', 'online_url', 'cost', 'capacity', 'notes', 'revenue', 'expenses', 'when_public', 'email', 'con', 'cancelled', 'xtraid', 'class_show', 'guest_id', 'reminder_sent', 'sold_out_late', 'teacher_id', 'school_fee');
 Wbhkit\set_vars($wk_vars);
 
 
 $guest = array(); // the user we're going to change
 if ($guest_id > 0) {
-	$guest = Users\get_user_by_id($guest_id, 0); // second parameter means "don't save this in the cookie"
+	$guest = Users\get_user_by_id($guest_id); // second parameter means "don't save this in the cookie"
 }
 
 
@@ -68,7 +68,7 @@ switch ($ac) {
 		$message = Enrollments\handle_enroll($wk, $guest, $con); 
 		break;
 
-	// initially called in admin_user.php
+	// initially called in admin_users.php
 	// but it comes here to finish the job
 	case 'delstudentconfirm':
 		Users\delete_student($guest['id']);

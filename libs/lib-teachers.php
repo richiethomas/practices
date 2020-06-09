@@ -3,47 +3,180 @@
 namespace Teachers;
 
 
-function get_teacher_info($uid) {
-	$stmt = \DB\pdo_query("select * from teachers where user_id = :id", array(':id' => $uid));
+function is_teacher($uid) {
+	$stmt = \DB\pdo_query("select t.*, u.email, u.display_name from teachers t, users u where u.id = t.user_id and t.user_id = :id", array(':id' => $uid));
 	while ($row = $stmt->fetch()) {
+		$row = fill_out_teacher_row($row); 
 		return $row;
 	}
 	return false;
 }
 
-function add_teacher_row($uid) {
-	
+function get_teacher_by_id($tid) {
+	$stmt = \DB\pdo_query("select t.*, u.email, u.display_name from teachers t, users u where u.id = t.user_id and t.id = :id", array(':id' => $tid));
+	while ($row = $stmt->fetch()) {
+		$row = fill_out_teacher_row($row); 
+		return $row;
+	}
+	return false;
 }
 
-function get_teacher_form($t = null) {
+function fill_out_teacher_row($row) {
+	 return \Users\set_nice_name($row); 
+}
+
+
+
+
+function make_teacher($uid) {
+	
+	global $last_insert_id;
+
+	$stmt = \DB\pdo_query("select * from teachers where user_id = :id", array(':id' => $uid));
+	while ($row = $stmt->fetch()) {
+		return $row['id']; // if exists, return the teacher id
+	}
+
+	$stmt = \DB\pdo_query("insert into teachers (user_id) VALUES (:id)" , array(':id' => $uid));
+	
+	return $last_insert_id;
+}
+
+function get_teacher_form($t) {
 	global $sc;
-	if (!$t && !isset($t['id'])) {
+	if (!$t || !isset($t['id'])) {
 		$t = empty_teacher();
 	}
 	return 
 		"<form id='update_teacher' action='$sc' method='post'>".
-		/Wbhkit/hidden('id', $t['id']).
-		/Wbhkit/textarea('bio', $t['bio']).
-		/Wbhkit/texty('house_cut', $t['bio']).
-		/Wbhkit/checbox('active', 1, null, $t['active']).
-		/Wbhkit/submit('Update').
+		\Wbhkit\hidden('tid', $t['id']).
+		\Wbhkit\hidden('ac', 'up').			
+		\Wbhkit\textarea('bio', $t['bio']).
+		\Wbhkit\checkbox('active', 1, null, $t['active']).
+		\Wbhkit\submit('Update').
 		"</form>";		
 }
 
-function get_teacher_photo($t) {
+
+function get_all_teachers() {
+	$stmt = \DB\pdo_query("select t.*, u.email, u.display_name from teachers t, users u where t.user_id = u.id");
+	$teachers = array();
+	while ($row = $stmt->fetch()) {
+		$row = fill_out_teacher_row($row); 
+		$teachers[] = $row;
+	}
+	
+	usort($teachers, function($a, $b) {
+	    return $a['nice_name'] <=> $b['nice_name'];
+	});
+	
+	return $teachers;
+}
+
+function get_faculty() {
+	$teachers = get_all_teachers();
+	$faculty = array();
+	foreach ($teachers as $id => $t) {
+		if ($t['active'] == 1) {
+			$t['classes'] = get_teacher_upcoming_classes($t['id']);
+			$faculty[] = $t;
+		}
+	}
+	return $faculty;
+}
+
+function get_teacher_upcoming_classes($tid) {
+	
+	$workshops = array();
+	// get all active teachers, and also upcoming courses they are teaching	
+	$stmt = \DB\pdo_query("select wk.* from workshops wk where teacher_id = :tid and start > :now order by start", array(':now' => date("Y-m-d H:i:s"), ':tid' => $tid));
+	while ($row = $stmt->fetch()) {
+		$workshops[] = \Workshops\fill_out_workshop_row($row, false); // don't need enrollment stats 
+	}
+	return $workshops;
+}
+
+function teachers_dropdown_array() {
+	$teachers = get_all_teachers();
+	$opts = array();
+	foreach ($teachers as $t) {
+		$opts[$t['id']] = $t['nice_name'];
+	}
+	return $opts;
+}
+
+function get_teacher_photo_src($uid) {
+	if (file_exists("photos/user_{$uid}.jpg")) {
+		return "/photos/user_{$uid}.jpg";
+	} else {
+		return false;
+	}
+}
+
+function upload_teacher_photo_form($t) {
+	global $sc;
+	return
+		"<form action=\"$sc\" method=\"post\" enctype=\"multipart/form-data\">\n".
+		\Wbhkit\hidden ('tid', $t['id']).
+	\Wbhkit\hidden ('ac', 'photo').
+	\Wbhkit\hidden ('MAX_FILE_SIZE', USER_PHOTO_MAX_BYTES).
+	\Wbhkit\fileupload('teacher_photo', 'Upload/Replace Teacher Photo (JPG file type only)').
+	\Wbhkit\submit ('Upload Photo').
+			"</form>\n";
+	
+}
+function upload_teacher_photo($t, &$message, &$error) {
+	$file_field_name = "teacher_photo";
+	
+	// Check file size
+	if ($_FILES[$file_field_name]["size"] > USER_PHOTO_MAX_BYTES) {
+	  $error = "File rejected: greater than 5MB";
+	  return false;
+	}
+	if ($_FILES[$file_field_name]["size"] == 0) {
+	  $error = "No files uploaded.";
+	  return false;
+	}
+	$file_parts = pathinfo($_FILES[$file_field_name]['name']);
+	if ($file_parts['extension'] != 'jpg') {
+		$error = "File must be in JPG format.";
+		return false;
+	}
+
+	if (move_uploaded_file($_FILES[$file_field_name]["tmp_name"], "photos/user_{$t['user_id']}.jpg")) {
+		$message = "photo uploaded!";
+		return true;
+	} else {
+		$error = "There was an error uploading your file.";
+		return false;
+	}
 	
 }
 
-
 function update_teacher_info($t) {
 	
+	
+	if (!$t['id'] || !$t['user_id']) {
+		return false;
+	}
+	// fussy MySQL 5.7
+	if (!$t['bio']) { $t['bio'] = ''; }
+	if (!$t['active']) { $t['active'] = 0; }
+	
+	
+	$params = array(':id' => $t['id'],
+		':bio' => $t['bio'],
+		':active' => $t['active']);
+		
+	$stmt = \DB\pdo_query("update teachers set bio = :bio, active = :active where id = :id", $params);
+	
+	return $t['id'];
 }
 
 function empty_teacher() {
 	return array(
 		'id' => null,
 		'user_id' => null,
-		'house_cut' => null,
 		'bio' => null,
 		'active' => 0
 	);

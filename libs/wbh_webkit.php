@@ -29,6 +29,17 @@ function texty($key, $value = '', $label = null, $placeholder = null, $help = nu
 	return $texty;
 }
 
+
+function fileupload($key, $label = null) {
+	
+	$l = label($label, $key);
+	$fu = form_element_start();		
+	$fu .= "{$l}<input class='form-control-file mx-md-1' type=\"file\" id=\"$key\" name=\"$key\">\n";
+	$fu .= "</div>\n";
+	
+	return $fu;
+}
+
 function textarea($key, $value = null, $label = null, $rows = 5, $cols = 40, $help = null, $error = null, $validation = null) {
 	$l = label($label, $key);
 	$ta = form_element_start();

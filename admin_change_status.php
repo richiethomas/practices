@@ -8,7 +8,7 @@ Wbhkit\set_vars($wk_vars);
 
 $guest = array(); // the user we're going to change
 if ($guest_id > 0) {
-	$guest = Users\get_user_by_id($guest_id, 0); // second parameter means "don't save this in the cookie"
+	$guest = Users\get_user_by_id($guest_id); // second parameter means "don't save this in the cookie"
 }
 
 if (!isset($wk) || !isset($wk['id']) || !isset($guest) || !isset($guest['id'])) {

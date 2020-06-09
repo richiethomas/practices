@@ -6,8 +6,18 @@ echo "<p>Numbers in parenthesis are: <i>(paid / enrolled / capacity / waiting)</
 
 echo "<p class='alert alert-primary'>Hi! You are logged in as <b>{$u['nice_name']}</b>.</p>\n";
 
+if ($your_teacher_id > 0) {
+	echo "<p>See: <a href='$sc?filter_by=$your_teacher_id'>just your classes</a> | <a href='$sc?filter_by=all'>all of them</a></p>";
+}
+
 $current_date = null;
 foreach ($workshops as $wk) {
+
+	if ($filter_by != 'all' && $filter_by > 0) {
+		if ($wk['teacher_id'] != $filter_by) {
+			continue; // skip this loop
+		}
+	}
 
 	// update date?
 	$next_date = date("l F j, Y", strtotime($wk['start']));
@@ -26,6 +36,7 @@ foreach ($workshops as $wk) {
 	$end = Wbhkit\friendly_time($wk['end']);
 	
 	echo "<li><a href='admin_edit.php?wid={$wk['id']}'>{$wk['title']}</a>, $start-$end (".number_format($wk['paid'], 0)." / ".number_format($wk['enrolled'], 0)." /  ".number_format($wk['capacity'], 0)." / ".number_format($wk['waiting']+$wk['invited']).")";
+	echo " - {$wk['teacher_name']}";
 	echo "</li>\n";
 	
 }	

@@ -1,16 +1,24 @@
 <?php
-$sc = "admin_user.php";
+$sc = "admin_users.php";
 $heading = "practices: admin";
 include 'lib-master.php';
 
-Wbhkit\set_vars(array('guest_id', 'carrier_id', 'phone', 'send_text', 'newemail', 'display_name', 'needle'));
+Wbhkit\set_vars(array('guest_id', 'carrier_id', 'phone', 'send_text', 'newemail', 'display_name', 'needle', 'group_id'));
 
 $guest = array(); // the user we're going to change
 if ($guest_id > 0) {
-	$guest = Users\get_user_by_id($guest_id, 0); // second parameter means "don't save this in the cookie"
+	$guest = Users\get_user_by_id($guest_id); // second parameter means "don't save this in the cookie"
 }
 
 switch ($ac) {
+
+	case 'updategroup':
+		if (Users\check_user_level(3)) {	
+			$guest['group_id'] = $group_id;
+			Users\update_group_level($guest);
+		}
+		break;
+	
 
 	case 'adduser':
 		if (Users\validate_email($needle)) {
@@ -66,7 +74,6 @@ switch ($ac) {
 				Enrollments\update_paid_by_enrollment_id($eid, 0);
 			}
 		}		
-		$v = 'ed';
 		
 }
 if (!$guest['id']) {
@@ -79,7 +86,8 @@ if (!$guest['id']) {
 	$view->data['change_email_form'] = Users\edit_change_email($guest);
 	$view->data['text_preferences'] =  Users\edit_text_preferences($guest);
 	$view->data['display_name_form'] = Users\edit_display_name($guest);
-	$view->renderPage('admin_user');
+	$view->data['groups_form'] = Users\edit_group_level($guest);
+	$view->renderPage('admin_users');
 }
 
 	

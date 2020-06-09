@@ -66,10 +66,11 @@ if (strpos($sc, 'admin') !== false && \Users\check_user_level(2)) {
 	
 	if (Users\check_user_level(3)) { echo nav_link($sc, 'admin_revenue.php', 'revenues', 'dollar'); }
 	
-	echo nav_link($sc, 'admin_search.php', 'find students', 'magnifying-glass');
+	echo nav_link($sc, 'admin_search.php', 'find students', 'people');
 	echo nav_link($sc, 'admin_status.php', 'status log', 'graph');
 	echo nav_link($sc, 'admin_mail_log.php', 'debug log', 'clipboard');
 	echo nav_link($sc, 'admin_listall.php', 'all workshops', 'book');
+	echo nav_link($sc, 'admin_teachers.php', 'teachers', 'star');
 	echo "</ul>\n";
 	
 } else {

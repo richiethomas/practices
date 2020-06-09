@@ -249,7 +249,6 @@ function update_display_name(&$u,  &$message, &$error) {
 		return false;
 	} else {
 		$stmt = \DB\pdo_query("update users set display_name = :name where id = :uid", array(':name' => $u['display_name'], ':uid' => $u['id']));
-		$u = get_user_by_id($u['id']); // updated so the form is correctly populated on refill
 		$message = "Display name updated to '{$u['display_name']}'";
 		$logger->info($message);
 		return true;
@@ -391,6 +390,29 @@ function update_text_preferences(&$u,  &$message, &$error) {
 
 }
 
+
+function edit_group_level($u) {
+	global $sc;
+	return "<form action='$sc' method='post'>\n".
+	\Wbhkit\hidden('guest_id', $u['id']).
+	\Wbhkit\hidden('ac', 'updategroup').
+	\Wbhkit\drop('group_id', \Lookups\groups_drop(), $u['group_id'], 'Group', 'Clearance level').
+	\Wbhkit\submit('Update Group Level').
+	"</form>\n";	
+}
+
+function update_group_level($u) {
+	global $logger;
+
+	if ($u['id'] == 1) { return false; } // no changing user 1 (will's) level -- go directly to DB for that
+
+	$stmt = \DB\pdo_query("update users set group_id = :gid where id = :uid", array(':gid' => $u['group_id'], ':uid' => $u['id']));
+	$u = get_user_by_id($u['id']); // updated so the form is correctly populated on refill
+	$message = "Display name updated to '{$u['display_name']}'";
+	$logger->info("User {$u['email']} updated to group level '{$u['group_id']}'");
+	return true;
+}
+
 function check_user_level($level) {
 	global $u;
 	if (isset($u) && isset($u['group_id']) && $u['group_id'] >= $level) {
@@ -415,3 +437,5 @@ function is_complete_user($u) {
 	}
 	return false;
 }
+
+

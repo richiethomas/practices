@@ -17,9 +17,12 @@
 		
 			echo "<div class='row workshop-row workshop-$cl my-3 py-3 border-top'>\n"; // workshop row start
 			
-			echo "<div class='col-md-6'>".($row['soldout'] == 1 ? 'SOLD OUT: ' : '')."<a href='workshop.php?wid={$row['id']}'>{$row['title']}</a></span>".($row['notes'] ? "<p class='small text-muted'>{$row['notes']}</p>" : '')."</div>"; // title cell
+			echo "<div class='col-md-6'>".($row['soldout'] == 1 ? 'SOLD OUT: ' : '')."<a href='workshop.php?wid={$row['id']}'>{$row['title']}</a></span>".
+				($row['notes'] ? "<p class='small text-muted'>{$row['notes']}</p>" : '').
+					"</div>"; // title cell
 				
 			echo "<div class='col-md-6'>\n"; // start of big crammed info cell wrapper
+				echo "<p><b>Teacher:{$row['teacher_name']}</b></p>\n";
 			
 				echo "{$row['when']} (".TIMEZONE.")<br><br>\n"; // when col	
 				echo "{$row['costdisplay']}<br>\n"; // cost cell

@@ -15,7 +15,7 @@ function get_workshop_info($id) {
 	return false;
 }
 
-function fill_out_workshop_row($row) {
+function fill_out_workshop_row($row, $get_enrollment_stats = true) {
 	$locations = \Lookups\get_locations();
 	
 	foreach (array('address', 'city', 'state', 'zip', 'place', 'lwhere') as $loc_field) {
@@ -25,8 +25,15 @@ function fill_out_workshop_row($row) {
 	if ($row['when_public'] == 0 ) {
 		$row['when_public'] = '';
 	}
-	$row = format_workshop_startend($row);	
+	$row = format_workshop_startend($row);
 	
+	
+	//get teacher info
+	$trow = \Teachers\get_teacher_by_id($row['teacher_id']);
+	$row['teacher_name'] = $trow['nice_name'];
+	$row['teacher_user_id'] = $trow['user_id'];
+	$row['teacher_id'] = $trow['id'];
+		
 	$row['costdisplay'] = $row['cost'] ? "\${$row['cost']} USD" : 'Pay what you can / donation';
 	
 	// xtra session info
@@ -58,21 +65,21 @@ function fill_out_workshop_row($row) {
 	$row['nextstart'] = \Wbhkit\friendly_when($row['nextstart_raw']);
 	$row['nextend'] = \Wbhkit\friendly_when($row['nextend_raw']);
 		
-	$row = set_enrollment_stats($row);
-	
-	if ($row['enrolled'] >= $row['capacity'] || $row['waiting'] > 0 || $row['invited'] > 0) { 
-		$row['soldout'] = 1;
-	} else {
-		$row['soldout'] = 0;
-	}	
-	
 	if (strtotime($row['end']) >= strtotime('now')) { 
 		$row['upcoming'] = 1; 
 	} else {
 		$row['upcoming'] = 0;
 	}
-	
 	$row = check_last_minuteness($row);
+	
+	if ($get_enrollment_stats) {
+		$row = set_enrollment_stats($row);
+		if ($row['enrolled'] >= $row['capacity'] || $row['waiting'] > 0 || $row['invited'] > 0) { 
+			$row['soldout'] = 1;
+		} else {
+			$row['soldout'] = 0;
+		}	
+	}
 	
 	return $row;
 	
@@ -183,7 +190,7 @@ function get_search_results($page = 1, $needle = null) {
 	
 	// get IDs of workshops
 	$sql = "select w.* from workshops w ";
-	if ($needle) { $sql .= "where w.title like '%$needle%' "; }
+	if ($needle) { $sql .= " where w.title like '%$needle%' "; }
 	$sql .= " order by start desc"; // get all
 		
 	// prep paginator
@@ -265,13 +272,16 @@ function get_sessions_to_come() {
 	$mysqlnow = date("Y-m-d H:i:s", strtotime("-3 hours"));
 	
 	$stmt = \DB\pdo_query("
-(select id, title, start, end, capacity, cost, 0 as xtra, notes from workshops where start >= date('$mysqlnow'))
+(select w.id, title, start, end, capacity, cost, 0 as xtra, notes, teacher_id from workshops w where start >= date('$mysqlnow'))
 union
-(select x.workshop_id, w.title, x.start, x.end, w.capacity, w.cost, 1 as xtra, w.notes from xtra_sessions x, workshops w where w.id = x.workshop_id and x.start >= date('$mysqlnow'))
+(select x.workshop_id, w.title, x.start, x.end, w.capacity, w.cost, 1 as xtra, w.notes, w.teacher_id from xtra_sessions x, workshops w, users u where w.id = x.workshop_id and x.start >= date('$mysqlnow'))
 order by start asc"); 
 		
 	$sessions = array();
 	while ($row = $stmt->fetch()) {
+		$trow = \Teachers\get_teacher_by_id($row['teacher_id']);
+		$row['teacher_name'] = $trow['nice_name'];
+		$row['teacher_user_id'] = $trow['user_id'];
 		$sessions[] = set_enrollment_stats($row);
 	}
 	return $sessions;
@@ -286,13 +296,14 @@ function how_many_paid($wk) {
 	return 0;
 }
 
+// for "revenues" page
 function get_workshops_list_bydate($start = null, $end = null) {
 	if (!$start) { $start = "Jan 1 1000"; }
 	if (!$end) { $end = "Dec 31 3000"; }
 	
 	//echo "select w.* from workshops w WHERE w.start >= '".date('Y-m-d H:i:s', strtotime($start))."' and w.end <= '".date('Y-m-d H:i:s', strtotime($end))."' order by start desc";
 	
-	$stmt = \DB\pdo_query("select w.* from workshops w WHERE w.start >= :start and w.end <= :end order by start desc", array(':start' => date('Y-m-d H:i:s', strtotime($start)), ':end' => date('Y-m-d H:i:s', strtotime($end))));
+	$stmt = \DB\pdo_query("select w.* from workshops w WHERE w.start >= :start and w.end <= :end order by teacher_id, start desc", array(':start' => date('Y-m-d H:i:s', strtotime($start)), ':end' => date('Y-m-d H:i:s', strtotime($end))));
 	
 	$workshops = array();
 	while ($row = $stmt->fetch()) {
@@ -318,6 +329,7 @@ function get_empty_workshop() {
 		'sold_out_late' => null,
 		'cancelled' => null,
 		'teacher_id' => 1,
+		'school_fee' => 0,
 		'reminder_sent' => 0
 	);
 }
@@ -341,8 +353,10 @@ function workshop_fields($wk) {
 	\Wbhkit\texty('start', $wk['start'], null, null, null, 'Required', ' required ').
 	\Wbhkit\texty('end', $wk['end'], null, null, null, 'Required', ' required ').
 	\Wbhkit\texty('cost', $wk['cost']).
+	\Wbhkit\texty('school_fee', $wk['school_fee']).
 	\Wbhkit\texty('capacity', $wk['capacity']).
 	\Wbhkit\textarea('notes', $wk['notes']).
+	\Wbhkit\drop('teacher_id', \Teachers\teachers_dropdown_array(), $wk['teacher_id'], 'Teacher', null, 'Required', ' required ').
 	\Wbhkit\texty('revenue', $wk['revenue']).
 	\Wbhkit\texty('expenses', $wk['expenses']).
 	\Wbhkit\checkbox('cancelled', 1, null, $wk['cancelled']).	
@@ -366,9 +380,8 @@ function add_update_workshop($wk, $ac = 'up') {
 	if (!$wk['start']) { $wk['start'] = NULL; }
 	if (!$wk['end']) { $wk['end'] = NULL; }
 	if (!$wk['teacher_id']) { $wk['teacher_id'] = 1; }
+	if (!$wk['school_fee']) { $wk['school_fee'] = 0; }
 	if (!$wk['reminder_sent']) { $wk['reminder_sent'] = 0; }
-	
-	
 	
 		
 	$params = array(':title' => $wk['title'],
@@ -383,15 +396,18 @@ function add_update_workshop($wk, $ac = 'up') {
 		':expenses' => $wk['expenses'],
 		':public' => date('Y-m-d H:i:s', strtotime($wk['when_public'])),
 		':cancelled' => $wk['cancelled'],
+		':tid' => $wk['teacher_id'],
+		':school_fee' => $wk['school_fee'],
 		':reminder_sent' => $wk['reminder_sent']);
 		
 		if ($ac == 'up') {
 			$params[':wid'] = $wk['id'];
-			$stmt = \DB\pdo_query("update workshops set title = :title, start = :start, end = :end, cost = :cost, capacity = :capacity, location_id = :lid, online_url = :online_url, notes = :notes, revenue = :revenue, expenses = :expenses, when_public = :public, cancelled = :cancelled, reminder_sent = :reminder_sent where id = :wid", $params);
+			$sql = "update workshops set title = :title, start = :start, end = :end, cost = :cost, capacity = :capacity, location_id = :lid, online_url = :online_url, notes = :notes, revenue = :revenue, expenses = :expenses, when_public = :public, cancelled = :cancelled, reminder_sent = :reminder_sent, teacher_id = :tid, school_fee = :school_fee where id = :wid";
+			$stmt = \DB\pdo_query($sql, $params);
 			return $wk['id'];
 		} elseif ($ac = 'ad') {
-			$stmt = \DB\pdo_query("insert into workshops (title, start, end, cost, capacity, location_id, online_url, notes, revenue, expenses, when_public, cancelled, reminder_sent)
-			VALUES (:title, :start, :end, :cost, :capacity, :lid, :online_url, :notes, :revenue, :expenses, :public, :cancelled, :reminder_sent)",
+			$stmt = \DB\pdo_query("insert into workshops (title, start, end, cost, capacity, location_id, online_url, notes, revenue, expenses, when_public, cancelled, reminder_sent, teacher_id, school_fee)
+			VALUES (:title, :start, :end, :cost, :capacity, :lid, :online_url, :notes, :revenue, :expenses, :public, :cancelled, :reminder_sent, :tid, :school_fee)",
 			$params);
 			return $last_insert_id; // set as a global by my dbo routines
 		}

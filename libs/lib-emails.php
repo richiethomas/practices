@@ -26,15 +26,17 @@ function centralized_email($to, $sub, $body) {
 	  $headers['Content-Type'] = "text/html";
 	  $headers['charset'] = "ISO-8859-1";
 
-	  if (LOCAL) {
-		 $sent = $smtp->send($to, $headers, $body);  // laptop can use the SMTP server on willhines.net
+	 $sent = $smtp->send($to, $headers, $body);  // laptop can use the SMTP server on willhines.net
+
+/*
+	 	  if (LOCAL) {
  	  } else {
 		  // live server CAN use SMTP but it's slower and no better!
 		  unset($headers['Subject']);
 		  unset($headers['To']);
 	  	 $sent = mail($to, $sub, $body, $headers); // willhinesimprov.com uses local server
  	  }
-	
+*/	
 	$ts = date("Y-m-d H:i:s").' ';
 	$mail_activity = "emailed '$to', '$sub'\n";
 	if ($sent) {
@@ -144,6 +146,7 @@ function confirm_email($wk, $u, $status_id = ENROLLED) {
 <p>Summary of class infomation:<br>
 --------------------------------<br>
 <b>Title:</b> {$wk['title']}<br>
+<b>Teacher:</b> {$wk['teacher_name']}<br>
 <b>When:</b> {$wk['when']} (PDT - California time)<br>
 <b>Cost:</b> \${$wk['cost']} USD<br>".
 ($status_id == ENROLLED ? "<b>Zoom link:</b> {$wk['online_url']}" : "<b>Zoom link</b>: We'll email you the zoom link if/once you are enrolled.")."<br>
@@ -269,6 +272,7 @@ function get_workshop_summary($wk) {
 <p>-----------------------------<br>
 <b>Class information:</b><br>
 <b>Title:</b> {$wk['title']}<br>
+<b>Teacher:</b> {$wk['teacher_name']}<br>
 <b>When:</b> {$wk['when']} (California time)";
 
 }
