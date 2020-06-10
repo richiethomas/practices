@@ -10,8 +10,8 @@ if ($t = Teachers\is_teacher($u['id'])) {
 	$your_teacher_id = $t['id'];
 }
 
-if ($filter_by != 'all' && !$filter_by) {
-	$filter_by = $your_teacher_id;
+if (!$filter_by) {
+	$filter_by = 'all';
 }
 
 if ($ac && $ac=='del' && isset($wk) && isset($wk['id'])) {

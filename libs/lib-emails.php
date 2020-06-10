@@ -26,17 +26,19 @@ function centralized_email($to, $sub, $body) {
 	  $headers['Content-Type'] = "text/html";
 	  $headers['charset'] = "ISO-8859-1";
 
-	 $sent = $smtp->send($to, $headers, $body);  // laptop can use the SMTP server on willhines.net
 
-/*
-	 	  if (LOCAL) {
+	  if (LOCAL) {
+ 	 	 $sent = $smtp->send($to, $headers, $body);  // laptop can use the SMTP server on willhines.net
  	  } else {
-		  // live server CAN use SMTP but it's slower and no better!
 		  unset($headers['Subject']);
 		  unset($headers['To']);
-	  	 $sent = mail($to, $sub, $body, $headers); // willhinesimprov.com uses local server
+		  $stringheaders = '';
+		  foreach ($headers as $key => $value) {
+			  $stringheaders .= "$key: $value\r\n";
+		  }
+	  	 $sent = mail($to, $sub, $body, $stringheaders); // willhinesimprov.com uses local server
  	  }
-*/	
+	
 	$ts = date("Y-m-d H:i:s").' ';
 	$mail_activity = "emailed '$to', '$sub'\n";
 	if ($sent) {

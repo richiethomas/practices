@@ -85,7 +85,7 @@ function multi_drop($name, $opts, $selected = null, $label = null, $size = 10, $
 	$select .= "{$l} <select size='$size' multiple class='form-control' name='{$name}".'[]'."' id='$name'";
 	if ($validation) { $select .= $validation; }
 	$select .= figure_aria_attribute($name, $help, $error);
-	$select .= "<option label=' ' value=''></option>\n";
+	//$select .= "<option label=' ' value=''></option>\n";
 	foreach ($opts as $key => $show) {
 		$select .= "<option value=\"$key\"";
 		if (is_array($selected)) {

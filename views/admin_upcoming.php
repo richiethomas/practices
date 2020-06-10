@@ -7,7 +7,11 @@ echo "<p>Numbers in parenthesis are: <i>(paid / enrolled / capacity / waiting)</
 echo "<p class='alert alert-primary'>Hi! You are logged in as <b>{$u['nice_name']}</b>.</p>\n";
 
 if ($your_teacher_id > 0) {
-	echo "<p>See: <a href='$sc?filter_by=$your_teacher_id'>just your classes</a> | <a href='$sc?filter_by=all'>all of them</a></p>";
+	echo "<p>
+		See: 
+	<a class=\"".($filter_by == $your_teacher_id ? 'text-muted' : 'font-weight-bold')."\" href='$sc?filter_by=$your_teacher_id'>just your classes</a> | 
+	<a class=\"".($filter_by == 'all' ? 'text-muted' : 'font-weight-bold')."\" href='$sc?filter_by=all'>all of them</a>
+	</p>";
 }
 
 $current_date = null;

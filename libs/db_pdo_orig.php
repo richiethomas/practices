@@ -1,7 +1,9 @@
 <?php
 namespace DB;
 
-define('EMAIL_PASSWORD', EMAIL PASSWORD HERE);
+define('EMAIL_PASSWORD', HIDDEN);
+define('EMAIL_PASSWORD_LOCAL', HIDDEN);
+define('EMAIL_PASSWORD_PRODUCTION', HIDDEN);
 
 
 $db = null;
@@ -38,11 +40,19 @@ function get_connection() {
 	if ($db) {
 		return $db;
 	}
-	$dsn = 'mysql:host=localhost;dbname=DBNAME';
-	$username = // username here
-	$password =   // password here
-	$options = array(
+	
+		$password = HIDDEN;  
+		if (LOCAL) { // laptop
+			$dsn = 'mysql:host=localhost;dbname=NOPE';
+			$username = 'NOPE'; 
+		} else { // willhinesimprov.com
+			$dsn = 'mysql:host=localhost;dbname=wNOPE';
+			$username = NOPE; 
+		}
+		
+		$options = array(
 	    \PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8',
+		\PDO::ATTR_PERSISTENT => true
 	); 
 
 	try {
@@ -56,5 +66,29 @@ function get_connection() {
 	return $db;
 }
 
+
+function interpolateQuery($query, $params) {
+    $keys = array();
+
+	
+	foreach ($params as $k => $p) {
+		$params[$k] = "'$p'";
+	}
+
+    # build a regular expression for each parameter
+    foreach ($params as $key => $value) {
+        if (is_string($key)) {
+            $keys[] = '/'.$key.'/';
+        } else {
+            $keys[] = '/[?]/';
+        }
+    }
+
+    $query = preg_replace($keys, $params, $query, 1, $count);
+
+    #trigger_error('replaced '.$count.' keys');
+
+    return $query;
+}
 	
 ?>

@@ -4,11 +4,7 @@
 	
 $sessions = '';
 if (!empty($wk['sessions'])) {
-	$sessions .= "{$wk['when']}";
-	foreach ($wk['sessions'] as $s) {
-		$sessions .= "<br>\n{$s['friendly_when']}";
-	}
-	$wk['when'] = $sessions; // replace the when variable 
+	$wk['when'] = \XtraSessions\add_sessions_to_when($wk['when'], $wk['sessions']);
 }	
 ?>
 	<div class="row m-3 p-3"><div class="col-md-6 border border-info">
