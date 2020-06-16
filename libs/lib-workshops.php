@@ -220,13 +220,28 @@ function get_workshops_list($admin = 0, $page = 1) {
 	global $view;
 	
 	// get IDs of workshops
-	$sql = 'select w.* from workshops w ';
+	$mysqlnow = date("Y-m-d H:i:s");
+
+	$sql = '(select w.* from workshops w ';
+	if (!$admin) {
+		$sql .= "where when_public < '$mysqlnow' and date(start) >= date('$mysqlnow')"; // get public ones to come
+	}
+	$sql .= ")"; // end first select statement of UNION
+	
+	// second select: search xtra sessions. 
+	// UNION should automatically remove duplicate rows,
+	// so multiple workshop/xtra sessions should only show up once in results?
+	$sql .=
+		"UNION
+		(select w.* from workshops w, xtra_sessions x where x.workshop_id = w.id
+	and w.when_public < '$mysqlnow' and date(x.start) >= date('$mysqlnow'))";  
+
 	if ($admin) {
 		$sql .= " order by start desc"; // get all
 	} else {
-		$mysqlnow = date("Y-m-d H:i:s");
-		$sql .= "where when_public < '$mysqlnow' and date(start) >= date('$mysqlnow') order by start asc"; // get public ones to come
+		$sql .= " order by start asc"; // get all
 	}
+
 		
 	// prep paginator
 	$paginator  = new \Paginator( $sql );
@@ -272,9 +287,9 @@ function get_sessions_to_come() {
 	$mysqlnow = date("Y-m-d H:i:s", strtotime("-3 hours"));
 	
 	$stmt = \DB\pdo_query("
-(select w.id, title, start, end, capacity, cost, 0 as xtra, notes, teacher_id from workshops w where start >= date('$mysqlnow'))
+(select w.id, title, start, end, capacity, cost, 0 as xtra, notes, teacher_id, 1 as rank from workshops w where start >= date('$mysqlnow'))
 union
-(select x.workshop_id, w.title, x.start, x.end, w.capacity, w.cost, 1 as xtra, w.notes, w.teacher_id from xtra_sessions x, workshops w, users u where w.id = x.workshop_id and x.start >= date('$mysqlnow'))
+(select x.workshop_id, w.title, x.start, x.end, w.capacity, w.cost, 1 as xtra, w.notes, w.teacher_id, x.rank from xtra_sessions x, workshops w, users u where w.id = x.workshop_id and x.start >= date('$mysqlnow'))
 order by start asc"); 
 		
 	$sessions = array();

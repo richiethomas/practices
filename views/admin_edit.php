@@ -75,7 +75,7 @@ echo "<div class='row mt-md-3 admin-edit-workshop'>\n";
 		if (!empty($wk['sessions'])) {
 			echo "<ul>\n";
 			foreach ($wk['sessions'] as $s) {
-				echo "<li>{$s['friendly_when']}".($s['class_show'] ? ' <b>(show)</b> ': '')." <a href='$sc?ac=delxtra&xtraid={$s['id']}&wid={$wk['id']}'>delete</a>".($s['reminder_sent'] ? ' <em>- reminder sent</em>' : '')."</li>\n";
+				echo "<li>({$s['rank']}) {$s['friendly_when']}".($s['class_show'] ? ' <b>(show)</b> ': '')." <a href='$sc?ac=delxtra&xtraid={$s['id']}&wid={$wk['id']}'>delete</a>".($s['reminder_sent'] ? ' <em>- reminder sent</em>' : '')."</li>\n";
 			}
 			echo "</ul>\n";
 		}

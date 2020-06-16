@@ -125,7 +125,7 @@ if (count($unavailable_workshops) > 0) {
 
 
 		<div class='row mb-md-4'><div class='col'>
-		<h2>Available Workshops</h2> 
+		<h2>Current / Upcoming Workshops</h2> 
 		<p class='mx-4''>New workshops go up 9:30am Fridays (California time, PDT).<br>Join the mailing list (bottom of page) for an email on Thursday saying what's coming.</p>
 		<?php echo $upcoming_workshops; ?>
 		</div></div> <!-- end of col and row -->
@@ -148,7 +148,7 @@ if (count($unavailable_workshops) > 0) {
 			<div class="card text-center text-white bg-success">
 			      <div class="card-body">
 			        <h2 class="card-title"><span class="oi oi-envelope-closed" title="envelope-closed" aria-hidden="true"></span><br>Mailing List</h2>
-			        <p class="card-text text-dark">If you want to know about classes the minute the go online, join my mailing list. You are NOT automatically put on my mailing list for these workshops. You have to explicitly join by clicking the link/button below.</p>
+			        <p class="card-text text-dark">If you want to know about classes the minute the go online, join my mailing list. You are NOT automatically put on my mailing list when you take a workshop. You have to explicitly join by clicking the link/button below.</p>
 			        <a href="http://eepurl.com/R2Ytz" class="btn btn-outline-light">Join Mailing List</a>
 			      </div> <!-- end of card body -->
 			    </div> <!-- end of card -->

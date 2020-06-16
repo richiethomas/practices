@@ -270,6 +270,9 @@ function get_reminder_message_data($wk) {
 
 
 function get_workshop_summary($wk) {
+	
+	$wk['when'] = \XtraSessions\add_sessions_to_when($wk['when'], $wk['sessions']);
+	
 		return "<br>
 <p>-----------------------------<br>
 <b>Class information:</b><br>
@@ -294,12 +297,12 @@ function remind_enrolled($wk) {
 		$trans = URL."index.php?key=$key";
 		$msg = $base_msg."<p>Log in or drop out here:<br>$trans</p>\n";
 		
-		//admin_log("reminder for {$std['email']} -- $subject");
-		
+		//admin_log("reminder for {$std['email']} -- $subject");		
+		//\Emails\centralized_email('whines@gmail.com', $subject, $msg); // for testing, i get everything
+
 		if (!LOCAL) {
 			\Emails\centralized_email($std['email'], $subject, $msg);
 			\Emails\send_text($std, $sms); // routine will check if they want texts and have proper info
-			//\Emails\centralized_email('whines@gmail.com', $subject, $msg); // for testing, i get everything
 		}
 	
 	}
