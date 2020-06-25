@@ -245,6 +245,8 @@ Zoom available at: http://www.zoom.us/</dd>
 </dl>";
 }	
 
+
+
 function get_workshop_summary($wk) {
 	
 	$wk['when'] = \XtraSessions\add_sessions_to_when($wk['when'], $wk['sessions']);
@@ -257,9 +259,6 @@ function get_workshop_summary($wk) {
 <b>When:</b> {$wk['when']} (California time)";
 
 }
-
-
-
 
 function get_smtp_object() {
 	global $smtp;

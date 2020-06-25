@@ -81,12 +81,13 @@ switch ($ac) {
 
 		
 	case 'adxtra':	
-		XtraSessions\add_xtra_session($wid, $start, $end, $class_show);
+		XtraSessions\add_xtra_session($wid, $start, $end, $class_show, $online_url);
 		$wk = Workshops\fill_out_workshop_row($wk);
 		break;
 		
 	case 'delxtra':
 		XtraSessions\delete_xtra_session($xtraid);
+		\XtraSessions\update_ranks($wk['id']);
 		$wk = Workshops\fill_out_workshop_row($wk);
 		break;
 		

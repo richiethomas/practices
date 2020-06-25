@@ -13,7 +13,7 @@ function is_teacher($uid) {
 }
 
 function get_teacher_by_id($tid) {
-	$stmt = \DB\pdo_query("select t.*, u.email, u.display_name from teachers t, users u where u.id = t.user_id and t.id = :id", array(':id' => $tid));
+	$stmt = \DB\pdo_query("select t.*, u.email, u.display_name, u.ukey from teachers t, users u where u.id = t.user_id and t.id = :id", array(':id' => $tid));
 	while ($row = $stmt->fetch()) {
 		$row = fill_out_teacher_row($row); 
 		return $row;
@@ -59,7 +59,7 @@ function get_teacher_form($t) {
 
 
 function get_all_teachers() {
-	$stmt = \DB\pdo_query("select t.*, u.email, u.display_name from teachers t, users u where t.user_id = u.id");
+	$stmt = \DB\pdo_query("select t.*, u.email, u.display_name, u.ukey from teachers t, users u where t.user_id = u.id");
 	$teachers = array();
 	while ($row = $stmt->fetch()) {
 		$row = fill_out_teacher_row($row); 

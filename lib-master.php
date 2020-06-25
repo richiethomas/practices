@@ -53,6 +53,7 @@ include 'libs/lib-lookups.php';
 include 'libs/lib-emails.php';
 include 'libs/lib-xtra-sessions.php';
 include 'libs/lib-teachers.php';
+include 'libs/lib-reminders.php';
 
 
 $statuses = Lookups\get_statuses();
@@ -98,5 +99,5 @@ if (strpos($sc, 'admin') !== false) {
 	Users\reject_user_below(2); // group 2 or higher for admin
 }
 
-Emails\check_reminder(); // every single time anyone loads a page, sheesh
+Reminders\check_reminder(); // every single time anyone loads a page, sheesh
 

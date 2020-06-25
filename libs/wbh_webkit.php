@@ -313,3 +313,11 @@ function binary_yesno($field) {
 	if ($field == 1) { return 'yes'; }
 	return 'no';
 }
+
+
+function admin_log($st) {
+	global $sc;
+	if (isset($sc) && strpos($sc,'admin') !== false) {
+		echo "$st<br>\n";
+	}
+}

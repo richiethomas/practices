@@ -41,6 +41,7 @@ foreach ($workshops as $wk) {
 	
 	echo "<li".($wk['class_show'] ? ' class="show"' : '')."><a href='admin_edit.php?wid={$wk['id']}'>{$wk['title']}</a> ({$wk['rank']}".($wk['class_show'] ? ' - show' : '')."), $start-$end (".number_format($wk['paid'], 0)." / ".number_format($wk['enrolled'], 0)." /  ".number_format($wk['capacity'], 0)." / ".number_format($wk['waiting']+$wk['invited']).")";
 	echo " - {$wk['teacher_name']}";
+	echo $wk['override_url'] ? "<ul><li><a href='{$wk['override_url']}'>{$wk['override_url']}</a></li></ul>" : '';
 	echo "</li>\n";
 	
 }	

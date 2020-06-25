@@ -50,15 +50,17 @@ function fill_out_workshop_row($row, $get_enrollment_stats = true) {
 		}
 	}
 	
-	// when is the next starting sessions
+	// when is the next starting session
 	// if all are in past, set this to most recent one
 	$row['nextstart_raw'] = $row['start'];
 	$row['nextend_raw'] = $row['end'];
+	$row['nextstart_url'] = $row['online_url'];
 	if (!\Wbhkit\is_future($row['nextstart_raw'])) {
 		foreach ($row['sessions'] as $s) {
 			if (\Wbhkit\is_future($s['start'])) {
 				$row['nextstart_raw'] = $s['start'];
 				$row['nextend_raw'] = $s['end'];
+				if ($s['online_url']) { $row['nextstart_url'] == $s['online_url']; }
 				break; // found the next start
 			}
 		}
@@ -289,9 +291,9 @@ function get_sessions_to_come() {
 	$mysqlnow = date("Y-m-d H:i:s", strtotime("-3 hours"));
 	
 	$stmt = \DB\pdo_query("
-(select w.id, title, start, end, capacity, cost, 0 as xtra, 0 as class_show, notes, teacher_id, 1 as rank from workshops w where start >= date('$mysqlnow'))
+(select w.id, title, start, end, capacity, cost, 0 as xtra, 0 as class_show, notes, teacher_id, 1 as rank, '' as override_url from workshops w where start >= date('$mysqlnow'))
 union
-(select x.workshop_id, w.title, x.start, x.end, w.capacity, w.cost, 1 as xtra, x.class_show, w.notes, w.teacher_id, x.rank from xtra_sessions x, workshops w, users u where w.id = x.workshop_id and x.start >= date('$mysqlnow'))
+(select x.workshop_id, w.title, x.start, x.end, w.capacity, w.cost, 1 as xtra, x.class_show, w.notes, w.teacher_id, x.rank, x.online_url as override_url from xtra_sessions x, workshops w, users u where w.id = x.workshop_id and x.start >= date('$mysqlnow'))
 order by start asc"); 
 		
 	$sessions = array();

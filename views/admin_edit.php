@@ -44,7 +44,8 @@ echo "<div class='row mt-md-3 admin-edit-workshop'>\n";
 		$class_dates = "";
 		if (!empty($wk['sessions'])) {
 			foreach ($wk['sessions'] as $s) {
-				$class_dates .= "{$s['friendly_when']}".($s['class_show'] ? ' (show)': '')."\n";
+				$class_dates .= "{$s['friendly_when']}".($s['class_show'] ? ' (show)': '').
+				($s['online_url'] ? " - {$s['online_url']}" : '')."\n";
 			}
 		}
 		if ($class_dates) {
@@ -85,18 +86,17 @@ echo "<div class='row mt-md-3 admin-edit-workshop'>\n";
 		if (!empty($wk['sessions'])) {
 			echo "<ul>\n";
 			foreach ($wk['sessions'] as $s) {
-				echo "<li>({$s['rank']}) {$s['friendly_when']}".($s['class_show'] ? ' <b>(show)</b> ': '')." <a href='$sc?ac=delxtra&xtraid={$s['id']}&wid={$wk['id']}'>delete</a>".($s['reminder_sent'] ? ' <em>- reminder sent</em>' : '')."</li>\n";
+				echo "<li>({$s['rank']}) {$s['friendly_when']}".($s['class_show'] ? ' <b>(show)</b> ': '')." <a href='$sc?ac=delxtra&xtraid={$s['id']}&wid={$wk['id']}'>delete</a>".($s['reminder_sent'] ? ' <em>- reminder sent</em>' : '').
+					($s['online_url'] ? "<ul><li><a href='{$s['online_url']}'>{$s['online_url']}</a></li></ul>" : '').
+					"</li>\n";
 			}
 			echo "</ul>\n";
 		}
 		
 		echo "<form id='xtra_edit' action='$sc' method='post' novalidate>
 		<fieldset name=\"sessions_edit\">".
-		Wbhkit\texty('start', null, null, null, null, 'Required', ' required ').
-		Wbhkit\texty('end', null, null, null, null, 'Required', ' required ').
-		Wbhkit\checkbox('class_show', 1, 'Class Show?', 0).				
+		\XtraSessions\xtra_session_fields($wk).
 		Wbhkit\hidden('ac', 'adxtra').
-		Wbhkit\hidden('wid', $wk['id']).
 		Wbhkit\submit('Add Session');
 		echo "</fieldset></form>\n";
 		
