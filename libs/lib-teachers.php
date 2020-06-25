@@ -4,7 +4,7 @@ namespace Teachers;
 
 
 function is_teacher($uid) {
-	$stmt = \DB\pdo_query("select t.*, u.email, u.display_name from teachers t, users u where u.id = t.user_id and t.user_id = :id", array(':id' => $uid));
+	$stmt = \DB\pdo_query("select t.*, u.email, u.display_name, u.ukey from teachers t, users u where u.id = t.user_id and t.user_id = :id", array(':id' => $uid));
 	while ($row = $stmt->fetch()) {
 		$row = fill_out_teacher_row($row); 
 		return $row;

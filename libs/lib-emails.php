@@ -92,7 +92,7 @@ function confirm_email($wk, $u, $status_id = ENROLLED) {
 			}
 			
 			if ($wk['cost'] > 0) {
-				$point .= "<p>Please pay now! Send \${$wk['cost']} (USD) via Venmo @willhines or PayPal whines@gmail.com</p>";
+				$point .= "<p>Payment due by start of class. Send \${$wk['cost']} (USD) via Venmo @willhines or PayPal whines@gmail.com</p>";
 			}
 
 			$call = "To DROP, click here:\n{$drop}<br>Since you are enrolled, if you drop within ".LATE_HOURS." hours of the start, you must still pay for your spot. Before that, full refund available.";
@@ -294,8 +294,8 @@ function remind_enrolled($wk) {
 
 	foreach ($stds as $std) {
 		$key = \Users\get_key($std['id']);
-		$trans = URL."index.php?key=$key";
-		$msg = $base_msg."<p>Log in or drop out here:<br>$trans</p>\n";
+		$trans = URL."workshop.php?key=$key&wid={$wk['id']}";
+		$msg = $base_msg."<p>Drop out (if class has not started) here:<br>$trans</p>\n";
 		
 		//admin_log("reminder for {$std['email']} -- $subject");		
 		//\Emails\centralized_email('whines@gmail.com', $subject, $msg); // for testing, i get everything
@@ -304,8 +304,15 @@ function remind_enrolled($wk) {
 			\Emails\centralized_email($std['email'], $subject, $msg);
 			\Emails\send_text($std, $sms); // routine will check if they want texts and have proper info
 		}
-	
 	}
+	//remind teacher
+	if (!LOCAL) {
+		$trans = URL."workshop.php?key={$wk['teacher_key']}&wid={$wk['id']}";
+		$msg = $base_msg."<p>Log in or drop out here:<br>$trans</p>\n";
+		\Emails\centralized_email($wk['teacher_email'], $subject, $msg);
+	}
+	
+	
 }
 
 function check_reminder() {

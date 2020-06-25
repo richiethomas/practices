@@ -30,9 +30,11 @@ function fill_out_workshop_row($row, $get_enrollment_stats = true) {
 	
 	//get teacher info
 	$trow = \Teachers\get_teacher_by_id($row['teacher_id']);
+	$row['teacher_email'] = $trow['email'];
 	$row['teacher_name'] = $trow['nice_name'];
 	$row['teacher_user_id'] = $trow['user_id'];
 	$row['teacher_id'] = $trow['id'];
+	$row['teacher_key'] = $trow['ukey'];
 		
 	$row['costdisplay'] = $row['cost'] ? "\${$row['cost']} USD" : 'Pay what you can / donation';
 	
@@ -287,9 +289,9 @@ function get_sessions_to_come() {
 	$mysqlnow = date("Y-m-d H:i:s", strtotime("-3 hours"));
 	
 	$stmt = \DB\pdo_query("
-(select w.id, title, start, end, capacity, cost, 0 as xtra, notes, teacher_id, 1 as rank from workshops w where start >= date('$mysqlnow'))
+(select w.id, title, start, end, capacity, cost, 0 as xtra, 0 as class_show, notes, teacher_id, 1 as rank from workshops w where start >= date('$mysqlnow'))
 union
-(select x.workshop_id, w.title, x.start, x.end, w.capacity, w.cost, 1 as xtra, w.notes, w.teacher_id, x.rank from xtra_sessions x, workshops w, users u where w.id = x.workshop_id and x.start >= date('$mysqlnow'))
+(select x.workshop_id, w.title, x.start, x.end, w.capacity, w.cost, 1 as xtra, x.class_show, w.notes, w.teacher_id, x.rank from xtra_sessions x, workshops w, users u where w.id = x.workshop_id and x.start >= date('$mysqlnow'))
 order by start asc"); 
 		
 	$sessions = array();

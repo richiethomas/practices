@@ -41,13 +41,23 @@ echo "<div class='row mt-md-3 admin-edit-workshop'>\n";
 		sort($names);
 		sort($just_emails);
 		
+		$class_dates = "";
+		if (!empty($wk['sessions'])) {
+			foreach ($wk['sessions'] as $s) {
+				$class_dates .= "{$s['friendly_when']}".($s['class_show'] ? ' (show)': '')."\n";
+			}
+		}
+		if ($class_dates) {
+			$class_dates = "\n\nClass Dates:\n{$class_dates}";
+		}
+		
 		echo  "<h3>Cut-and-paste roster</h3>\n";
 		echo  Wbhkit\textarea('roster',
 			"{$wk['title']} - {$wk['showstart']}\n".
 			($wk['location_id'] == ONLINE_LOCATION_ID ? "{$wk['online_url']}\n" : '').
 			"\n".
 			implode("\n", $names).
-			"\n\n".implode(",\n", $just_emails), 
+			"\n\n".implode(",\n", $just_emails).$class_dates, 
 		0);			
 		
 		
