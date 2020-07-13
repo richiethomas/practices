@@ -249,6 +249,7 @@ function get_workshop_summary($wk) {
 	
 	$wk['when'] = \XtraSessions\add_sessions_to_when($wk['when'], $wk['sessions']);
 	
+	
 		return "<br>
 <p>-----------------------------<br>
 <b>Class information:</b><br>

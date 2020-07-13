@@ -41,7 +41,7 @@ echo "<div class='row mt-md-3 admin-edit-workshop'>\n";
 		sort($names);
 		sort($just_emails);
 		
-		$class_dates = "";
+		$class_dates = $wk['when']."\n";
 		if (!empty($wk['sessions'])) {
 			foreach ($wk['sessions'] as $s) {
 				$class_dates .= "{$s['friendly_when']}".($s['class_show'] ? ' (show)': '').

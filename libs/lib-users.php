@@ -259,7 +259,11 @@ function update_display_name(&$u,  &$message, &$error) {
 
 
 function change_email_phase_one($u, $new_email) {
+	global $logger;
+	
 	$stmt = \DB\pdo_query("update users set new_email = :email where id = :uid", array(':email' => $new_email, ':uid' => $u['id']));
+	
+	$logger->info("change email phase one: user id {$u['id']}, new email '$new_email'");
 	
 	$sub = 'email update at will hines practices';
 	$link = URL."you.php?key={$u['ukey']}&ac=concemail";
@@ -284,13 +288,19 @@ function edit_change_email($u) {
 }
 
 function change_email($ouid, $newe) {
+	global $logger;
+	
 	$olds = get_user_by_id($ouid);
+	
+	$logger->info("change email phase two: request to set user id $ouid to new email '$newe'");
 	
 	//does new student exist?
 	$stmt = \DB\pdo_query("select u.* from users u where email = :email", array(':email' => $newe));
 	$news = false;
 	while ($row = $stmt->fetch()) {
 		$news = add_extra_user_info($row);
+		$logger->info("change email phase two: found user '{$news['id']}' with email '{$news['email']}'");
+		
 	}	
 	
 	if ($news) {
@@ -303,6 +313,7 @@ function change_email($ouid, $newe) {
 			$rows2 = $stmt2->fetchAll();
 			if (count($rows2) == 0) {
 				$stmt3 = \DB\pdo_query("update registrations set user_id = :uid where workshop_id = :wid and user_id = :uid2", array(':uid' => $news['id'], ':wid' => $row['workshop_id'], ':uid2' => $ouid));
+				$logger->info("change email phase two: update registration uid '$ouid' wid {$row['workshop_id']} to uid {$news['id']}");
 			}
 		}
 		
@@ -312,11 +323,15 @@ function change_email($ouid, $newe) {
 		// update records in change log
 		$stmt = \DB\pdo_query("update status_change_log set user_id = :uid where user_id = :uid2", array(':uid' => $news['id'], ':uid2' => $olds['id']));
 		
+		//update teacher records
+		$stmt = \DB\pdo_query("update teachers set user_id = :uid where user_id = :uid2", array(':uid' => $news['id'], ':uid2' => $olds['id']));
+		
 		delete_student($ouid);
 		return true;
 	} else {
 		// new email is not yet a student, so just rename old
 		$stmt = \DB\pdo_query("update users set email = :email where id = :uid", array(':email' => $newe, ':uid' => $ouid));	
+		$logger->info("change email phase two: update email for '$ouid' to new email '$newe'");
 		return true;
 	}
 	return true;

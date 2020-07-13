@@ -125,8 +125,8 @@ if (count($unavailable_workshops) > 0) {
 
 
 		<div class='row mb-md-4'><div class='col'>
-		<h2>Current / Upcoming Workshops</h2> 
-		<p class='mx-4''>New workshops go up 9:30am Fridays (California time, PDT).<br>Join the mailing list (bottom of page) for an email on Thursday saying what's coming.</p>
+		<h2>Current / Upcoming Classes</h2> 
+		<p class='mx-4''>New classes go up 9:30am Fridays (California time, PDT).<br>Join the mailing list (bottom of page) for an email on Thursday saying what's coming.</p>
 		<?php echo $upcoming_workshops; ?>
 		</div></div> <!-- end of col and row -->
 	
