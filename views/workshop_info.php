@@ -24,12 +24,16 @@ echo "
 <div class='row my-3 py-3'><div class='col-sm-6'>
 <h2>{$wk['title']}</h2>
 <p>{$wk['notes']}</p>
-<p><b>Teacher: <a href='teachers.php?tid={$wk['teacher_id']}'>{$wk['teacher_name']}</a></b></p>
 {$wk['when']} (".TIMEZONE.")<br><br>
 {$wk['costdisplay']}, {$wk['enrolled']} (of {$wk['capacity']}) enrolled, ".($wk['waiting']+$wk['invited'])." waiting<br><br>
 
-$names_list
-</div></div>
-";
+$names_list<br><br>\n";
+
+echo \Teachers\teacher_photo($wk['teacher_user_id']);
+
+echo "<p><b>Teacher: <a href='teachers.php?tid={$wk['teacher_id']}'>{$wk['teacher_name']}</a></b></p>\n";
+
+
+echo "</div></div>\n";
 		
 ?>

@@ -113,6 +113,14 @@ function get_teacher_photo_src($uid) {
 	}
 }
 
+function teacher_photo($uid) {
+	if ($src = get_teacher_photo_src($uid)) {
+		$row = is_teacher($uid);
+		return "<a href='teachers.php?tid={$row['id']}'><img class='img-fluid border' src='$src'></a>";
+	}
+	return "";
+}
+
 function upload_teacher_photo_form($t) {
 	global $sc;
 	return

@@ -6,9 +6,7 @@ foreach ($faculty as $f) {
 		continue; // if we got passed an ID, only show that one
 	}	
 echo "<div class=\"row border-top p-3 m-3\">\n";
-if ($src = \Teachers\get_teacher_photo_src($f['user_id'])) {
-	echo "<div class=\"col-sm-2 p-2\"><img class=\"img-fluid\" src=\"$src\"></div>\n";
-}
+echo "<div class=\"col-sm-2 p-2\">".\Teachers\teacher_photo($f['user_id'])."</div>\n";
 echo "	<div class=\"col-sm-10 p-2\">\n";
 echo "		<h2>{$f['nice_name']}</h2>\n";
 echo "<p>".preg_replace('/\R/', "<br>", $f['bio'])."</p>\n";

@@ -37,7 +37,7 @@ function get_an_enrollment($wk, $u) {
 		$row['status_name'] = $statuses[$row['status_id']];
 		return $row;
 	}
-	return false;
+	return get_empty_enrollment();
 }
 
 
@@ -400,5 +400,16 @@ function drop_session($wk, $u) {
 	return true;
 }	
 	
+function get_empty_enrollment() {
+	return array(
+		'id' => false,
+		'user_id' => false,
+		'workshop_id' => false,
+		'status_id' => false,
+		'paid' => false,
+		'registered' => false, 	
+		'last_modified' => false,
+		'while_soldout' => false);
 	
+}
 	

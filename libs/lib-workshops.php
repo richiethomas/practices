@@ -274,11 +274,11 @@ function get_unavailable_workshops() {
 	$mysqlnow = date("Y-m-d H:i:s");
 	
 	$stmt = \DB\pdo_query("
-select id, title, start, end, capacity, cost, when_public from workshops where date(start) >= :when1 and when_public >= :when2 order by when_public asc, start asc", array(":when1" => $mysqlnow, ":when2" => $mysqlnow)); 
+select * from workshops where date(start) >= :when1 and when_public >= :when2 order by when_public asc, start asc", array(":when1" => $mysqlnow, ":when2" => $mysqlnow)); 
 		
 	$sessions = array();
 	while ($row = $stmt->fetch()) {
-		$sessions[] = $row;
+		$sessions[] = fill_out_workshop_row($row);
 	}
 	return $sessions;
 	

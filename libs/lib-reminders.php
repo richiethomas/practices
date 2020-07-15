@@ -70,7 +70,7 @@ function remind_enrolled($wk) {
 	foreach ($stds as $std) {
 		$key = \Users\get_key($std['id']);
 		$trans = URL."workshop.php?key=$key&wid={$wk['id']}";
-		$msg = $base_msg."<p>Drop out (if class has not started) here:<br>$trans</p>\n";
+		$msg = $base_msg."<p>Class info online:<br>$trans</p>\n";
 		
 		//\Emails\centralized_email('whines@gmail.com', $subject, $msg); // for testing, i get everything
 
@@ -82,7 +82,7 @@ function remind_enrolled($wk) {
 	//remind teacher
 	if (!LOCAL) {
 		$trans = URL."workshop.php?key={$wk['teacher_key']}&wid={$wk['id']}";
-		$msg = $base_msg."<p>Log in or drop out here:<br>$trans</p>\n";
+		$msg = $base_msg."<p>Class info online:<br>$trans</p>\n";
 		\Emails\centralized_email($wk['teacher_email'], $subject, $msg);
 	}
 	//\Emails\centralized_email('whines@gmail.com', $subject, $msg);
