@@ -96,6 +96,18 @@ function get_teacher_upcoming_classes($tid) {
 	return $workshops;
 }
 
+function get_teacher_all_classes($tid) {
+	
+	$workshops = array();
+	// get all active teachers, and also upcoming courses they are teaching	
+	$stmt = \DB\pdo_query("select wk.* from workshops wk where teacher_id = :tid order by start desc", array(':tid' => $tid));
+	while ($row = $stmt->fetch()) {
+		$workshops[] = \Workshops\fill_out_workshop_row($row, false); // don't need enrollment stats 
+	}
+	return $workshops;
+}
+
+
 function teachers_dropdown_array() {
 	$teachers = get_all_teachers();
 	$opts = array();

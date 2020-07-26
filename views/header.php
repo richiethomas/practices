@@ -1,4 +1,4 @@
-<?php $heading = isset($heading) ? $heading: 'will hines improv'; ?>
+<?php $heading = isset($heading) ? $heading: "wgis"; ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -37,10 +37,10 @@ table th.workshop-name {
 }
 
 
-div.workshop-info { background-color: #bee5eb; }
-div.workshop-danger { background-color: #f5c6cb; }
-div.workshop-success { background-color: #c3e6cb; }
-div.workshop-light { background-color: #fdfdfe; }
+.workshop-info { background-color: #bee5eb; }
+.workshop-danger { background-color: #f5c6cb; }
+.workshop-success { background-color: #c3e6cb; }
+.workshop-light { background-color: #fdfdfe; }
 
 
 div.admin-edit-workshop h2,
@@ -65,7 +65,7 @@ li.show {
 echo "<div class=\"container-fluid\">\n";
 
 if (strpos($sc, 'admin') !== false && \Users\check_user_level(2)) {
-	echo "<h1><a href=\"admin.php\">{$heading}</a> <small><a class='text-muted' href='index.php'>(user side)</a></small></h1>\n";
+	echo "<h1><a href=\"admin.php\">wgis</a> <small><a class='text-muted' href='index.php'>(user side)</a></small></h1>\n";
 	echo "<ul class='nav nav-pills nav-fill'>\n";
 	echo nav_link($sc, 'admin.php', 'upcoming', 'calendar');
 	echo nav_link($sc, 'admin_emails.php', 'get emails', 'envelope-closed');
@@ -81,7 +81,7 @@ if (strpos($sc, 'admin') !== false && \Users\check_user_level(2)) {
 	
 } else {
 	echo "<div class=\"my-3 p-3 bg-info text-light\">";
-	echo "<h1 class=\"display-1\"><a class=\"text-light\" href=\"index.php\">{$heading}</a></h1>\n";	
+	echo "<h1 class=\"display-3\"><a class=\"text-light\" href=\"index.php\">world's greatest improv school</a></h1>\n";	
 	echo "<p class=\"lead text-dark\">These workshops are taught online using the <a class='text-dark' href='http://www.zoom.us/'>Zoom</a> app.";
 	echo "</div>\n";
 }

@@ -321,3 +321,5 @@ function admin_log($st) {
 		echo "$st<br>\n";
 	}
 }
+
+

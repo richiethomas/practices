@@ -3,27 +3,23 @@
 <?php				
 		foreach ( $rows as $row ) {
 			
-			// temporary
-			//if ($row['soldout'] == 1) {
+			//if ($row['upcoming'] == 0) {
 			//	continue;
 			//}
-			
+
 			$row['when'] = \XtraSessions\add_sessions_to_when($row['when'], $row['sessions']);
 					
 					
 			$cl = '';
 			if (date('z', strtotime($row['start'])) == date('z')) { // today
 				$cl .= 'info'; 
+			} elseif ($row['upcoming'] == 0) {
+				$cl .= 'light';
 			} elseif ($row['soldout'] == 1) {
 				$cl .= 'danger';
-			} elseif ($row['upcoming'] == 1) {
+			} else {
 				$cl .= 'success';
-			} else { // past workshops
-				$cl .= 'light';
-			}
-
-
-
+			} 
 
 		
 			echo "<div class='row workshop-row workshop-$cl my-3 py-3 border-top'>\n"; // workshop row start

@@ -10,12 +10,16 @@
 	
 
 
-	<div class="row">					
-		<div class="col-md-3">
-			<img src="assets/headshot20194.jpg" class="img-fluid" alt="Will Hines photo"><br><small>Photo by: <a href="http://www.claylarsen.net/">Clay Larsen</a></small>
-		</div>
-		<div class="col"> 
-<p class="lead">Hi, I'm Will! I'm one of the top improv teachers in the whole world, can you believe it? I've taught all experience levels for 20 years, have written a <a href="https://www.amazon.com/dp/0982625723">best-selling book</a> on the subject, and am a <a href="https://www.imdb.com/name/nm2654402/">working comedic actor</a>.</p>
+	<div class="row justify-content-center m-3 ">	
+		<div class="col-sm-3 p-3 border border-dark text-center workshop-danger">	
+			<h3 class="workshop-danger p-3"><a href="news.php">News</a></h3>
+			<h4>Threeprov shows</h4>
+				<p>July 30 and 31</p>
+				<p>August 6 and 7</p>
+			<p>Details on the <a href="news.php">news page</a></p>
+		</div>			
+		<div class="col-sm-8 p-3"> 
+<p class="lead">Welcome to the World's Greatest Improv School. We teach online classes in long-form improv, character and sketch. If you are familiar the schools of improv out there, we are a game-based, Chicago-style school, with teachers mostly trained at The Upright Citizens Brigade Theatre. That all may mean nothing to you, which is fine! You can still take our classes.<br><br>The improviser <a href="teachers.php?tid=1">Will Hines</a>, who wrote <a href="https://www.amazon.com/How-Be-Greatest-Improviser-Earth/dp/0982625723/ref=sr_1_1?dchild=1&keywords=how+to+be+the+greatest+improviser+on+earth&qid=1594850266&sr=8-1">a similarily titled book</a>, founded this school.<br><br>Below is a list of the classes we are currently offering.</p>
 		</div>
 	</div>
 
@@ -126,7 +130,7 @@ if (count($unavailable_workshops) > 0) {
 
 		<div class='row mb-md-4'><div class='col'>
 		<h2>Current / Upcoming Classes</h2> 
-		<p class='mx-4''>New classes go up 9:30am Fridays (California time, PDT).<br>Join the mailing list (bottom of page) for an email on Thursday saying what's coming.</p>
+		<p class='mx-4''>Join the mailing list (bottom of page) to be notified on new classes first.</p>
 		<?php echo $upcoming_workshops; ?>
 		</div></div> <!-- end of col and row -->
 	
@@ -180,53 +184,3 @@ if (count($unavailable_workshops) > 0) {
   </div>
 </div>
 
-<?php
-	
-/*
-//old modal buttons saving this HTML
-
-<ul class="nav">
-  <li class="nav-item">
-    <a class='nav-link btn btn-outline-light m-2' href='' data-toggle="modal" data-target="#nameEmailModal"><span class="oi oi-person" title="person" aria-hidden="true"></span> update name and email</a>
-  </li>
-  <li class="nav-item">
-    <a class='nav-link btn btn-outline-light m-2' href='' data-toggle="modal" data-target="#textModal"><span class="oi oi-phone" title="phone" aria-hidden="true"></span> update text notifications</a>
-  </li>
- <li class="nav-item">
-   <a class='nav-link btn btn-outline-light m-2' href='you.php'><span class="oi oi-book" title="book" aria-hidden="true"></span> your workshops</a>
- </li> 
-  <li class="nav-item">
-    <a class='nav-link btn btn-outline-light m-2' href="index.php?ac=lo"><span class="oi oi-account-logout" title="account-logout" aria-hidden="true"></span> log out</a>
-  </li>
-</ul>
-
-
-// old boxes from bottom of page
-
-
-			<div class="col-md-4">
-			<div class="card text-center text-white bg-warning">
-		      <div class="card-body">
-		        <h2 class="card-title"><span class="oi oi-dollar" title="dollar" aria-hidden="true"></span><br>Paying</h2>
-		        <p class="card-text text-dark">
-				Venmo to @willhines, or Paypal to whines@gmail.com</p>
-		        <a href="http://venmo.com/willhines?txn=pay&share=friends&amount=30&note=improv%20workshop"  class="btn btn-outline-light">Venmo @willhines</a>
-		      </div> <!-- end of card body -->
-		    </div> <!-- end of card -->
-		</div> <!-- end of col -->		
-
-			<div class="col-md-4">
-			<div class="card text-center text-white bg-success">
-			      <div class="card-body">
-			        <h2 class="card-title"><span class="oi oi-question-mark" title="question-mark" aria-hidden="true"></span><br>Common Questions</h2>
-			        <p class="card-text text-dark">We use the <a class="text-dark font-weight-bold" href="http://www.zoom.us/">Zoom app</a>. Please note the <b>time zone (<?php echo TIMEZONE; ?>)</b>!</p>
-			        <a href="<?php echo $sc; ?>?ac=faq" class="btn btn-outline-light">More Common Questions</a>
-			      </div> <!-- end of card body -->
-			    </div> <!-- end of card -->
-			</div> <!-- end of col -->
-
-
-
-*/
-	
-?>

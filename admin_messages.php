@@ -52,7 +52,7 @@ switch ($ac) {
 		break;
 
 	case 'remind':
-		$reminder = Emails\get_reminder_message_data($wk);
+		$reminder = Reminders\get_reminder_message_data($wk);
 		$subject = $reminder['subject'];
 		$note = $reminder['note'];
 		$sms = $reminder['sms'];

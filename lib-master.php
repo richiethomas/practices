@@ -4,15 +4,19 @@ using Bootstrap 4.4
 tested on PHP 7.4.2
 */
 
+if (!isset($sc)) { $sc = ''; }
+
 require "vendor/autoload.php"; // i barely understand this; might not have enough classes to justify it
 
 date_default_timezone_set ( 'America/Los_Angeles' );
 session_start();
 
 // maybe i don't need these next three anymore? i dnuno :(
-ini_set("include_path", '/home/whines/php:' . ini_get("include_path") ); // willhines.net
 ini_set("include_path", '/home/willfahg/php:' . ini_get("include_path") ); // willhinesimprov.com
 ini_set("include_path", '/Applications/MAMP/bin/php/php7.4.2/lib/php:' . ini_get("include_path") ); // local laptop
+ini_set("include_path", '/home/wgimrenl/php:' . ini_get("include_path") ); // wgimprovschool.com
+
+
 
 // set function for autoloading classes
 spl_autoload_register(function ($className) {

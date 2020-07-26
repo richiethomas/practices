@@ -6,8 +6,10 @@ include 'lib-master.php';
 Wbhkit\set_vars(array('guest_id', 'tid', 'bio', 'active'));
 
 $t = array(); // array for teacher info
+$t_classes = array();
 if ($tid) {
 	$t = Teachers\get_teacher_by_id($tid);
+	$t_classes = Teachers\get_teacher_all_classes($tid);
 }
 
 switch ($ac) {
@@ -35,7 +37,9 @@ switch ($ac) {
 //$view->add_globals(array('needle', 'sort', 'all'));
 //$view->data['search_opts'] = array('n' => 'by name', 't' => 'by total classes', 'd' => 'by date registered');
 $view->data['t'] = $t;
+$view->data['t_classes'] = $t_classes;
 $view->data['teachers'] = Teachers\get_all_teachers();
+
 $view->renderPage('admin_teachers');
 
 
