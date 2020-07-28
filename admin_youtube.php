@@ -1,7 +1,6 @@
 <?php
-$heading = 'wgis: youtube';
-$sc = "admin_youtube.php";
+$heading = 'youtube stream';
 include 'lib-master.php';
 
 
-$view->renderPage('admin_youtube');
+$view->renderPage('admin/youtube');

@@ -1,6 +1,5 @@
 <?php
-$heading = 'improv practices';
-$sc = "workshop.php";
+$heading = 'workshop';
 include 'lib-master.php';
 
 if (Workshops\is_public($wk)) {
@@ -133,6 +132,7 @@ if (isset($wk) && isset($wk['id']) && $wk['id']) {
 	$view->data['e'] = Enrollments\get_an_enrollment($wk, $u);
 	$view->data['workshop_tabled'] = Workshops\get_workshop_info_tabled($wk);
 	$view->data['admin'] = 0;
+	$heading = $wk['title'];
 	$view->renderPage('winfo');
 } else {
 	$view->data['error_message'] = "<h1>Whoops!</h1><p>You are asking to look at info about a workshop, but I (the computer) cannot tell which workshop you mean. Sorry!</p>\n";

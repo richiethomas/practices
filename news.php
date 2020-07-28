@@ -1,6 +1,5 @@
 <?php
-$heading = 'wgis: news';
-$sc = "news.php";
+$heading = 'news';
 include 'lib-master.php';
 
 

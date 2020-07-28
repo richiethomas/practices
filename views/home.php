@@ -6,10 +6,10 @@
         $('#checkYourEmail').modal('show');
     });
 </script>	
+
+	
 <?php } ?>
 	
-
-
 	<div class="row justify-content-center m-3 ">	
 		<div class="col-sm-3 p-3 border border-dark text-center workshop-danger">	
 			<h3 class="workshop-danger p-3"><a href="news.php">News</a></h3>
@@ -19,7 +19,15 @@
 			<p>Details on the <a href="news.php">news page</a></p>
 		</div>			
 		<div class="col-sm-8 p-3"> 
-<p class="lead">Welcome to the World's Greatest Improv School. We teach online classes in long-form improv, character and sketch. If you are familiar the schools of improv out there, we are a game-based, Chicago-style school, with teachers mostly trained at The Upright Citizens Brigade Theatre. That all may mean nothing to you, which is fine! You can still take our classes.<br><br>The improviser <a href="teachers.php?tid=1">Will Hines</a>, who wrote <a href="https://www.amazon.com/How-Be-Greatest-Improviser-Earth/dp/0982625723/ref=sr_1_1?dchild=1&keywords=how+to+be+the+greatest+improviser+on+earth&qid=1594850266&sr=8-1">a similarily titled book</a>, founded this school.<br><br>Below is a list of the classes we are currently offering.</p>
+<p class="lead">Welcome to the World's Greatest Improv School. We teach online classes in long-form improv, character and sketch. 
+	
+	<p>Learn more about...
+	<ul>
+		<li>the <a href="about_school.php">school</a></li>
+		<li>the <a href="about_catalog.php">courses</a> we offer</li>
+		<li><a href="about_works.php">how it works</a>: signing up, privacy, paying</li>
+	</ul></p>
+	
 		</div>
 	</div>
 
@@ -137,8 +145,8 @@ if (count($unavailable_workshops) > 0) {
 	
 			<div class="row border-top border-bottom py-3 bg-light">					
 				<div class="col"> 
-					<h2>Buy My Book</h2>
-	<p class="lead">If the workshops are sold out, you could buy my improv book, sensibly titled "How to Be the Greatest Improviser on Earth." It's consistently amongst the bestselling books on Amazon in the "acting and auditioning" category, and has sold all over the world. Tips on being present, being authentic, being funny and being healthy. There are print and digital versions <a href="https://www.amazon.com/dp/0982625723">on Amazon</a>. You could also buy a much prettier digital version from my <a href="http://www.improvnonsense.com/">personal online bookstore</a>.</p>
+					<h2>Buy This Book</h2>
+	<p class="lead">If the workshops are sold out, you could buy "How to Be the Greatest Improviser on Earth" written by Will Hines, the founder of this school. Print and digital versions <a href="https://www.amazon.com/dp/0982625723">on Amazon</a>. You could also buy a much prettier digital version from Will's <a href="http://www.improvnonsense.com/">personal online bookstore</a>.</p>
 				</div>
 				<div class="col-md-3">
 					<a href="https://www.amazon.com/dp/0982625723"><img src="assets/htbtgioe_cover.jpg" class="img-fluid" alt="How to Be The Greatest Improviser on Earth"></a>

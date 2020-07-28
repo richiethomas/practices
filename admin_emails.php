@@ -1,6 +1,5 @@
 <?php
-$sc = "admin_emails.php";
-$heading = "practices: admin";
+$heading = "get emails";
 include 'lib-master.php';
 
 
@@ -43,6 +42,6 @@ if (is_array($workshops)) {
 }
 
 $view->add_globals(array('all_workshops', 'workshops', 'statuses', 'results', 'unpaid'));
-$view->renderPage('admin_gemail');
+$view->renderPage('admin/gemail');
 
 

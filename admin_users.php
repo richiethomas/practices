@@ -1,6 +1,5 @@
 <?php
-$sc = "admin_users.php";
-$heading = "practices: admin";
+$heading = "users";
 include 'lib-master.php';
 
 Wbhkit\set_vars(array('guest_id', 'carrier_id', 'phone', 'send_text', 'newemail', 'display_name', 'needle', 'group_id'));
@@ -77,7 +76,7 @@ switch ($ac) {
 		
 }
 if (!$guest['id']) {
-	$view->renderPage('admin_error');	
+	$view->renderPage('admin/error');	
 } else {
 	$view->data['key'] = Users\get_key($guest['id'], 0); // don't save it in a cookie
 	$view->data['guest'] = $guest;
@@ -87,7 +86,7 @@ if (!$guest['id']) {
 	$view->data['text_preferences'] =  Users\edit_text_preferences($guest);
 	$view->data['display_name_form'] = Users\edit_display_name($guest);
 	$view->data['groups_form'] = Users\edit_group_level($guest);
-	$view->renderPage('admin_users');
+	$view->renderPage('admin/users');
 }
 
 	

@@ -76,7 +76,7 @@ echo "<div class='row mt-md-3 admin-edit-workshop'>\n";
 		Wbhkit\hidden('ac', 'up').
 		Wbhkit\hidden('wid', $wk['id']).
 		Wbhkit\submit('Update').
-		"<a class='btn btn-outline-primary' href=\"{$sc}?wid={$wk['id']}&ac=cdel\">Delete This Practice</a>".
+		"<a class='btn btn-outline-primary' href=\"admin_edit.php?wid={$wk['id']}&ac=cdel\">Delete This Practice</a>".
 		"</fieldset></form>\n";
 	
 

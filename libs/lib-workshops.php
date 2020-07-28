@@ -215,7 +215,7 @@ function get_search_results($page = 1, $needle = null) {
 	// prep view
 	$view->data['links'] = $links;
 	$view->data['rows'] = $workshops;
-	return $view->renderSnippet('admin_search_workshops');	
+	return $view->renderSnippet('admin/search_workshops');	
 }
 
 
@@ -243,7 +243,7 @@ function get_workshops_list($admin = 0, $page = 1) {
 	if ($admin) {
 		$sql .= " order by start desc"; // get all
 	} else {
-		$sql .= " order by start desc";  // temporary, should be asc
+		$sql .= " order by start asc";  // temporary, should be asc
 	}
 
 		

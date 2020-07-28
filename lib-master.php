@@ -4,7 +4,7 @@ using Bootstrap 4.4
 tested on PHP 7.4.2
 */
 
-if (!isset($sc)) { $sc = ''; }
+if (!isset($sc)) { $sc = $_SERVER['SCRIPT_NAME']; }
 
 require "vendor/autoload.php"; // i barely understand this; might not have enough classes to justify it
 
@@ -76,19 +76,19 @@ Wbhkit\set_vars(array('ac', 'wid', 'uid', 'key', 'page'));
 
 // set workshop info into memory
 if ($wid) {
-	$wk = Workshops\get_workshop_info($wid);
+	$wk = \Workshops\get_workshop_info($wid);
 } else {
-	$wk = Workshops\get_empty_workshop();
+	$wk = \Workshops\get_empty_workshop();
 }
 
 // set user info into memory
 $already_here_key = (isset($_SESSION['s_key']) ? $_SESSION['s_key'] : null);
 
-$key = Users\check_for_stored_or_passed_key(); // checks for key in REQUEST and SESSION and COOKIE, not logged in otherwise
+$key = \Users\check_for_stored_or_passed_key(); // checks for key in REQUEST and SESSION and COOKIE, not logged in otherwise
 if ($key) {
-	$u = Users\key_to_user($key);
+	$u = \Users\key_to_user($key);
 } else {
-	$u = Users\get_empty_user();
+	$u = \Users\get_empty_user();
 }
 
 // is this the first page this visitor has visited
@@ -100,8 +100,8 @@ $view = new View();
 
 // group 2 or higher for admin pasges
 if (strpos($sc, 'admin') !== false) {
-	Users\reject_user_below(2); // group 2 or higher for admin
+	\Users\reject_user_below(2); // group 2 or higher for admin
 }
 
-Reminders\check_reminder(); // every single time anyone loads a page, sheesh
+\Reminders\check_reminder(); // every single time anyone loads a page, sheesh
 

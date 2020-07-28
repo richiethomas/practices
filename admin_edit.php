@@ -1,6 +1,5 @@
 <?php
-$sc = "admin_edit.php";
-$heading = "practices: admin edit";
+$heading = "edit workshop";
 include 'lib-master.php';
 
 
@@ -28,7 +27,7 @@ switch ($ac) {
 	
 		if ($ac == 'ad' && !$title) {
 			$error = 'Must include a title for new workshop.';
-			$view->renderPage('admin_error');
+			$view->renderPage('admin/error');
 			exit();
 		}
 
@@ -124,10 +123,10 @@ foreach ($statuses as $stid => $status_name) {
 	$lists[$stid] = Enrollments\get_students($wid, $stid);
 }
 $data['log'] = Enrollments\get_status_change_log($wk);
-$status_log = $view->renderSnippet('admin_status', $data);
+$status_log = $view->renderSnippet('admin/status', $data);
 
 $view->add_globals(array('stats', 'statuses', 'lists', 'status_log'));	
-$view->renderPage('admin_edit');
+$view->renderPage('admin/edit');
 
 
 

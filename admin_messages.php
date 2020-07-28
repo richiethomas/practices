@@ -1,6 +1,5 @@
 <?php
-$sc = "admin_messages.php";
-$heading = "practices: admin";
+$heading = "send messages";
 include 'lib-master.php';
 
 $mess_vars = array('st', 'note', 'subject', 'sms', 'cancellation');
@@ -91,7 +90,7 @@ if (!$wk['id']) {
 	}	
 	$view->data['students'] = $students;
 	$view->data['statuses'] = $statuses;
-	$view->renderPage('admin_messages');
+	$view->renderPage('admin/messages');
 }
 
 

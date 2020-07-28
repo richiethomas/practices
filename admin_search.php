@@ -1,6 +1,5 @@
 <?php
-$sc = "admin_search.php";
-$heading = "practices: admin";
+$heading = "search";
 include 'lib-master.php';
 
 $vars = array('needle', 'sort');
@@ -44,7 +43,7 @@ $all = ($needle ? Users\find_students($needle, $sort) : array());
 
 $view->add_globals(array('needle', 'sort', 'all'));
 $view->data['search_opts'] = array('n' => 'by name', 't' => 'by total classes', 'd' => 'by date registered');
-$view->renderPage('admin_search');
+$view->renderPage('admin/search');
 
 
 

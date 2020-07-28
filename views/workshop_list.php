@@ -3,9 +3,9 @@
 <?php				
 		foreach ( $rows as $row ) {
 			
-			//if ($row['upcoming'] == 0) {
-			//	continue;
-			//}
+			if ($row['upcoming'] == 0) {
+				continue;
+			}
 
 			$row['when'] = \XtraSessions\add_sessions_to_when($row['when'], $row['sessions']);
 					

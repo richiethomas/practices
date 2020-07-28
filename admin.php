@@ -1,6 +1,5 @@
 <?php
-$sc = "admin.php";
-$heading = "practices: admin";
+$heading = "upcoming";
 include 'lib-master.php';
 
 Wbhkit\set_vars(array('filter_by'));
@@ -25,5 +24,5 @@ $view->data['workshops'] = Workshops\get_sessions_to_come();
 $view->data['filter_by'] = $filter_by; 
 $view->data['your_teacher_id'] = $your_teacher_id; 
 
-$view->renderPage('admin_upcoming');
+$view->renderPage('admin/upcoming');
 

@@ -1,6 +1,5 @@
 <?php
-$heading = 'improv practices: faq';
-$sc = "index.php";
+$heading = 'faq';
 include 'lib-master.php';
 
 

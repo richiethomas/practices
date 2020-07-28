@@ -1,6 +1,5 @@
 <?php
-$sc = "admin_teachers.php";
-$heading = "practices: admin";
+$heading = "teachers";
 include 'lib-master.php';
 
 Wbhkit\set_vars(array('guest_id', 'tid', 'bio', 'active'));
@@ -40,7 +39,7 @@ $view->data['t'] = $t;
 $view->data['t_classes'] = $t_classes;
 $view->data['teachers'] = Teachers\get_all_teachers();
 
-$view->renderPage('admin_teachers');
+$view->renderPage('admin/teachers');
 
 
 

@@ -1,6 +1,5 @@
 <?php
-$heading = 'Your Info';
-$sc = "you.php";
+$heading = 'you';
 include 'lib-master.php';
 
 

@@ -1,4 +1,4 @@
-<?php $heading = isset($heading) ? $heading: "wgis"; ?>
+<?php $heading = isset($heading) ? "wgis: $heading": "wgis"; ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -63,9 +63,14 @@ li.show {
 
 <?php
 echo "<div class=\"container-fluid\">\n";
-
 if (strpos($sc, 'admin') !== false && \Users\check_user_level(2)) {
-	echo "<h1><a href=\"admin.php\">wgis</a> <small><a class='text-muted' href='index.php'>(user side)</a></small></h1>\n";
+?>
+<div class="row align-items-center">
+	<div class="col-sm-3"><a href="admin.php"><img alt="wgis" class="img-fluid" src='assets/branding/wgis_letters.jpg'></a></div>
+	<div class="col-sm-9"><h1><a href="admin.php">admin pages</a> <a class='text-muted' href='index.php'>(user side)</a></h1></div>
+</div>	
+	<?php
+	
 	echo "<ul class='nav nav-pills nav-fill'>\n";
 	echo nav_link($sc, 'admin.php', 'upcoming', 'calendar');
 	echo nav_link($sc, 'admin_emails.php', 'get emails', 'envelope-closed');
@@ -80,10 +85,14 @@ if (strpos($sc, 'admin') !== false && \Users\check_user_level(2)) {
 	echo "</ul>\n";
 	
 } else {
-	echo "<div class=\"my-3 p-3 bg-info text-light\">";
-	echo "<h1 class=\"display-3\"><a class=\"text-light\" href=\"index.php\">world's greatest improv school</a></h1>\n";	
-	echo "<p class=\"lead text-dark\">These workshops are taught online using the <a class='text-dark' href='http://www.zoom.us/'>Zoom</a> app.";
-	echo "</div>\n";
+	?>
+<div class="row"><div class="col-sm text-center">
+<a href="index.php"><img class="img-fluid" src="assets/branding/wgis_banner.jpg" alt="world's greatest improv school"></a>
+<h1 class="sr-only"><a class="text-light" href="index.php">world's greatest improv school</a></h1>	
+</div></div>
+
+	
+<?php
 }
 
 if (isset($error) && $error) {

@@ -1,6 +1,5 @@
 <?php
-$heading = 'improv practices';
-$sc = "login.php";
+$heading = 'login';
 include 'lib-master.php';
 
 $view->renderPage('login');

@@ -1,6 +1,5 @@
 <?php
-$sc = "admin_change_status.php";
-$heading = "practices: admin edit";
+$heading = "change status";
 include 'lib-master.php';
 
 $wk_vars = array('wid', 'uid', 'st', 'con', 'lmod', 'guest_id');
@@ -34,7 +33,7 @@ switch ($ac) {
 $view->data['e'] = Enrollments\get_an_enrollment($wk, $guest);
 $view->data['statuses'] = $statuses;
 $view->data['guest'] = $guest;
-$view->renderPage('admin_change_status');
+$view->renderPage('admin/change_status');
 
 
 

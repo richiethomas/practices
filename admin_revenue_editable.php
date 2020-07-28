@@ -1,6 +1,5 @@
 <?php
-$sc = "admin_revenue.php";
-$heading = "practices: admin";
+$heading = "revenue";
 include 'lib-master.php';
 
 Users\reject_user_below(3); // group 3 or higher
@@ -51,7 +50,7 @@ $view->add_globals($vars);
 
 $view->data['workshops_list'] = Workshops\get_workshops_list_bydate($searchstart, $searchend);
 
-$view->renderPage('admin_revenue');
+$view->renderPage('admin/revenue');
 
 
 function change_date_string($timestring, $change) {

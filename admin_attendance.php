@@ -1,6 +1,5 @@
 <?php
-$sc = "admin_attendance.php";
-$heading = "practices: admin";
+$heading = "attendence";
 include 'lib-master.php';
 include 'libs/validate.php';
 
@@ -28,7 +27,7 @@ if (!$wk['id']) {
 	$view->data['wk'] = $wk;
 	$view->data['statuses'] = $statuses; // global
 	$view->data['students'] = $students;
-	$view->renderPage('admin_attendance');
+	$view->renderPage('admin/attendance');
 }
 
 

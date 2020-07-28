@@ -1,6 +1,5 @@
 <?php
-$sc = "admin_debug_log.php";
-$heading = "practices: admin";
+$heading = "debug";
 include 'lib-master.php';
 
 Wbhkit\set_vars(array('ac', 'deldate'));
@@ -54,7 +53,7 @@ if (empty($log)) {
 $view->data['dates_opts'] = $dates_opts; 
 $view->data['log'] = $log;
 $view->data['ac'] = $ac;
-$view->renderPage('admin_debug_log');
+$view->renderPage('admin/debug_log');
 
 
 
