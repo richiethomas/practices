@@ -439,7 +439,7 @@ function check_user_level($level) {
 function reject_user_below($at_least) {
 	global $u, $view;
 	if (!isset ($u) || !isset($u['id']) || !isset($u['group_id']) || $u['group_id'] < $at_least) {
-		$view->renderPage('admin_notcleared');
+		$view->renderPage('admin/notcleared');
 		exit();
 		return false;
 	}
