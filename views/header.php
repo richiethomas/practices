@@ -78,8 +78,16 @@ if (strpos($sc, 'admin') !== false && \Users\check_user_level(2)) {
 	if (Users\check_user_level(3)) { echo nav_link($sc, 'admin_revenue.php', 'revenues', 'dollar'); }
 	
 	echo nav_link($sc, 'admin_search.php', 'find students', 'magnifying-glass');
-	echo nav_link($sc, 'admin_status.php', 'status log', 'graph');
-	echo nav_link($sc, 'admin_debug_log.php', 'debug log', 'clipboard');
+?>	
+    <li class="nav-item dropdown">
+      <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Logs</a>
+      <div class="dropdown-menu">
+        <a class="dropdown-item" href="admin_debug_log.php">Debug Log</a>
+        <a class="dropdown-item" href="admin_status_log.php">Status Log</a>
+        <a class="dropdown-item" href="admin_error_log.php">Error Log</a>
+      </div>
+    </li>
+<?php	
 	echo nav_link($sc, 'admin_listall.php', 'all workshops', 'book');
 	echo nav_link($sc, 'admin_teachers.php', 'teachers', 'star');
 	echo "</ul>\n";

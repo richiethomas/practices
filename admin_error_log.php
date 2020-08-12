@@ -4,11 +4,12 @@ include 'lib-master.php';
 
 Wbhkit\set_vars(array('ac', 'deldate'));
 
-$log = file(DEBUG_LOG);
+$log = file(ERROR_LOG);
 
 switch ($ac) {
 	case 'condel':
-		file_put_contents(DEBUG_LOG, '');		$log = file(DEBUG_LOG);
+		file_put_contents(ERROR_LOG, '');
+		$log = file(ERROR_LOG);
 		break;
 	
 	case 'deldate':
@@ -22,7 +23,7 @@ switch ($ac) {
 				}
 				$newlog[] = $l;
 			}
-			file_put_contents(DEBUG_LOG, implode($newlog));
+			file_put_contents(ERROR_LOG, implode($newlog));
 			$log = $newlog;
 		}
 		break;
@@ -53,7 +54,7 @@ if (empty($log)) {
 $view->data['dates_opts'] = $dates_opts; 
 $view->data['log'] = $log;
 $view->data['ac'] = $ac;
-$view->renderPage('admin/debug_log');
+$view->renderPage('admin/error_log');
 
 
 

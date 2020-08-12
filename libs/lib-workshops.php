@@ -55,12 +55,16 @@ function fill_out_workshop_row($row, $get_enrollment_stats = true) {
 	$row['nextstart_raw'] = $row['start'];
 	$row['nextend_raw'] = $row['end'];
 	$row['nextstart_url'] = $row['online_url'];
+	$row['nextsession_show'] = 0;
+	$row['nextsession_extra'] = 0;
 	if (!\Wbhkit\is_future($row['nextstart_raw'])) {
 		foreach ($row['sessions'] as $s) {
 			if (\Wbhkit\is_future($s['start'])) {
+				$row['nextsesssion_extra'] = 1;
 				$row['nextstart_raw'] = $s['start'];
 				$row['nextend_raw'] = $s['end'];
 				if ($s['online_url']) { $row['nextstart_url'] = $s['online_url']; }
+				if ($s['class_show'] == 1) { $row['nextsession_show'] = 1; }
 				break; // found the next start
 			}
 		}

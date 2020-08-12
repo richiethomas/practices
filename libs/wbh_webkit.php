@@ -98,7 +98,7 @@ function multi_drop($name, $opts, $selected = null, $label = null, $size = 10, $
 		$select .= ">$show</option>\n";
 	}
 	$select .= "</select>";
-	$select .= form_help_block($key, $help, $error);	
+	$select .= form_help_block($name, $help, $error);	
 	$select .= "</div>";
 
 	return $select;

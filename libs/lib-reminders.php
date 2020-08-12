@@ -80,7 +80,7 @@ function remind_enrolled($wk) {
 		}
 	}
 	//remind teacher
-	if (!LOCAL) {
+	if (!LOCAL || 1 ==1) {
 		$trans = URL."workshop.php?key={$wk['teacher_key']}&wid={$wk['id']}";
 		$msg = $base_msg."<p>Class info online:<br>$trans</p>\n";
 		\Emails\centralized_email($wk['teacher_email'], $subject, $msg);
@@ -104,16 +104,31 @@ function remind_enrolled($wk) {
 
 function get_reminder_message_data($wk) {
 	
-	$subject = "REMINDER: {$wk['title']} {$wk['nextstart']}";
+	$subject = "REMINDER: {$wk['title']} ".($wk['nextsession_show'] ? 'CLASS SHOW - ' : '')."{$wk['nextstart']}";
 	if ($wk['location_id'] != ONLINE_LOCATION_ID) {
 		$subject .= " at {$wk['place']}";	
 	}
-	$note = "Greetings. You're enrolled in this workshop. ";
-	$note .= "It starts ".\TimeDifference\nicetime($wk['nextstart_raw']).". ";
+	
+	if ($wk['nextsession_show'] == 1) {
+		$note = "<p>Greetings. You have a class show tomorrow! ";
+	} elseif ($wk['nextsession_extra']) {
+		$note = "<p>Greetings. You have another session of this class tomorrow. ";
+	} else {
+		$note = "<p>Greetings. You're enrolled in a class that starts tomorrow. ";
+	}
+
+	$note .= "It starts ".\TimeDifference\nicetime($wk['nextstart_raw']).".</p>\n";
+	
 	if ($wk['location_id'] == ONLINE_LOCATION_ID) {
-		$note .= "<p>Here's the link: {$wk['nextstart_url']}</p>\n";  // should be workshop url or xtra_session url, set in lib_workshops.php fill_out_workshop_row
+		
+		$note .= "<p>Here's the link: {$wk['nextstart_url']}</p>\n";  
+		// should be workshop url or xtra_session url, set in lib_workshops.php fill_out_workshop_row
+		if ($wk['nextstart_url'] != $wk['online_url']) {
+			$note .= "<p>Please note: this is a DIFFERENT LINK than you usually use for this class!</p>\n";
+		}
+
 	}			
-	$sms = "Reminder: {$wk['title']} workshop, {$wk['nextstart']}, ".URL;
+	$sms = "Reminder: {$wk['title']} ".($wk['nextsession_show'] ? 'class show' : 'class').", {$wk['nextstart']}, ".URL;
 	
 	return array(
 	 'subject' => $subject,
