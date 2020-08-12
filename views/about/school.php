@@ -46,7 +46,7 @@
 
 <dl class="row">
   <dt class="col-sm-3">"game-based"</dt>
-  <dd class="col-sm-9">improv is improv that consciously focuses on finding an unusual thing and heightening it. It focuses on the comedy of the scene. This is a practice developed and championed by the Upright Citizens Brigade Theater (founders trained in Chicago, though their theaters were in New York City and Los Angeles).</dd>
+  <dd class="col-sm-9">improv is improv that consciously focuses on finding an unusual thing and heightening it. It focuses on the comedy of the scene. This is a practice developed and championed by the Upright Citizens Brigade Theater (founders trained in Chicago, though their theaters were set up in New York City and Los Angeles).</dd>
 </dl>
 	
 <p>Phew. Honestly, none of that matters too much. If you are interested in learning to do some improv comedy -- making up comedic scenes on the spot without a script -- we can help you do that.</p>

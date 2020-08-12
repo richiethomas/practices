@@ -19,7 +19,7 @@ if (isset($_REQUEST['users']) && is_array($_REQUEST['users']) && $wid) {
 
 $students = array();
 if (!$wk['id']) {
-	$view->renderPage('admin_error');	
+	$view->renderPage('admin/error');	
 } else {
 	foreach ($statuses as $stid => $status_name) {
 		$students[$stid] = Enrollments\get_students($wid, $stid);

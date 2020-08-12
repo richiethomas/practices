@@ -12,7 +12,7 @@ if ($guest_id > 0) {
 
 if (!isset($wk) || !isset($wk['id']) || !isset($guest) || !isset($guest['id'])) {
 	$view->data['error_message'] = "<h1>Whoops!</h1><p>You are asking to look at info about an enrollment, but I (the computer) cannot tell which enrollment you mean. Sorry!</p>\n";
-	$view->renderPage('admin_error');
+	$view->renderPage('admin/error');
 	exit();
 }
 

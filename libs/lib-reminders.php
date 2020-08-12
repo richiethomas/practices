@@ -85,6 +85,18 @@ function remind_enrolled($wk) {
 		$msg = $base_msg."<p>Class info online:<br>$trans</p>\n";
 		\Emails\centralized_email($wk['teacher_email'], $subject, $msg);
 	}
+	
+	
+	// if not full -- point it out to Will
+	if ($wk['enrolled'] < $wk['capacity']) {
+		
+		$alert_msg = "'{$wk['title']}' is not full. {$wk['enrolled']} of {$wk['capacity']} signed up<br>\n".
+			URL."admin_edit.php?wid={$wk['id']}<br>\n".
+				\Emails\get_workshop_summary($wk);
+		
+		\Emails\centralized_email(WEBMASTER, "'{$wk['title']}' is not full.", $alert_msg);
+	}
+	
 	//\Emails\centralized_email('whines@gmail.com', $subject, $msg);
 	
 	

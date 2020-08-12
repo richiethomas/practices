@@ -8,7 +8,7 @@ include 'login_actions.php';
 
 if (!Users\logged_in()) {
 	$view->data['error_message'] = "<h1>Whoops!</h1><p>You are asking to look at info about a student, probably you, but I (the computer) cannot tell which student you mean. Sorry!</p>\n";
-	$view->renderPage('admin_error');
+	$view->renderPage('admin/error');
 	exit();
 } else {
 

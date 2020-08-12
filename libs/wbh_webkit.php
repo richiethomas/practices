@@ -291,9 +291,9 @@ function friendly_date($time_string) {
 
 
 	if (date('Y', $ts) != date('Y')) {  
-		return date('l M j, Y', $ts);
+		return date('D M j, Y', $ts);
 	} else {
-		return date('l M j', $ts);
+		return date('D M j', $ts);
 	}
 }	
 

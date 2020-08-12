@@ -81,7 +81,7 @@ No worries if you'd rather not answer! Thank you all again for taking it!
 						
 }
 if (!$wk['id']) {
-	$view->renderPage('admin_error');	
+	$view->renderPage('admin/error');	
 } else {
 	$view->add_globals($mess_vars);		
 	$students = array();
