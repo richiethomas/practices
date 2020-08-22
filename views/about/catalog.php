@@ -8,23 +8,30 @@
 <p>This school is new and in flux, but here's our main courses right now.</p>
 
 <h2>Will Hines Multi-Week Classes</h2>
+<h4>Revised: Fall 2020</h4>
 <p>Each one of these is five two-hour sessions, plus a show. 8 students per class, $220 each.</p>
 
-<p>Next batch of these will go up September 2020. It'll be a lottery to get in. Join the <a href="http://eepurl.com/R2Ytz">mailing list</a> to hear about them when they are offered.</p>
-
+<p>Here's my thing with "levels": they are suggestions. I've numbered them in the order that I think is the most helpful. But this is a small community of students who mostly have studied improv already. So be your own judge. If you're itching to learn about The Harold, jump in there. Conversely, if you're sick of the Harold, try level 2 (chracter/monoscene). THAT SAID: If you've NEVER really done "game of the scene" style improv, I suggest level one first. Don't let "level one" fool you -- it's not a beginner's class. It's just the one that the other three are built on.</p>
 
 <dl class="row">
-  <dt class="col-sm-3">Better Games Level One</dt>
-  <dd class="col-sm-9">We work towards doing a monolgue show. Someone tells a true story and we pull scenes from it. Subject covered: finding the fool, saying why, supporting games through walk-ons and tag-outs, looking for contrast, self-destruction and absurdity. Some improv experience preferred.</dd>
+  <dt class="col-sm-3">Level One: The Unusual Thing</dt>
+  <dd class="col-sm-9">This is an intro to  “game of the scene” work -- meant for new people and vets who want to strengthen game of the scene. Base reality, unusual thing and using walk-ons and tag-outs to support. How to accept/reject offers. Saying why. Class show: monologues and scenes./dd>
 
-  <dt class="col-sm-3">Better Games Level Two</dt>
+  <dt class="col-sm-3">Leve Two: Character/Monoscene</dt>
   <dd class="col-sm-9">
-    We work towards doing a version of the Harold, where you revisit scenes a few times to make the scenes feel like an interwoven play. Must have taken Better Games Level One or have an exception based on outside experience.
+Working on game, but through character. Turning points-of-view and character energies into games. Being inspired by locations and the other characters. Keeping silly characters grounded. Forms covered: road trip, La Ronde. Class show: A monoscene. 
   </dd>
 
-  <dt class="col-sm-3">Better Games Level Three</dt>
-  <dd class="col-sm-9">We work towards doing a version of the Harold, with more focus on group scenes, third beats and stronger comedic games. Must have taken Better Games Level Two, or had an exception based on outside expereince.</dd>
+  <dt class="col-sm-3">Level Three: Harold</dt>
+  <dd class="col-sm-9">Meant for students ready for a challenge. Second beats, third beats, group games and connections. Use all of your improv muscles: an organic start, big heightening moves, patterns, being inspired by reality and tying it all up. Class show: Headless Harold. </dd>
+  
+  <dt class="col-sm-3">Level Four: Montage</dt>
+  <dd class="col-sm-9">The most formless, but the most challenging! A montage that still has callbacks and connections. Focus harder on finding a game every scene. Learn about: contrast games, mapping games, heightened reality, peas in a pod, action-reaction, character games.  Class show: get a suggestion and go.</dd>
 </dl>
+
+
+
+
 
 <h2>Brandon Gardner Multi-Week Classes</h2>
 

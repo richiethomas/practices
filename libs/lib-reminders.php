@@ -80,12 +80,11 @@ function remind_enrolled($wk) {
 		}
 	}
 	//remind teacher
-	if (!LOCAL || 1 ==1) {
+	if (!LOCAL) {
 		$trans = URL."workshop.php?key={$wk['teacher_key']}&wid={$wk['id']}";
 		$msg = $base_msg."<p>Class info online:<br>$trans</p>\n";
 		\Emails\centralized_email($wk['teacher_email'], $subject, $msg);
 	}
-	
 	
 	// if not full -- point it out to Will
 	if ($wk['enrolled'] < $wk['capacity']) {
@@ -126,6 +125,12 @@ function get_reminder_message_data($wk) {
 		if ($wk['nextstart_url'] != $wk['online_url']) {
 			$note .= "<p>Please note: this is a DIFFERENT LINK than you usually use for this class!</p>\n";
 		}
+		
+		if ($wk['nextsession_show'] == 1) {
+			$note .= "<p>Invite your friends and family to watch the show at the YouTube Channel:<br>https://www.youtube.com/channel/UCxM09rN2BoddZYtqnlPBucQ<br>(Every show is streamed to that channel - same YouTube link for all class shows)</p>\n";
+		}
+
+		
 
 	}			
 	$sms = "Reminder: {$wk['title']} ".($wk['nextsession_show'] ? 'class show' : 'class').", {$wk['nextstart']}, ".URL;

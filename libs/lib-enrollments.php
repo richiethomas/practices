@@ -181,32 +181,15 @@ function check_waiting($wk) {
 
 
 
-function update_paid($wid, $uid, $paid = 1) {
+function update_paid($wid, $uid, $paid = 1, $eid = null) {
 		
-	
-	if ($paid == 1) {
-		send_payment_confirmation_email($uid, $wid);
-	}
-	$stmt = \DB\pdo_query("update registrations set paid = :paid where workshop_id = :wid and user_id = :uid", array(':paid' => $paid, ':wid' => $wid, ':uid' => $uid));
-	
-	return "Updated user ($uid) workshop ($wid) to paid status: $paid";
-}
-
-function update_paid_by_enrollment_id($eid, $paid = 1) {
-	
-	if ($paid == 1) {
-		$stmt = \DB\pdo_query("select user_id, workshop_id from registrations where id = :rid", array(':rid' => $eid));
+	// get enrollment ID if need be	
+	if (!$eid) {
+		$stmt = \DB\pdo_query("select id from registrations where workshop_id = :wid and user_id = :uid", array(':wid' => $wid, ':uid' => $uid));
 		while ($row = $stmt->fetch()) {
-			send_payment_confirmation_email($row['user_id'], $row['workshop_id']);
+			$eid = $row['id'];
 		}
 	}
-	$stmt = \DB\pdo_query("update registrations set paid = :paid where id = :rid", array(':paid' => $paid, ':rid' => $eid));
-	
-	return "Updated enrollment id ($eid) to paid status: $paid";
-}
-
-function send_payment_confirmation_email($uid, $wid) {
-	
 	
 	// get paid status before
 	$paid_before = 0;
@@ -215,20 +198,41 @@ function send_payment_confirmation_email($uid, $wid) {
 		$paid_before = $row['paid'];
 	}
 	
-	if ($paid_before == 0) {
+	if ($paid != $paid_before) {
+		$stmt = \DB\pdo_query("update registrations set paid = :paid where id = :rid", array(':paid' => $paid, ':rid' => $eid));
 		// send payment confirmation
 		$payee = \Users\get_user_by_id($uid);
 		$workshop = \Workshops\get_workshop_info($wid);
+
+		if ($paid == 1) {
 		
-		$body = "<p>This is automated email to confirm that I've received your payment for class.</p>";
-		$body .= "<p>Class: {$workshop['title']} {$workshop['showstart']} (California time, PDT)</p>\n";
-		$body .= "<p>Student: {$payee['nice_name']}</p>";
-		$body .= "<p>Amount: \${$workshop['cost']} (USD)</p>\n";
-		$body .= "<p>Thanks!<br>-Will</p>\n";
+			$body = "<p>This is automated email to confirm that I've received your payment for class.</p>";
+			$body .= "<p>Class: {$workshop['title']} {$workshop['showstart']} (California time, PDT)</p>\n";
+			$body .= "<p>Student: {$payee['nice_name']}</p>";
+			$body .= "<p>Amount: \${$workshop['cost']} (USD)</p>\n";
+			$body .= "<p>Thanks!<br>-Will</p>\n";
 				
-		\Emails\centralized_email($payee['email'], "Payment received for {$workshop['title']} {$workshop['showstart']} (PDT)", $body); 
+			\Emails\centralized_email($payee['email'], "Payment received for {$workshop['title']} {$workshop['showstart']} (PDT)", $body); 
+			
+			return "Set user '{$payee['nice_name']}' to 'paid' for workshop '{$workshop['title']}'";
+		} else {
+			return "Set user '{$payee['nice_name']}' to 'unpaid' for workshop '{$workshop['title']}'";
+		}
 		
 	}
+	return false; // no update needed
+	
+}
+
+function update_paid_by_enrollment_id($eid, $paid = 1) {
+	
+	// get the workshop id and user id
+	$stmt = \DB\pdo_query("select user_id, workshop_id from registrations where id = :id", array(':id' => $eid));
+	while ($row = $stmt->fetch()) {
+		return update_paid($row['workshop_id'], $row['user_id'], $paid, $eid);
+	}
+	return false;
+
 }
 
 

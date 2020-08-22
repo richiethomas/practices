@@ -2,7 +2,6 @@
 
 include 'lib-master.php';
 
-
 $email = null;
 $link_email_sent_flag = false;
 

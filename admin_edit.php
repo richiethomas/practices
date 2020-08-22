@@ -94,14 +94,19 @@ switch ($ac) {
 	case 'at':
 		$users = (isset($_REQUEST['users']) && is_array($_REQUEST['users'])) ? $_REQUEST['users'] : array();
 
+		$msg = null;
 		if ($wid) {
 			foreach ($statuses as $sid => $sts) {
 				$stds = Enrollments\get_students($wid, $sid);
 				foreach ($stds as $as) {
 					if (in_array($as['id'], $users)) {
-						Enrollments\update_paid($wid, $as['id'], 1);
+						$msg = Enrollments\update_paid($wid, $as['id'], 1);
 					} else {
-						Enrollments\update_paid($wid, $as['id'], 0);
+						$msg = Enrollments\update_paid($wid, $as['id'], 0);
+					}
+					if ($msg) {
+						$message .= $msg."<br>\n";
+						$msg = null;
 					}
 				}
 			}		

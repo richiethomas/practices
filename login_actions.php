@@ -38,6 +38,8 @@ switch ($ac) {
 	case 'lo':
 		$logger->info("{$u['nice_name']} logging out.");
 		Users\logout($key, $u, $message);
+		header("Location: ".URL);
+		die();
 		break;	
 
 	case 'cemail':
