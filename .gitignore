@@ -12,6 +12,8 @@ mail_log.txt
 zschema.txt
 info.txt
 photos/*
+error_log
+composer.lock
 
 # Compiled source #
 ###################

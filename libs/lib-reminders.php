@@ -17,53 +17,55 @@ update xtra_sessions set reminder_sent = 0;
 	}
 	
 	// if yes, get a list of all workshops that have yet to start within REMINDER_HOURS
-	$workshops_to_remind = array();
+	$classes_to_remind = array();
 	$mysqlnow = date("Y-m-d H:i:s");
 	
 	
 	// set up $workshops_to_remind
 	// first number id, second number xtra_session row id (0 if not an xtra session)
 	
-	
-	$stmt = \DB\pdo_query("select id, start from workshops where start > :now and reminder_sent = 0", array(':now' => $mysqlnow)); // workshops in the future
+	// first do workshops table - these are session 1s
+	$stmt = \DB\pdo_query("select id as workshop_id, start from workshops w where start > :now and reminder_sent = 0", array(':now' => $mysqlnow)); // workshops in the future
 	while ($row = $stmt->fetch()) {
 		if ((strtotime($row['start']) - time()) / 3600 < REMINDER_HOURS) {
-			$workshops_to_remind[] = array($row['id'], 0);
+			$classes_to_remind[] = array($row['workshop_id'], 0);
 		}
 	}
 	
-	$stmt = \DB\pdo_query("select id, workshop_id, start, online_url from xtra_sessions where start > :now and reminder_sent = 0", array(':now' => $mysqlnow)); // workshops in the future
+	$stmt = \DB\pdo_query("select id, workshop_id, start from xtra_sessions where start > :now and reminder_sent = 0", array(':now' => $mysqlnow)); // workshops in the future
 	while ($row = $stmt->fetch()) {
 		if ((strtotime($row['start']) - time()) / 3600 < REMINDER_HOURS) {
-			$workshops_to_remind[] = array($row['workshop_id'], $row['id']); 
+			$classes_to_remind[] = array($row['workshop_id'], $row['id']); 
 		}
 	}
 	
 	// go through each workshop that start in that window, and send remidners
 	$wk = array();
-	foreach ($workshops_to_remind as $wk_id_info) {
-		$wk = \Workshops\get_workshop_info($wk_id_info[0]);
-		
-		remind_enrolled($wk);
-		if ($wk_id_info[1] > 0) {
-			$stmt = \DB\pdo_query("update xtra_sessions set reminder_sent = 1 where id = :id", array(':id' => $wk_id_info[1])); // most recent check
+	foreach ($classes_to_remind as $class) {
+		remind_enrolled($class);
+		if ($class[1] > 0) {
+			$stmt = \DB\pdo_query("update xtra_sessions set reminder_sent = 1 where id = :id", array(':id' => $class[1])); // most recent check
 		} else {
-			$stmt = \DB\pdo_query("update workshops set reminder_sent = 1 where id = :id", array(':id' => $wk_id_info[0])); // most recent check
+			$stmt = \DB\pdo_query("update workshops set reminder_sent = 1 where id = :id", array(':id' => $class[0])); // most recent check
 		}
 	}
 	
 	// add a row to reminder check
-	$stmt = \DB\pdo_query("insert into reminder_checks (time_checked, reminders_sent) VALUES (:now, :rsent)", array(':now' => $mysqlnow, ':rsent' => count($workshops_to_remind))); // most recent check
+	$stmt = \DB\pdo_query("insert into reminder_checks (time_checked, reminders_sent) VALUES (:now, :rsent)", array(':now' => $mysqlnow, ':rsent' => count($classes_to_remind))); // most recent check
 
 }
 
-function remind_enrolled($wk) {
-	$reminder = get_reminder_message_data($wk);
+function remind_enrolled($class) {
+	$wk = \Workshops\get_workshop_info($class[0]);
+	$xtra = \XtraSessions\get_xtra_session($class[1]);
+	
+	$reminder = get_reminder_message_data($wk, $xtra);
+	
 	$subject = $reminder['subject'];
 	$note = $reminder['note'];
 	$sms = $reminder['sms'];
 	
-	$stds = \Enrollments\get_students($wk['id'], ENROLLED);
+	$stds = \Enrollments\get_students($class[0], ENROLLED);
 
 	$base_msg =	$note.\Emails\get_workshop_summary($wk);
 
@@ -82,8 +84,9 @@ function remind_enrolled($wk) {
 	//remind teacher
 	if (!LOCAL) {
 		$trans = URL."workshop.php?key={$wk['teacher_key']}&wid={$wk['id']}";
-		$msg = $base_msg."<p>Class info online:<br>$trans</p>\n";
-		\Emails\centralized_email($wk['teacher_email'], $subject, $msg);
+		$teacher_reminder = get_reminder_message_data($wk, $xtra, true);
+		$msg = $teacher_reminder['note']."<p>Class info online:<br>$trans</p>\n";
+		\Emails\centralized_email($wk['teacher_email'], $teacher_reminder['subject'], $msg);
 	}
 	
 	// if not full -- point it out to Will
@@ -101,39 +104,46 @@ function remind_enrolled($wk) {
 	
 }
 
-function get_reminder_message_data($wk) {
+function get_reminder_message_data($wk, $xtra, $teacher = false) {
 	
-	$subject = "REMINDER: {$wk['title']} ".($wk['nextsession_show'] ? 'CLASS SHOW - ' : '')."{$wk['nextstart']}";
+	
+	if ($xtra['id']) {
+		$subject = "REMINDER: {$wk['title']} ".($xtra['class_show'] ? 'CLASS SHOW - ' : '')."{$xtra['friendly_when']}";
+	} else {
+		$subject = "REMINDER: {$wk['title']} {$wk['when']}";
+	}
+	
+	
 	if ($wk['location_id'] != ONLINE_LOCATION_ID) {
 		$subject .= " at {$wk['place']}";	
 	}
 	
-	if ($wk['nextsession_show'] == 1) {
-		$note = "<p>Greetings. You have a class show tomorrow! ";
-	} elseif ($wk['nextsession_extra']) {
-		$note = "<p>Greetings. You have another session of this class tomorrow. ";
+	if ($xtra['class_show'] == 1) {
+		$note = "<p>Greetings. ".($teacher ? "You are teaching" :  "You have")." a class show soon! ";
+	} elseif ($xtra['id']) {
+		$note = "<p>Greetings. ".($teacher ? "You are teaching" :  "You have")." another session of this class soon. ";
 	} else {
-		$note = "<p>Greetings. You're enrolled in a class that starts tomorrow. ";
+		$note = "<p>Greetings. ".($teacher ? "You are teaching" :  "You are enrolled in")." a class that starts soon. ";
 	}
 
-	$note .= "It starts ".\TimeDifference\nicetime($wk['nextstart_raw']).".</p>\n";
+	$note .= "It starts ".\TimeDifference\nicetime($xtra['id'] ? $xtra['start'] : $wk['start']).".</p>\n";
 	
 	if ($wk['location_id'] == ONLINE_LOCATION_ID) {
 		
-		$note .= "<p>Here's the link: {$wk['nextstart_url']}</p>\n";  
+		$note .= "<p>Here's the link: ".($xtra['online_url'] ? $xtra['online_url'] : $wk['online_url'])."</p>\n";  
 		// should be workshop url or xtra_session url, set in lib_workshops.php fill_out_workshop_row
-		if ($wk['nextstart_url'] != $wk['online_url']) {
+		if ($xtra['online_url']) {
 			$note .= "<p>Please note: this is a DIFFERENT LINK than you usually use for this class!</p>\n";
 		}
 		
-		if ($wk['nextsession_show'] == 1) {
+		if ($xtra['class_show'] == 1) {
 			$note .= "<p>Invite your friends and family to watch the show at the YouTube Channel:<br>https://www.youtube.com/channel/UCxM09rN2BoddZYtqnlPBucQ<br>(Every show is streamed to that channel - same YouTube link for all class shows)</p>\n";
 		}
 
 		
 
 	}			
-	$sms = "Reminder: {$wk['title']} ".($wk['nextsession_show'] ? 'class show' : 'class').", {$wk['nextstart']}, ".URL;
+	$sms = "Reminder: {$wk['title']} ".($xtra['class_show'] ? 'class show' : 'class').", {$wk['nextstart']}, ".URL;
 	
 	return array(
 	 'subject' => $subject,

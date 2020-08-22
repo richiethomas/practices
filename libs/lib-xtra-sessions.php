@@ -14,6 +14,33 @@ function get_xtra_sessions($workshop_id) {
 	return $sessions;
 }	
 
+
+function get_xtra_session($xtra_id = 0) {
+	
+	if (!$xtra_id) { return empty_xtra_session(); }
+	
+	$stmt = \DB\pdo_query("select * from xtra_sessions where id = :id", array(':id' => $xtra_id));
+	$sessions = array();
+	while ($row = $stmt->fetch()) {
+		$row['friendly_when'] = \Wbhkit\friendly_when($row['start']).'-'.\Wbhkit\friendly_time($row['end']);
+		return $row;
+	}
+	return empty_xtra_session();
+}	
+
+function empty_xtra_session() {
+	return array(
+		'id' => null,
+		'workshop_id' => null,
+		'start' => null,
+		'end' => null,
+		'class_show' => null,
+		'rank' => null,
+		'online_url' => null,
+		'reminder_sent' => null
+	);
+}
+
 function xtra_session_fields($wk) {
 	
 	return

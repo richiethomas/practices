@@ -80,6 +80,7 @@ function fill_out_workshop_row($row, $get_enrollment_stats = true) {
 	}
 	$row = check_last_minuteness($row);
 	
+	$row['soldout'] = 0;
 	if ($get_enrollment_stats) {
 		$row = set_enrollment_stats($row);
 		if ($row['enrolled'] >= $row['capacity'] || $row['waiting'] > 0 || $row['invited'] > 0) { 
