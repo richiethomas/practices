@@ -67,6 +67,37 @@ if (Users\logged_in()) { ?>
 
 <?php } else { ?>
 
+
+<script type="text/javascript">
+	function onSignIn(googleUser) {
+		console.log('inside onSignIn');
+	  var id_token = googleUser.getAuthResponse().id_token;
+	  var xhr = new XMLHttpRequest();
+	  xhr.open('POST', 'https://wgimprovschool.com/gsign.php');
+	  xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+	  xhr.onload = function() {
+	    console.log('Signed in as: ' + xhr.responseText);
+		createInput(xhr.responseText);
+		$("#google-signinbutton").hide();
+		$("#google-signout").show();
+	  };
+	  xhr.send('idtoken=' + id_token);
+	}
+
+	function createInput(key){
+	    var $input = $('<p>Connected to Google! <a class="btn btn-primary" href="index.php?key='+key+'">Log in to wgimprovschool.com</a></p>');
+	    $input.appendTo($("#google-authenticated"));
+	}
+
+  function signOut() {
+    var auth2 = gapi.auth2.getAuthInstance();
+    auth2.signOut().then(function () {
+      console.log('User signed out.');
+	  window.location.reload(false); 
+    });
+  }
+</script>
+
 <div id= "login_prompt" class='row bg-info p-3'>
 	<div class="col-sm-12">
 		<h2 class="text-center">Two Ways to Log In</h2>
@@ -86,9 +117,11 @@ if (Users\logged_in()) { ?>
 	<div class="col-sm-1 align-self-center">
 		<h3>Or</h3>
 	</div>
+	
 	<div class="col p-3 bg-warning">
 		<h2>Sign in Via Google</h2>
-		<div id="google-signinbutton" class="g-signin2" data-onsuccess="onSignIn"></div> <p id="google-signout" class="my-3">Want to sign-out of Google? <a class="text-dark" href="#" onclick="signOut();">(Click here)</a></p>
+		<div id="google-signinbutton" class="g-signin2" data-onsuccess="onSignIn"></div> 
+		<p id="google-signout" class="my-3">Want to sign-out of Google? <a class="text-dark" href="#" onclick="signOut();">(Click here)</a></p>
 		<div id="google-authenticated"></div>
 	</div>
   

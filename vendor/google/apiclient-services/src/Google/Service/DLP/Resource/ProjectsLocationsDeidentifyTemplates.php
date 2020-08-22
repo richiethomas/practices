@@ -31,17 +31,17 @@ class Google_Service_DLP_Resource_ProjectsLocationsDeidentifyTemplates extends G
    * https://cloud.google.com/dlp/docs/creating-templates-deid to learn more.
    * (deidentifyTemplates.create)
    *
-   * @param string $parent Required. The parent resource name, for example
-   * projects/my-project-id or organizations/my-org-id.
-   * @param string $locationId The geographic location to store the
-   * deidentification template. Reserved for future extensions.
+   * @param string $parent Required. Parent resource name. - Format:projects
+   * /[PROJECT-ID] - Format:organizations/[ORGANIZATION-ID] - Format:projects
+   * /[PROJECT-ID]/locations/[LOCATION-ID] - Format:organizations/[ORGANIZATION-
+   * ID]/locations/[LOCATION-ID]
    * @param Google_Service_DLP_GooglePrivacyDlpV2CreateDeidentifyTemplateRequest $postBody
    * @param array $optParams Optional parameters.
    * @return Google_Service_DLP_GooglePrivacyDlpV2DeidentifyTemplate
    */
-  public function create($parent, $locationId, Google_Service_DLP_GooglePrivacyDlpV2CreateDeidentifyTemplateRequest $postBody, $optParams = array())
+  public function create($parent, Google_Service_DLP_GooglePrivacyDlpV2CreateDeidentifyTemplateRequest $postBody, $optParams = array())
   {
-    $params = array('parent' => $parent, 'locationId' => $locationId, 'postBody' => $postBody);
+    $params = array('parent' => $parent, 'postBody' => $postBody);
     $params = array_merge($params, $optParams);
     return $this->call('create', array($params), "Google_Service_DLP_GooglePrivacyDlpV2DeidentifyTemplate");
   }
@@ -84,13 +84,13 @@ class Google_Service_DLP_Resource_ProjectsLocationsDeidentifyTemplates extends G
    * templates-deid to learn more.
    * (deidentifyTemplates.listProjectsLocationsDeidentifyTemplates)
    *
-   * @param string $parent Required. The parent resource name, for example
-   * projects/my-project-id or organizations/my-org-id.
-   * @param string $locationId The geographic location where deidentifications
-   * templates will be retrieved from. Use `-` for all locations. Reserved for
-   * future extensions.
+   * @param string $parent Required. Parent resource name. - Format:projects
+   * /[PROJECT-ID] - Format:organizations/[ORGANIZATION-ID] - Format:projects
+   * /[PROJECT-ID]/locations/[LOCATION-ID] - Format:organizations/[ORGANIZATION-
+   * ID]/locations/[LOCATION-ID]
    * @param array $optParams Optional parameters.
    *
+   * @opt_param string locationId Deprecated. This field has no effect.
    * @opt_param int pageSize Size of the page, can be limited by server. If zero
    * server returns a page of max size 100.
    * @opt_param string orderBy Comma separated list of fields to order by,
@@ -109,9 +109,9 @@ class Google_Service_DLP_Resource_ProjectsLocationsDeidentifyTemplates extends G
    * previous call to `ListDeidentifyTemplates`.
    * @return Google_Service_DLP_GooglePrivacyDlpV2ListDeidentifyTemplatesResponse
    */
-  public function listProjectsLocationsDeidentifyTemplates($parent, $locationId, $optParams = array())
+  public function listProjectsLocationsDeidentifyTemplates($parent, $optParams = array())
   {
-    $params = array('parent' => $parent, 'locationId' => $locationId);
+    $params = array('parent' => $parent);
     $params = array_merge($params, $optParams);
     return $this->call('list', array($params), "Google_Service_DLP_GooglePrivacyDlpV2ListDeidentifyTemplatesResponse");
   }

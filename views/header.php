@@ -18,7 +18,7 @@
 	<!-- Google Fonts -->
 	<link href="https://fonts.googleapis.com/css2?family=Open+Sans&family=Poppins:wght@500&display=swap" rel="stylesheet">
 
-<meta name="google-signin-client_id" content="989168310652-3tsfgaaaq4uo6ujidcu538kdqmaii7lh.apps.googleusercontent.com">
+<meta name="google-signin-client_id" content="989168310652-al6inpe49ep29r9i2ppb0t8j58k1pt22.apps.googleusercontent.com">
 <script src="https://apis.google.com/js/platform.js" async defer></script>
 
 
@@ -57,37 +57,6 @@ li.show {
 }
 
 </style>
-
-
-<script type="text/javascript">
-	function onSignIn(googleUser) {
-		console.log('inside onSignIn');
-	  var id_token = googleUser.getAuthResponse().id_token;
-	  var xhr = new XMLHttpRequest();
-	  xhr.open('POST', 'https://wgimprovschool.com/gsign.php');
-	  xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-	  xhr.onload = function() {
-	    console.log('Signed in as: ' + xhr.responseText);
-		 console.log("index.php?key="+xhr.responseText);
-		createInput(xhr.responseText);
-		$("#google-signinbutton").hide();
-		$("#google-signout").show();
-	  };
-	  xhr.send('idtoken=' + id_token);
-	}
-
-	function createInput(key){
-	    var $input = $('<p>Connected to Google! <a class="btn btn-primary" href="index.php?key='+key+'">Log in to wgimprovschool.com</a></p>');
-	    $input.appendTo($("#google-authenticated"));
-	}
-
-  function signOut() {
-    var auth2 = gapi.auth2.getAuthInstance();
-    auth2.signOut().then(function () {
-      console.log('User signed out.');
-    });
-  }
-</script>
 
 </head>
 <body>

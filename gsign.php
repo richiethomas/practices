@@ -1,10 +1,13 @@
 <?php
 require_once 'vendor/autoload.php';
-header("Access-Control-Allow-Origin: https://wgimprovschool.com");
+
+
+
+header("Access-Control-Allow-Origin: *");
 
 $id_token = isset($_POST['idtoken']) ? $_POST['idtoken'] : null;
 
-$client = new Google_Client(['client_id' => "989168310652-3tsfgaaaq4uo6ujidcu538kdqmaii7lh.apps.googleusercontent.com"]);  // Specify the CLIENT_ID of the app that accesses the backend
+$client = new Google_Client(['client_id' => "989168310652-al6inpe49ep29r9i2ppb0t8j58k1pt22.apps.googleusercontent.com"]);  // Specify the CLIENT_ID of the app that accesses the backend
 
 
 if (isset($id_token) && $id_token) {
