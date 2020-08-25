@@ -15,7 +15,7 @@
 
 <dl class="row">
   <dt class="col-sm-3">Level One: The Unusual Thing</dt>
-  <dd class="col-sm-9">This is an intro to  “game of the scene” work -- meant for new people and vets who want to strengthen game of the scene. Base reality, unusual thing and using walk-ons and tag-outs to support. How to accept/reject offers. Saying why. Class show: monologues and scenes./dd>
+  <dd class="col-sm-9">This is an intro to  “game of the scene” work -- meant for new people and vets who want to strengthen game of the scene. Base reality, unusual thing and using walk-ons and tag-outs to support. How to accept/reject offers. Saying why. Class show: monologues and scenes.</dd>
 
   <dt class="col-sm-3">Leve Two: Character/Monoscene</dt>
   <dd class="col-sm-9">

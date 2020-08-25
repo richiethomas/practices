@@ -119,14 +119,14 @@ function get_reminder_message_data($wk, $xtra, $teacher = false) {
 	}
 	
 	if ($xtra['class_show'] == 1) {
-		$note = "<p>Greetings. ".($teacher ? "You are teaching" :  "You have")." a class show soon! ";
+		$note = "<p>Greetings. ".($teacher ? "You are teaching" :  "You have")." a class show soonish, ";
 	} elseif ($xtra['id']) {
-		$note = "<p>Greetings. ".($teacher ? "You are teaching" :  "You have")." another session of this class soon. ";
+		$note = "<p>Greetings. ".($teacher ? "You are teaching" :  "You have")." another session of this class soonish, ";
 	} else {
-		$note = "<p>Greetings. ".($teacher ? "You are teaching" :  "You are enrolled in")." a class that starts soon. ";
+		$note = "<p>Greetings. ".($teacher ? "You are teaching" :  "You are enrolled in")." a class that starts soonish, ";
 	}
 
-	$note .= "It starts ".\TimeDifference\nicetime($xtra['id'] ? $xtra['start'] : $wk['start']).".</p>\n";
+	$note .= "specifically ".\TimeDifference\nicetime($xtra['id'] ? $xtra['start'] : $wk['start']).".</p>\n";
 	
 	if ($wk['location_id'] == ONLINE_LOCATION_ID) {
 		

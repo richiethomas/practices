@@ -18,13 +18,11 @@
 
 <p>It's difficult to overstate its affect on my life.</p>
 
-<p>From the practice of doing improv: not only did I acquire some basic skills of listening, reacting, seeing patterns and enjoying irony -- but improv helped me believe that I was a creative person, express my sense of humor to other people and in general become the person I dreamed of being! Sheesh.</p>
+<p>From the practice of doing improv: not only did I acquire some basic skills of listening, reacting, seeing patterns and enjoying irony -- but improv helped me believe that I was a creative person, express my sense of humor to other people and in general become the person I dreamed of being!</p>
 
 <p>From the UCB's style of improv in particular, I learned to appreciate that improv has both a creative and an analytical side. It's art and math. They work together to make really interesting and surprising comedy.</p>
 
 <p>From the improv community worlwide, I learned that when an improv theater is working well, it can bring together like-minded people and let them appreciate each other's sensibilities, celebrate each other's creativity and push them to be great artists and people.</p>
-
-<p>Whoa, right?</p>
 
 <p>My dream would be to help other people have even a piece of that experience! Or failing that, at least to enjoy themselves and each other as they become better listeners, actors and comedians.</p>
 
@@ -36,20 +34,20 @@
 
 <dl class="row">
   <dt class="col-sm-3">"long-form"</dt>
-  <dd class="col-sm-9">means freeform scenes that are made up on the spot, like a comedic play. This term is to distinguish it from "short-form" which are highly structured improv "games" like you might see on the show "Whose Line Is It, Anyway?" Short form is fun, but that's not what we teach here.</dd>
+  <dd class="col-sm-9">This means freeform scenes that are made up on the spot, like a comedic play. This term is to distinguish it from "short-form" which are highly structured improv "games" like you might see on the show "Whose Line Is It, Anyway?" Short form is fun, but that's not what we teach here.</dd>
 </dl>
 
 <dl class="row">
   <dt class="col-sm-3">"Chicago style"</dt>
-  <dd class="col-sm-9">means our teaching descends from the improv that has evolved in Chicago starting in the late 1950s. It focuses on mantras of "yes, and" and "truth in comedy" as developed by Del Close and other Chicago teachers. The way we get suggestions, start and end scenes, organize teams all comes from conventions developed in Chicago. This is used in non-American improv communities to distinguish it from other big schools of improv, like the Keith Johnstone teachings, which evolved separately.</dd>
+  <dd class="col-sm-9">This is a term to describe the teaching that descends from the improv that has evolved in Chicago starting in the late 1950s. It focuses on mantras of "yes, and" and "truth in comedy" as developed by Del Close and other Chicago teachers. The way we get suggestions, start and end scenes, organize teams all comes from conventions developed in Chicago. This is used in non-American improv communities to distinguish it from other big schools of improv, like the Keith Johnstone teachings, which evolved separately.</dd>
 </dl>
 
 <dl class="row">
   <dt class="col-sm-3">"game-based"</dt>
-  <dd class="col-sm-9">improv is improv that consciously focuses on finding an unusual thing and heightening it. It focuses on the comedy of the scene. This is a practice developed and championed by the Upright Citizens Brigade Theater (founders trained in Chicago, though their theaters were set up in New York City and Los Angeles).</dd>
+  <dd class="col-sm-9">That describes improv that consciously focuses on finding an unusual thing and heightening it. It focuses on the comedy of the scene. This is a practice developed and championed by the Upright Citizens Brigade Theater (founders trained in Chicago, though their theaters were set up in New York City and Los Angeles).</dd>
 </dl>
 	
-<p>Phew. Honestly, none of that matters too much. If you are interested in learning to do some improv comedy -- making up comedic scenes on the spot without a script -- we can help you do that.</p>
+<p>Honestly, none of that matters too much. If you are interested in learning to do some improv comedy -- making up comedic scenes on the spot without a script -- we can help you do that.</p>
 	
 <h2>Going Forward</h2>
 

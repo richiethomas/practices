@@ -276,7 +276,7 @@ function get_smtp_object() {
 		$params["auth"] = "PLAIN";
 		$params["username"] = 'will@willhines.net';
 		$params["password"] = EMAIL_PASSWORD_LOCAL;
-	} else {
+	} else { // out of date
 		$params["host"] = "ssl://premium44.web-hosting.com";
 		$params["port"] = '465';
 		$params["auth"] = "PLAIN";
