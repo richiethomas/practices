@@ -1,7 +1,20 @@
 <?php
 namespace Reminders;
 
-function check_reminder() {
+
+function get_reminders($how_many = 100) {
+	
+	// check reminder database -- has it been 6 hours?
+	$stmt = \DB\pdo_query("select * from reminder_checks order by id desc limit :howmany", array(':howmany' => $how_many)); 
+	$reminders = array();
+	while ($row = $stmt->fetch()) {
+		$reminders[] = $row;
+	}
+	return $reminders;
+	
+}
+
+function check_reminder($force = false) {
 	
 	/*
 delete from reminder_checks;
@@ -12,7 +25,7 @@ update xtra_sessions set reminder_sent = 0;
 	// check reminder database -- has it been 6 hours?
 	$stmt = \DB\pdo_query("select * from reminder_checks order by id desc limit 1"); // most recent check
 	while ($row = $stmt->fetch()) {
-		if ((time() - strtotime($row['time_checked'])) / 3600 <= 6) { return false; } // checked less than six hours ago
+		if ((time() - strtotime($row['time_checked'])) / 3600 <= 4 && ($force !== true)) { return false; } // checked less than six hours ago
 		 
 	}
 	

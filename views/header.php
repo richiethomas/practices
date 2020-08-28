@@ -90,6 +90,7 @@ if (strpos($sc, 'admin') !== false && \Users\check_user_level(2)) {
 <?php	
 	echo nav_link($sc, 'admin_listall.php', 'all workshops', 'book');
 	echo nav_link($sc, 'admin_teachers.php', 'teachers', 'star');
+	echo nav_link($sc, 'admin_reminders.php', 'reminders', 'lightbulb');
 	echo "</ul>\n";
 	
 } else {
