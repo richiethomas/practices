@@ -50,11 +50,22 @@ switch ($ac) {
 		$logger->info($message);
 		break;
 
-	case 'remind':
-		$reminder = Reminders\get_reminder_message_data($wk);
-		$subject = $reminder['subject'];
-		$note = $reminder['note'];
-		$sms = $reminder['sms'];
+	case 'emails':
+
+		$students = Enrollments\get_students($wk['id'], $stid);
+
+		$names = array();
+		$just_emails = array();
+		foreach ($students as $s) {
+			$names[] = "{$s['nice_name']} - {$s['email']}";
+			$just_emails[] = "{$s['email']}";
+		}
+		sort($names);
+		sort($just_emails);
+
+		$subject = "emails for '{$wk['title']}'";
+		$note = "Here is the list of emails for your class. First is just the emails. Then is a list of the person's name next to the email. Unless I (the computer) do not know their name, in which case it's just their email again.\n\n".implode("\n", $just_emails)."\n\n".implode(",\n", $names);
+		$sms = null;
 		$st = ENROLLED; // pre-populating the status drop in 'send message' form
 		break;
 

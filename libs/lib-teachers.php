@@ -125,10 +125,10 @@ function get_teacher_photo_src($uid) {
 	}
 }
 
-function teacher_photo($uid) {
+function teacher_photo($uid, $xtra_classes = null) {
 	if ($src = get_teacher_photo_src($uid)) {
 		$row = is_teacher($uid);
-		return "<a href='teachers.php?tid={$row['id']}'><img class='img-fluid border' src='$src'></a>";
+		return "<a href='teachers.php?tid={$row['id']}'><img class='img-fluid border $xtra_classes' src='$src'></a>";
 	}
 	return "";
 }

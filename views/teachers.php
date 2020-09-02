@@ -15,7 +15,8 @@ echo "<p>".preg_replace('/\R/', "<br>", $f['bio'])."</p>\n";
 if (count($f['classes']) > 0) {
 	echo "<p>Upcoming classes for {$f['nice_name']}:<ul>\n";
 	foreach ($f['classes'] as $c) {
-		echo "	<li><a href=\"workshop.php?wid={$c['id']}\">{$c['title']}</a></li>\n";
+		$c['when'] = \XtraSessions\add_sessions_to_when($c['when'], $c['sessions']);
+		echo "	<li><a href=\"workshop.php?wid={$c['id']}\">{$c['title']}</a>, {$c['capacity']} people max, \${$c['cost']} USD<br><div class='mx-4'>{$c['when']}</div></li>\n";
 	}
 	echo "</ul></p>\n";
 }

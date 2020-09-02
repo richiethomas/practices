@@ -3,7 +3,7 @@
 		echo  "<div class='row'><div class='col-md-6'><h2>emails for <a href='admin_edit.php?wid={$wk['id']}'>{$wk['title']}</a></h2>";
 		echo  "<p>(Will replace TITLE in subject or note. Also, practice info is appended to message.)</p>\n";
 		echo  "<div class='well'><h3>Send Message 
-			<small><a href='$sc?ac=remind&wid={$wk['id']}'>reminder</a> / 
+			<small><a href='$sc?ac=emails&wid={$wk['id']}'>emails</a> / 
 		<a href='$sc?ac=feedback&wid={$wk['id']}'>feedback</a> / <a href='$sc?ac=cancel&wid={$wk['id']}'>cancel</a></small>
 		</h3>
 			<form action ='$sc' method='post'>".

@@ -13,10 +13,10 @@
 	<div class="row justify-content-center m-3 ">	
 		<div class="col-sm-3 p-3 border border-dark text-center workshop-danger">	
 			<h3 class="workshop-danger p-3"><a href="news.php">News</a></h3>
-			<h4>Jams!</h4>
-				<p>Friday August 28</p>
-				<p>Jams 11am and 5pm PDT</p>
-			<p>Come play. Details on the <a href="news.php">news page</a></p>
+			<h4>Monologue Show</h4>
+				<p>Friday September 4,<br>11am and 5pm PDT</p>
+				<p>Sign up in advance with a team you pick, or just show up.</p>
+			<p>Details on the <a href="news.php">news page</a></p>
 		</div>			
 		<div class="col-sm-8 p-3"> 
 <p class="lead">Welcome to the World's Greatest Improv School. We teach online classes in long-form improv, character and sketch. 

@@ -54,11 +54,12 @@ echo "<div class='row mt-md-3 admin-edit-workshop'>\n";
 		
 		echo  "<h3>Cut-and-paste roster</h3>\n";
 		echo  Wbhkit\textarea('roster',
-			"{$wk['title']} - {$wk['showstart']}\n".
+			preg_replace("/\n\n+/", "\n\n", "{$wk['title']} - {$wk['showstart']}\n".
 			($wk['location_id'] == ONLINE_LOCATION_ID ? "{$wk['online_url']}\n" : '').
 			"\n".
 			implode("\n", $names).
-			"\n\n".implode(",\n", $just_emails).$class_dates, 
+			"\n\n".implode(",\n", $just_emails).
+			$class_dates), 
 		0);			
 		
 		
