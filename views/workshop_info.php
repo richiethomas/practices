@@ -18,9 +18,7 @@ echo "
 <h2>{$wk['title']}</h2>
 <p>{$wk['notes']}</p>
 {$wk['when']} (".TIMEZONE.")<br><br>
-{$wk['costdisplay']}, {$wk['enrolled']} (of {$wk['capacity']}) enrolled, ".($wk['waiting']+$wk['invited'])." waiting<br><br>
-
-$names_list</div>
+{$wk['costdisplay']}, {$wk['enrolled']} (of {$wk['capacity']}) enrolled, ".($wk['waiting']+$wk['invited'])." waiting</div>
 <div class='col-sm-6'>
 <figure class=\"figure\">
   ".\Teachers\teacher_photo($wk['teacher_user_id'], " figure-img rounded")."

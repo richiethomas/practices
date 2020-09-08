@@ -25,6 +25,7 @@ function fill_out_workshop_row($row, $get_enrollment_stats = true) {
 	if ($row['when_public'] == 0 ) {
 		$row['when_public'] = '';
 	}
+	$row['soldout'] = 0; // so many places in the code refer to this
 	$row = format_workshop_startend($row);
 	
 	
@@ -80,7 +81,6 @@ function fill_out_workshop_row($row, $get_enrollment_stats = true) {
 	}
 	$row = check_last_minuteness($row);
 	
-	$row['soldout'] = 0;
 	if ($get_enrollment_stats) {
 		$row = set_enrollment_stats($row);
 		if ($row['enrolled'] >= $row['capacity'] || $row['waiting'] > 0 || $row['invited'] > 0) { 
@@ -151,33 +151,6 @@ function check_last_minuteness($wk) {
 		}
 	}
 	return $wk;
-}
-
-
-function get_workshop_info_tabled($wk) {
-	
-	global $view;
-	$stds = \Enrollments\get_students($wk['id']);
-
-	$snames = array();
-	foreach ($stds as $s) {
-		if ($s['display_name']) {
-			$snames[] = $s['display_name'];
-		}
-	}
-	$known = count($snames);
-	
-	$names_list = '';
-	if ($known) {
-		natcasesort($snames);
-		$names_list = implode("<br>", $snames);
-		if ($known < $wk['enrolled']) {
-			$names_list .= "<br>plus ".($wk['enrolled']-$known)." more.";
-		}
-		$names_list = "Currently Registered:<br>{$names_list}";
-	}
-	$view->data['names_list'] = $names_list;
-	return $view->renderSnippet('workshop_info');
 }
 
 function get_workshops_dropdown($start = null, $end = null) {

@@ -13,9 +13,8 @@
 	<div class="row justify-content-center m-3 ">	
 		<div class="col-sm-3 p-3 border border-dark text-center workshop-danger">	
 			<h3 class="workshop-danger p-3"><a href="news.php">News</a></h3>
-			<h4>Monologue Show</h4>
-				<p>Friday September 4,<br>11am and 5pm PDT</p>
-				<p>Sign up in advance with a team you pick, or just show up.</p>
+			<h4>No Show Sept 11</h4>
+				<p>Next show Fri Sep 18</p>
 			<p>Details on the <a href="news.php">news page</a></p>
 		</div>			
 		<div class="col-sm-8 p-3"> 

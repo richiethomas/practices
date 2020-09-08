@@ -130,7 +130,7 @@ if (Workshops\is_public($wk)) {
 if (isset($wk) && isset($wk['id']) && $wk['id']) {
 	$wk = Workshops\fill_out_workshop_row($wk);
 	$view->data['e'] = Enrollments\get_an_enrollment($wk, $u);
-	$view->data['workshop_tabled'] = Workshops\get_workshop_info_tabled($wk);
+	$view->data['workshop_tabled'] = $view->renderSnippet('workshop_info');
 	$view->data['admin'] = 0;
 	$heading = $wk['title'];
 	$view->renderPage('winfo');

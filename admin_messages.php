@@ -4,6 +4,7 @@ include 'lib-master.php';
 
 $mess_vars = array('st', 'note', 'subject', 'sms', 'cancellation');
 Wbhkit\set_vars($mess_vars);
+if (!$st) { $st = ENROLLED; }
 
 $long_where = "{$wk['place']} {$wk['lwhere']}";
 
@@ -52,7 +53,7 @@ switch ($ac) {
 
 	case 'emails':
 
-		$students = Enrollments\get_students($wk['id'], $stid);
+		$students = Enrollments\get_students($wk['id'], $st);
 
 		$names = array();
 		$just_emails = array();
@@ -64,7 +65,7 @@ switch ($ac) {
 		sort($just_emails);
 
 		$subject = "emails for '{$wk['title']}'";
-		$note = "Here is the list of emails for your class. First is just the emails. Then is a list of the person's name next to the email. Unless I (the computer) do not know their name, in which case it's just their email again.\n\n".implode("\n", $just_emails)."\n\n".implode(",\n", $names);
+		$note = "Here is the list of emails for your class. First is just the email addresses, ready to be cut-and-pasted into a blank email. Then it's a list of the emails with their actual human names. Unless I (the computer) do not know their name, in which case it's just their email again.\n\n".implode("\n", $just_emails)."\n\n".implode(",\n", $names);
 		$sms = null;
 		$st = ENROLLED; // pre-populating the status drop in 'send message' form
 		break;
