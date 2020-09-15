@@ -30,7 +30,7 @@ define('LOCAL', ($_SERVER['SERVER_NAME'] == 'localhost') ? true : false);
 define('DEBUG_MODE', true);
 define('DEBUG_LOG', 'info.txt');
 define('ERROR_LOG', 'error_log');
-define('URL', "http://{$_SERVER['HTTP_HOST']}/");
+define('URL', "https://{$_SERVER['HTTP_HOST']}/");
 define('ONLINE_LOCATION_ID', 8);
 define('TIMEZONE', 'PDT');
 define('LATE_HOURS', 12);

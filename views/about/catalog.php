@@ -70,8 +70,12 @@ Working on game, but through character. Turning points-of-view and character ene
 <p>Two hours, eight people, $40</p>
 
 <dl class="row">
+  <dt class="col-sm-3">Be A Better Unusual and Voice Of Reason</dt>
+  <dd class="col-sm-9"> This workshop will help give you more experience with both Unusual and Voice of Reason characters. We will work together to help bring your voice to both POV's in order to create fun and Interesting scenes that you will then heighten.</dd>
+  
   <dt class="col-sm-3">Having Fun With The Why</dt>
   <dd class="col-sm-9">Ever think after a scene "I gave a justification, why did that scene suck?" This workshop will help you push past the initial why and get you to the real why of the scene. Leading you to easier more fun games to play.</dd>
+  
 </dl>
 
 

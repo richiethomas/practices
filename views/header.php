@@ -58,6 +58,13 @@ li.show {
 
 </style>
 
+<?php
+if (isset($fb_image)) {
+	echo "<meta property=\"og:image\" content=\"{$fb_image}\">\n";
+}
+?>
+
+
 </head>
 <body>
 

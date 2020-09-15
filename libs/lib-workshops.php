@@ -432,3 +432,39 @@ function is_complete_workshop($wk) {
 	return false;
 }
 
+function get_cut_and_paste_roster($wk, $enrolled = null) {
+	$names = array();
+	$just_emails = array();
+	
+	if (!isset($enrolled)) {
+		$enrolled = \Enrollments\get_students($wk['id'], ENROLLED);
+	}
+
+	foreach ($enrolled as $s) {
+		$names[] = "{$s['nice_name']} {$s['email']}";
+		$just_emails[] = "{$s['email']}";
+	}
+	sort($names);
+	sort($just_emails);
+	
+	$class_dates = $wk['when']."\n";
+	if (!empty($wk['sessions'])) {
+		foreach ($wk['sessions'] as $s) {
+			$class_dates .= "{$s['friendly_when']}".($s['class_show'] ? ' (show)': '').
+			($s['online_url'] ? " - {$s['online_url']}" : '')."\n";
+		}
+	}
+	if ($class_dates) {
+		$class_dates = "\n\nClass Dates:\n{$class_dates}";
+	}
+	
+	return 
+		preg_replace("/\n\n+/", 
+					"\n\n", 
+					"{$wk['title']} - {$wk['showstart']}\n".
+					"Zoom link: ".($wk['location_id'] == ONLINE_LOCATION_ID ? "{$wk['online_url']}\n" : '').
+					"\nNames and Emails\n---------------\n".implode("\n", $names)."\n\nJust the emails\n---------------\n".implode(",\n", $just_emails).
+					$class_dates);
+	
+}
+

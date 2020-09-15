@@ -31,36 +31,9 @@ echo "<div class='row mt-md-3 admin-edit-workshop'>\n";
 		echo "</form>\n";		
 		
 		
-		//cut-and-paste roster
-		$names = array();
-		$just_emails = array();
-		foreach ($lists[ENROLLED] as $s) {
-			$names[] = "{$s['nice_name']} {$s['email']}";
-			$just_emails[] = "{$s['email']}";
-		}
-		sort($names);
-		sort($just_emails);
-		
-		$class_dates = $wk['when']."\n";
-		if (!empty($wk['sessions'])) {
-			foreach ($wk['sessions'] as $s) {
-				$class_dates .= "{$s['friendly_when']}".($s['class_show'] ? ' (show)': '').
-				($s['online_url'] ? " - {$s['online_url']}" : '')."\n";
-			}
-		}
-		if ($class_dates) {
-			$class_dates = "\n\nClass Dates:\n{$class_dates}";
-		}
-		
+		$roster = Workshops\get_cut_and_paste_roster($wk, $lists[ENROLLED]);
 		echo  "<h3>Cut-and-paste roster</h3>\n";
-		echo  Wbhkit\textarea('roster',
-			preg_replace("/\n\n+/", "\n\n", "{$wk['title']} - {$wk['showstart']}\n".
-			($wk['location_id'] == ONLINE_LOCATION_ID ? "{$wk['online_url']}\n" : '').
-			"\n".
-			implode("\n", $names).
-			"\n\n".implode(",\n", $just_emails).
-			$class_dates), 
-		0);			
+		echo  Wbhkit\textarea('roster', $roster, 0);			
 		
 		
 		echo  $status_log; // from a snippet "admin_status"

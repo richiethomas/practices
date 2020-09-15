@@ -11,8 +11,6 @@ function centralized_email($to, $sub, $body) {
 		
 	global $logger;	
 		
-	// connect to SMTP
-	$smtp = get_smtp_object();
 	
 	$crlf = "\n";
 	$headers = array(
@@ -28,7 +26,9 @@ function centralized_email($to, $sub, $body) {
 
 
 	  if (LOCAL) {
- 	 	 $sent = $smtp->send($to, $headers, $body);  // laptop can use the SMTP server on willhines.net
+	  	// connect to SMTP
+		$smtp = get_smtp_object();
+ 	 	$sent = $smtp->send($to, $headers, $body);  // laptop can use the SMTP server on willhines.net
  	  } else {
 		  unset($headers['Subject']);
 		  unset($headers['To']);
@@ -119,6 +119,13 @@ function confirm_email($wk, $u, $status_id = ENROLLED) {
 				$late .= "<br><i>".get_dropping_late_warning()."</i>";
 			}
 			$call = "If you change your mind, re-enroll here:\n{$enroll}";
+			
+			// tell webmaster if this person needs a refund
+			if ($e['paid'] == 1) {
+				centralized_email(WEBMASTER, "refund requested", "<p>{$u['nice_name']} just dropped from the class '{$wk['title']}', and had already paid</p><p>See workshop info: ".URL."admin_edit.php?wid={$wk['id']}</p>");
+			}
+			
+			
 			break;
 		default:
 			$sub = "{$statuses[$status_id]}: {$wk['title']}";

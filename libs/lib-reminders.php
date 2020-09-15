@@ -96,9 +96,16 @@ function remind_enrolled($class) {
 	}
 	//remind teacher
 	if (!LOCAL) {
+				
 		$trans = URL."workshop.php?key={$wk['teacher_key']}&wid={$wk['id']}";
 		$teacher_reminder = get_reminder_message_data($wk, $xtra, true);
 		$msg = $teacher_reminder['note']."<p>Class info online:<br>$trans</p>\n";
+		
+		if (!$xtra['id']) { // is it first session? send teacher the roster
+			$msg .= "<h3>List of students in your class</h3>\n".
+				preg_replace('/\n/', "<br>\n", \Workshops\get_cut_and_paste_roster($wk));
+		}
+		
 		\Emails\centralized_email($wk['teacher_email'], $teacher_reminder['subject'], $msg);
 	}
 	
