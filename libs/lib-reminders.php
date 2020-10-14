@@ -83,6 +83,16 @@ function remind_enrolled($class) {
 	$base_msg =	$note.\Emails\get_workshop_summary($wk);
 
 	foreach ($stds as $std) {
+		
+		// add note if student has to pay
+		$note = $reminder['note'];
+		if (!$std['paid'] && $wk['cost']) {
+			$note .= "<p>Our records show you have not yet paid. If that's true, please pay {$wk['cost']} USD via venmo @willhines or paypal whines@gmail.com.<br>
+If you've got  questions/concerns about this, send them to ".WEBMASTER."</p>";
+		}
+		$base_msg =	$note.\Emails\get_workshop_summary($wk);
+		
+		
 		$key = \Users\get_key($std['id']);
 		$trans = URL."workshop.php?key=$key&wid={$wk['id']}";
 		$msg = $base_msg."<p>Class info online:<br>$trans</p>\n";
@@ -150,7 +160,7 @@ function get_reminder_message_data($wk, $xtra, $teacher = false) {
 	
 	if ($wk['location_id'] == ONLINE_LOCATION_ID) {
 		
-		$note .= "<p>Here's the link: ".($xtra['online_url'] ? $xtra['online_url'] : $wk['online_url'])."</p>\n";  
+		$note .= "<p>Here's the zoom link: ".($xtra['online_url'] ? $xtra['online_url'] : $wk['online_url'])."</p>\n";  
 		// should be workshop url or xtra_session url, set in lib_workshops.php fill_out_workshop_row
 		if ($xtra['online_url']) {
 			$note .= "<p>Please note: this is a DIFFERENT LINK than you usually use for this class!</p>\n";
@@ -161,8 +171,8 @@ function get_reminder_message_data($wk, $xtra, $teacher = false) {
 		}
 
 		
-
 	}			
+	
 	$sms = "Reminder: {$wk['title']} ".($xtra['class_show'] ? 'class show' : 'class').", {$wk['nextstart']}, ".URL;
 	
 	return array(
