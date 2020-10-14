@@ -110,7 +110,7 @@ function remind_enrolled($class) {
 	}
 	
 	// if not full -- point it out to Will
-	if ($wk['enrolled'] < $wk['capacity']) {
+	if ($wk['enrolled'] < $wk['capacity'] && !LOCAL) {
 		
 		$alert_msg = "'{$wk['title']}' is not full. {$wk['enrolled']} of {$wk['capacity']} signed up<br>\n".
 			URL."admin_edit.php?wid={$wk['id']}<br>\n".

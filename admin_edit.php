@@ -18,7 +18,7 @@ switch ($ac) {
 
 
 	case 'sar':
-		Emails\remind_enrolled($wk);
+		Reminders\remind_enrolled($wk);
 		$message = "Reminders sent to enrolled.";
 		break;
 

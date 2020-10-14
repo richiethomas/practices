@@ -11,6 +11,8 @@
 <h4>Revised: Fall 2020</h4>
 <p>Each one of these is five two-hour sessions, plus a show. 8 students per class, $220 each.</p>
 
+<p>The next round of classes will start in early November. THey will be posted in the last week or so of October. Join the mailing list to be notified when they go up.</p>
+
 <p>Here's my thing with "levels": they are suggestions. I've numbered them in the order that I think is the most helpful. But this is a small community of students who mostly have studied improv already. So be your own judge. If you're itching to learn about The Harold, jump in there. Conversely, if you're sick of the Harold, try level 2 (chracter/monoscene). THAT SAID: If you've NEVER really done "game of the scene" style improv, I suggest level one first. Don't let "level one" fool you -- it's not a beginner's class. It's just the one that the other three are built on.</p>
 
 <dl class="row">

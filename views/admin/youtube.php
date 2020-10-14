@@ -38,21 +38,10 @@
 	
 <h2 class="mt-4">Ending the Stream</h2>
 <ol>
-	<li>First, in Zoom, in the bottom toolbar, click "more" and then "stop live stream" -> this stops the stream.</li>
-	<?php echo img_link("assets/ay_stream/ay_stopstream.png"); ?>
-	
-	<li>Now we have to tell YouTube the stream has stopped. Go to http://studio.youtube.com/</li>
-	<li>Look in the upper right hand corner. Make sure this is the "WG Improv School" channel. If not, click the icon in the upper right hand corner (probably your google icon). A menu drops down. Pick "Switch Account." Another little menu pops up. Pick "WG Improv School"</li>
-	<?php echo img_link("assets/ay_stream/ay_switchaccount.png"); ?>
-	<?php echo img_link("assets/ay_stream/ay_wgimprovaccount.png"); ?>
-	<?php echo img_link("assets/ay_stream/ay_rightaccount.png"); ?>
-	
-	<li>Once you're in the studio page for WG Improv School, on the left, click "videos."</li>
-	<li>Then over the list of videos click "live"</li>
-	<li>The most recent live video will be your zoom stream. Next to it click "view in live control room"</li>
-	<?php echo img_link("assets/ay_stream/ay_livecontrolroom.png"); ?>
-	
-	<li>Yet another screen pops up. At the top right, you'll see "End stream" -> click that.</li>
+	<li>Go to the YouTube page showing your video.</li>
+	<li>Upper right: click the "create" button (with a little camera icon). A drop down menu appears. Select "Go Live."</li>
+<li>You'll see a list of videos. The top one should be your video that was streaming. Click it (title or thumbnail).</li>
+<li>On the next screen, at the top right, you'll see "End stream" -> click that.</li>
 	<?php echo img_link("assets/ay_stream/ay_endstream.png"); ?>
 	<li>That's it!</li>
 	

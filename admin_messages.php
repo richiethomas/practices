@@ -9,7 +9,7 @@ if (!$st) { $st = ENROLLED; }
 $long_where = "{$wk['place']} {$wk['lwhere']}";
 
 // multiple sessions?
-$wk['when'] = \XtraSessions\add_sessions_to_when($wk['when'], $wk['sessions']);
+//$wk['when'] = \XtraSessions\add_sessions_to_when($wk['when'], $wk['sessions']);
 
 switch ($ac) {
 			
@@ -51,21 +51,11 @@ switch ($ac) {
 		$logger->info($message);
 		break;
 
-	case 'emails':
+	case 'roster':
 
-		$students = Enrollments\get_students($wk['id'], $st);
+		$subject = "full class info for '{$wk['title']}'";
+		$note = "Hi! You are a student in the class '{$wk['title']}' from WGIS. Below is some info you might need. You might want to save this one. It's got your zoom link, list of class dates (some of which might have different zoom links) and a list of your classmates.\n\n".\Workshops\get_cut_and_paste_roster($wk);
 
-		$names = array();
-		$just_emails = array();
-		foreach ($students as $s) {
-			$names[] = "{$s['nice_name']} - {$s['email']}";
-			$just_emails[] = "{$s['email']}";
-		}
-		sort($names);
-		sort($just_emails);
-
-		$subject = "emails for '{$wk['title']}'";
-		$note = "Here is the list of emails for your class. First is just the email addresses, ready to be cut-and-pasted into a blank email. Then it's a list of the emails with their actual human names. Unless I (the computer) do not know their name, in which case it's just their email again.\n\n".implode("\n", $just_emails)."\n\n".implode(",\n", $names);
 		$sms = null;
 		$st = ENROLLED; // pre-populating the status drop in 'send message' form
 		break;
@@ -81,16 +71,7 @@ No worries if you'd rather not answer! Thank you all again for taking it!
 -Will";
 		$st = ENROLLED; // pre-populating the status drop in 'send message' form
 		break;
-
-
-	case 'cancel':
-		$subject = "{$wk['title']}";
-		$note = "<p>I had to cancel this workshop! I'm so sorry.<br>-Will</p>";
-		$st = ENROLLED; // pre-populating the status drop in 'send message' form
-		$sms = "Workshop cancelled: {$wk['title']}";
-		$cancellation = 1;
-		break;
-						
+		
 }
 if (!$wk['id']) {
 	$view->renderPage('admin/error');	

@@ -455,16 +455,16 @@ function get_cut_and_paste_roster($wk, $enrolled = null) {
 		}
 	}
 	if ($class_dates) {
-		$class_dates = "\n\nClass Dates:\n{$class_dates}";
+		$class_dates = "\n\nClass Sessions:\n(some sessions may their own zoom links)\n------------\n{$class_dates}";
 	}
 	
 	return 
 		preg_replace("/\n\n+/", 
 					"\n\n", 
-					"{$wk['title']} - {$wk['showstart']}\n".
-					"Zoom link: ".($wk['location_id'] == ONLINE_LOCATION_ID ? "{$wk['online_url']}\n" : '').
-					"\nNames and Emails\n---------------\n".implode("\n", $names)."\n\nJust the emails\n---------------\n".implode(",\n", $just_emails).
-					$class_dates);
+					"{$wk['title']} - {$wk['showstart']}\n\n".
+					"Main zoom link:\n".($wk['location_id'] == ONLINE_LOCATION_ID ? "{$wk['online_url']}\n" : '').
+						$class_dates.
+					"\nNames and Emails\n---------------\n".implode("\n", $names)."\n\nJust the emails\n---------------\n".implode(",\n", $just_emails));
 	
 }
 
