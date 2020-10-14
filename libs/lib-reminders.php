@@ -87,7 +87,7 @@ function remind_enrolled($class) {
 		// add note if student has to pay
 		$note = $reminder['note'];
 		if (!$std['paid'] && $wk['cost']) {
-			$note .= "<p>Our records show you have not yet paid. If that's true, please pay {$wk['cost']} USD via venmo @willhines or paypal whines@gmail.com.<br>
+			$note .= "<p>Our records show you have not yet paid. If that's true, please pay by the beginning of class. Send {$wk['cost']} USD via venmo @willhines or paypal whines@gmail.com.<br>
 If you've got  questions/concerns about this, send them to ".WEBMASTER."</p>";
 		}
 		$base_msg =	$note.\Emails\get_workshop_summary($wk);
