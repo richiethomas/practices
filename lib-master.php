@@ -29,7 +29,7 @@ spl_autoload_register(function ($className) {
 define('LOCAL', ($_SERVER['SERVER_NAME'] == 'localhost') ? true : false);
 define('DEBUG_MODE', true);
 define('DEBUG_LOG', 'info.txt');
-define('ERROR_LOG', 'error_log');
+define('ERROR_LOG', 'error_log.txt');
 define('URL', "https://{$_SERVER['HTTP_HOST']}/");
 define('ONLINE_LOCATION_ID', 8);
 define('TIMEZONE', 'PDT');

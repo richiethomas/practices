@@ -13,7 +13,7 @@
 	<div class="row justify-content-center m-3 ">	
 		<div class="col-sm-3 p-3 border border-dark text-center workshop-danger">	
 			<h3 class="workshop-danger p-3"><a href="news.php">News</a></h3>
-			<h4>Friday Oct 16 Shows</h4>
+			<h4>Friday Oct 23 Shows</h4>
 				<p>Jams</p>
 				<p>11am, 5pm (PDT)</p>
 			<p>Details on the <a href="news.php">news page</a></p>
