@@ -11,11 +11,16 @@
 			foreach ($results as $stid => $students) {
 				$status_name = $statuses[$stid];
 				$es = '';
-				foreach ($students as $semail) {
-					$es .= "{$semail}\n";
+				$nn = '';
+				foreach ($students['emails'] as $email) {
+					$es .= "{$email},\n";
 				}
-				echo "<h3>{$status_name} (".count($students).")</h3>\n";
-				echo Wbhkit\textarea($status_name, $es, 0);
+				foreach ($students['nice_names'] as $nname) {
+					$nn .= "{$nname},\n";
+				}
+					echo "<h3>{$status_name} (".count($students['emails']).")</h3>\n";
+				echo Wbhkit\textarea($status_name.'-emails', $es, 0);
+				echo Wbhkit\textarea($status_name.'-names', $nn, 0);
 
 			}
 			
