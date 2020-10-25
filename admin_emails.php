@@ -19,7 +19,8 @@ if (is_array($workshops)) {
 				foreach ($stds as $as) {		
 					
 					// track students by status		
-					$students[] = $as['email'];
+					$student_emails[] = $as['email'];
+					$student_names[] = $as['nice_name'];
 					
 					// also tally who paid
 					if ($as['status_id'] == ENROLLED and $as['paid'] == 0) {
@@ -30,9 +31,13 @@ if (is_array($workshops)) {
 			}
 		}
 				
-		$students = array_unique($students);
-		natcasesort($students);
-		$results[$stid] = $students; // attach list of students
+		$student_emails = array_unique($student_emails);
+		natcasesort($student_emails);
+		$results[$stid]['emails'] = $student_emails; // attach list of students
+
+		$student_names = array_unique($student_names);
+		natcasesort($student_names);
+		$results[$stid]['nice_names'] = $student_names; // attach list of students
 		
 		// also unpaid
 		$unpaid = array_unique($unpaid);
