@@ -1,178 +1,89 @@
-
-<?php if ($link_email_sent_flag) { ?>
-	
+<?php if ($link_email_sent_flag) { ?>	
 <script type="text/javascript">
     $(window).on('load',function(){
         $('#checkYourEmail').modal('show');
     });
 </script>	
-
-	
 <?php } ?>
-	
-	<div class="row justify-content-center m-3 ">	
-		<div class="col-sm-3 p-3 border border-dark text-center workshop-danger">	
-			<h3 class="workshop-danger p-3"><a href="news.php">News</a></h3>
-
-			<h4>Friday Jams</h4>
-				<p>11am, 5pm (PDT)</p>
-			<p>Details on the <a href="news.php">news page</a></p>
-		</div>			
-		<div class="col-sm-8 p-3"> 
-<p class="lead">Welcome to the World's Greatest Improv School. We teach online classes in long-form improv, character and sketch. 
-	
-	<p>Learn more about...
-	<ul>
-		<li>the <a href="about_school.php">school</a></li>
-		<li>the <a href="about_catalog.php">courses</a> we offer</li>
-		<li><a href="about_works.php">how it works</a>: signing up, privacy, paying</li>
-	</ul></p>
-	
-		</div>
-	</div>
 
 <?php if (Users\logged_in() && !$u['display_name']) { ?>	
-		
-			<div class="alert alert-info" role="alert">
-			<p>Would you mind entering a name? Nickname is fine.</p>
-		<?php echo Users\edit_display_name($u); ?>
-			</div>
+		<div class="alert alert-info" role="alert">
+		<p>Would you mind entering a name? Nickname is fine.</p>
+	<?php echo Users\edit_display_name($u); ?>
+		</div>
 <?php 		}  ?>
 	
 
-
-<!-- Log in section -->
-
-
-<?php 		
-
-if (Users\logged_in()) { ?>		
-<div id= "login_prompt" class='row mb-md-4 bg-info p-3'>
-	<div class='col-md-12'>
-		<p>Welcome, you are logged in as <strong><?php echo $u['nice_name']; ?></strong>.
-   
-   <?php if (Users\check_user_level(2)) { ?>
-   
-      	<a class='btn btn-outline-light m-2' href='admin.php'><span class="oi oi-clipboard" title="clipboard" aria-hidden="true"></span> admin site</a> 
-	  
-   <?php } // end of check user level 2
-   ?> 
-   
-	<a class='btn btn-outline-light m-2' href='you.php'><span class="oi oi-person" title="person" aria-hidden="true"></span> edit your info</a>
-	<a class='btn btn-outline-light m-2' href="<?php echo $sc; ?>?ac=lo"><span class="oi oi-account-logout" title="account-logout" aria-hidden="true"></span> log out of willhinesimprov.com</a></p>				
+<main role="main">
+  <!-- Main jumbotron for a primary  message -->
+  <div class="jumbotron">
+	<div class="container-lg container-fluid">
+	  <div class="row align-items-center justify-content-center">
+		<p class="col-12 col-sm-10 col-md-8">We teach online classes in <span class="color-long-form-improv">long-form improv</span>. <!--<span class="color-character">character</span> and <span class="color-sketch">sketch</span>.--></p>
+	  </div>
+	  <div class="row news-summary pb-4">
+		<div class="col-12 d-flex align-items-start justify-content-start ">
+		  <span class="badge badge-pill badge-primary h6"><a href="news.php">News</a></span>
+		  <span class="h6 news-item pl-1">Online jams every Friday for current/former students! <a href="news.php">See details</a>.</span>
+		</div>
+	  </div>
 	</div>
-
-</div> <!--// end of logged in -->
-
-
-<?php } else { ?>
-
-
-<script type="text/javascript">
-	function onSignIn(googleUser) {
-		console.log('inside onSignIn');
-	  var id_token = googleUser.getAuthResponse().id_token;
-	  var xhr = new XMLHttpRequest();
-	  xhr.open('POST', 'https://wgimprovschool.com/gsign.php');
-	  xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-	  xhr.onload = function() {
-	    console.log('Signed in as: ' + xhr.responseText);
-		createInput(xhr.responseText);
-		$("#google-signinbutton").hide();
-		$("#google-signout").show();
-	  };
-	  xhr.send('idtoken=' + id_token);
-	}
-
-	function createInput(key){
-	    var $input = $('<p>Connected to Google! <a class="btn btn-primary" href="index.php?key='+key+'">Log in to wgimprovschool.com</a></p>');
-	    $input.appendTo($("#google-authenticated"));
-	}
-
-  function signOut() {
-    var auth2 = gapi.auth2.getAuthInstance();
-    auth2.signOut().then(function () {
-      console.log('User signed out.');
-	  window.location.reload(false); 
-    });
-  }
-</script>
-
-<div id= "login_prompt" class='row bg-info p-3'>
-	<div class="col-sm-12">
-		<h2 class="text-center">Two Ways to Log In</h2>
-	</div>
-</div>
-<div id= "login_prompt" class='row bg-info p-3'>
-	<div class="col p-3 bg-warning">
-		<h2>We Email You A Link</h2>
-		<?php echo \Wbhkit\form_validation_javascript('log_in'); ?>
-	
-		<form id='log_in' action='<?php echo $sc; ?>' method='post' novalidate>
-		<?php echo \Wbhkit\hidden('ac', 'link').
-		\Wbhkit\texty('email', $email, 'Email', 'something@something.com', 'We will send you a email, click the link there.', 'Must be a valid email you have access to', ' required ', 'email').
-		\Wbhkit\submit('Log In'); ?>
-		</form>
-	</div>
-	<div class="col-sm-1 align-self-center">
-		<h3>Or</h3>
-	</div>
-	
-	<div class="col p-3 bg-warning">
-		<h2>Sign in Via Google</h2>
-		<div id="google-signinbutton" class="g-signin2" data-onsuccess="onSignIn"></div> 
-		<p id="google-signout" class="my-3">Want to sign-out of Google? <a class="text-dark" href="#" onclick="signOut();">(Click here)</a></p>
-		<div id="google-authenticated"></div>
-	</div>
-  
-</div> <!--// end of login prompt-->
-  
-<?php } // end of "is user logged in?"
-?>
-
-
-
-<?php
-if (count($unavailable_workshops) > 0) {
-	include 'unavailable_workshops.php';	
-} 
-?>
-
-
-
-		<div class='row mb-md-4'><div class='col'>
-		<h2>Current / Upcoming Classes</h2> 
-		<p class='mx-4''>Join the mailing list (bottom of page) to be notified on new classes first.</p>
-		<?php echo $upcoming_workshops; ?>
-		</div></div> <!-- end of col and row -->
-	
-	
-			<div class="row border-top border-bottom py-3 bg-light">					
-				<div class="col"> 
-					<h2>Buy This Book</h2>
-	<p class="lead">If the workshops are sold out, you could buy "How to Be the Greatest Improviser on Earth" written by Will Hines, the founder of this school. Print and digital versions <a href="https://www.amazon.com/dp/0982625723">on Amazon</a>. You could also buy a much prettier digital version from Will's <a href="http://www.improvnonsense.com/">personal online bookstore</a>.</p>
+  </div>
+  <div id="classes">
+	<div class="container-fluid classes-header container-header-banner"><h3 class="container-lg container-fluid"><a href="/classes">Current & Upcoming Classes</a></h3></div>
+	<h4 class="text-center class-time-announcement mt-5 mb-5 col-12">All Class Dates and Times are California Time (PST)</h4>
+	<div class="container-lg container-fluid" id="classes-listings">
+	  <div class="row justify-content-between">
+		  
+		  
+		<?php
+			foreach ($upcoming_workshops as $wk) {
+		?>
+			<div class="col-md-6 classes-listings-class mb-5">
+			  <h3 class="mb-3"><?php echo $wk['title'];?></h4>
+			  <p><?php echo $wk['notes']; ?></p>
+			  <p class="class-time-info">Starting <?php echo $wk['showstart']; ?> for <?php echo $wk['total_sessions'];?> weeks</p>
+			  <div class="class-meta d-flex justify-content-between align-items-center mt-4">
+				<div class="d-flex class-teacher col-7 mr-0 px-0 align-items-center">
+				  <img class="mr-3 teacher-image align-self-center" src="<?php echo \Teachers\get_teacher_photo_src($wk['teacher_user_id']);?>" alt="Teacher Name">
+				  <div class="">
+					<h6 class="mt-0 mb-0 teacher-label">Teacher</h6>
+					<h5 class="mt-0 mb-0 teacher-name"><?php echo $wk['teacher_name'];?></h5>
+				  </div>
 				</div>
-				<div class="col-md-3">
-					<a href="https://www.amazon.com/dp/0982625723"><img src="assets/htbtgioe_cover.jpg" class="img-fluid" alt="How to Be The Greatest Improviser on Earth"></a>
-				</div>
+				<span class="class-price">
+				  <?php echo $wk['cost']; ?> USD
+				</span>
+				<span class="class-enroll"><a class="btn btn-primary" href="workshop.php?wid=<?php echo $wk['id']; ?>" role="button">Sign Up</a></span>
+			  </div>
 			</div>
-
-		<div class="row justify-content-center mb-md-4">
+			<?php
+		}
+		?>
+  </div><!-- Upcoming Classes -->
+  
+  <div id="newsletter-signup" class="pt-4 pb-4 mb-5">
+	<div class="container">
+	  <h3 class="http://eepurl.com/R2Ytz">Mailing List</h3>
+	  <div class="row">
+		<div class="col-lg-12 col-sm-12">
+		  <p>If you want to know about classes the minute the go online, <a class="text-light" href="http://eepurl.com/R2Ytz">join the mailing list</a>.</p>
+			<p>You are NOT automatically put on the mailing list when you take a workshop.</p>
+		  </div>
+		  
+		 
+	  </div>
+	</div>
 	
-					
-			<div class="col-sm-6 my-4">
-			<div class="card text-center text-white bg-success">
-			      <div class="card-body">
-			        <h2 class="card-title"><span class="oi oi-envelope-closed" title="envelope-closed" aria-hidden="true"></span><br>Mailing List</h2>
-			        <p class="card-text text-dark">If you want to know about classes the minute the go online, join my mailing list. You are NOT automatically put on my mailing list when you take a workshop. You have to explicitly join by clicking the link/button below.</p>
-			        <a href="http://eepurl.com/R2Ytz" class="btn btn-outline-light">Join Mailing List</a>
-			      </div> <!-- end of card body -->
-			    </div> <!-- end of card -->
-			</div> <!-- end of col -->
-			
-			
+  <div id="buy-the-book" class="container mb-5">
+	<h3 class="mb-3">Buy the Book</h3>
+<div class="row">
+  <img src="images/htbtgioe_cover.jpg" class="col-sm-12 col-md-3 align-self-start mb-2" />
+	<p class="col-sm-12 col-md-9">If the workshops are sold out, you could buy "How to Be the Greatest Improviser on Earth" written by Will Hines, the founder of this school. Print and digital versions <a href="https://www.amazon.com/dp/0982625723">on Amazon</a>. You could also buy a much prettier digital version from Will's <a href="http://www.improvnonsense.com/">personal online bookstore</a>.</p></div>
+  </div>
+</main>
 
-			</div> <!-- end of row -->
+
 
 
 <!-- check your email modal -->
@@ -195,4 +106,3 @@ if (count($unavailable_workshops) > 0) {
     </div>
   </div>
 </div>
-

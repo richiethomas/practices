@@ -50,6 +50,7 @@ function fill_out_workshop_row($row, $get_enrollment_stats = true) {
 			$row['total_class_sessions']++;
 		}
 	}
+	$row['total_sessions'] = $row['total_class_sessions'] + $row['total_show_sessions'];
 	
 	// when is the next starting session
 	// if all are in past, set this to most recent one
@@ -201,6 +202,48 @@ function get_workshops_list($admin = 0, $page = 1) {
 	
 	global $view;
 	
+	$sql = build_workshop_list_sql($admin);
+
+	// prep paginator
+	$paginator  = new \Paginator( $sql );
+	$rows = $paginator->getData($page);
+	$links = $paginator->createLinks();
+
+	// calculate enrollments, ranks, etc
+	if ($rows->total > 0) {
+		$workshops = array();
+		foreach ($rows->data as $row ) {
+			$workshops[] = fill_out_workshop_row($row);
+		}
+	} else {
+		return "<p>No upcoming workshops!</p>\n";	// this skips $body variable contents	
+	}
+		
+	// prep view
+	$view->data['links'] = $links;
+	$view->data['admin'] = $admin;
+	$view->data['rows'] = $workshops;
+	return $view->renderSnippet('workshop_list');
+}
+
+
+
+function get_workshops_list_no_html($admin = 0, $page = 1) {
+	
+	$sql = build_workshop_list_sql($admin);
+	
+	$stmt = \DB\pdo_query($sql);
+	$workshops = array();
+	while ($row = $stmt->fetch()) {
+		$workshops[] = fill_out_workshop_row($row);
+	}
+
+	return $workshops;
+}
+
+
+function build_workshop_list_sql($admin) {
+	
 	// get IDs of workshops
 	$mysqlnow = date("Y-m-d H:i:s");
 
@@ -224,28 +267,11 @@ function get_workshops_list($admin = 0, $page = 1) {
 		$sql .= " order by start asc";  // temporary, should be asc
 	}
 
-		
-	// prep paginator
-	$paginator  = new \Paginator( $sql );
-	$rows = $paginator->getData($page);
-	$links = $paginator->createLinks();
-
-	// calculate enrollments, ranks, etc
-	if ($rows->total > 0) {
-		$workshops = array();
-		foreach ($rows->data as $row ) {
-			$workshops[] = fill_out_workshop_row($row);
-		}
-	} else {
-		return "<p>No upcoming workshops!</p>\n";	// this skips $body variable contents	
-	}
-		
-	// prep view
-	$view->data['links'] = $links;
-	$view->data['admin'] = $admin;
-	$view->data['rows'] = $workshops;
-	return $view->renderSnippet('workshop_list');
+	return $sql;
+	
+	
 }
+
 
 function get_unavailable_workshops() {
 	

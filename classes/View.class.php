@@ -13,10 +13,10 @@ class View extends WBHObject
 	    if (is_array($data) && !empty($data)) {
 	        extract($data);
 	    }
-		//include $this->getPageStr($this->common_vars_page);
-		include $this->getPageStr($this->header);
+	
+		include $this->getPageStr($this->header.(strpos($page, 'admin') ? '-admin' : ''));
 		include $this->getPageStr($page);
-		include $this->getPageStr($this->footer);
+		include $this->getPageStr($this->footer.(strpos($page, 'admin') ? '-admin' : ''));
 	}
 			
 	public function renderSnippet($bargle, $data=null) {
@@ -29,15 +29,15 @@ class View extends WBHObject
 	    return ob_get_clean();
 	}
 	
-	public function renderHTML($html, $data = null) {
+	public function renderHTML($html, $data = null, $admin = false) {
 		$data = $this->updateData($data); // add some things to it
 	    if (is_array($data) && !empty($data)) {
 	        extract($data);
 	    }
 		//include $this->getPageStr($this->common_vars_page);
-		include $this->getPageStr($this->header);
+		include $this->getPageStr($this->header.($admin ? '-admin' : ''));
 		echo $html;
-		include $this->getPageStr($this->footer);
+		include $this->getPageStr($this->footer.($admin ? '-admin' : ''));
 	}
 
 	private function getPageStr($pagename) {

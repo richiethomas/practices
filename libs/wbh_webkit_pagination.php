@@ -29,9 +29,9 @@ class Paginator {
 
 	}
 
-	public function getData( $page = 1, $limit = 20) {
+	public function getData( $page = 1, $limit = 50) {
 
-		if (!$limit) { $limit = 20; }
+		if (!$limit) { $limit = 50; }
 		if (!$page) { $page = 1; }
 
 		$this->_limit   = $limit;

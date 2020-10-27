@@ -61,6 +61,7 @@ include 'libs/lib-emails.php';
 include 'libs/lib-xtra-sessions.php';
 include 'libs/lib-teachers.php';
 include 'libs/lib-reminders.php';
+include 'libs/lib-danny.php';
 
 
 $statuses = Lookups\get_statuses();
