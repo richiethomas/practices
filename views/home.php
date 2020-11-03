@@ -12,10 +12,9 @@
 	
 	<div class="row justify-content-center m-3 ">	
 		<div class="col-sm-3 p-3 border border-dark text-center workshop-danger">	
-			<h3 class="workshop-danger p-3"><a href="news.php">News</a></h3>
-			<h4>Friday Jams</h4>
+			<h3 class="workshop-danger p-3"><a href="news.php">Jams and Shows</a></h3>
 				<p>11am, 5pm (PDT)</p>
-			<p>Details on the <a href="news.php">news page</a></p>
+			<p>Details on the <a href="news.php">jams and shows</a> page.</p>
 		</div>			
 		<div class="col-sm-8 p-3"> 
 <p class="lead">Welcome to the World's Greatest Improv School. We teach online classes in long-form improv, character and sketch. 
@@ -149,7 +148,7 @@ if (count($unavailable_workshops) > 0) {
 			<div class="row border-top border-bottom py-3 bg-light">					
 				<div class="col"> 
 					<h2>Buy This Book</h2>
-	<p class="lead">If the workshops are sold out, you could buy "How to Be the Greatest Improviser on Earth" written by Will Hines, the founder of this school. Print and digital versions <a href="https://www.amazon.com/dp/0982625723">on Amazon</a>. You could also buy a much prettier digital version from Will's <a href="http://www.improvnonsense.com/">personal online bookstore</a>.</p>
+	<p class="lead">If the workshops are sold out, you could buy "How to Be the Greatest Improviser on Earth" written by Will Hines, the founder of this school. Print and digital versions <a href="https://www.amazon.com/dp/0982625723">on Amazon</a>.</p>
 				</div>
 				<div class="col-md-3">
 					<a href="https://www.amazon.com/dp/0982625723"><img src="assets/htbtgioe_cover.jpg" class="img-fluid" alt="How to Be The Greatest Improviser on Earth"></a>

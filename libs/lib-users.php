@@ -150,7 +150,7 @@ function email_link($u) {
 		$body = "<p>Use this link to log in:</p>
 <p>{$trans}</p>".\Emails\email_footer();
 
-		return \Emails\centralized_email($u['email'], "Log in to 'Will Hines practices'", $body);
+		return \Emails\centralized_email($u['email'], "Log in to WGIS", $body);
 }
 
 function logged_in() {
@@ -265,9 +265,9 @@ function change_email_phase_one($u, $new_email) {
 	
 	$logger->info("change email phase one: user id {$u['id']}, new email '$new_email'");
 	
-	$sub = 'email update at will hines practices';
+	$sub = 'email update at WGIS';
 	$link = URL."you.php?key={$u['ukey']}&ac=concemail";
-	$ebody = "<p>You requested to change what email you use at the Will Hines practices web site. Use the link below to do that:</p><p>$link</p>";
+	$ebody = "<p>You requested to change what email you use at the WGIS web site. Use the link below to do that:</p><p>$link</p>";
 	\Emails\centralized_email($new_email, $sub, $ebody);
 
 }

@@ -156,7 +156,7 @@ function confirm_email($wk, $u, $status_id = ENROLLED) {
 --------------------------------<br>
 <b>Title:</b> {$wk['title']}<br>
 <b>Teacher:</b> {$wk['teacher_name']}<br>
-<b>When:</b> {$wk['when']} (PDT - California time)<br>
+<b>When:</b> {$wk['when']} (PST - California time)<br>
 <b>Cost:</b> \${$wk['cost']} USD<br>".
 ($status_id == ENROLLED ? "<b>Zoom link:</b> {$wk['online_url']}" : "<b>Zoom link</b>: We'll email you the zoom link if/once you are enrolled.")."<br>
 <b>Description:</b> {$wk['notes']}</p>

@@ -207,7 +207,7 @@ function update_paid($wid, $uid, $paid = 1, $eid = null) {
 		if ($paid == 1) {
 		
 			$body = "<p>This is automated email to confirm that I've received your payment for class.</p>";
-			$body .= "<p>Class: {$workshop['title']} {$workshop['showstart']} (California time, PDT)</p>\n";
+			$body .= "<p>Class: {$workshop['title']} {$workshop['showstart']} (California time, PST)</p>\n";
 			$body .= "<p>Student: {$payee['nice_name']}</p>";
 			$body .= "<p>Amount: \${$workshop['cost']} (USD)</p>\n";
 			$body .= "<p>Thanks!<br>-Will</p>\n";
