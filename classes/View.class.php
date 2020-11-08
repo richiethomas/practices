@@ -8,9 +8,11 @@ class View extends WBHObject
 	private $footer = 'footer';
 	private $snippetDir = 'views';
 
-	public function renderPage($page = null, $data = null) {
+	public function renderPage($page = null, $data = null, $mode = 'single') {
+		
 		$data = $this->updateData($data); // add some things to it
-	    if (is_array($data) && !empty($data)) {
+	    $data['page'] = $page;
+		if (is_array($data) && !empty($data)) {
 	        extract($data);
 	    }
 	

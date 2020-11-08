@@ -170,7 +170,7 @@ class Teacher {
 
 function get_nav_items(){
 	$nav_items = array();
-	$nav_items[] = array('title' => "Classes", "href" => "classes.php");
+	//$nav_items[] = array('title' => "Classes", "href" => "classes.php");
 	$nav_items[] = array('title' => "Teachers", "href" => "faculty.php");
 	$nav_items[] = array('title' => "About", "href" => "about_school.php", 'children' => array(
 
@@ -178,7 +178,7 @@ function get_nav_items(){
 		array('title' => "Catalog", "href" => "about_catalog.php"),
 		array('title' => "How It Works", "href" => "about_works.php")
 	));
-	$nav_items[] = array('title' => "News", "href" => "news.php");
+	$nav_items[] = array('title' => "Shows / Jams", "href" => "news.php");
 	return $nav_items;
 }
 

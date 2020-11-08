@@ -1,9 +1,8 @@
 
-<div class="row justify-content-center">
-	<div class="col-sm-8">
-		
-<h1>Course Catalog</h1>
+<h1 class="page-title mb-5">Course Catalog</h1>
 <small>Updated August 2020</small>
+	<div class="row justify-content-center">
+		<div class="col-md-10 col-12">
 
 <p>This school is new and in flux, but here's our main courses right now.</p>
 

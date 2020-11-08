@@ -61,3 +61,12 @@
 		  </div>
 	</nav>
   </header>
+  
+ <?php if ($page != 'home') {
+	 echo "
+	 <main role=\"main\">
+	 	<div class=\"container-lg container-fluid\">
+	 	<article> <!-- Using the <article> tag to signify this is a straight page or post -->
+";
+ }
+ ?>

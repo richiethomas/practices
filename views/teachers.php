@@ -1,4 +1,6 @@
-<h1>Teachers</h1>
+<h1 class="page-title mb-5">Teachers</h1>
+	<div class="row justify-content-center">
+		<div class="col-md-10 col-12">
 
 <?php
 foreach ($faculty as $f) {

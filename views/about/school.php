@@ -1,8 +1,8 @@
-<div class="row justify-content-center">
-	<div class="col-sm-8">
-		
-<h1>About the School</h1>
 
+
+<h1 class="page-title mb-5">About the School</h1>
+	<div class="row justify-content-center">
+		<div class="col-md-10 col-12">
 
 <div class="row">
 	<div class="col-sm-3">

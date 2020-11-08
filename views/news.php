@@ -1,6 +1,8 @@
-<div class="row justify-content-center"><div class="col-sm-10 p-3 m-3">
 
-<h1>News</h1>
+<h1 class="page-title mb-5">Shows / Jams</h1>
+	<div class="row justify-content-center">
+		<div class="col-md-10 col-12">
+
 <p>Back to the <a href="index.php">front of the site</a></p>
 
 <h2 class="my-4">Friday October 30 Shows: JAMS</h2>

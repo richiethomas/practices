@@ -1,3 +1,12 @@
+ <?php if ($page != 'home') {
+	 echo "
+	 	</article>	
+	 	</div>  
+	 </main>
+";
+ }
+ ?>
+
 <footer class="pt-4 pb-4"><div class="container-lg container-fluid">
 	<h3 class="mb-3">The World's Greatest Improv School</h3>
 	<ul class="nav mb-3">
