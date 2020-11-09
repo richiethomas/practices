@@ -37,7 +37,7 @@ function fill_out_workshop_row($row, $get_enrollment_stats = true) {
 	$row['teacher_id'] = $trow['id'];
 	$row['teacher_key'] = $trow['ukey'];
 		
-	$row['costdisplay'] = $row['cost'] ? "\${$row['cost']} USD" : 'Pay what you can / donation';
+	$row['costdisplay'] = $row['cost'] ? "\${$row['cost']} USD" : 'Free';
 	
 	// xtra session info
 	$row['sessions'] = \XtraSessions\get_xtra_sessions($row['id']);	
