@@ -1,28 +1,47 @@
-<h1 class="page-title mb-5">Teachers</h1>
-	<div class="row justify-content-center">
-		<div class="col-md-10 col-12">
+<?php
+$show_all = 1;
+$hd = "Teachers";
+if (isset($tid) && $tid) {
+	$show_all = 0;
+	foreach ($faculty as $f) {
+		if ($tid == $f['id']) {
+			$hd .= ': '.$f['nice_name'];
+		}
+	}
+}	
+?>
+
+<h1 class="page-title mb-4"><?php echo $hd; ?></h1>
+	<div class="row justify-content-between  align-items-stretch  align-content-stretch">
 
 <?php
 foreach ($faculty as $f) {
-	if (isset($tid) && $tid && $tid != $f['id']) {
+	if (!$show_all && $tid != $f['id']) {
 		continue; // if we got passed an ID, only show that one
 	}	
-echo "<div class=\"row border-top p-3 m-3\">\n";
-echo "<div class=\"col-sm-2 p-2\">".\Teachers\teacher_photo($f['user_id'])."</div>\n";
-echo "	<div class=\"col-sm-10 p-2\">\n";
-echo "		<h2>{$f['nice_name']}</h2>\n";
-echo "<p>".preg_replace('/\R/', "<br>", $f['bio'])."</p>\n";
-
-
-if (count($f['classes']) > 0) {
-	echo "<p>Upcoming classes for {$f['nice_name']}:<ul>\n";
-	foreach ($f['classes'] as $c) {
-		$c['when'] = \XtraSessions\add_sessions_to_when($c['when'], $c['sessions']);
-		echo "	<li><a href=\"workshop.php?wid={$c['id']}\">{$c['title']}</a>, {$c['capacity']} people max, \${$c['cost']} USD<br><div class='mx-4'>{$c['when']}</div></li>\n";
-	}
-	echo "</ul></p>\n";
+?>	
+	<div class="col-sm-<?php echo ($show_all ? '6' : '12'); ?> teachers_listings-teacher align-self-stretch">
+	    <div class="teacher-info mb-4">
+				 <img class="teacher-image align-self-center" src="<?php echo \Teachers\get_teacher_photo_src($f['user_id']);?>" alt="Teacher Name">
+				   <h5 class="mt-0 mb-0 teacher-name"><?php echo $f['nice_name'];?></h5>
+				   <p class="p-3 teacher-bio pt-0"><?php echo preg_replace('/\R/', "<br>", $f['bio']);?></p>
+					   
+<?php
+	if (count($f['classes']) > 0) {
+		echo "<p class='teacher-bio px-3'>Upcoming classes for {$f['nice_name']}:<ul>\n";
+		foreach ($f['classes'] as $c) {
+			$c['when'] = \XtraSessions\add_sessions_to_when($c['when'], $c['sessions']);
+			echo "	<li class='teacher-bio'><a href=\"workshop.php?wid={$c['id']}\">{$c['title']}</a>, {$c['capacity']} people max, \${$c['cost']} USD<br><div class='mx-4'>{$c['when']}</div></li>\n";
+		}
+		echo "</ul></p>\n";
+	}					   
+?>			   
+		   </div>
+	</div><!-- teacher -->	
+	
+<?php
 }
+?>
 
-echo "	</div>\n"; // end of col
-echo "</div>\n"; // end of row
-}
+</div>
+

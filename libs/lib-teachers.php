@@ -58,8 +58,8 @@ function get_teacher_form($t) {
 }
 
 
-function get_all_teachers() {
-	$stmt = \DB\pdo_query("select t.*, u.email, u.display_name, u.ukey from teachers t, users u where t.user_id = u.id");
+function get_all_teachers($only_active = false) {
+	$stmt = \DB\pdo_query("select t.*, u.email, u.display_name, u.ukey from teachers t, users u where t.user_id = u.id".($only_active ? ' and t.active = 1' : ''));
 	$teachers = array();
 	while ($row = $stmt->fetch()) {
 		$row = fill_out_teacher_row($row); 

@@ -32,8 +32,8 @@ define('DEBUG_LOG', 'info.txt');
 define('ERROR_LOG', 'error_log.txt');
 define('URL', "https://{$_SERVER['HTTP_HOST']}/");
 define('ONLINE_LOCATION_ID', 8);
-define('TIMEZONE', 'PDT');
-define('LATE_HOURS', 12);
+define('TIMEZONE', 'PST');
+define('LATE_HOURS', 24);
 define('REMINDER_HOURS', 24);
 define('USER_PHOTO_MAX_BYTES', 5000000);
 

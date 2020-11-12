@@ -4,17 +4,11 @@
 	<div class="row justify-content-center">
 		<div class="col-md-10 col-12">
 
-<div class="row">
-	<div class="col-sm-3">
-		<img class="img-fluid" src="/photos/user_1.jpg" alt="Will Hines">
-	</div>
-	<div class="col-sm-9">
+		<img class="img-fluid float-right" src="/photos/user_1.jpg" alt="Will Hines">
+
 		<p>For now, the story of this school is the story of the guy who founded it: Will Hines. That's me, and I am the one writing this.</p>
 		
 		<p>In 1999, I started studying improv at the then new Upright Citizens Brigade Theatre in New York City. Though I was a computer programmer with no performing experience or aspirations, I loved my classes and got really into it. Over the next few years I was asked to join the theater's house teams and was hired as one of their teachers. I left my day job behind and joined the legion of semi-professional actors and improv coaches.</p>
-	</div>
-</div>
-
 
 <p>It's difficult to overstate its affect on my life.</p>
 

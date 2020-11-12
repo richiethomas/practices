@@ -29,7 +29,9 @@ body.admin .navbar-brand {
 
 /* Header */
 
-body.admin header {
+body.admin header,
+body.admin header .nav-item
+ {
   background: var(--color-dark-blue);
   color: white;
 }
@@ -159,7 +161,7 @@ body.admin main a {
   max-height: 0;
 }
 
-.admin-box#admin-box-upcoming-workshops ul li a {
+.admin-box#admin-box-upcoming-workshops ul li a.zoomlink {
   display: block;
   text-indent: 1rem;
 }

@@ -1,3 +1,5 @@
+
+
 <div class="row">
 	<div class="col-sm-3">
 		<h2>Teachers Info</h2>
@@ -56,3 +58,4 @@
 		<?php } ?>
 </div>
 </div>
+

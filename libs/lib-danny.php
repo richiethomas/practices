@@ -171,7 +171,7 @@ class Teacher {
 function get_nav_items(){
 	$nav_items = array();
 	//$nav_items[] = array('title' => "Classes", "href" => "classes.php");
-	$nav_items[] = array('title' => "Teachers", "href" => "faculty.php");
+	$nav_items[] = array('title' => "Teachers", "href" => "teachers.php");
 	$nav_items[] = array('title' => "About", "href" => "about_school.php", 'children' => array(
 
 		array('title' => "School", "href" => "about_school.php"),

@@ -1,3 +1,5 @@
+
+
 <h1 class="page-title mb-5">Privacy Policy</h1>
 	<div class="row justify-content-center">
 		<div class="col-md-10 col-12">
@@ -8,7 +10,7 @@
 
 <p>We don't ask you to set a password.</p>
 
-<p>We don't put tracking cookies on your computer.</p>
+<p>We don't put tracking cookies on your computer. We DO put a login cookie. The only info we store there is an internally-generated number so the site remembers who you are. No other site can access it.</p>
 
 <p>We don't keep any financial information. You pay via Venmo or PayPal outside of this site.</p>
 

@@ -73,7 +73,7 @@
 	
 		<form id='log_in' action='<?php echo $sc; ?>' method='post' novalidate>
 		<?php echo \Wbhkit\hidden('ac', 'link').
-		\Wbhkit\texty('email', $email, 'Email', 'something@something.com', 'We will send you an email with a link to click.', 'Must be a valid email you have access to', ' required ', 'email').
+		\Wbhkit\texty('email', '', 'Email', 'something@something.com', 'We will send you an email with a link to click.', 'Must be a valid email you have access to', ' required ', 'email').
 		\Wbhkit\submit('Send Me An Email'); ?>
 		</form>
 

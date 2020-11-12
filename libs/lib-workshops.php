@@ -37,7 +37,7 @@ function fill_out_workshop_row($row, $get_enrollment_stats = true) {
 	$row['teacher_id'] = $trow['id'];
 	$row['teacher_key'] = $trow['ukey'];
 		
-	$row['costdisplay'] = $row['cost'] ? "\${$row['cost']} USD" : 'Pay what you can / donation';
+	$row['costdisplay'] = $row['cost'] ? "\${$row['cost']} USD" : 'Free';
 	
 	// xtra session info
 	$row['sessions'] = \XtraSessions\get_xtra_sessions($row['id']);	
@@ -334,6 +334,40 @@ function get_workshops_list_bydate($start = null, $end = null) {
 	}
 	return $workshops;
 }	
+
+
+// for "revenues" page
+function get_sessions_bydate($start = null, $end = null) {
+	if (!$start) { $start = "Jan 1 1000"; }
+	if (!$end) { $end = "Dec 31 3000"; }
+	
+	//echo "select w.* from workshops w WHERE w.start >= '".date('Y-m-d H:i:s', strtotime($start))."' and w.end <= '".date('Y-m-d H:i:s', strtotime($end))."' order by start desc";
+	
+	// get IDs of workshops
+	$mysqlstart = date("Y-m-d H:i:s", strtotime($start));
+	$mysqlend = date("Y-m-d H:i:s", strtotime($end));
+	$mysqlnow = date("Y-m-d H:i:s", strtotime("-3 hours"));
+	
+	$stmt = \DB\pdo_query("
+(select w.id, title, start, end, capacity, cost, 0 as xtra, 0 as class_show, notes, teacher_id, 1 as rank, '' as override_url, online_url 
+	from workshops w 
+	where w.start >= date('$mysqlstart') and w.end <= date('$mysqlend'))
+union
+(select x.workshop_id, w.title, x.start, x.end, w.capacity, w.cost, 1 as xtra, x.class_show, w.notes, w.teacher_id, x.rank, x.online_url as override_url, w.online_url from xtra_sessions x, workshops w, users u where w.id = x.workshop_id and x.start >= date('$mysqlstart') and x.end <= date('$mysqlend'))
+order by teacher_id, start asc"); 	
+	
+//	$stmt = \DB\pdo_query("select w.* from workshops w WHERE w.start >= :start and w.end <= :end order by teacher_id, start desc", array(':start' => date('Y-m-d H:i:s', strtotime($start)), ':end' => date('Y-m-d H:i:s', strtotime($end))));
+	
+	$sessions = array();
+	while ($row = $stmt->fetch()) {
+		$t = \Teachers\get_teacher_by_id($row['teacher_id']);
+		$row['teacher_name'] = $t['nice_name']; 
+		$sessions[] = $row;
+	}
+	return $sessions;
+}	
+
+
 
 function get_empty_workshop() {
 	return array(
