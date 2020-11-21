@@ -12,10 +12,19 @@
 	<meta name="google-signin-client_id" content="989168310652-al6inpe49ep29r9i2ppb0t8j58k1pt22.apps.googleusercontent.com">
 	<script src="https://apis.google.com/js/platform.js" async defer></script>
 	
+    <!-- iconic (open source version) -->
+    <link href="open-iconic/font/css/open-iconic-bootstrap.css" rel="stylesheet">
+	
+<?php
+if (isset($fb_image)) {
+	echo "<meta property=\"og:image\" content=\"{$fb_image}\">\n";
+}
+?>	
+	
   </head>
   <body class="<?php if ($_SERVER['SCRIPT_NAME'] == '/index.php') { echo 'home'; } ?>">
 	<header>
-	<nav class="navbar navbar-expand-md navbar-light bg-white container-lg container-fluid"">
+	<nav class="navbar navbar-expand-md navbar-light bg-white container-lg container-fluid">
 		 <a class="navbar-brand" href="index.php"><span>World's Greatest Improv School</span></a>
 		  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
 			<span class="navbar-toggler-icon"></span>
@@ -24,7 +33,7 @@
 			<ul class="navbar-nav ml-auto justify-content-end">
 				
 			    <?php if (Users\check_user_level(2)) { ?>
-				 	<li class="nav-item"> <a class="nav-link btn btn-outline-light" href="admin.php">Admin</a> </li>	  
+				 	<li class="nav-item"> <a class="btn btn-outline-primary" href="admin.php">Admin</a> </li>	  
 			    <?php } // end of check user level 2 ?>
 				
 				<?php foreach( get_nav_items() as $nav_item ){
@@ -62,11 +71,20 @@
 	</nav>
   </header>
   
- <?php if ($page != 'home') {
+  
+  
+ <?php 
+ 
+
+ 
+ 
+ 
+ if ($page != 'home') {
 	 echo "
 	 <main role=\"main\">
 	 	<div class=\"container-lg container-fluid\">
 	 	<article> <!-- Using the <article> tag to signify this is a straight page or post -->
 ";
  }
+
  ?>

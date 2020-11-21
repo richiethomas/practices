@@ -23,7 +23,7 @@ foreach ($faculty as $f) {
 	<div class="col-sm-<?php echo ($show_all ? '6' : '12'); ?> teachers_listings-teacher align-self-stretch">
 	    <div class="teacher-info mb-4">
 				 <img class="teacher-image align-self-center" src="<?php echo \Teachers\get_teacher_photo_src($f['user_id']);?>" alt="Teacher Name">
-				   <h5 class="mt-0 mb-0 teacher-name"><?php echo $f['nice_name'];?></h5>
+				   <h5 class="mt-0 mb-0 teacher-name"><a href="teachers.php?tid=<?php echo $f['id'];?>"><?php echo $f['nice_name'];?></a></h5>
 				   <p class="p-3 teacher-bio pt-0"><?php echo preg_replace('/\R/', "<br>", $f['bio']);?></p>
 					   
 <?php

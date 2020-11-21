@@ -129,7 +129,6 @@ nav li.nav-item .user-logged-in:hover img {
 
 @media (min-width: 768px) {
   .classes-listings-class {
-    flex: 0 0 48%;
   }
 }
 

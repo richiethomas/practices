@@ -16,7 +16,7 @@
 	</ul>
 	<div class="footer-colophon row justify-content-between mb-3">
 		<div class="col-lg-7 col-sm-12">
-		Send questions to Will Hines - <a href="mailto:whines@gmail.com">whines@gmail.com</a> | <a href="privacy.php">Privacy Policy</a>
+		Send questions to Will Hines - <a href="mailto:will@wgimprovschool.com">will@wgimprovschool.com</a> | <a href="privacy.php">Privacy Policy</a>
 		</div>
 		<div class="col-lg-5 col-sm-12">
 		Site uses: <a href="http://www.php.net/">PHP</a> / <a href="http://www.mysql.com/">MySQL</a> / <a href="http://www.getbootstrap.com/">Bootstrap</a> / <a href="http://useiconic.com/open">Open Iconic</a>

@@ -5,9 +5,9 @@
 
 <h2 class="my-4">Friday Jams</h2>
 
-<p>For WGIS students only! 12:15pm and 6:15 PST (California time)</p>
+<p>For WGIS students! 12:15pm and 6:15 PST (California time)</p>
 
-<p>https://us02web.zoom.us/j/84345581543?pwd=M2o5bllONE8zalhIQnFZdHdmVGsyZz09<br>
+<p><a href="https://us02web.zoom.us/j/84345581543?pwd=M2o5bllONE8zalhIQnFZdHdmVGsyZz09">https://us02web.zoom.us/j/84345581543?pwd=M2o5bllONE8zalhIQnFZdHdmVGsyZz09</a><br>
 Meeting ID: 843 4558 1543<br>
 Passcode: 077289</p>
 

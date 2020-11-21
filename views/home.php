@@ -21,25 +21,44 @@
 	  <div class="row align-items-center justify-content-center">
 		<p class="col-12 col-sm-10 col-md-8">We teach online classes in <span class="color-long-form-improv">long-form improv</span>. <!--<span class="color-character">character</span> and <span class="color-sketch">sketch</span>.--></p>
 	  </div>
+	  
+	  <div class="row news-summary pb-4">
+		<div class="col-12 d-flex align-items-start justify-content-start ">
+		  <span class="badge badge-pill badge-primary h6"><a class="text-light" href="news.php">Shows and Jams</a></span>
+		  <span class="h6 news-item pl-1"> EVERY FRIDAY -- see the <a href="news.php">shows/jams</a> page for details!</span>
+		</div>
+	  </div>
+	  
 	</div>
   </div>
+  
+
+  
   <div id="classes">
-	<div class="container-fluid classes-header container-header-banner"><h3 class="container-lg container-fluid"><a href="/classes">Current & Upcoming Classes</a></h3></div>
+	<div class="container-fluid classes-header container-header-banner"><h3 class="container-lg container-fluid">Current & Upcoming Classes</h3></div>
 	<h4 class="text-center class-time-announcement mt-5 mb-5 col-12">All Class Dates and Times are California Time (PST)</h4>
 	<div class="container-lg container-fluid" id="classes-listings">
-	  <div class="row justify-content-between">
 		  
 		  
 		<?php
+			$classes_shown = 0;
 			foreach ($upcoming_workshops as $wk) {
+				
+				if (!Wbhkit\is_future($wk['start'])) {
+					continue; // skip ones that already started
+				}
+				$classes_shown++; // count how many classes we actually list
+				
 		?>
-			<div class="col-md-6 classes-listings-class mb-5">
-			  <h3 class="mb-3"><?php echo $wk['title'];?></h4>
+  	  <div class="row justify-content-between">
+		
+			<div class="col-md-11 classes-listings-class mb-5">
+			  <h3 class="mb-3"><a href="workshop.php?wid=<?php echo $wk['id']; ?>"><?php echo $wk['title'];?></a></h3>
 			  <p><?php
 				  if ($wk['soldout']) { echo "<span class=\"text-danger\">Sold Out!</span> - ";  } 
 				  echo $wk['notes']; 
 				  ?></p>
-			  <p class="class-time-info">Starting <?php echo $wk['showstart']; ?> for <?php echo $wk['total_sessions'];?> weeks</p>
+			  <p class="class-time-info">Starting <?php echo $wk['showstart']; ?> for <?php echo $wk['total_sessions'];?> <?php echo ($wk['total_sessions'] == 1) ? 'week': 'weeks'; ?></p>
 			  <div class="class-meta d-flex justify-content-between align-items-center mt-4">
 				<div class="d-flex class-teacher col-7 mr-0 px-0 align-items-center">
 				  <img class="mr-3 teacher-image align-self-center" src="<?php echo \Teachers\get_teacher_photo_src($wk['teacher_user_id']);?>" alt="Teacher Name">
@@ -61,10 +80,15 @@
 				</span>
 			  </div>
 			</div>
+  </div>
 			<?php
 		}
+		
+		if ($classes_shown == 0) {
+			echo "<h3 class='m-5'>No upcoming classes right now! Join the mailing list below to hear when new ones get posted.</h3>\n";
+		}
+		
 		?>
-  </div><!-- Upcoming Classes -->
   
   
   <div id="newsletter-signup" class="pt-4 pb-4 mb-5">

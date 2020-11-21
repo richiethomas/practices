@@ -2,6 +2,8 @@
 $heading = 'workshop';
 include 'lib-master.php';
 
+$show_other_action = true;
+
 if (Workshops\is_public($wk)) {
 	
 	switch ($ac) {
@@ -44,6 +46,8 @@ if (Workshops\is_public($wk)) {
 				if (Users\verify_key($key, $u['ukey'], $error)) {
 								
 					$message = "Do you really want to drop '{$wk['title']}'? Then click <a class='btn btn-warning' href=\"$sc?ac=condrop&key={$u['ukey']}&wid={$wid}\">confirm drop</a>";
+					$show_other_action = false;
+					
 				
 					$e = Enrollments\get_an_enrollment($wk, $u);
 					if ($e['while_soldout']) { 
@@ -131,6 +135,7 @@ if (isset($wk) && isset($wk['id']) && $wk['id']) {
 	$wk = Workshops\fill_out_workshop_row($wk);
 	$view->data['e'] = Enrollments\get_an_enrollment($wk, $u);
 	$view->data['workshop_tabled'] = $view->renderSnippet('workshop_info');
+	$view->data['show_other_action'] = $show_other_action;
 	$view->data['admin'] = 0;
 	$heading = $wk['title'];
 	

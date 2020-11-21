@@ -2,7 +2,7 @@
 class View extends WBHObject
 {
 
-	public $title = 'will hines online practices';
+	public $title = 'wgis';
 	public $data = array();
 	private $header = 'header';
 	private $footer = 'footer';
@@ -17,6 +17,7 @@ class View extends WBHObject
 	    }
 	
 		include $this->getPageStr($this->header.(strpos($page, 'admin') !== false ? '-admin' : ''));
+		include $this->getPageStr('messagealert'); // every page: show $message and $error
 		include $this->getPageStr($page);
 		include $this->getPageStr($this->footer.(strpos($page, 'admin') !== false ? '-admin' : ''));
 	}

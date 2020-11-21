@@ -14,6 +14,7 @@ info.txt
 photos/*
 error_log
 composer.lock
+*.txt
 
 # Compiled source #
 ###################

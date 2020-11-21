@@ -8,8 +8,39 @@
 	<link href="dist/css/bootstrap.min.css" rel="stylesheet">
 	<!-- Custom styles for this template -->
 	<link href="admin.css" rel="stylesheet">
+    <!-- iconic (open source version) -->
+    <link href="open-iconic/font/css/open-iconic-bootstrap.css" rel="stylesheet">
+
+<style>	
+	table th.workshop-name {
+		width: 300px;
+	}
+
+
+	.workshop-info { background-color: #bee5eb; }
+	.workshop-danger { background-color: #f5c6cb; }
+	.workshop-success { background-color: #c3e6cb; }
+	.workshop-light { background-color: #fdfdfe; }
+
+
+	div.admin-edit-workshop h2,
+	div.admin-edit-workshop h3,
+	div.admin-edit-workshop h4
+	{
+		margin-top: 2rem;
+	}
+
+
+	li.show {
+		font-weight: bold;
+		font-style: italic;
+	}
+</style>
+	
+	
  </head>
   <body class="admin d-flex align-content-stretch align-items-stretch">
+	  
   <header>
 	<nav class="navbar p-0">
 		<a class="navbar-brand" href="admin.php"><span>World's Greatest Improv School</span></a>
@@ -44,4 +75,5 @@
   </header>
   
  <main class="p-4">
+ 
  

@@ -1,6 +1,6 @@
-	<h2>All Workshops</h2>
+	<h2>All Classes</h2>
 
-<p><small><a href='#addworkshop'>add a workshop</a></small></p>
+<p><small><a href='#addworkshop'>add a class</a></small></p>
 
 <form action="<?php echo $sc; ?>" method="post">
 <?php
