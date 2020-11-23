@@ -322,4 +322,43 @@ function admin_log($st) {
 	}
 }
 
+// take array $part
+// add missing keys with their default values
+// based on the keys/values in $default
+function fill_out($part, $default) {
+	
+	foreach ($default as $k => $v) {
+		if (!$part[$k]) { $part[$k] = $v; }
+	}
+	return $part;
+	
+}
 
+// make array of params
+// for pdo_query
+function make_params($data, $default) {
+	$params = array();
+	foreach ($default as $k => $v) {
+		$params[":{$k}"] = $data[$k];
+	}
+	return $params;
+}
+
+function create_update_sql($default) {
+	$sql = '';
+	foreach ($default as $k => $v ) {
+		if ($k == 'id') { continue; }
+		if ($sql) { $sql .= ', '; }
+		$sql .= "{$k} = :$k ";
+	}
+	return $sql;
+}
+
+// for adding 'empty x' keys to vars_to_set
+function add_empty_fields($varlist, $fields) {
+	foreach ($fields as $k => $v) {
+		if ($k == 'id') { continue; }
+		$varlist[] = $k;
+	}
+	return $varlist;
+}

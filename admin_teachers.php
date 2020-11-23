@@ -2,7 +2,9 @@
 $heading = "teachers";
 include 'lib-master.php';
 
-Wbhkit\set_vars(array('guest_id', 'tid', 'bio', 'active'));
+$vars_to_set = array('guest_id', 'tid');
+$vars_to_set = \Wbhkit\add_empty_fields($vars_to_set, Teachers\empty_teacher());
+Wbhkit\set_vars($vars_to_set);
 
 $t = array(); // array for teacher info
 $t_classes = array();
@@ -21,8 +23,8 @@ switch ($ac) {
 		break;
 		
 	case 'up':
-		list($t['id'], $t['bio'], $t['active']) = array($tid, $bio, $active);
-		$tid = Teachers\update_teacher_info($t);
+		list($t['id'], $t['bio'], $t['active'], $t['default_rate']) = array($tid, $bio, $active, $default_rate);
+			$tid = Teachers\update_teacher_info($t);
 		break;
 		
 	case 'photo':
