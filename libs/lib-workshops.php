@@ -323,22 +323,22 @@ function get_workshops_list_bydate($start = null, $end = null) {
 
 // figure teacher pay for a workshop
 // go through all sessions
-// add either override_pay or default_pay
+// add either actual_pay or default_pay
 function get_teacher_pay($wid) {
 	
 	$pay = 0;
 	$default_pay = 0;
 		
-	$stmt = \DB\pdo_query("select t.default_rate, w.override_pay 
+	$stmt = \DB\pdo_query("select t.default_rate, w.actual_pay 
 		from workshops w, teachers t
 		where w.teacher_id = t.id
 		and w.id = :id", array(':id' => $wid));
 	while ($row = $stmt->fetch()) {
 		$default_pay = $row['default_rate'];
-		$pay += $row['override_pay'] ? $row['override_pay'] : $default_pay;
+		$pay += $row['actual_pay'] ? $row['actual_pay'] : $default_pay;
 	}
 
-	$stmt = \DB\pdo_query("select x.override_pay
+	$stmt = \DB\pdo_query("select x.actual_pay
 		from xtra_sessions x
 		where x.workshop_id = :id", array(':id' => $wid));
 	while ($row = $stmt->fetch()) {
@@ -362,11 +362,11 @@ function get_sessions_bydate($start = null, $end = null) {
 	$mysqlnow = date("Y-m-d H:i:s", strtotime("-3 hours"));
 	
 	$stmt = \DB\pdo_query("
-(select w.id, 0 as xtra_id, title, start, end, capacity, cost, 0 as xtra, 0 as class_show, notes, teacher_id, 1 as rank, '' as override_url, online_url, when_teacher_paid, override_pay
+(select w.id, 0 as xtra_id, title, start, end, capacity, cost, 0 as xtra, 0 as class_show, notes, teacher_id, 1 as rank, '' as override_url, online_url, when_teacher_paid, actual_pay
 	from workshops w 
 	where w.start >= date('$mysqlstart') and w.end <= date('$mysqlend'))
 union
-(select x.workshop_id, x.id as xtra_id, w.title, x.start, x.end, w.capacity, w.cost, 1 as xtra, x.class_show, w.notes, w.teacher_id, x.rank, x.online_url as override_url, w.online_url, x.when_teacher_paid, x.override_pay from xtra_sessions x, workshops w, users u where w.id = x.workshop_id and x.start >= date('$mysqlstart') and x.end <= date('$mysqlend'))
+(select x.workshop_id, x.id as xtra_id, w.title, x.start, x.end, w.capacity, w.cost, 1 as xtra, x.class_show, w.notes, w.teacher_id, x.rank, x.online_url as override_url, w.online_url, x.when_teacher_paid, x.actual_pay from xtra_sessions x, workshops w, users u where w.id = x.workshop_id and x.start >= date('$mysqlstart') and x.end <= date('$mysqlend'))
 order by teacher_id, start asc"); 	
 	
 //	$stmt = \DB\pdo_query("select w.* from workshops w WHERE w.start >= :start and w.end <= :end order by teacher_id, start desc", array(':start' => date('Y-m-d H:i:s', strtotime($start)), ':end' => date('Y-m-d H:i:s', strtotime($end))));

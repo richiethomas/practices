@@ -7,9 +7,6 @@ Users\reject_user_below(3); // group 3 or higher
 $vars = array('searchstart', 'searchend', 'lastweekstart', 'lastweekend', 'nextweekstart', 'nextweekend');
 Wbhkit\set_vars($vars);
 
-
-
-
 switch ($ac) {
 	
 	case 'up':
@@ -23,16 +20,27 @@ switch ($ac) {
 				$query = "update ".($ps[2] ? 'xtra_sessions' : 'workshops')." 
 					set when_teacher_paid = :when_paid where id = :id";
 					$params = array(
-						':when_paid' => $value ? date("Y-m-d H:i:s", strtotime($value)) : 'null',
-						':id' => ($ps[2] ? $ps[2] : $ps[1]));
+						':when_paid' => $value ?  date("Y-m-d H:i:s", strtotime($value)) : NULL, 
+						':id' => $ps[2] ? $ps[2] : $ps[1]);
+						
+						$db = \DB\get_connection();
+						$stmt = $db->prepare($query);
+						$id = $ps[2] ? $ps[2] : $ps[1];
+						$stmt->bindParam(':id', $id);
+						if ($value) {
+							$datetoinsert = date("Y-m-d H:i:s", strtotime($value));
+							$stmt->bindParam(':when_paid', $datetoinsert);
+						} else {
+							$stmt->bindValue(':when_paid', null, PDO::PARAM_INT);
+						}
 				//echo \DB\interpolateQuery($query, $params)."<br>\n";
 				$stmt = \DB\pdo_query($query, $params);
 			}
-			if (substr($key, 0, 9) == 'override_') {
+			if (substr($key, 0, 7) == 'actual_') {
 				$ps = explode('_', $key);
 				//echo "key: $key, value $value<br>\n";
 				$query = "update ".($ps[2] ? 'xtra_sessions' : 'workshops')." 
-					set override_pay = :override where id = :id";
+					set actual_pay = :override where id = :id";
 				$params = array(':override' => $value, 
 					':id' => ($ps[2] ? $ps[2] : $ps[1]));
 				$stmt = \DB\pdo_query($query, $params);

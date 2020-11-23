@@ -18,6 +18,16 @@ window.onload = function() {
 		$("input[name*='whenpaid_']").val('');
 		e.preventDefault();
 	});
+	
+	
+	$( "#copy_default" ).click(function(e) {
+		e.preventDefault();
+		$("input[name*='actual_']").each(function() {
+			var dr = $(this).parents('td').prev('td').find('input').val();
+			$(this).val(dr);
+		});
+
+	});
 };	
 	
 </script>
@@ -48,7 +58,6 @@ $table_open = "<table class='table table-striped my-3'>
 		<th>workshop</th>
 		<th>session #</th>
 		<th>default pay</th>
-		<th>override pay</th>
 		<th>actual pay</th>
 		<th>when paid</th>
 	</thead><tbody>";
@@ -73,35 +82,34 @@ $table_open = "<table class='table table-striped my-3'>
 				echo $table_open;
 				$teacher_id = $wk['teacher_id'];
 			}
-			
-			$actual_pay = $wk['override_pay'] ? $wk['override_pay'] : $wk['teacher_default_rate'];
-			
+						
 			echo "<tr>
-			<td width='300'>({$wk['id']}-{$wk['xtra_id']}) <a href='admin_edit.php?wid={$wk['id']}'>{$wk['title']}</a> <small>({$wk['start']})</small></td>
-			<td>{$wk['rank']} </td>
-			<td>{$wk['teacher_default_rate']}</td>
-			<td>".\Wbhkit\texty(
-					"override_{$wk['id']}_{$wk['xtra_id']}", 
-					$wk['override_pay'],
+			<td width='300'><a href='admin_edit.php?wid={$wk['id']}'>{$wk['title']}</a> <small>({$wk['start']})</small></td>
+			<td>".($wk['class_show'] ? "<b>{$wk['rank']} - show</b>" : "{$wk['rank']}")."</td>
+			<td class='tdr'>".\Wbhkit\texty(
+					"tdr_{$wk['id']}_{$wk['xtra_id']}", 
+					$wk['teacher_default_rate'],
 					0)."</td>
-			<td>{$actual_pay}</td>
+			<td class='or'>".\Wbhkit\texty(
+					"actual_{$wk['id']}_{$wk['xtra_id']}", 
+					$wk['actual_pay'],
+					0)."</td>
 			<td>".\Wbhkit\texty(
 					"whenpaid_{$wk['id']}_{$wk['xtra_id']}", 					set_when_paid_date($wk['when_teacher_paid']),
 					0)."</td>
 			</tr>\n";
 			
-			$teacher_pay += $actual_pay;
+			$teacher_pay += $wk['actual_pay'];
 			$previous_wk = $wk; // remember this workshop during next loop
 		}
 		
 		show_teacher_totals($wk, $teacher_pay);
-		
-		
+		$total_pay += $teacher_pay;
 		
 		echo "<tr><td colspan='6'></td></tr>\n";
 		
 		echo "<tr><td>Total Pay:</td>
-		<td colspan=3>&nbsp;</td>
+		<td colspan=2>&nbsp;</td>
 		<td>{$total_pay}</td>
 		<td>&nbsp;</td>		
 		</tr>\n";
@@ -110,6 +118,7 @@ $table_open = "<table class='table table-striped my-3'>
 		
 		echo "<button id=\"todays_date\" class=\"btn btn-success m-1\"  role=\"button\">Make Paid Dates Today</a>\n";
 		echo "<button id=\"clear_dates\" class=\"btn btn-success m-1\"  role=\"button\">Clear All Paid Dates</a>\n";
+		echo "<button id=\"copy_default\" class=\"btn btn-success m-1\"  role=\"button\">Copy Default as Override</a>\n";
 		echo \Wbhkit\submit('Update');
 
 		
@@ -121,7 +130,7 @@ function show_teacher_totals($wk, $teacher_pay) {
 	// wrap up previous teacher revenue
 	echo "<tr class=\"table-info\">
 		<td>{$wk['teacher_name']} pay:</td>
-	<td colspan=3>&nbsp;</td>
+	<td colspan=2>&nbsp;</td>
 	<td>{$teacher_pay}</td>
 	<td>&nbsp;</td>
 	</tr>\n";	
