@@ -16,7 +16,6 @@ $table_open = "<table class='table table-striped my-3'>
 		<th>workshop</th>
 		<th>paid / enrolled / capacity</th>
 		<th>cost</th>
-		<th>house fee</th>
 		<th>est totals:<br>paid / enrolled / capacity</th>
 		<th>suggested taxes</th></tr>
 	</thead><tbody>";
@@ -26,8 +25,7 @@ $table_open = "<table class='table table-striped my-3'>
 		$empty_totals = array(
 			'suggested_paid' => 0,
 			'suggested_enrolled' => 0,
-			'suggested_capacity' => 0,
-			'school_fee' => 0
+			'suggested_capacity' => 0
 		);
 
 		$totals = $teacher_totals = $empty_totals;
@@ -53,19 +51,16 @@ $table_open = "<table class='table table-striped my-3'>
 			echo "<tr><td>({$wk['id']}-{$wk['teacher_id']}) <a href='admin_edit.php?wid={$wk['id']}'>{$wk['title']}</a> <small>({$wk['showstart']})</small><br><span class='text-secondary'>{$wk['place']}</span></td>
 			<td>{$wk['paid']} / {$wk['enrolled']} / {$wk['capacity']}</td>
 			<td>{$wk['cost']}</td>
-			<td>{$wk['school_fee']}</td>
-			<td>".($wk['cost']*$wk['paid'] - $wk['school_fee'])." / ".($wk['cost']*$wk['enrolled'] - $wk['school_fee'])." / ".($wk['cost']*$wk['capacity'] - $wk['school_fee'])."</td>
-			<td>".number_format((($wk['cost']*$wk['enrolled'] - $wk['school_fee']) / 3))."</td></tr>\n";
+			<td>".($wk['cost']*$wk['paid'])." / ".($wk['cost']*$wk['enrolled'])." / ".($wk['cost']*$wk['capacity'])."</td>
+			<td>".number_format((($wk['cost']*$wk['enrolled']) / 3))."</td></tr>\n";
 						
-			$totals['suggested_paid'] += $wk['cost']*$wk['paid'] - $wk['school_fee'];
-			$totals['suggested_enrolled'] += $wk['cost']*$wk['enrolled'] - $wk['school_fee'];
-			$totals['suggested_capacity'] += $wk['cost']*$wk['capacity'] - $wk['school_fee'];
-			$totals['school_fee'] += $wk['school_fee'];
+			$totals['suggested_paid'] += $wk['cost']*$wk['paid'];
+			$totals['suggested_enrolled'] += $wk['cost']*$wk['enrolled'];
+			$totals['suggested_capacity'] += $wk['cost']*$wk['capacity'];
 			
-			$teacher_totals['suggested_paid'] += $wk['cost']*$wk['paid'] - $wk['school_fee'];
-			$teacher_totals['suggested_enrolled'] += $wk['cost']*$wk['enrolled'] - $wk['school_fee'];
-			$teacher_totals['suggested_capacity'] += $wk['cost']*$wk['capacity'] - $wk['school_fee'];
-			$teacher_totals['school_fee'] += $wk['school_fee'];
+			$teacher_totals['suggested_paid'] += $wk['cost']*$wk['paid'];
+			$teacher_totals['suggested_enrolled'] += $wk['cost']*$wk['enrolled'];
+			$teacher_totals['suggested_capacity'] += $wk['cost']*$wk['capacity'];
 
 			$previous_wk = $wk;
 			
@@ -76,7 +71,6 @@ $table_open = "<table class='table table-striped my-3'>
 		
 		echo "<tr><td>Totals:</td>
 		<td colspan=2>&nbsp;</td>
-		<td>{$totals['school_fee']}</td>
 		<td>{$totals['suggested_paid']} / {$totals['suggested_enrolled']} / {$totals['suggested_capacity']}
 		</td>
 		<td>".number_format(($totals['suggested_paid'] / 3))."</td>
@@ -92,7 +86,6 @@ function show_teacher_totals($wk, $teacher_totals) {
 	echo "<tr class=\"table-info\">
 		<td>{$wk['teacher_name']} sub totals:</td>
 	<td colspan=2>&nbsp;</td>
-	<td>{$teacher_totals['school_fee']}
 	<td>{$teacher_totals['suggested_paid']} / {$teacher_totals['suggested_enrolled']} / {$teacher_totals['suggested_capacity']}</td>
 	<td>".number_format(($teacher_totals['suggested_paid'] / 3))."</td>
 	</tr>\n";	

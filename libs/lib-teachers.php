@@ -53,13 +53,14 @@ function get_teacher_form($t) {
 		\Wbhkit\hidden('ac', 'up').			
 		\Wbhkit\textarea('bio', $t['bio']).
 		\Wbhkit\checkbox('active', 1, null, $t['active']).
+		\Wbhkit\texty('default_rate', $t['default_rate']).
 		\Wbhkit\submit('Update').
 		"</form>";		
 }
 
 
-function get_all_teachers() {
-	$stmt = \DB\pdo_query("select t.*, u.email, u.display_name, u.ukey from teachers t, users u where t.user_id = u.id");
+function get_all_teachers($only_active = false) {
+	$stmt = \DB\pdo_query("select t.*, u.email, u.display_name, u.ukey from teachers t, users u where t.user_id = u.id".($only_active ? ' and t.active = 1' : ''));
 	$teachers = array();
 	while ($row = $stmt->fetch()) {
 		$row = fill_out_teacher_row($row); 
@@ -175,30 +176,25 @@ function upload_teacher_photo($t, &$message, &$error) {
 
 function update_teacher_info($t) {
 	
-	
 	if (!$t['id'] || !$t['user_id']) {
 		return false;
-	}
-	// fussy MySQL 5.7
-	if (!$t['bio']) { $t['bio'] = ''; }
-	if (!$t['active']) { $t['active'] = 0; }
-	
-	
-	$params = array(':id' => $t['id'],
-		':bio' => $t['bio'],
-		':active' => $t['active']);
-		
-	$stmt = \DB\pdo_query("update teachers set bio = :bio, active = :active where id = :id", $params);
+	}	
+	$t = \Wbhkit\fill_out($t, empty_teacher());
+	$params = \Wbhkit\make_params($t, empty_teacher());
+	$update_sql = \Wbhkit\create_update_sql(empty_teacher());
+	$stmt = \DB\pdo_query("update teachers set $update_sql where id = :id", $params);
 	
 	return $t['id'];
 }
+
 
 function empty_teacher() {
 	return array(
 		'id' => null,
 		'user_id' => null,
 		'bio' => null,
-		'active' => 0
+		'active' => 0,
+		'default_rate' => 0
 	);
 	
 }

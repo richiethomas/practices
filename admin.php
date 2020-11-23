@@ -20,6 +20,7 @@ if ($ac && $ac=='del' && isset($wk) && isset($wk['id'])) {
 	$logger->info($message);
 }
 
+$view->data['faculty'] = Teachers\get_all_teachers(true); // active teachers
 $view->data['workshops'] = Workshops\get_sessions_to_come();
 $view->data['filter_by'] = $filter_by; 
 $view->data['your_teacher_id'] = $your_teacher_id; 

@@ -7,7 +7,7 @@ use Monolog\Handler\StreamHandler;
 $logger = new Logger('my_logger');
 
 $logger->pushHandler(new StreamHandler(DEBUG_LOG, Logger::DEBUG));	
-$logger->pushHandler(new StreamHandler(ERROR_LOG, Logger::DEBUG));	
+$logger->pushHandler(new StreamHandler(ERROR_LOG, Logger::ERROR));	
 
 
 

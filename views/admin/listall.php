@@ -1,4 +1,6 @@
-<h2>All Workshops <small><a href='#addworkshop'>add a workshop</a></small></h2>
+	<h2>All Classes</h2>
+
+<p><small><a href='#addworkshop'>add a class</a></small></p>
 
 <form action="<?php echo $sc; ?>" method="post">
 <?php
@@ -13,3 +15,5 @@ echo \Wbhkit\submit();
 <a id='addworkshop'></a><div class='row'><div class='col-md-4'>
 <?php echo $add_workshop_form; ?>
 </div></div>
+
+

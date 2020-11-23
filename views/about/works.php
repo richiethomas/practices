@@ -1,7 +1,6 @@
-<div class="row justify-content-center">
-	<div class="col-sm-8">
-		
-<h1>How It Works</h1>
+<h1 class="page-title mb-5">How It Works</h1>
+	<div class="row justify-content-center">
+		<div class="col-md-10 col-12">
 
 <h2>Registering and Paying</h2>
 

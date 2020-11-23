@@ -1,13 +1,13 @@
-<div class="row justify-content-center"><div class="col-sm-10 p-3 m-3">
 
-<h1>Jams And Shows</h1>
-<p>Back to the <a href="index.php">front of the site</a></p>
+<h1 class="page-title mb-5">Shows / Jams</h1>
+	<div class="row justify-content-center">
+		<div class="col-md-10 col-12">
 
 <h2 class="my-4">Friday Jams</h2>
 
-<p>For WGIS students only! 12:15pm and 6:15 PST (California time)</p>
+<p>For WGIS students! 12:15pm and 6:15 PST (California time)</p>
 
-<p>https://us02web.zoom.us/j/84345581543?pwd=M2o5bllONE8zalhIQnFZdHdmVGsyZz09<br>
+<p><a href="https://us02web.zoom.us/j/84345581543?pwd=M2o5bllONE8zalhIQnFZdHdmVGsyZz09">https://us02web.zoom.us/j/84345581543?pwd=M2o5bllONE8zalhIQnFZdHdmVGsyZz09</a><br>
 Meeting ID: 843 4558 1543<br>
 Passcode: 077289</p>
 
@@ -135,7 +135,6 @@ Tom M</p>
 <h2 class="my-4">Facebook Group</h2>
 <p>The school has an optional Facebook group. This is for students to meet each other, plug show, ask questions etc.</p> 
 <p><a href="https://www.facebook.com/groups/wgimprovschool">https://www.facebook.com/groups/wgimprovschool</a></p>
-
 
 
 

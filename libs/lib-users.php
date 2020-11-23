@@ -95,9 +95,8 @@ function check_key($key, $uid) {
 	}
 }
 
-function verify_key($passed, $true, &$error, $show_error = 1) {
-	global $u;
-	if ($passed != $true) {
+function verify_key($passedkey, $loggedkey, &$error, $show_error = 1) {
+	if ($passedkey != $loggedkey) {
 		if ($show_error) {
 			$error = "Hmmm. I can't verify that you are who you say you are. Try logging in below.";
 		}
