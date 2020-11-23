@@ -273,21 +273,6 @@ function build_workshop_list_sql($admin) {
 }
 
 
-function get_unavailable_workshops() {
-	
-	$mysqlnow = date("Y-m-d H:i:s");
-	
-	$stmt = \DB\pdo_query("
-select * from workshops where date(start) >= :when1 and when_public >= :when2 order by when_public asc, start asc", array(":when1" => $mysqlnow, ":when2" => $mysqlnow)); 
-		
-	$sessions = array();
-	while ($row = $stmt->fetch()) {
-		$sessions[] = fill_out_workshop_row($row);
-	}
-	return $sessions;
-	
-}
-
 // data only, for admin_calendar
 function get_sessions_to_come() {
 	
@@ -334,6 +319,34 @@ function get_workshops_list_bydate($start = null, $end = null) {
 	}
 	return $workshops;
 }	
+
+
+// figure teacher pay for a workshop
+// go through all sessions
+// add either override_pay or default_pay
+function get_teacher_pay($wid) {
+	
+	$pay = 0;
+	$default_pay = 0;
+		
+	$stmt = \DB\pdo_query("select t.default_rate, w.override_pay 
+		from workshops w, teachers t
+		where w.teacher_id = t.id
+		and w.id = :id", array(':id' => $wid));
+	while ($row = $stmt->fetch()) {
+		$default_pay = $row['default_rate'];
+		$pay += $row['override_pay'] ? $row['override_pay'] : $default_pay;
+	}
+
+	$stmt = \DB\pdo_query("select x.override_pay
+		from xtra_sessions x
+		where x.workshop_id = :id", array(':id' => $wid));
+	while ($row = $stmt->fetch()) {
+		$pay += $row['override_pay'] ? $row['override_pay'] : $default_pay;
+	}
+	
+	return $pay;
+}
 
 
 // for "payroll" page
