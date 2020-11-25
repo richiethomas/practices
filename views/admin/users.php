@@ -44,9 +44,9 @@ if ($needle) {
 <?php 
 $t = \Teachers\is_teacher($guest['id']);
 if ($t) {
-	echo "<p>{$guest['nice_name']} is a teacher. <a class=\"btn btn-primary\" href='admin_teachers.php?ac=view&tid={$t['id']}'>Edit teacher info</a></p>";
+	echo "<p>{$guest['nice_name']} is a teacher. <a class=\"btn btn-primary text-light\" href='admin_teachers.php?ac=view&tid={$t['id']}'>Edit teacher info</a></p>";
 } else {
-	echo "<p>{$guest['nice_name']} is NOT a teacher. <a class=\"btn btn-primary\" href='admin_teachers.php?ac=make&guest_id={$guest['id']}'>Make teacher</a></p>";	
+	echo "<p>{$guest['nice_name']} is NOT a teacher. <a class=\"btn btn-primary text-light\" href='admin_teachers.php?ac=make&guest_id={$guest['id']}'>Make teacher</a></p>";	
 }
 ?>
 </div></div> <!-- end of card -->
@@ -55,6 +55,6 @@ if ($t) {
 
 <p>or</p>
 
-<p><a class='btn btn-danger' href='<?php echo "$sc?ac=delstudent&guest_id={$guest['id']}" ?>'>remove this student</a></p>
+<p><a class='btn btn-danger text-light' href='<?php echo "$sc?ac=delstudent&guest_id={$guest['id']}" ?>'>remove this student</a></p>
 
 </div></div>

@@ -10,6 +10,8 @@ $all_workshops = Workshops\get_workshops_dropdown();
 
 $unpaid = array();
 $students = array();
+$statuses = $lookups->statuses;
+
 if (is_array($workshops)) {
 	$statuses[0] = 'all'; // modifying global $statuses
 	foreach ($statuses as $stid => $status_name) { 

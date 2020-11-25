@@ -339,9 +339,7 @@ function change_email($ouid, $newe) {
 
 
 function edit_text_preferences($u) {
-	global $sc, $ac;
-	$carriers = \Lookups\get_carriers_drop();
-	
+	global $sc, $ac, $lookups;
 	$body = '';
 	$body .= "";
 		
@@ -351,7 +349,7 @@ function edit_text_preferences($u) {
 	$body .= \Wbhkit\hidden('guest_id', $u['id']);
 	$body .= \Wbhkit\hidden('ac', 'updateu');
 	$body .= \Wbhkit\checkbox('send_text', 1, 'Send text updates?', $u['send_text']);
-	$body .= \Wbhkit\drop('carrier_id', $carriers, $u['carrier_id'], 'phone network', null, "You must pick a carrier if you want text updates.", ' required ');
+	$body .= \Wbhkit\drop('carrier_id', $lookups->get_carriers_drop(), $u['carrier_id'], 'phone network', null, "You must pick a carrier if you want text updates.", ' required ');
 	$body .= \Wbhkit\texty('phone', $u['phone'], 'phone number', null, '10 digit phone number', 'Phone must be 10 digits, no letters or spaces or dashes', ' required minlength="10" maxlength="11" pattern="\d+" ');
 	$body .= \Wbhkit\submit('Update Text Preferences');
 	$body .= "</form>\n";
@@ -406,11 +404,11 @@ function update_text_preferences(&$u,  &$message, &$error) {
 
 
 function edit_group_level($u) {
-	global $sc;
+	global $sc, $lookups;
 	return "<form action='$sc' method='post'>\n".
 	\Wbhkit\hidden('guest_id', $u['id']).
 	\Wbhkit\hidden('ac', 'updategroup').
-	\Wbhkit\drop('group_id', \Lookups\groups_drop(), $u['group_id'], 'Group', 'Clearance level').
+	\Wbhkit\drop('group_id', $lookups->groups_drop(), $u['group_id'], 'Group', 'Clearance level').
 	\Wbhkit\submit('Update Group Level').
 	"</form>\n";	
 }

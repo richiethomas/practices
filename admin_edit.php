@@ -96,7 +96,7 @@ switch ($ac) {
 
 		$msg = null;
 		if ($wid) {
-			foreach ($statuses as $sid => $sts) {
+			foreach ($lookups->statuses as $sid => $sts) {
 				$stds = Enrollments\get_students($wid, $sid);
 				foreach ($stds as $as) {
 					if (in_array($as['id'], $users)) {
@@ -123,14 +123,15 @@ if (!$wid) {
 
 $stats = array();
 $lists = array();
-foreach ($statuses as $stid => $status_name) {
+foreach ($lookups->statuses as $stid => $status_name) {
 	$stats[$stid] = count(Enrollments\get_students($wid, $stid));
 	$lists[$stid] = Enrollments\get_students($wid, $stid);
 }
 $data['log'] = Enrollments\get_status_change_log($wk);
 $status_log = $view->renderSnippet('admin/status', $data);
 
-$view->add_globals(array('stats', 'statuses', 'lists', 'status_log'));	
+$view->add_globals(array('stats', 'lists', 'status_log'));	
+$view->data['statuses'] = $lookups->statuses;
 $view->renderPage('admin/edit');
 
 

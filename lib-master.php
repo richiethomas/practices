@@ -56,21 +56,18 @@ include 'libs/time_difference.php';
 include 'libs/lib-users.php';
 include 'libs/lib-workshops.php';
 include 'libs/lib-enrollments.php';
-include 'libs/lib-lookups.php';
 include 'libs/lib-emails.php';
 include 'libs/lib-xtra-sessions.php';
 include 'libs/lib-teachers.php';
 include 'libs/lib-reminders.php';
 include 'libs/lib-danny.php';
 
+$lookups = new Lookups(); // define locations, statuses, carriers, and groups
 
-$statuses = Lookups\get_statuses();
-$locations = Lookups\get_locations();
-define('ENROLLED', Lookups\find_status_by_value('enrolled'));
-define('WAITING', Lookups\find_status_by_value('waiting'));
-define('DROPPED', Lookups\find_status_by_value('dropped'));
-define('INVITED', Lookups\find_status_by_value('invited'));
-$carriers = array();
+define('ENROLLED', $lookups->find_status_by_value('enrolled'));
+define('WAITING', $lookups->find_status_by_value('waiting'));
+define('DROPPED', $lookups->find_status_by_value('dropped'));
+define('INVITED', $lookups->find_status_by_value('invited'));
 $error = '';
 $message = '';
 $body = '';

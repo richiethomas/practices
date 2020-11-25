@@ -78,11 +78,11 @@ if (!$wk['id']) {
 } else {
 	$view->add_globals($mess_vars);		
 	$students = array();
-	foreach ($statuses as $stid => $status_name) {
+	foreach ($lookups->statuses as $stid => $status_name) {
 		$students[$stid] = Enrollments\get_students($wid, $stid);
 	}	
 	$view->data['students'] = $students;
-	$view->data['statuses'] = $statuses;
+	$view->data['statuses'] = $lookups->statuses;
 	$view->renderPage('admin/messages');
 }
 

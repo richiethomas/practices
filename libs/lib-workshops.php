@@ -3,9 +3,7 @@ namespace Workshops;
 	
 // workshops
 function get_workshop_info($id) {
-	$statuses = \Lookups\get_statuses();
-	$locations = \Lookups\get_locations();
-	
+
 	$stmt = \DB\pdo_query("select w.* from workshops w where w.id = :id", array(':id' => $id));
 	while ($row = $stmt->fetch()) {
 		$row = fill_out_workshop_row($row);
@@ -16,10 +14,10 @@ function get_workshop_info($id) {
 }
 
 function fill_out_workshop_row($row, $get_enrollment_stats = true) {
-	$locations = \Lookups\get_locations();
+	global $lookups;
 	
 	foreach (array('address', 'city', 'state', 'zip', 'place', 'lwhere') as $loc_field) {
-		$row[$loc_field] = $locations[$row['location_id']][$loc_field];
+		$row[$loc_field] = $lookups->locations[$row['location_id']][$loc_field];
 	}
 		
 	if ($row['when_public'] == 0 ) {
@@ -111,10 +109,10 @@ function format_workshop_startend($row) {
 // used in fill_out_workshop_row and also get_sessions_to_come
 // expects 'id' and 'capacity' to be set
 function set_enrollment_stats($row) {
-	$statuses = \Lookups\get_statuses();
+	global $lookups;
 	
 	$enrollments = \Enrollments\get_enrollments($row['id']);
-	foreach ($statuses as $sid => $sname) {
+	foreach ($lookups->statuses as $sid => $sname) {
 		$row[$sname] = $enrollments[$sid];
 	}	
 	$row['paid'] = how_many_paid($row);
@@ -156,7 +154,6 @@ function check_last_minuteness($wk) {
 
 function get_workshops_dropdown($start = null, $end = null) {
 	
-	$locations = \Lookups\get_locations();
 	$stmt = \DB\pdo_query("select w.* from workshops w order by start desc");
 	$workshops = array();
 	while ($row = $stmt->fetch()) {
@@ -364,10 +361,14 @@ function get_sessions_bydate($start = null, $end = null) {
 	$stmt = \DB\pdo_query("
 (select w.id, 0 as xtra_id, title, start, end, capacity, cost, 0 as xtra, 0 as class_show, notes, teacher_id, 1 as rank, '' as override_url, online_url, when_teacher_paid, actual_pay
 	from workshops w 
-	where w.start >= date('$mysqlstart') and w.end <= date('$mysqlend'))
+	where w.start >= :start1 and w.end <= :end1)
 union
-(select x.workshop_id, x.id as xtra_id, w.title, x.start, x.end, w.capacity, w.cost, 1 as xtra, x.class_show, w.notes, w.teacher_id, x.rank, x.online_url as override_url, w.online_url, x.when_teacher_paid, x.actual_pay from xtra_sessions x, workshops w, users u where w.id = x.workshop_id and x.start >= date('$mysqlstart') and x.end <= date('$mysqlend'))
-order by teacher_id, start asc"); 	
+(select x.workshop_id, x.id as xtra_id, w.title, x.start, x.end, w.capacity, w.cost, 1 as xtra, x.class_show, w.notes, w.teacher_id, x.rank, x.online_url as override_url, w.online_url, x.when_teacher_paid, x.actual_pay from xtra_sessions x, workshops w, users u where w.id = x.workshop_id and x.start >= :start2 and x.end <= :end2)
+order by teacher_id, start asc",
+array(':start1' => $mysqlstart,
+':end1' => $mysqlend,
+'start2' => $mysqlstart,
+'end2' => $mysqlend)); 	
 	
 //	$stmt = \DB\pdo_query("select w.* from workshops w WHERE w.start >= :start and w.end <= :end order by teacher_id, start desc", array(':start' => date('Y-m-d H:i:s', strtotime($start)), ':end' => date('Y-m-d H:i:s', strtotime($end))));
 	
@@ -415,8 +416,10 @@ function add_workshop_form($wk) {
 }
 
 function workshop_fields($wk) {
+	global $lookups;
+	
 	return \Wbhkit\texty('title', $wk['title'], null, null, null, 'Required', ' required ').
-	\Lookups\locations_drop($wk['location_id']).
+	$lookups->locations_drop($wk['location_id']).
 	\Wbhkit\texty('online_url', $wk['online_url'], 'Online URL').	
 	\Wbhkit\texty('start', $wk['start'], null, null, null, 'Required', ' required ').
 	\Wbhkit\texty('end', $wk['end'], null, null, null, 'Required', ' required ').
