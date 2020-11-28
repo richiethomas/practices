@@ -18,7 +18,7 @@ switch ($ac) {
 
 
 	case 'sar':
-		Reminders\remind_enrolled($wk);
+		Reminders::remind_enrolled($wk);
 		$message = "Reminders sent to enrolled.";
 		break;
 
@@ -96,7 +96,7 @@ switch ($ac) {
 
 		$msg = null;
 		if ($wid) {
-			foreach ($lookups->statuses as $sid => $sts) {
+			foreach (\Lookups\get_statuses() as $sid => $sts) {
 				$stds = Enrollments\get_students($wid, $sid);
 				foreach ($stds as $as) {
 					if (in_array($as['id'], $users)) {
@@ -123,7 +123,7 @@ if (!$wid) {
 
 $stats = array();
 $lists = array();
-foreach ($lookups->statuses as $stid => $status_name) {
+foreach (\Lookups\get_statuses() as $stid => $status_name) {
 	$stats[$stid] = count(Enrollments\get_students($wid, $stid));
 	$lists[$stid] = Enrollments\get_students($wid, $stid);
 }
@@ -131,7 +131,7 @@ $data['log'] = Enrollments\get_status_change_log($wk);
 $status_log = $view->renderSnippet('admin/status', $data);
 
 $view->add_globals(array('stats', 'lists', 'status_log'));	
-$view->data['statuses'] = $lookups->statuses;
+$view->data['statuses'] = \Lookups\get_statuses();
 $view->renderPage('admin/edit');
 
 

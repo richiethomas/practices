@@ -31,7 +31,8 @@ switch ($ac) {
 }
 
 $view->data['e'] = Enrollments\get_an_enrollment($wk, $guest);
-$view->data['statuses'] = $lookups->statuses;
+$view->data['statuses'] = \Lookups\get_statuses();
+	;
 $view->data['guest'] = $guest;
 $view->renderPage('admin/change_status');
 

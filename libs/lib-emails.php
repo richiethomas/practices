@@ -58,7 +58,7 @@ function centralized_email($to, $sub, $body) {
 
 function confirm_email($wk, $u, $status_id = ENROLLED) {
 		
-	global $lookups;
+	
 	
 	if (!isset($u['key']) || !$u['key']) {
 		$key = \Users\get_key($u['id']);
@@ -129,8 +129,9 @@ function confirm_email($wk, $u, $status_id = ENROLLED) {
 			
 			break;
 		default:
-			$sub = "{$lookups->statuses[$status_id]}: {$wk['title']}";
-			$point = "You are a status of '{$lookups->statuses[$status_id]}' for {$wk['title']}";
+			$statuses = \Lookups\get_statuses();
+			$sub = "{$statuses[$status_id]}: {$wk['title']}";
+			$point = "You are a status of '{$statuses[$status_id]}' for {$wk['title']}";
 			$textpoint = $point." ";
 			break;
 	}
@@ -171,12 +172,12 @@ $notifications
 
 
 function send_text($u, $msg) {
-	global $lookups;
 	if (!$u['send_text'] || !$u['carrier_id'] || !$u['phone'] || strlen($u['phone']) != 10 || (!trim($msg))) {
 		return false;
 	}
 	
-	$to = $u['phone'].'@'.$lookups->carriers[$u['carrier_id']]['email'];	
+	$carriers = \Lookups\get_carriers();
+	$to = $u['phone'].'@'.$carriers[$u['carrier_id']]['email'];	
 	$mail_status = centralized_email($to, '', $msg);
 	//echo "<pre>".print_r($u, true)."<br>to: $to<br>mail status: $mail_status<br>msg: $msg</pre>\n";
 	return $mail_status;

@@ -14,7 +14,7 @@ function get_reminders($how_many = 100) {
 	
 }
 
-function check_reminder($force = false) {
+function check_reminders($force = false) {
 	
 	/*
 delete from reminder_checks;

@@ -1,6 +1,9 @@
 <?php
 namespace Lookups;	
 
+$statuses = array();
+$locations = array();
+$carriers = array();
 
 function get_statuses() {
 	global $statuses;

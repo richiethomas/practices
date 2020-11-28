@@ -45,10 +45,11 @@ if (LOCAL) {
 	define('WEBMASTER', "will@willhinesimprov.com");
 }
 
-
 // set objects, code, etc
 $last_insert_id = null;
 include 'libs/lib-logger.php';
+include 'libs/lib-reminders.php';
+include 'libs/lib-lookups.php';
 include 'libs/db_pdo.php';
 include 'libs/wbh_webkit.php';
 include 'libs/wbh_webkit_pagination.php';
@@ -59,15 +60,12 @@ include 'libs/lib-enrollments.php';
 include 'libs/lib-emails.php';
 include 'libs/lib-xtra-sessions.php';
 include 'libs/lib-teachers.php';
-include 'libs/lib-reminders.php';
 include 'libs/lib-danny.php';
-
-$lookups = new Lookups(); // define locations, statuses, carriers, and groups
-
-define('ENROLLED', $lookups->find_status_by_value('enrolled'));
-define('WAITING', $lookups->find_status_by_value('waiting'));
-define('DROPPED', $lookups->find_status_by_value('dropped'));
-define('INVITED', $lookups->find_status_by_value('invited'));
+	
+define('ENROLLED', Lookups\find_status_by_value('enrolled'));
+define('WAITING', Lookups\find_status_by_value('waiting'));
+define('DROPPED', Lookups\find_status_by_value('dropped'));
+define('INVITED', Lookups\find_status_by_value('invited'));
 $error = '';
 $message = '';
 $body = '';
@@ -104,5 +102,5 @@ if (strpos($sc, 'admin') !== false) {
 	\Users\reject_user_below(2); // group 2 or higher for admin
 }
 
-\Reminders\check_reminder(); // every single time anyone loads a page, sheesh
-
+// check to see if we should send reminders every time anyone loads a page
+Reminders\check_reminders(); 

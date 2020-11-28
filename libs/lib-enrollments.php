@@ -3,20 +3,18 @@ namespace Enrollments;
 
 // registrations
 function get_enrollments($id) {
-	global $lookups;
 	$stmt = \DB\pdo_query("select count(*) as total, status_id from registrations where workshop_id = :wid group by status_id", array(':wid' => $id));
 	$enrollments = [];
 	while ($row = $stmt->fetch()) {
 		$enrollments[$row['status_id']] = $row['total'];
 	}
-	foreach ($lookups->statuses as $sid => $sname) {
+	foreach (\Lookups\get_statuses() as $sid => $sname) {
 		if (!isset($enrollments[$sid])) { $enrollments[$sid] = 0; }		
 	}
 	return $enrollments;
 }
 
 function get_an_enrollment($wk, $u) {
-	global $lookups;
 	$stmt = \DB\pdo_query("select r.* from registrations r where r.workshop_id = :wid and user_id = :uid", array(':wid' => $wk['id'], ':uid' => $u['id']));
 
 	while ($row = $stmt->fetch()) {
@@ -34,7 +32,8 @@ function get_an_enrollment($wk, $u) {
 		} else {
 			$row['rank'] = null;
 		}
-		$row['status_name'] = $lookups->statuses[$row['status_id']];
+		$statuses = \Lookups\get_statuses();
+		$row['status_name'] = $statuses[$row['status_id']];
 		return $row;
 	}
 	return get_empty_enrollment();
@@ -240,16 +239,17 @@ function update_paid_by_enrollment_id($eid, $paid = 1) {
 function change_status($wk, $u, $status_id = ENROLLED, $confirm = true) {
 				
 	$e = get_an_enrollment($wk, $u);
-	global $lookups;
+	$statuses = \Lookups\get_statuses();
+
 	if ($e['status_id'] != $status_id) {
 		
 		$stmt = \DB\pdo_query("update registrations set status_id = :status_id,  last_modified = '".date("Y-m-d H:i:s")."' where workshop_id = :wid and user_id = :uid", array(':status_id' => $status_id, ':wid' => $wk['id'], ':uid' => $u['id']));
 		
 		update_change_log($wk, $u, $status_id);	
 		if ($confirm) { \Emails\confirm_email($wk, $u, $status_id); }
-		return "Updated user ({$u['email']}) to status '{$lookups->statuses[$status_id]}' for {$wk['title']}.";
+		return "Updated user ({$u['email']}) to status '{$statuses[$status_id]}' for {$wk['title']}.";
 	}
-	return "User ({$u['email']}) was already status '{$lookups->statuses[$status_id]}' for {$wk['title']}.";
+	return "User ({$u['email']}) was already status '{$statuses[$status_id]}' for {$wk['title']}.";
 }
 
 function update_change_log($wk, $u, $status_id) {
@@ -258,15 +258,14 @@ function update_change_log($wk, $u, $status_id) {
 	}
 	
 	global $logger;
-	
-	global $lookups;
+	$statuses = \Lookups\get_statuses();
 	
 	$stmt = \DB\pdo_query("insert into status_change_log (workshop_id, user_id, status_id, happened) VALUES (:wid, :uid, :status_id, '".date('Y-m-d H:i:s', time())."')", 
 	array(':wid' => $wk['id'],
 	':uid' => $u['id'],
 	':status_id' => $status_id));
 	
-	$logger->info("{$u['fullest_name']} is now '{$lookups->statuses[$status_id]}' for '{$wk['title']}'");
+	$logger->info("{$u['fullest_name']} is now '{$statuses[$status_id]}' for '{$wk['title']}'");
 	
 	return true;
 }
@@ -335,7 +334,7 @@ function get_last_enrolled($wid = 0, $uid = 0, $before = null) {
 }
 
 function get_transcript_tabled($u, $admin = false, $page = 1) {
-	global $key, $view, $lookups;
+	global $key, $view;
 	if (!$u || !isset($u['id'])) {
 		return "<p>Not logged in!</p>\n";
 	}
@@ -388,7 +387,7 @@ function get_transcript_tabled($u, $admin = false, $page = 1) {
 	}
 	
 	$view->data['guest_id'] = $u['id'];
-	$view->data['statuses'] = $lookups->statuses;
+	$view->data['statuses'] = \Lookups\get_statuses();
 	$view->data['admin'] = $admin;
 	$view->data['links'] = $links;
 	$view->data['rows'] = $past_classes;

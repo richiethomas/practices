@@ -14,10 +14,10 @@ function get_workshop_info($id) {
 }
 
 function fill_out_workshop_row($row, $get_enrollment_stats = true) {
-	global $lookups;
+	$locations = \Lookups\get_locations();
 	
 	foreach (array('address', 'city', 'state', 'zip', 'place', 'lwhere') as $loc_field) {
-		$row[$loc_field] = $lookups->locations[$row['location_id']][$loc_field];
+		$row[$loc_field] = $locations[$row['location_id']][$loc_field];
 	}
 		
 	if ($row['when_public'] == 0 ) {
@@ -109,10 +109,9 @@ function format_workshop_startend($row) {
 // used in fill_out_workshop_row and also get_sessions_to_come
 // expects 'id' and 'capacity' to be set
 function set_enrollment_stats($row) {
-	global $lookups;
 	
 	$enrollments = \Enrollments\get_enrollments($row['id']);
-	foreach ($lookups->statuses as $sid => $sname) {
+	foreach (\Lookups\get_statuses() as $sid => $sname) {
 		$row[$sname] = $enrollments[$sid];
 	}	
 	$row['paid'] = how_many_paid($row);
@@ -416,10 +415,10 @@ function add_workshop_form($wk) {
 }
 
 function workshop_fields($wk) {
-	global $lookups;
+	
 	
 	return \Wbhkit\texty('title', $wk['title'], null, null, null, 'Required', ' required ').
-	$lookups->locations_drop($wk['location_id']).
+	\Lookups\locations_drop($wk['location_id']).
 	\Wbhkit\texty('online_url', $wk['online_url'], 'Online URL').	
 	\Wbhkit\texty('start', $wk['start'], null, null, null, 'Required', ' required ').
 	\Wbhkit\texty('end', $wk['end'], null, null, null, 'Required', ' required ').
@@ -464,7 +463,7 @@ function add_update_workshop($wk, $ac = 'up') {
 		
 		if ($ac == 'up') {
 			$params[':wid'] = $wk['id'];
-			$sql = "update workshops set title = :title, start = :start, end = :end, cost = :cost, capacity = :capacity, location_id = :lid, online_url = :online_url, notes = :notes, when_public = :public, cancelled = :cancelled, reminder_sent = :reminder_sent, teacher_id = :tid, where id = :wid";
+			$sql = "update workshops set title = :title, start = :start, end = :end, cost = :cost, capacity = :capacity, location_id = :lid, online_url = :online_url, notes = :notes, when_public = :public, cancelled = :cancelled, reminder_sent = :reminder_sent, teacher_id = :tid where id = :wid";			
 			$stmt = \DB\pdo_query($sql, $params);
 			return $wk['id'];
 		} elseif ($ac = 'ad') {
