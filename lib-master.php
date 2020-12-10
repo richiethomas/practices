@@ -48,24 +48,27 @@ if (LOCAL) {
 // set objects, code, etc
 $last_insert_id = null;
 include 'libs/lib-logger.php';
-include 'libs/lib-reminders.php';
-include 'libs/lib-lookups.php';
 include 'libs/db_pdo.php';
 include 'libs/wbh_webkit.php';
 include 'libs/wbh_webkit_pagination.php';
 include 'libs/time_difference.php';
-include 'libs/lib-users.php';
 include 'libs/lib-workshops.php';
-include 'libs/lib-enrollments.php';
 include 'libs/lib-emails.php';
 include 'libs/lib-xtra-sessions.php';
 include 'libs/lib-teachers.php';
+include 'libs/lib-reminders.php';
 include 'libs/lib-danny.php';
 	
-define('ENROLLED', Lookups\find_status_by_value('enrolled'));
-define('WAITING', Lookups\find_status_by_value('waiting'));
-define('DROPPED', Lookups\find_status_by_value('dropped'));
-define('INVITED', Lookups\find_status_by_value('invited'));
+//include 'libs/lib-enrollments.php';
+//include 'libs/lib-lookups.php';
+//include 'libs/lib-users.php';
+
+	
+$lookups = new Lookups;	
+define('ENROLLED', $lookups->find_status_by_value('enrolled'));
+define('WAITING', $lookups->find_status_by_value('waiting'));
+define('DROPPED', $lookups->find_status_by_value('dropped'));
+define('INVITED', $lookups->find_status_by_value('invited'));
 $error = '';
 $message = '';
 $body = '';
@@ -80,26 +83,27 @@ if ($wid) {
 	$wk = \Workshops\get_empty_workshop();
 }
 
+$u = new User(); // set empty user
+
 // set user info into memory
 $already_here_key = (isset($_SESSION['s_key']) ? $_SESSION['s_key'] : null);
 
-$key = \Users\check_for_stored_or_passed_key(); // checks for key in REQUEST and SESSION and COOKIE, not logged in otherwise
+$key = $u->check_for_stored_or_passed_key(); // checks for key in REQUEST and SESSION and COOKIE, not logged in otherwise
 if ($key) {
-	$u = \Users\key_to_user($key);
-} else {
-	$u = \Users\get_empty_user();
-}
+	$u->set_user_by_key($key);
+} 
 
 // is this the first page this visitor has visited
-if (isset($u['ukey']) && $u['ukey'] != $already_here_key) {
-	$logger->info("{$u['fullest_name']} logged in.");
+if (isset($u->fields['ukey']) && $u->fields['ukey'] != $already_here_key) {
+	$logger->info("{$u->fields['fullest_name']} logged in.");
 }
+
 
 $view = new View();
 
 // group 2 or higher for admin pasges
 if (strpos($sc, 'admin') !== false) {
-	\Users\reject_user_below(2); // group 2 or higher for admin
+	$u->reject_user_below(2); // group 2 or higher for admin
 }
 
 // check to see if we should send reminders every time anyone loads a page

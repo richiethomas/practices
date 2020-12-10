@@ -1,4 +1,11 @@
 <?php
+
+
+$sessions = '';
+if (!empty($wk['sessions'])) {
+	$wk['when'] = \XtraSessions\add_sessions_to_when($wk['when'], $wk['sessions']);
+}	
+
 	
 if (!\Workshops\is_public($wk)) {
 	$point = "This workshop is not available for signups yet. It will be available at <b>".date("l M j, g:ia", strtotime($wk['when_public']))."</b> California time (PDT)";
@@ -7,42 +14,72 @@ if (!\Workshops\is_public($wk)) {
 } elseif ($wk['cancelled'] == true) {
 	$point = "This workshop is CANCELLED.";
 } else {
-	if (isset($u['id'])) {
+	if ($u->logged_in()) {
 		$enroll_link = "$sc?ac=enroll&wid={$wk['id']}";
-		$key = $u['ukey'];
 
 		switch ($e['status_id']) {
 			case ENROLLED:
-				$point = "You are ENROLLED in the practice listed below. Would you like to <a class='btn btn-primary' href='$sc?ac=drop&wid={$wk['id']}&key={$key}&v=winfo'>drop</a> it?";
+				$point = "You are ENROLLED in the practice listed below. Would you like to <a class='btn btn-primary' href='$sc?ac=drop&wid={$wk['id']}&key={$u->fields['ukey']}&v=winfo'>drop</a> it?";
 				break;
 			case WAITING:
-				$point = "You are spot number {$e['rank']} on the WAIT LIST for the practice listed below. Would you like to <a class='btn btn-primary' href='$sc?ac=drop&wid={$wk['id']}&key={$key}&v=winfo'>drop</a> it?";
+				$point = "You are spot number {$e['rank']} on the WAIT LIST for the practice listed below. Would you like to <a class='btn btn-primary' href='$sc?ac=drop&wid={$wk['id']}&key={$u->fields['ukey']}&v=winfo'>drop</a> it?";
 				break;
 			case INVITED:
-				$point = "A spot opened up in the practice listed below. Would you like to <a class='btn btn-primary' href='$sc?ac=accept&wid={$wk['id']}&key={$key}&v=winfo'>accept</a> it, or <a class='btn btn-primary' href='$sc?ac=decline&wid={$wk['id']}&key={$key}&v=winfo'>decline</a> it?";
+				$point = "A spot opened up in the practice listed below. Would you like to <a class='btn btn-primary' href='$sc?ac=accept&wid={$wk['id']}&key={$u->fields['ukey']}&v=winfo'>accept</a> it, or <a class='btn btn-primary' href='$sc?ac=decline&wid={$wk['id']}&key={$u->fields['ukey']}&v=winfo'>decline</a> it?";
 				break;
 			case DROPPED:
-				$point = "You have dropped out of the practice listed below. Would you like to <a class='btn btn-primary'  href='$enroll_link'>re-enroll</a>? Info will be sent to <b>{$u['email']}</b>.";
+				$point = "You have dropped out of the practice listed below. Would you like to <a class='btn btn-primary'  href='$enroll_link'>re-enroll</a>? Info will be sent to <b>{$u->fields['email']}</b>.";
 				break;
 			default:
 	
-				$point = "You are not currenty signed up for the practice listed below. ".
+				$point = 
 					($wk['soldout'] == 1
-					? "It is full. Want to <a class='btn btn-primary' href='$enroll_link'>join the wait list</a>?"
-					: "Want to <a class='btn btn-primary' href='$enroll_link'>enroll</a>?  Info will be sent to <b>{$u['email']}</b>.");
+					? "The class is full. Want to <a class='btn btn-primary' href='$enroll_link'>join the wait list</a>?"
+					: "Click here to <a class='btn btn-primary' href='$enroll_link'>enroll</a> in this class.  Info will be sent to <b>{$u->fields['email']}</b>.");
 	
 				break;
 		}
 	} else {
-		$point = "If you wish to enroll, you must first log in <a href='$sc'>on the front page</a>.";	
+		$point = "If you wish to enroll, you must first log in <a href='index.php'>on the front page</a>.";	
 	}
 }
 ?>
 <div class='row'><div class='col'>
-<?php if ($show_other_action)  { ?>
-<p class='alert alert-info'><?php echo $point; ?></p>
-<?php } ?>
-<p>Click here to <a href='index.php'> <span class="oi oi-home" title="home" aria-hidden="true"></span> return to the main page</a>.</p>
-<hr>
-<?php echo $workshop_tabled; ?>
-</div></div> <!-- end of col and row -->	
+
+
+<?php
+	
+
+if ($show_other_action)  {
+	echo "<p class='alert alert-info'>{$point}</p>\n";
+}
+	
+echo "	
+<div class='row my-3 py-3'><div class='col-sm-6'>
+<h2>{$wk['title']}</h2>
+<p>{$wk['notes']}</p>
+<p>{$wk['when']} (".TIMEZONE.")<br><br>
+{$wk['costdisplay']}, {$wk['enrolled']} (of {$wk['capacity']}) enrolled, ".($wk['waiting']+$wk['invited'])." waiting</p>
+</div>
+
+<div class='col-sm-6'>
+<figure class=\"figure\">
+  ".\Teachers\teacher_photo($wk['teacher_user_id'], " figure-img rounded")."
+  <figcaption class=\"figure-caption\"><b>Teacher: <a href='teachers.php?tid={$wk['teacher_id']}'>{$wk['teacher_name']}</a></b></figcaption>
+</figure>
+</div></div>
+</div>
+
+<div class=\"row m-3 p-3 justify-content-center\"><div class=\"col-md-8 border border-info\">
+<h2>How This Works</h2>
+<ul>
+	<li>All times are California local time (PDT).</li>
+	<li>Pay over Venmo / PayPal -- the specific account info will be sent after you sign up</li>
+	<li>Classes are held over <a href=\"http://www.zoom.us/\">Zoom</a></li>
+	<li><b>LATE DROP POLICY: If you are enrolled, and the class is sold out, and you drop within ".LATE_HOURS." hours of the start of the workshop, you still must pay. Otherwise, full refund available.</b></li>
+</ul>
+</div>
+
+
+</div></div> <!-- end of col and row -->
+";	

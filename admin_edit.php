@@ -6,10 +6,11 @@ include 'lib-master.php';
 $wk_vars = array('wid', 'title', 'notes', 'start', 'end', 'lid', 'online_url', 'cost', 'capacity', 'notes', 'when_public', 'email', 'con', 'cancelled', 'xtraid', 'class_show', 'guest_id', 'reminder_sent', 'sold_out_late', 'teacher_id');
 Wbhkit\set_vars($wk_vars);
 
+$eh = new EnrollmentsHelper();
 
-$guest = array(); // the user we're going to change
+$guest = new User(); // the user we're going to change
 if ($guest_id > 0) {
-	$guest = Users\get_user_by_id($guest_id); // second parameter means "don't save this in the cookie"
+	$guest->set_user_by_id($guest_id); 
 }
 
 
@@ -18,7 +19,7 @@ switch ($ac) {
 
 
 	case 'sar':
-		Reminders::remind_enrolled($wk);
+		Reminders\remind_enrolled($wk);
 		$message = "Reminders sent to enrolled.";
 		break;
 
@@ -52,27 +53,25 @@ switch ($ac) {
 		break;
 		
 	case 'cw':
-		$message = Enrollments\check_waiting($wk);
+		$e = new Enrollment();
+		$message = $e->check_waiting($wk);
 		break;
 
 	case 'conrem':
-		Enrollments\drop_session($wk, $guest);
-		$message = "Removed user ({$guest['email']}) from practice '{$wk['title']}'";
+		$e = new Enrollment();
+		$e->set_an_enrollments($wk['id'], $guest->fields['id']);
+		$e->drop_session();
+		$message = "Removed user ({$guest->fields['email']}) from practice '{$wk['title']}'";
 		$logger->info($message);
 		break;
 
 	case 'enroll':
 		Wbhkit\set_vars(array('email', 'con'));
-		$guest = Users\get_user_by_email($email);
-		$message = Enrollments\handle_enroll($wk, $guest, $con); 
+		$guest->set_user_by_email($email);
+		$e = new Enrollment();
+		$e->set_an_enrollment($wk['id'], $guest->fields['id']);
+		$message = $e->smart_enroll($wk, $guest, $con); 
 		break;
-
-	// initially called in admin_users.php
-	// but it comes here to finish the job
-	case 'delstudentconfirm':
-		Users\delete_student($guest['id']);
-		break;
-
 	
 	case 'cdel':
 		$error = "Are you sure you want to delete '{$wk['title']}'? <a class='btn btn-danger' href='admin.php?ac=del&wid={$wk['id']}'>delete</a>";
@@ -96,8 +95,8 @@ switch ($ac) {
 
 		$msg = null;
 		if ($wid) {
-			foreach (\Lookups\get_statuses() as $sid => $sts) {
-				$stds = Enrollments\get_students($wid, $sid);
+			foreach ($lookups->statuses as $sid => $sts) {
+				$stds = $eh->get_students($wid, $sid);
 				foreach ($stds as $as) {
 					if (in_array($as['id'], $users)) {
 						$msg = Enrollments\update_paid($wid, $as['id'], 1);
@@ -123,15 +122,15 @@ if (!$wid) {
 
 $stats = array();
 $lists = array();
-foreach (\Lookups\get_statuses() as $stid => $status_name) {
-	$stats[$stid] = count(Enrollments\get_students($wid, $stid));
-	$lists[$stid] = Enrollments\get_students($wid, $stid);
+foreach ($lookups->statuses as $stid => $status_name) {
+	$stats[$stid] = count($eh->get_students($wid, $stid));
+	$lists[$stid] = $eh->get_students($wid, $stid);
 }
-$data['log'] = Enrollments\get_status_change_log($wk);
+$data['log'] = $eh->get_status_change_log($wk);
 $status_log = $view->renderSnippet('admin/status', $data);
 
 $view->add_globals(array('stats', 'lists', 'status_log'));	
-$view->data['statuses'] = \Lookups\get_statuses();
+$view->data['statuses'] = $lookups->statuses;
 $view->renderPage('admin/edit');
 
 

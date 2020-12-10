@@ -11,6 +11,9 @@ $long_where = "{$wk['place']} {$wk['lwhere']}";
 // multiple sessions?
 //$wk['when'] = \XtraSessions\add_sessions_to_when($wk['when'], $wk['sessions']);
 
+$eh = new EnrollmentsHelper();
+$guest = new User();
+
 switch ($ac) {
 			
 	case 'sendmsg':
@@ -23,7 +26,7 @@ switch ($ac) {
 			$error = 'No workshop chosen';
 			break;
 		}
-		$stds = Enrollments\get_students($wk['id'], $st);
+		$stds = $eh->get_students($wk['id'], $st);
 		$sent = '';
 		$subject = preg_replace('/TITLE/', $wk['title'], $subject);
 		$note = preg_replace('/TITLE/', $wk['title'], $note);
@@ -37,14 +40,15 @@ switch ($ac) {
 
 
 		foreach ($stds as $std) {
-			$key = Users\get_key($std['id']);
-			$trans = URL."workshop.php?key=$key&wid={$wk['id']}";
+			
+			$trans = URL."workshop.php?key={$std['ukey']}&wid={$wk['id']}";
 			$msg = $base_msg."<p>Drop/re-enroll/see more info here:<br>$trans</p>\n";
 			
 			Emails\centralized_email($std['email'], $subject, $msg);
 			$sent .= "{$std['email']}, ";
 		
-			Emails\send_text($std, $sms); // routine will check if they want texts and have proper info
+			$guest->set_user_by_id($std['id']);
+			Emails\send_text($guest, $sms); // routine will check if they want texts and have proper info
 		
 		}
 		$message = "Email '$subject' sent to $sent";
@@ -78,11 +82,11 @@ if (!$wk['id']) {
 } else {
 	$view->add_globals($mess_vars);		
 	$students = array();
-	foreach (\Lookups\get_statuses() as $stid => $status_name) {
-		$students[$stid] = Enrollments\get_students($wid, $stid);
+	foreach ($lookups->statuses as $stid => $status_name) {
+		$students[$stid] = $eh->get_students($wid, $stid);
 	}	
 	$view->data['students'] = $students;
-	$view->data['statuses'] = \Lookups\get_statuses();
+	$view->data['statuses'] = $lookups->statuses;
 	$view->renderPage('admin/messages');
 }
 

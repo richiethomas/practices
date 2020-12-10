@@ -22,7 +22,10 @@ function get_teacher_by_id($tid) {
 }
 
 function fill_out_teacher_row($row) {
-	 return \Users\set_nice_name($row); 
+	$tempu = new \User();
+	$tempu->replace_fields($row);
+	$tempu->set_nice_name();
+	return $tempu->fields; 
 }
 
 

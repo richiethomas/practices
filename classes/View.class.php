@@ -16,10 +16,12 @@ class View extends WBHObject
 	        extract($data);
 	    }
 	
-		include $this->getPageStr($this->header.(strpos($page, 'admin') !== false ? '-admin' : ''));
+		include $this->getPageStr($this->header.
+			(strpos($page, 'admin') !== false ? '-admin' : ''));
 		include $this->getPageStr('messagealert'); // every page: show $message and $error
 		include $this->getPageStr($page);
-		include $this->getPageStr($this->footer.(strpos($page, 'admin') !== false ? '-admin' : ''));
+		include $this->getPageStr
+			($this->footer.(strpos($page, 'admin') !== false ? '-admin' : ''));
 	}
 			
 	public function renderSnippet($bargle, $data=null) {

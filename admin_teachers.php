@@ -33,7 +33,7 @@ switch ($ac) {
 	
 }
 
-//$all = ($needle ? Users\find_students($needle, $sort) : array());
+//$all = ($needle ? $userhelper->find_students($needle, $sort) : array());
 
 //$view->add_globals(array('needle', 'sort', 'all'));
 //$view->data['search_opts'] = array('n' => 'by name', 't' => 'by total classes', 'd' => 'by date registered');

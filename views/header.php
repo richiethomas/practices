@@ -32,8 +32,8 @@ if (isset($fb_image)) {
 		  <div class="collapse navbar-collapse" id="navbarsExampleDefault">
 			<ul class="navbar-nav ml-auto justify-content-end">
 				
-			    <?php if (Users\check_user_level(2)) { ?>
-				 	<li class="nav-item"> <a class="btn btn-outline-primary" href="admin.php">Admin</a> </li>	  
+			    <?php if ($u->check_user_level(2)) { ?>
+				 	<li class="nav-item"> <a class="btn btn-outline-primary nav-link" href="admin.php">Admin</a> </li>	  
 			    <?php } // end of check user level 2 ?>
 				
 				<?php foreach( get_nav_items() as $nav_item ){
@@ -58,10 +58,10 @@ if (isset($fb_image)) {
 					}
 				}?>
 				
-		  		<?php if (Users\logged_in()) { ?>		
+		  		<?php if ($u->logged_in()) { ?>		
 							
 				
-				<li class="nav-item"><a class="user-logged-in" href="you.php" title="User Profile"><span class="oi oi-person" title="person" aria-hidden="true"></span>  <?php echo "{$u['nice_name']}"; ?></a></li>
+				<li class="nav-item"><a class="user-logged-in" href="you.php" title="User Profile"><span class="oi oi-person" title="person" aria-hidden="true"></span>  <?php echo "{$u->fields['nice_name']}"; ?></a></li>
 				
 				<?php } else { ?>
 			    <li class="nav-item"> <a class="btn btn-outline-primary my-2 my-sm-0" data-toggle="modal" data-target="#login-modal">Login</a></li>

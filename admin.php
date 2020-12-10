@@ -5,7 +5,7 @@ include 'lib-master.php';
 Wbhkit\set_vars(array('filter_by'));
 
 $your_teacher_id = 0;
-if ($t = Teachers\is_teacher($u['id'])) {
+if ($t = Teachers\is_teacher($u->fields['id'])) {
 	$your_teacher_id = $t['id'];
 }
 

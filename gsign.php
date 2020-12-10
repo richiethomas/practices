@@ -17,9 +17,9 @@ if (isset($id_token) && $id_token) {
 
 		include 'lib-master.php';
 
-		if (isset($email) && $email && Users\validate_email($email)) {
-			$u = Users\get_user_by_email($email);
-			echo $u['ukey'];
+		if (isset($email) && $email && $u->validate_email($email)) {
+			$u ->set_user_by_email($email);
+			echo $u->fields['ukey'];
 			exit;
 		} else {
 			echo false;

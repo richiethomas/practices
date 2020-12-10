@@ -2,7 +2,7 @@
 $heading = "payroll";
 include 'lib-master.php';
 
-Users\reject_user_below(3); // group 3 or higher
+$u->reject_user_below(3); // group 3 or higher
 
 $vars = array('searchstart', 'searchend', 'lastweekstart', 'lastweekend', 'nextweekstart', 'nextweekend');
 Wbhkit\set_vars($vars);

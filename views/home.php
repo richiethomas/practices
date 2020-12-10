@@ -1,4 +1,8 @@
 <?php if ($link_email_sent_flag) { ?>	
+<script
+  src="https://code.jquery.com/jquery-3.5.1.min.js"
+  integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0="
+  crossorigin="anonymous"></script>
 <script type="text/javascript">
     $(window).on('load',function(){
         $('#checkYourEmail').modal('show');
@@ -6,10 +10,10 @@
 </script>	
 <?php } ?>
 
-<?php if (Users\logged_in() && !$u['display_name']) { ?>	
+<?php if ($u->logged_in() && !$u->fields['display_name']) { ?>	
 		<div class="alert alert-info" role="alert">
 		<p>Would you mind entering a name? Nickname is fine.</p>
-	<?php echo Users\edit_display_name($u); ?>
+	<?php echo $userhelper->edit_display_name($u); ?>
 		</div>
 <?php 		}  ?>
 	

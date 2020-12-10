@@ -20,7 +20,7 @@ if ($needle) {
 	echo "<h3>Matches for '$needle'</h3>\n";
 	if (count($all) == 0) {
 		echo "<p>No matches!</p>";
-		if (\Users\validate_email($needle)) {
+		if ($u->validate_email($needle)) {
 			echo "<p>Would you like to add <a class='btn btn-primary' href='admin_users.php?ac=adduser&needle=$needle'>{$needle}</a> as a user?</p>\n";
 		}
 	} else {

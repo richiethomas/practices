@@ -5,12 +5,16 @@ include 'lib-master.php';
 $wk_vars = array('wid', 'uid', 'st', 'con', 'lmod', 'guest_id');
 Wbhkit\set_vars($wk_vars);
 
-$guest = array(); // the user we're going to change
+$guest = new User();
 if ($guest_id > 0) {
-	$guest = Users\get_user_by_id($guest_id); // second parameter means "don't save this in the cookie"
+	$guest->set_user_by_id($guest_id); 
 }
 
-if (!isset($wk) || !isset($wk['id']) || !isset($guest) || !isset($guest['id'])) {
+
+$e = new Enrollment();
+$e->set_an_enrollment($wid, $guest_id);
+
+if (!isset($wk) || !isset($wk['id']) || !$guest->logged_in()) {
 	$view->data['error_message'] = "<h1>Whoops!</h1><p>You are asking to look at info about an enrollment, but I (the computer) cannot tell which enrollment you mean. Sorry!</p>\n";
 	$view->renderPage('admin/error');
 	exit();
@@ -23,16 +27,15 @@ switch ($ac) {
 	
 	case 'cs':
 		if ($st) {
-			$message = Enrollments\change_status($wk, $guest, $st, $con);
+			$message = $e->change_status($st, $con);
 		}
 		break;	
 	
 	
 }
 
-$view->data['e'] = Enrollments\get_an_enrollment($wk, $guest);
-$view->data['statuses'] = \Lookups\get_statuses();
-	;
+$view->data['e'] = $e;
+$view->data['statuses'] = $lookups->statuses;
 $view->data['guest'] = $guest;
 $view->renderPage('admin/change_status');
 

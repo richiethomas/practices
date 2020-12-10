@@ -50,7 +50,7 @@
 			<li class="nav-item"><a class="nav-link" href="admin_listall.php">Classes</a></li>
 			<li class="nav-item"><a class="nav-link" href="admin_teachers.php">Teachers</a></li>
 			<li class="nav-item"><a class="nav-link" href="admin_search.php">Students</a> </li>
-<?php if (Users\check_user_level(3)) { ?>
+<?php if ($u->check_user_level(3)) { ?>
 			<li><hr/></li>
 			<li class="nav-item"><a class="nav-link" href="admin_reminders.php">Reminders</a></li>
     <li class="nav-item dropdown">

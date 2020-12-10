@@ -1,9 +1,9 @@
-<div class='row'><div class='col-md-12'><h2>Transcript for <a href='<?php echo "$sc?guest_id={$guest['id']}&needle=".$needle; ?>'><?php echo $guest['nice_name']; ?></a></h2>
+<div class='row'><div class='col-md-12'><h2>Transcript for <a href='<?php echo "$sc?guest_id={$guest->fields['id']}&needle=".$needle; ?>'><?php echo $guest->fields['nice_name']; ?></a></h2>
 
 
 <?php 
-if (Users\check_user_level(3)) {
-	echo "<p><a href='".URL."index.php?key=$key'>Log in as {$guest['email']}</a></p>\n";
+if ($u->check_user_level(3)) {
+	echo "<p><a href='".URL."index.php?key=$key'>Log in as {$guest->fields['email']}</a></p>\n";
 } 
 
 
@@ -19,34 +19,34 @@ if ($needle) {
 
 <div class='card my-5 bg-light'><div class='card-body'>
 <h3 class="my-3">Change Email</h3>
-<?php echo $change_email_form; ?>
+<?php echo $userhelper->edit_change_email($guest, $sc); ?>
 </div></div> <!-- end of card -->
 
 <div class='card my-5 bg-light'><div class='card-body'>
 <h3 class="my-3">Text Preferences</h3>
-<?php echo $text_preferences; ?>
+<?php echo $userhelper->edit_text_preferences($guest, $sc, $lookups); ?>
 </div></div> <!-- end of card -->
 
 <div class='card my-5 bg-light'><div class='card-body'>
 <h3 class="my-3">Display Name</h3>
-<?php echo $display_name_form; ?>
+<?php echo $userhelper->edit_display_name($guest, $sc); ?>
 </div></div> <!-- end of card -->
 
-<?php if (Users\check_user_level(3)) { ?>
+<?php if ($u->check_user_level(3)) { ?>
 <div class='card my-5 bg-light'><div class='card-body'>
 <h3 class="my-3">Group Level</h3>
-<?php echo $groups_form; ?>
+<?php echo $userhelper->edit_group_level($guest, $sc, $lookups); ?>
 </div></div> <!-- end of card -->
 <?php } ?>
 
 <div class='card my-5 bg-light'><div class='card-body'>
 <h3 class="my-3">Teacher Status</h3>
 <?php 
-$t = \Teachers\is_teacher($guest['id']);
+$t = \Teachers\is_teacher($guest->fields['id']);
 if ($t) {
-	echo "<p>{$guest['nice_name']} is a teacher. <a class=\"btn btn-primary text-light\" href='admin_teachers.php?ac=view&tid={$t['id']}'>Edit teacher info</a></p>";
+	echo "<p>{$guest->fields['nice_name']} is a teacher. <a class=\"btn btn-primary text-light\" href='admin_teachers.php?ac=view&tid={$t['id']}'>Edit teacher info</a></p>";
 } else {
-	echo "<p>{$guest['nice_name']} is NOT a teacher. <a class=\"btn btn-primary text-light\" href='admin_teachers.php?ac=make&guest_id={$guest['id']}'>Make teacher</a></p>";	
+	echo "<p>{$guest->fields['nice_name']} is NOT a teacher. <a class=\"btn btn-primary text-light\" href='admin_teachers.php?ac=make&guest_id={$guest->fields['id']}'>Make teacher</a></p>";	
 }
 ?>
 </div></div> <!-- end of card -->
@@ -55,6 +55,6 @@ if ($t) {
 
 <p>or</p>
 
-<p><a class='btn btn-danger text-light' href='<?php echo "$sc?ac=delstudent&guest_id={$guest['id']}" ?>'>remove this student</a></p>
+<p><a class='btn btn-danger text-light' href='<?php echo "$sc?ac=delstudent&guest_id={$guest->fields['id']}" ?>'>remove this student</a></p>
 
 </div></div>

@@ -10,24 +10,23 @@ switch ($ac) {
 		Wbhkit\set_vars(array('email', 'display_name'));
 	
 		// if a user exists for that email, get it
-		$u = Users\get_user_by_email($email);
+		$u->set_user_by_email($email);
 
-		// if not, make that user
-		if (!$u) {
-			$error = "'$email' is not a valid email, I think?";
+		// if failed, that was a bad email
+		if (!$u->logged_in()) {
+			$error = $u->error;
 			$logger->debug($error);
-			
 			break;
 		}
 
 		// send log in link to that user
-		if (Users\email_link($u)) {
-			$message = "Thanks! I've sent a link to your {$u['email']}. If you don't see it <a href='index.php'>click here to refresh the page</a> and try again.";
+		if ($u->email_link()) {
+			$message = "Thanks! I've sent a link to your {$u->fields['email']}. If you don't see it <a href='index.php'>click here to refresh the page</a> and try again.";
 			$link_email_sent_flag = true;
 			$logger->debug($message);
 			
 		} else {
-			$error = "I was unable to email a link to {$u['email']}! Sorry.";
+			$error = "I was unable to email a link to {$u->fields['email']}! Sorry.";
 			$logger->debug($error);
 		}
 		
@@ -36,8 +35,8 @@ switch ($ac) {
 	
 	// log out	
 	case 'lo':
-		$logger->info("{$u['nice_name']} logging out.");
-		Users\logout($key, $u, $message);
+		$logger->info("{$u->fields['nice_name']} logging out.");
+		$u->logout();
 		header("Location: ".URL);
 		die();
 		break;	
@@ -45,18 +44,18 @@ switch ($ac) {
 	case 'cemail':
 		Wbhkit\set_vars(array('newemail'));
 
-		if (!Users\logged_in()) {
+		if (!$u->logged_in()) {
 			$error = 'You are not logged in! You have to be logged in to change your email.';
 			$logger->debug($error);
 			break;
 		}
-		if (!Users\validate_email($newemail)) {
+		if (!$u->validate_email($newemail)) {
 			$error = 'You asked to change your email but the new email \'$newemail\' is not a valid email';
 			$logger->debug($error);
 			break;
 		}
 
-		Users\change_email_phase_one($u, $newemail);
+		$u->change_email_phase_one($newemail);
 		$message = "Okay, a link has been sent to the new email address ({$newemail}). Check your spam folder if you don't see it.";
 		$logger->debug($message);
 		break;
@@ -67,14 +66,15 @@ switch ($ac) {
 	case 'updatedn':
 		Wbhkit\set_vars(array('display_name'));
 	
-		if (!Users\logged_in()) {
+		if (!$u->logged_in()) {
 			$error = 'You are not logged in! You have to be logged in to update your display name.';
 			$logger->debug($error);
 			break;
 		}
-		$logger->info("Changing display name to '$display_name' from '{$u['display_name']}' for user {$u['id']}");
-		$u['display_name'] = $display_name;
-		Users\update_display_name($u, $message, $error); // function will update all of those arguments
+		$message = "Changing display name to '$display_name' from '{$u->fields['display_name']}' for user {$u->fields['id']}";
+		$logger->info($message);
+		$u->fields['display_name'] = $display_name;
+		$u->update_display_name(); 
 		break;		
 
 
@@ -84,36 +84,33 @@ switch ($ac) {
 
 		Wbhkit\set_vars(array('carrier_id', 'phone', 'send_text'));
 
-		if (!Users\logged_in()) {
+		if (!$u->logged_in()) {
 			$error = 'You are not logged in! You have to be logged in to update your text preferences.';
 			break;
 		}
-		$u['carrier_id'] = $carrier_id;
-		$u['phone'] = $phone;
-		$u['send_text'] = $send_text;
-		Users\update_text_preferences($u, $message, $error); // function will update all of those arguments
+		$u->update_text_preferences($phone, $send_text, $carrier_id); 
+		if ($u->error) {
+			$error = $u->error;
+		} else {
+			$message = "Text preferences updated!";
+		}
 		break;		
 
 
 	case 'concemail':
-		if (!Users\logged_in()) {
+		if (!$u->logged_in()) {
 			$error = 'You are not logged in! You have to be logged in to change your email.';
 			$logger->debug($error);
 			break;
 		}
 		//actually change the email
-		$result = Users\change_email($u['id'], $u['new_email']);
-		if ($result !== true) {
-			$error = $result;
-		} else {
-			$message = "Email changed from '{$u['email']}' to '{$u['new_email']}'";
-			$logger->info($message);
-	
-			$u = Users\get_user_by_email($u['new_email']);
-	
-			// make session key equal to database key
-			$_SESSION['s_key'] = $key = $u['ukey'];
-		}
+		$oldemail = $u->fields['email'];
+		$u->change_email($u->fields['id'], $u->fields['new_email']);
+		$message = "Email changed from '{$oldemail}' to '{$u->fields['email']}'";
+		$logger->info($message);
+
+		// make session key equal to database key
+		$_SESSION['s_key'] = $u->fields['ukey'];
 		break;
 
 }	

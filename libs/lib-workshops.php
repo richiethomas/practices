@@ -14,10 +14,10 @@ function get_workshop_info($id) {
 }
 
 function fill_out_workshop_row($row, $get_enrollment_stats = true) {
-	$locations = \Lookups\get_locations();
-	
+	global $lookups;
+		
 	foreach (array('address', 'city', 'state', 'zip', 'place', 'lwhere') as $loc_field) {
-		$row[$loc_field] = $locations[$row['location_id']][$loc_field];
+		$row[$loc_field] = $lookups->locations[$row['location_id']][$loc_field];
 	}
 		
 	if ($row['when_public'] == 0 ) {
@@ -82,7 +82,7 @@ function fill_out_workshop_row($row, $get_enrollment_stats = true) {
 	
 	if ($get_enrollment_stats) {
 		$row = set_enrollment_stats($row);
-		if ($row['enrolled'] >= $row['capacity'] || $row['waiting'] > 0 || $row['invited'] > 0) { 
+		if ($row['enrolled'] + $row['waiting'] + $row['invited'] >= $row['capacity']) { 
 			$row['soldout'] = 1;
 		} else {
 			$row['soldout'] = 0;
@@ -110,8 +110,11 @@ function format_workshop_startend($row) {
 // expects 'id' and 'capacity' to be set
 function set_enrollment_stats($row) {
 	
-	$enrollments = \Enrollments\get_enrollments($row['id']);
-	foreach (\Lookups\get_statuses() as $sid => $sname) {
+	global $lookups;
+	$eh = new \EnrollmentsHelper();
+	
+	$enrollments = $eh->set_enrollments_for_workshop($row['id']);
+	foreach ($lookups->statuses as $sid => $sname) {
 		$row[$sname] = $enrollments[$sid];
 	}	
 	$row['paid'] = how_many_paid($row);
@@ -192,36 +195,6 @@ function get_search_results($page = 1, $needle = null) {
 	$view->data['rows'] = $workshops;
 	return $view->renderSnippet('admin/search_workshops');	
 }
-
-
-function get_workshops_list($admin = 0, $page = 1) {
-	
-	global $view;
-	
-	$sql = build_workshop_list_sql($admin);
-
-	// prep paginator
-	$paginator  = new \Paginator( $sql );
-	$rows = $paginator->getData($page);
-	$links = $paginator->createLinks();
-
-	// calculate enrollments, ranks, etc
-	if ($rows->total > 0) {
-		$workshops = array();
-		foreach ($rows->data as $row ) {
-			$workshops[] = fill_out_workshop_row($row);
-		}
-	} else {
-		return "<p>No upcoming workshops!</p>\n";	// this skips $body variable contents	
-	}
-		
-	// prep view
-	$view->data['links'] = $links;
-	$view->data['admin'] = $admin;
-	$view->data['rows'] = $workshops;
-	return $view->renderSnippet('workshop_list');
-}
-
 
 
 function get_workshops_list_no_html($admin = 0, $page = 1) {
@@ -416,9 +389,10 @@ function add_workshop_form($wk) {
 
 function workshop_fields($wk) {
 	
+	global $lookups;
 	
 	return \Wbhkit\texty('title', $wk['title'], null, null, null, 'Required', ' required ').
-	\Lookups\locations_drop($wk['location_id']).
+	\Wbhkit\drop('lid', $lookups->locations_drop(), $wk['location_id'], 'Location', null, 'Required', ' required ').
 	\Wbhkit\texty('online_url', $wk['online_url'], 'Online URL').	
 	\Wbhkit\texty('start', $wk['start'], null, null, null, 'Required', ' required ').
 	\Wbhkit\texty('end', $wk['end'], null, null, null, 'Required', ' required ').
@@ -499,9 +473,10 @@ function is_complete_workshop($wk) {
 function get_cut_and_paste_roster($wk, $enrolled = null) {
 	$names = array();
 	$just_emails = array();
+	$eh = new \EnrollmentsHelper();
 	
 	if (!isset($enrolled)) {
-		$enrolled = \Enrollments\get_students($wk['id'], ENROLLED);
+		$enrolled = $eh->get_students($wk['id'], ENROLLED);
 	}
 
 	foreach ($enrolled as $s) {

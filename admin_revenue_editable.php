@@ -2,7 +2,7 @@
 $heading = "revenue";
 include 'lib-master.php';
 
-Users\reject_user_below(3); // group 3 or higher
+$u->reject_user_below(3); // group 3 or higher
 
 $v = null;
 switch ($ac) {

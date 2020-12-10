@@ -1,5 +1,6 @@
 <?php
 
+
 echo "<h1>Your Profile <small><a href='index.php'>(return to front)</a></small></h1>\n";
 echo "<p>Here you can change your email, display name, text preferences and see what workshops you've taken.</p>";
 
@@ -7,17 +8,17 @@ echo "<div class='row justify-content-center'><div class='col-sm-6'>\n";
 
 echo "<div class='card my-5 bg-light'><div class='card-body'>\n";
 echo "<h3>Change Your Email</h3>\n";
-echo Users\edit_change_email($u);
+echo $userhelper->edit_change_email($u, $sc);
 echo "</div></div> <!-- end of card -->\n";
 
 echo "<div class='card my-5 bg-light'><div class='card-body'>\n";
 echo "<h3>Change Your Display Name</h3>\n";
-echo Users\edit_display_name($u);
+echo $userhelper->edit_display_name($u, $sc);
 echo "</div></div> <!-- end of card -->\n";
 
 echo "<div class='card my-5 bg-light'><div class='card-body'>\n";	
 echo "<h3>Change Your Text Preferences</h3>\n";
-echo Users\edit_text_preferences($u);	
+echo $userhelper->edit_text_preferences($u, $sc, $lookups);	
 echo "</div></div> <!-- end of card -->\n";
 
 echo "<div class='card my-5 bg-light'><div class='card-body'>\n";

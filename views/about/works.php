@@ -12,7 +12,7 @@
 
 <p>A lot happens over email. That's how you will be told if a spot opens up in a class you were on a waiting list for. That's how you'll get your Zoom link to take the class. If anything changes with regard to the class, you'll get an email.</p>
 
-<p>After you have been enrolled, you pay on your own by sending money via Venmo or Paypal (Venmo @willhines, or paypal whines@gmail.com). We ask that you pay by the start of class.</p>
+<p>After you have been enrolled, you pay on your own by sending money via Venmo or Paypal (account info sent via email after you enroll). We ask that you pay by the start of class.</p>
 
 
 <h2>Using Zoom</h2>

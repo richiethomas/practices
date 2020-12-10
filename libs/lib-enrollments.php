@@ -3,19 +3,23 @@ namespace Enrollments;
 
 // registrations
 function get_enrollments($id) {
+	global $lookups;
+	
 	$stmt = \DB\pdo_query("select count(*) as total, status_id from registrations where workshop_id = :wid group by status_id", array(':wid' => $id));
 	$enrollments = [];
 	while ($row = $stmt->fetch()) {
 		$enrollments[$row['status_id']] = $row['total'];
 	}
-	foreach (\Lookups\get_statuses() as $sid => $sname) {
+	foreach ($lookups->statuses as $sid => $sname) {
 		if (!isset($enrollments[$sid])) { $enrollments[$sid] = 0; }		
 	}
 	return $enrollments;
 }
 
 function get_an_enrollment($wk, $u) {
-	$stmt = \DB\pdo_query("select r.* from registrations r where r.workshop_id = :wid and user_id = :uid", array(':wid' => $wk['id'], ':uid' => $u['id']));
+	global $lookups;
+	
+	$stmt = \DB\pdo_query("select r.* from registrations r where r.workshop_id = :wid and user_id = :uid", array(':wid' => $wk['id'], ':uid' => $u->fields['id']));
 
 	while ($row = $stmt->fetch()) {
 		
@@ -32,7 +36,7 @@ function get_an_enrollment($wk, $u) {
 		} else {
 			$row['rank'] = null;
 		}
-		$statuses = \Lookups\get_statuses();
+		$statuses = $lookups->statuses;
 		$row['status_name'] = $statuses[$row['status_id']];
 		return $row;
 	}
@@ -61,7 +65,7 @@ function handle_enroll($wk, $u, $confirm = true) {
 		
 		return false;
 	}
-	if (!\Users\is_complete_user($u)) {
+	if (!$u->logged_in()) {
 		$error = 'We need a user.';
 		$logger->notice('handle_enroll:'.$error);
 		return false;
@@ -82,7 +86,7 @@ function handle_enroll($wk, $u, $confirm = true) {
 		} else {
 			$keyword = 'is now';
 		}
-		$message = "'{$u['nice_name']}' $keyword enrolled in '{$wk['title']}'!  Info emailed to <b>{$u['email']}</b>.";
+		$message = "'{$u->fields['nice_name']}' $keyword enrolled in '{$wk['title']}'!  Info emailed to <b>{$u->fields['email']}</b>.";
 	} elseif ($status_id == WAITING) {
 		if (!$before) {
 			$keyword = 'has been added to';
@@ -92,9 +96,9 @@ function handle_enroll($wk, $u, $confirm = true) {
 		} else {
 			$keyword = 'is now on';
 		}		
-		$message = "This practice is full. '{$u['nice_name']}' $keyword the waiting list.";
+		$message = "This practice is full. '{$u->fields['nice_name']}' $keyword the waiting list.";
 	} elseif ($status_id == 'already') {
-		$message = "'{$u['nice_name']}' has already been registered.";
+		$message = "'{$u->fields['nice_name']}' has already been registered.";
 		$confirm = false; // no need for an email message		
 	} else {
 		$message = "Not sure what happened. Tried to enroll and got this status id: ".$status_id;
@@ -108,7 +112,7 @@ function handle_enroll($wk, $u, $confirm = true) {
 // first figures if the person is already enrolled
 function enroll($wk, $u) {
 	$wid = $wk['id'];
-	$uid = $u['id'];
+	$uid = $u->fields['id'];
 	
 	// if person is already registered
 	$stmt = \DB\pdo_query("select  * from registrations where workshop_id = :wid and user_id = :uid", array(':wid' => $wid, ':uid' => $uid));
@@ -169,7 +173,8 @@ function check_waiting($wk) {
 		$stmt = \DB\pdo_query("select * from registrations where workshop_id = :wid and status_id = '".WAITING."' order by last_modified limit 1", array(':wid' => $wk['id']));
 		
 		while ($row = $stmt->fetch()) {
-			$u = \Users\get_user_by_id($row['user_id']);
+			$u = new \User();
+			$u->set_user_by_id($row['user_id']);
 			$msg .= change_status($wk, $u, INVITED, true);
 		}
 		$wk = \Workshops\fill_out_workshop_row($wk); //update lists
@@ -200,7 +205,8 @@ function update_paid($wid, $uid, $paid = 1, $eid = null) {
 	if ($paid != $paid_before) {
 		$stmt = \DB\pdo_query("update registrations set paid = :paid where id = :rid", array(':paid' => $paid, ':rid' => $eid));
 		// send payment confirmation
-		$payee = \Users\get_user_by_id($uid);
+		$payee = new \User();
+		$payee->set_user_by_id($uid);
 		$workshop = \Workshops\get_workshop_info($wid);
 
 		if ($paid == 1) {
@@ -211,11 +217,11 @@ function update_paid($wid, $uid, $paid = 1, $eid = null) {
 			$body .= "<p>Amount: \${$workshop['cost']} (USD)</p>\n";
 			$body .= "<p>Thanks!<br>-Will</p>\n";
 				
-			\Emails\centralized_email($payee['email'], "Payment received for {$workshop['title']} {$workshop['showstart']} (PDT)", $body); 
+			\Emails\centralized_email($payee->fields['email'], "Payment received for {$workshop['title']} {$workshop['showstart']} (PDT)", $body); 
 			
-			return "Set user '{$payee['nice_name']}' to 'paid' for workshop '{$workshop['title']}'";
+			return "Set user '{$payee->fields['nice_name']}' to 'paid' for workshop '{$workshop['title']}'";
 		} else {
-			return "Set user '{$payee['nice_name']}' to 'unpaid' for workshop '{$workshop['title']}'";
+			return "Set user '{$payee->fields['nice_name']}' to 'unpaid' for workshop '{$workshop['title']}'";
 		}
 		
 	}
@@ -237,35 +243,38 @@ function update_paid_by_enrollment_id($eid, $paid = 1) {
 
 
 function change_status($wk, $u, $status_id = ENROLLED, $confirm = true) {
-				
+							
+	global $lookups;
+	
 	$e = get_an_enrollment($wk, $u);
-	$statuses = \Lookups\get_statuses();
+	$statuses = $lookups->statuses;
 
 	if ($e['status_id'] != $status_id) {
 		
-		$stmt = \DB\pdo_query("update registrations set status_id = :status_id,  last_modified = '".date("Y-m-d H:i:s")."' where workshop_id = :wid and user_id = :uid", array(':status_id' => $status_id, ':wid' => $wk['id'], ':uid' => $u['id']));
+		$stmt = \DB\pdo_query("update registrations set status_id = :status_id,  last_modified = '".date("Y-m-d H:i:s")."' where workshop_id = :wid and user_id = :uid", array(':status_id' => $status_id, ':wid' => $wk['id'], ':uid' => $u->fields['id']));
 		
 		update_change_log($wk, $u, $status_id);	
 		if ($confirm) { \Emails\confirm_email($wk, $u, $status_id); }
-		return "Updated user ({$u['email']}) to status '{$statuses[$status_id]}' for {$wk['title']}.";
+		return "Updated user ({$u->fields['email']}) to status '{$statuses[$status_id]}' for {$wk['title']}.";
 	}
-	return "User ({$u['email']}) was already status '{$statuses[$status_id]}' for {$wk['title']}.";
+	return "User ({$u->fields['email']}) was already status '{$statuses[$status_id]}' for {$wk['title']}.";
 }
 
 function update_change_log($wk, $u, $status_id) {
-	if (!$wk['id'] || !$u['id'] || !$status_id) {
+	if (!$wk['id'] || !$u->logged_in() || !$status_id) {
 		return false;
 	}
 	
-	global $logger;
-	$statuses = \Lookups\get_statuses();
+	global $logger, $lookups;
+	
+	$statuses = $lookups->statuses;
 	
 	$stmt = \DB\pdo_query("insert into status_change_log (workshop_id, user_id, status_id, happened) VALUES (:wid, :uid, :status_id, '".date('Y-m-d H:i:s', time())."')", 
 	array(':wid' => $wk['id'],
-	':uid' => $u['id'],
+	':uid' => $u->fields['id'],
 	':status_id' => $status_id));
 	
-	$logger->info("{$u['fullest_name']} is now '{$statuses[$status_id]}' for '{$wk['title']}'");
+	$logger->info("{$u->fields['fullest_name']} is now '{$statuses[$status_id]}' for '{$wk['title']}'");
 	
 	return true;
 }
@@ -284,9 +293,10 @@ function get_status_change_log($wk = null) {
 	}
 	$log = array();
 
+	$u = new \User(); // need its methods
 	while ($row = $stmt->fetch()) {
 		$row = \Workshops\format_workshop_startend($row);
-		$row = \Users\set_nice_name($row);
+		$row = $u->set_nice_name_in_row($row);
 		if (!$wk) {
 			// skip old ones for the global change log
 			if (strtotime($row['start']) < strtotime("24 hours ago")) {
@@ -312,9 +322,9 @@ function get_students($wid, $status_id = ENROLLED) {
 		
 	}
 	$stds = array();
+	$u = new \User(); // need its methods!
 	while ($row = $stmt->fetch()) {
-		$row = \Users\set_nice_name($row);
-		$stds[$row['id']] = $row;
+		$stds[$row['id']] = $u->set_nice_name_in_row($row);
 	}
 	return $stds;
 }
@@ -334,8 +344,8 @@ function get_last_enrolled($wid = 0, $uid = 0, $before = null) {
 }
 
 function get_transcript_tabled($u, $admin = false, $page = 1) {
-	global $key, $view;
-	if (!$u || !isset($u['id'])) {
+	global $view, $lookups;
+	if (!$u->logged_in() || !isset($u->fields['id'])) {
 		return "<p>Not logged in!</p>\n";
 	}
 	
@@ -348,7 +358,7 @@ function get_transcript_tabled($u, $admin = false, $page = 1) {
 	and r.user_id = :uid 
 	and ( (w.start >= :now) || (r.status_id = :enrolled_id) ) 
 	order by w.start desc";
-	$params = array(':uid' => $u['id'], ':now' => $mysqlnow, ':enrolled_id' => ENROLLED);
+	$params = array(':uid' => $u->fields['id'], ':now' => $mysqlnow, ':enrolled_id' => ENROLLED);
 	
 	// rank
 
@@ -386,8 +396,8 @@ function get_transcript_tabled($u, $admin = false, $page = 1) {
 		$past_classes[] = $d;
 	}
 	
-	$view->data['guest_id'] = $u['id'];
-	$view->data['statuses'] = \Lookups\get_statuses();
+	$view->data['guest_id'] = $u->fields['id'];
+	$view->data['statuses'] = $lookups->statuses;
 	$view->data['admin'] = $admin;
 	$view->data['links'] = $links;
 	$view->data['rows'] = $past_classes;
@@ -397,7 +407,7 @@ function get_transcript_tabled($u, $admin = false, $page = 1) {
 
 function drop_session($wk, $u) {
 	
-	$stmt = \DB\pdo_query('delete from registrations where workshop_id = :wid and user_id = :uid', array(':wid' => $wk['id'], ':uid' => $u['id']));	
+	$stmt = \DB\pdo_query('delete from registrations where workshop_id = :wid and user_id = :uid', array(':wid' => $wk['id'], ':uid' => $u->fields['id']));	
 	update_change_log($wk, $u, DROPPED); // really should be a new status like "REMOVED" 
 	check_waiting($wk);
 	return true;

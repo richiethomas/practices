@@ -9,7 +9,7 @@ require_once 'Mail.php';
 // turned '=' into '=3D' and other things
 function centralized_email($to, $sub, $body) {
 		
-	global $logger;	
+	global $logger, $lookups;	
 		
 	
 	$crlf = "\n";
@@ -58,20 +58,13 @@ function centralized_email($to, $sub, $body) {
 
 function confirm_email($wk, $u, $status_id = ENROLLED) {
 		
-	
-	
-	if (!isset($u['key']) || !$u['key']) {
-		$key = \Users\get_key($u['id']);
-	} else {
-		$key = $u['key'];
-	}
 	$e = \Enrollments\get_an_enrollment($wk, $u); 
-	$drop = URL."workshop.php?key=$key&ac=drop&wid={$wk['id']}";
-	$trans = URL."workshop.php?key=$key&wid={$wk['id']}";
-	$accept = URL."workshop.php?ac=accept&wid={$wk['id']}&key=$key";
-	$decline = URL."workshop.php?ac=decline&wid={$wk['id']}&key=$key";
-	$enroll = URL."workshop.php?key=$key&ac=enroll&wid={$wk['id']}";
-	$textpref = URL."you.php?key=$key";
+	$drop = URL."workshop.php?key={$u->fields['ukey']}&ac=drop&wid={$wk['id']}";
+	$trans = URL."workshop.php?key={$u->fields['ukey']}&wid={$wk['id']}";
+	$accept = URL."workshop.php?ac=accept&wid={$wk['id']}&key={$u->fields['ukey']}";
+	$decline = URL."workshop.php?ac=decline&wid={$wk['id']}&key={$u->fields['ukey']}";
+	$enroll = URL."workshop.php?key={$u->fields['ukey']}&ac=enroll&wid={$wk['id']}";
+	$textpref = URL."you.php?key={$u->fields['ukey']}";
 	$call = '';
 	$late = '';
 	$textpoint = '';
@@ -123,13 +116,13 @@ function confirm_email($wk, $u, $status_id = ENROLLED) {
 			
 			// tell webmaster if this person needs a refund
 			if ($e['paid'] == 1) {
-				centralized_email(WEBMASTER, "refund requested", "<p>{$u['nice_name']} just dropped from the class '{$wk['title']}', and had already paid</p><p>See workshop info: ".URL."admin_edit.php?wid={$wk['id']}</p>");
+				centralized_email(WEBMASTER, "refund requested", "<p>{$u->fields['nice_name']} just dropped from the class '{$wk['title']}', and had already paid</p><p>See workshop info: ".URL."admin_edit.php?wid={$wk['id']}</p>");
 			}
 			
 			
 			break;
 		default:
-			$statuses = \Lookups\get_statuses();
+			$statuses = $lookups->statuses;
 			$sub = "{$statuses[$status_id]}: {$wk['title']}";
 			$point = "You are a status of '{$statuses[$status_id]}' for {$wk['title']}";
 			$textpoint = $point." ";
@@ -137,7 +130,7 @@ function confirm_email($wk, $u, $status_id = ENROLLED) {
 	}
 
 	$text = '';
-	if ($u['send_text']) {
+	if ($u->fields['send_text']) {
 		$last_bitly = shorten_link($trans);
 		$textmsg = $textpoint.' '.$last_bitly;
 		send_text($u, $textmsg);
@@ -145,7 +138,7 @@ function confirm_email($wk, $u, $status_id = ENROLLED) {
 	
 	
 	$notifcations = '';
-	if (!$u['send_text']) {
+	if (!$u->fields['send_text']) {
 		$notifications = "<p>Would you want to be notified via text? You can set text preferences:<br>".$textpref."</p>";
 	}
 
@@ -158,7 +151,7 @@ function confirm_email($wk, $u, $status_id = ENROLLED) {
 --------------------------------<br>
 <b>Title:</b> {$wk['title']}<br>
 <b>Teacher:</b> {$wk['teacher_name']}<br>
-<b>When:</b> {$wk['when']} (PST - California time)<br>
+<b>When:</b> {$wk['when']} (".TIMEZONE." - California time)<br>
 <b>Cost:</b> \${$wk['cost']} USD<br>".
 ($status_id == ENROLLED ? "<b>Zoom link:</b> {$wk['online_url']}" : "<b>Zoom link</b>: We'll email you the zoom link if/once you are enrolled.")."<br>
 <b>Description:</b> {$wk['notes']}</p>
@@ -167,17 +160,20 @@ $notifications
 
 ";	
 
-	return centralized_email($u['email'], "{$sub}", $body);
+	return centralized_email($u->fields['email'], "{$sub}", $body);
 }
 
 
 function send_text($u, $msg) {
-	if (!$u['send_text'] || !$u['carrier_id'] || !$u['phone'] || strlen($u['phone']) != 10 || (!trim($msg))) {
+	
+	global $lookups;
+	
+	if (!$u->fields['send_text'] || !$u->fields['carrier_id'] || !$u->fields['phone'] || strlen($u->fields['phone']) != 10 || (!trim($msg))) {
 		return false;
 	}
 	
-	$carriers = \Lookups\get_carriers();
-	$to = $u['phone'].'@'.$carriers[$u['carrier_id']]['email'];	
+	$carriers = $lookups->carriers;
+	$to = $u->fields['phone'].'@'.$carriers[$u->fields['carrier_id']]['email'];	
 	$mail_status = centralized_email($to, '', $msg);
 	//echo "<pre>".print_r($u, true)."<br>to: $to<br>mail status: $mail_status<br>msg: $msg</pre>\n";
 	return $mail_status;
@@ -264,7 +260,7 @@ function get_workshop_summary($wk) {
 <b>Class information:</b><br>
 <b>Title:</b> {$wk['title']}<br>
 <b>Teacher:</b> {$wk['teacher_name']}<br>
-<b>When:</b> {$wk['when']} (California time)";
+<b>When:</b> {$wk['when']} (".TIMEZONE." - California time)";
 
 }
 

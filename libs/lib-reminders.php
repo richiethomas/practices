@@ -69,6 +69,9 @@ update xtra_sessions set reminder_sent = 0;
 }
 
 function remind_enrolled($class) {
+	
+	$guest = new \User();
+	
 	$wk = \Workshops\get_workshop_info($class[0]);
 	$xtra = \XtraSessions\get_xtra_session($class[1]);
 	
@@ -78,7 +81,8 @@ function remind_enrolled($class) {
 	$note = $reminder['note'];
 	$sms = $reminder['sms'];
 	
-	$stds = \Enrollments\get_students($class[0], ENROLLED);
+	$eh = new \EnrollmentsHelper();
+	$stds = $eh->get_students($class[0], ENROLLED);
 
 	$base_msg =	$note.\Emails\get_workshop_summary($wk);
 
@@ -93,15 +97,15 @@ If you've got  questions/concerns about this, send them to ".WEBMASTER."</p>";
 		$base_msg =	$note.\Emails\get_workshop_summary($wk);
 		
 		
-		$key = \Users\get_key($std['id']);
-		$trans = URL."workshop.php?key=$key&wid={$wk['id']}";
+		$trans = URL."workshop.php?key={$std['ukey']}&wid={$wk['id']}";
 		$msg = $base_msg."<p>Class info online:<br>$trans</p>\n";
 		
 		//\Emails\centralized_email('whines@gmail.com', $subject, $msg); // for testing, i get everything
 
 		if (!LOCAL) {
 			\Emails\centralized_email($std['email'], $subject, $msg);
-			\Emails\send_text($std, $sms); // routine will check if they want texts and have proper info
+			$guest->set_user_by_id($std['id']);
+			\Emails\send_text($guest, $sms); // routine will check if they want texts and have proper info
 		}
 	}
 	//remind teacher
@@ -169,8 +173,6 @@ function get_reminder_message_data($wk, $xtra, $teacher = false) {
 		if ($xtra['class_show'] == 1) {
 			$note .= "<p>Invite your friends and family to watch the show at the YouTube Channel:<br>https://www.youtube.com/channel/UCxM09rN2BoddZYtqnlPBucQ<br>(Every show is streamed to that channel - same YouTube link for all class shows)</p>\n";
 		}
-
-		
 	}			
 	
 	$sms = "Reminder: {$wk['title']} ".($xtra['class_show'] ? 'class show' : 'class').", {$wk['nextstart']}, ".URL;
