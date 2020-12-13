@@ -17,24 +17,26 @@ if (!\Workshops\is_public($wk)) {
 	if ($u->logged_in()) {
 		$enroll_link = "$sc?ac=enroll&wid={$wk['id']}";
 
-		switch ($e['status_id']) {
+		switch ($e->fields['status_id']) {
 			case ENROLLED:
 				$point = "You are ENROLLED in the practice listed below. Would you like to <a class='btn btn-primary' href='$sc?ac=drop&wid={$wk['id']}&key={$u->fields['ukey']}&v=winfo'>drop</a> it?";
 				break;
 			case WAITING:
-				$point = "You are spot number {$e['rank']} on the WAIT LIST for the practice listed below. Would you like to <a class='btn btn-primary' href='$sc?ac=drop&wid={$wk['id']}&key={$u->fields['ukey']}&v=winfo'>drop</a> it?";
+				$point = "You are spot number {$e->fields['rank']} on the WAIT LIST for the practice listed below. Would you like to <a class='btn btn-primary' href='$sc?ac=drop&wid={$wk['id']}&key={$u->fields['ukey']}&v=winfo'>drop</a> it?";
 				break;
 			case INVITED:
 				$point = "A spot opened up in the practice listed below. Would you like to <a class='btn btn-primary' href='$sc?ac=accept&wid={$wk['id']}&key={$u->fields['ukey']}&v=winfo'>accept</a> it, or <a class='btn btn-primary' href='$sc?ac=decline&wid={$wk['id']}&key={$u->fields['ukey']}&v=winfo'>decline</a> it?";
 				break;
 			case DROPPED:
-				$point = "You have dropped out of the practice listed below. Would you like to <a class='btn btn-primary'  href='$enroll_link'>re-enroll</a>? Info will be sent to <b>{$u->fields['email']}</b>.";
+				$point = "You have dropped out of the practice listed below. ".
+					($wk['soldout'] == 1 ? "The class is full! Do you want to be on the <a class='btn btn-primary'  href='$enroll_link'>wait list</a>?" : "Would you like to <a class='btn btn-primary'  href='$enroll_link'>re-enroll</a>?").
+						" Info will be sent to <b>{$u->fields['email']}</b>.";
 				break;
 			default:
 	
 				$point = 
 					($wk['soldout'] == 1
-					? "The class is full. Want to <a class='btn btn-primary' href='$enroll_link'>join the wait list</a>?"
+					? "The class is full. Want to be on the <a class='btn btn-primary' href='$enroll_link'>wait list</a>?"
 					: "Click here to <a class='btn btn-primary' href='$enroll_link'>enroll</a> in this class.  Info will be sent to <b>{$u->fields['email']}</b>.");
 	
 				break;

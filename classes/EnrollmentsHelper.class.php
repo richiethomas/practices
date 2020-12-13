@@ -43,7 +43,6 @@ class EnrollmentsHelper extends WBHObject {
 			$stmt = \DB\pdo_query($sql);
 		}
 		
-		
 		$log = array();
 
 		$u = new \User(); // need its methods
@@ -57,24 +56,42 @@ class EnrollmentsHelper extends WBHObject {
 					continue;
 				}
 			}
-			if ($row['status_id'] == DROPPED) {
-				$row['last_enrolled'] = $e->get_last_enrolled($row['workshop_id'], $row['user_id'], $row['happened']);
-			}
 			$log[] = $row;
 		}
+		foreach ($log as $id => $l) {
+			if ($l['status_id'] == DROPPED) {
+				$log[$id]['last_enrolled'] = $this->get_last_enrolled($log, $l['workshop_id'], $l['user_id'], $l['happened']);
+			}	
+		}
+		
 		return $log;
 	}
-	
+
+
+	// search through status log results to find most recent enrollment if any
+	// for a user in a workshop
+	// used to see how long someone was in before they dropped
+	function get_last_enrolled(array $log, int $wid = 0, int $uid = 0, string $before = null) {
+		if (!$before) {  $before = "now()"; }
+		foreach ($log as $l) {
+			if ($l['user_id'] == $uid
+			&& $l['workshop_id'] == $wid
+			&& $l['status_id'] == ENROLLED 
+			&& strtotime($l['happened']) < strtotime($before)) {
+				return $l['happened'];
+			}
+		}
+		return null;
+	}
 	
 	function get_students(int $wid, int $status_id = ENROLLED) {
-		$sql = "select u.*, r.status_id,  r.paid, r.registered, r.last_modified  from registrations r, users u where r.workshop_id = :wid";
+		$sql = "select u.*, r.status_id,  r.paid, r.registered, r.last_modified  from registrations r, users u where r.workshop_id = :wid and r.user_id = u.id ";
 		if ($status_id) { 
-			$sql .= " and status_id = :sid and r.user_id = u.id order by last_modified"; 
+			$sql .= " and status_id = :sid order by last_modified"; 
 			$stmt = \DB\pdo_query($sql, array(':wid' => $wid, ':sid' => $status_id));
 		} else {
-			$sql .= " and r.user_id = u.id order by last_modified"; 
+			$sql .= " order by last_modified"; 
 			$stmt = \DB\pdo_query($sql, array(':wid' => $wid));
-		
 		}
 		$stds = array();
 		$u = new \User(); // need its methods!
@@ -89,7 +106,6 @@ class EnrollmentsHelper extends WBHObject {
 		if (!$u->logged_in() || !isset($u->fields['id'])) {
 			return "<p>Not logged in!</p>\n";
 		}
-	
 		$mysqlnow = date("Y-m-d H:i:s");
 	
 		$sql = "select *, r.id as enrollment_id 
@@ -97,12 +113,11 @@ class EnrollmentsHelper extends WBHObject {
 		where r.workshop_id = w.id 
 		and w.location_id = l.id 
 		and r.user_id = :uid 
-		and ( (w.start >= :now) || (r.status_id = :enrolled_id) ) 
+		and ( (w.start >= :now) || (r.status_id = ".ENROLLED.") ) 
 		order by w.start desc";
-		$params = array(':uid' => $u->fields['id'], ':now' => $mysqlnow, ':enrolled_id' => ENROLLED);
+		$params = array(':uid' => $u->fields['id'], ':now' => $mysqlnow);
 	
 		// rank
-
 		$paginator  = new \Paginator( $sql, $params );
 		$rows = $paginator->getData($page);	
 		if (count($rows->data) == 0) {
@@ -112,8 +127,8 @@ class EnrollmentsHelper extends WBHObject {
 		// prep data
 		$links = $paginator->createLinks();
 		$past_classes = array();
+		$e = new Enrollment();
 		foreach ($rows->data as $d) {
-		
 		
 			// build a workshop array from data we have
 			$wk_fields = \Workshops\get_empty_workshop();
@@ -129,8 +144,8 @@ class EnrollmentsHelper extends WBHObject {
 			$d['teacher_name'] = $wk['teacher_name'];
 			$d['teacher_id'] = $wk['teacher_id'];
 			if ($d['status_id'] == WAITING) {
-				$e = get_an_enrollment($wk, $u); 
-				$d['rank'] = $e['rank']; 
+				$e->set_by_u_wk($u, $wk); 
+				$d['rank'] = $e->fields['rank']; 
 			} else {
 				$d['rank'] = null;
 			}

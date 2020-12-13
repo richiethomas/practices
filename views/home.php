@@ -65,10 +65,10 @@
 			  <p class="class-time-info">Starting <?php echo $wk['showstart']; ?> for <?php echo $wk['total_sessions'];?> <?php echo ($wk['total_sessions'] == 1) ? 'week': 'weeks'; ?></p>
 			  <div class="class-meta d-flex justify-content-between align-items-center mt-4">
 				<div class="d-flex class-teacher col-7 mr-0 px-0 align-items-center">
-				  <img class="mr-3 teacher-image align-self-center" src="<?php echo \Teachers\get_teacher_photo_src($wk['teacher_user_id']);?>" alt="Teacher Name">
+				  <a href="teachers.php?tid=<?php echo $wk['teacher_id']; ?>"><img class="mr-3 teacher-image align-self-center" src="<?php echo \Teachers\get_teacher_photo_src($wk['teacher_user_id']);?>" alt="Teacher Name"></a>
 				  <div class="">
 					<h6 class="mt-0 mb-0 teacher-label">Teacher</h6>
-					<h5 class="mt-0 mb-0 teacher-name"><?php echo $wk['teacher_name'];?></h5>
+					<h5 class="mt-0 mb-0 teacher-name"><a href="teachers.php?tid=<?php echo $wk['teacher_id']; ?>"><?php echo $wk['teacher_name'];?></a></h5>
 				  </div>
 				</div>
 				<span class="class-price">

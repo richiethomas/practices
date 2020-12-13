@@ -6,11 +6,12 @@ include 'lib-master.php';
 $wk_vars = array('wid', 'title', 'notes', 'start', 'end', 'lid', 'online_url', 'cost', 'capacity', 'notes', 'when_public', 'email', 'con', 'cancelled', 'xtraid', 'class_show', 'guest_id', 'reminder_sent', 'sold_out_late', 'teacher_id');
 Wbhkit\set_vars($wk_vars);
 
+$e = new Enrollment();
 $eh = new EnrollmentsHelper();
 
 $guest = new User(); // the user we're going to change
 if ($guest_id > 0) {
-	$guest->set_user_by_id($guest_id); 
+	$guest->set_by_id($guest_id); 
 }
 
 
@@ -19,7 +20,7 @@ switch ($ac) {
 
 
 	case 'sar':
-		Reminders\remind_enrolled($wk);
+		Reminders\remind_enrolled(array($wk['id'], 0));
 		$message = "Reminders sent to enrolled.";
 		break;
 
@@ -59,18 +60,22 @@ switch ($ac) {
 
 	case 'conrem':
 		$e = new Enrollment();
-		$e->set_an_enrollments($wk['id'], $guest->fields['id']);
-		$e->drop_session();
-		$message = "Removed user ({$guest->fields['email']}) from practice '{$wk['title']}'";
-		$logger->info($message);
+		$e->set_by_u_wk($guest, $wk);
+		if ($e->drop_session()) {
+			$message = "Removed user ({$guest->fields['email']}) from practice '{$wk['title']}'";
+			$logger->info($message);
+		} else {
+			$error = $e->error;
+			$logger->error($error);
+		}
 		break;
 
 	case 'enroll':
 		Wbhkit\set_vars(array('email', 'con'));
-		$guest->set_user_by_email($email);
+		$guest->set_by_email($email);
 		$e = new Enrollment();
-		$e->set_an_enrollment($wk['id'], $guest->fields['id']);
-		$message = $e->smart_enroll($wk, $guest, $con); 
+		$e->set_by_u_wk($u, $wk);
+		$message = $e->change_status(ENROLLED, $con); 
 		break;
 	
 	case 'cdel':
@@ -85,7 +90,7 @@ switch ($ac) {
 		
 	case 'delxtra':
 		XtraSessions\delete_xtra_session($xtraid);
-		\XtraSessions\update_ranks($wk['id']);
+		XtraSessions\update_ranks($wk['id']);
 		$wk = Workshops\fill_out_workshop_row($wk);
 		break;
 		
@@ -99,9 +104,9 @@ switch ($ac) {
 				$stds = $eh->get_students($wid, $sid);
 				foreach ($stds as $as) {
 					if (in_array($as['id'], $users)) {
-						$msg = Enrollments\update_paid($wid, $as['id'], 1);
+						$msg = $e->update_paid($wid, $as['id'], 1);
 					} else {
-						$msg = Enrollments\update_paid($wid, $as['id'], 0);
+						$msg = $e->update_paid($wid, $as['id'], 0);
 					}
 					if ($msg) {
 						$message .= $msg."<br>\n";
@@ -123,8 +128,8 @@ if (!$wid) {
 $stats = array();
 $lists = array();
 foreach ($lookups->statuses as $stid => $status_name) {
-	$stats[$stid] = count($eh->get_students($wid, $stid));
 	$lists[$stid] = $eh->get_students($wid, $stid);
+	$stats[$stid] = count($lists[$stid]);
 }
 $data['log'] = $eh->get_status_change_log($wk);
 $status_log = $view->renderSnippet('admin/status', $data);

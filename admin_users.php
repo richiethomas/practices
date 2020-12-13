@@ -4,10 +4,12 @@ include 'lib-master.php';
 
 Wbhkit\set_vars(array('guest_id', 'carrier_id', 'phone', 'send_text', 'newemail', 'display_name', 'needle', 'group_id'));
 
+$e = new Enrollment();
+$eh = new EnrollmentsHelper();
 $guest = new User();
 
 if ($guest_id > 0) {
-	$guest->set_user_by_id($guest_id); // second parameter means "don't save this in the cookie"
+	$guest->set_by_id($guest_id); // second parameter means "don't save this in the cookie"
 }
 
 switch ($ac) {
@@ -21,7 +23,7 @@ switch ($ac) {
 
 	case 'adduser':
 		if ($u->validate_email($needle)) {
-			$guest->set_user_by_email($needle);
+			$guest->set_by_email($needle);
 		}
 		break;
 	
@@ -47,7 +49,7 @@ switch ($ac) {
 			} else {
 				$guest->change_email($guest->fields['id'], $newemail);
 				$message = "Email changed from '{$guest->fields['email']}' to '$newemail'";
-				$guest->set_user_by_email($newemail);
+				$guest->set_by_email($newemail);
 			}
 		} else {
 			$error = "Can't change email because I, the computer, have lost track of the user we are trying to change. Meaning the variable where I stored the info is now empty.";
@@ -60,13 +62,13 @@ switch ($ac) {
 	case 'at':
 	
 		$paids = (isset($_REQUEST['paids']) && is_array($_REQUEST['paids'])) ? $_REQUEST['paids'] : array();
-		$all_enrollments = Enrollments\get_enrollment_ids_for_user($guest->fields['id']);
+		$all_enrollments = $eh->get_enrollment_ids_for_user($guest->fields['id']);
 		$msg = null;
 		foreach ($all_enrollments as $eid) {
 			if (in_array($eid, $paids)) {
-				$msg = Enrollments\update_paid_by_enrollment_id($eid, 1);
+				$msg = $e->update_paid(null, null, 1, $eid);
 			} else {
-				$msg = Enrollments\update_paid_by_enrollment_id($eid, 0);
+				$msg = $e->update_paid(null, null, 0, $eid);
 			}
 			if ($msg) {
 				$message .= $msg."<br>\n";
@@ -81,7 +83,7 @@ if (!$guest->logged_in()) {
 	$view->data['key'] = $guest->get_key(); 
 	$view->data['guest'] = $guest; // user profile of user we are modifying
 	$view->data['needle'] = trim($needle);
-	$view->data['transcripts'] = Enrollments\get_transcript_tabled($guest, true, $page);
+	$view->data['transcripts'] = $e->get_transcript_tabled($guest, true, $page);
 	$view->data['userhelper'] = new UserHelper($sc);
 	$view->data['lookups'] = $lookups;
 	$view->renderPage('admin/users');

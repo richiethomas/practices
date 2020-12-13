@@ -13,8 +13,8 @@ class WBHObject
 
 	public function __construct() {
 		global $logger, $lookups;
-		$this->logger = $logger;
-		$this->lookups = $lookups;
+		$this->logger = &$logger;
+		$this->lookups = &$lookups;
 	}
 	
 	public function setError($error) {

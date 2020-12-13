@@ -90,7 +90,7 @@ $already_here_key = (isset($_SESSION['s_key']) ? $_SESSION['s_key'] : null);
 
 $key = $u->check_for_stored_or_passed_key(); // checks for key in REQUEST and SESSION and COOKIE, not logged in otherwise
 if ($key) {
-	$u->set_user_by_key($key);
+	$u->set_by_key($key);
 } 
 
 // is this the first page this visitor has visited

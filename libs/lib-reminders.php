@@ -104,7 +104,7 @@ If you've got  questions/concerns about this, send them to ".WEBMASTER."</p>";
 
 		if (!LOCAL) {
 			\Emails\centralized_email($std['email'], $subject, $msg);
-			$guest->set_user_by_id($std['id']);
+			$guest->set_by_id($std['id']);
 			\Emails\send_text($guest, $sms); // routine will check if they want texts and have proper info
 		}
 	}

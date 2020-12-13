@@ -13,7 +13,8 @@ if (!$u->logged_in()) {
 } else {
 
 
-	$view->data['transcript'] = Enrollments\get_transcript_tabled($u, 0, $page); 
+	$eh = new EnrollmentsHelper();
+	$view->data['transcript'] = $eh->get_transcript_tabled($u, 0); 
 	$view->data['admin'] = false;
 	$view->data['userhelper'] = new UserHelper($sc);
 	$view->data['lookups'] = $lookups;

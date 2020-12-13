@@ -57,8 +57,10 @@ function centralized_email($to, $sub, $body) {
 }
 
 function confirm_email($wk, $u, $status_id = ENROLLED) {
-		
-	$e = \Enrollments\get_an_enrollment($wk, $u); 
+	
+	$e = new \Enrollment();	
+	$e->set_by_u_wk($u, $wk);
+	
 	$drop = URL."workshop.php?key={$u->fields['ukey']}&ac=drop&wid={$wk['id']}";
 	$trans = URL."workshop.php?key={$u->fields['ukey']}&wid={$wk['id']}";
 	$accept = URL."workshop.php?ac=accept&wid={$wk['id']}&key={$u->fields['ukey']}";
@@ -89,13 +91,13 @@ function confirm_email($wk, $u, $status_id = ENROLLED) {
 				$point .= "<p>Payment due by start of class. Send \${$wk['cost']} (USD) via Venmo @willhines or PayPal whines@gmail.com</p>";
 			}
 
-			$call = "To DROP, click here:\n{$drop}<br>Since you are enrolled, if you drop within ".LATE_HOURS." hours of the start, you must still pay for your spot. Before that, full refund available.";
+			$call = "To DROP, click here:\n{$drop}<br>If you drop within ".LATE_HOURS." hours of the start, you must still pay for your spot. Before that, full refund available.";
 
 			$send_faq = false;
 			break;
 		case WAITING:
 			$sub = "WAIT LIST: {$wk['title']}";
-			$point = "You are WAIT LIST spot {$e['rank']} for \"{$wk['title']}\".";
+			$point = "You are WAIT LIST spot {$e->fields['rank']} for \"{$wk['title']}\".";
 			$textpoint = $point." ";
 			$call = "To DROP, click here:\n{$drop}";
 			break;
@@ -109,13 +111,13 @@ function confirm_email($wk, $u, $status_id = ENROLLED) {
 			$sub = "DROPPED: {$wk['title']}";
 			$point = "You have DROPPED out of {$wk['title']}";
 			$textpoint = $point." ";
-			if ($e['while_soldout'] == 1) {
+			if ($e->fields['while_soldout'] == 1) {
 				$late .= "<br><i>".get_dropping_late_warning()."</i>";
 			}
 			$call = "If you change your mind, re-enroll here:\n{$enroll}";
 			
 			// tell webmaster if this person needs a refund
-			if ($e['paid'] == 1) {
+			if ($e->fields['paid'] == 1) {
 				centralized_email(WEBMASTER, "refund requested", "<p>{$u->fields['nice_name']} just dropped from the class '{$wk['title']}', and had already paid</p><p>See workshop info: ".URL."admin_edit.php?wid={$wk['id']}</p>");
 			}
 			

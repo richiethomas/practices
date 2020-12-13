@@ -7,12 +7,12 @@ Wbhkit\set_vars($wk_vars);
 
 $guest = new User();
 if ($guest_id > 0) {
-	$guest->set_user_by_id($guest_id); 
+	$guest->set_by_id($guest_id); 
 }
 
 
 $e = new Enrollment();
-$e->set_an_enrollment($wid, $guest_id);
+$e->set_by_u_wk($guest, $wk);
 
 if (!isset($wk) || !isset($wk['id']) || !$guest->logged_in()) {
 	$view->data['error_message'] = "<h1>Whoops!</h1><p>You are asking to look at info about an enrollment, but I (the computer) cannot tell which enrollment you mean. Sorry!</p>\n";

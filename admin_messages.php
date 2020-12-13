@@ -47,7 +47,7 @@ switch ($ac) {
 			Emails\centralized_email($std['email'], $subject, $msg);
 			$sent .= "{$std['email']}, ";
 		
-			$guest->set_user_by_id($std['id']);
+			$guest->set_by_id($std['id']);
 			Emails\send_text($guest, $sms); // routine will check if they want texts and have proper info
 		
 		}

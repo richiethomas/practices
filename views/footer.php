@@ -71,7 +71,7 @@
 		<h2>1) We Email You A Link</h2>
 		<?php echo \Wbhkit\form_validation_javascript('log_in'); ?>
 	
-		<form id='log_in' action='<?php echo $sc; ?>' method='post' novalidate>
+		<form id='log_in' action='index.php' method='post' novalidate>
 		<?php echo \Wbhkit\hidden('ac', 'link').
 		\Wbhkit\texty('email', '', 'Email', 'something@something.com', 'We will send you an email with a link to click.', 'Must be a valid email you have access to', ' required ', 'email').
 		\Wbhkit\submit('Send Me An Email'); ?>

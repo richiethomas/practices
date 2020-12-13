@@ -9,7 +9,7 @@ Wbhkit\set_vars($vars);
 
 
 $guest = new User();
-$guest->set_user_by_id($guest_id);
+$guest->set_by_id($guest_id);
 
 $needle = trim($needle);
 

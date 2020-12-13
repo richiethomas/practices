@@ -10,7 +10,7 @@ switch ($ac) {
 		Wbhkit\set_vars(array('email', 'display_name'));
 	
 		// if a user exists for that email, get it
-		$u->set_user_by_email($email);
+		$u->set_by_email($email);
 
 		// if failed, that was a bad email
 		if (!$u->logged_in()) {

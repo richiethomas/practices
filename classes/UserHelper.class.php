@@ -114,7 +114,7 @@ class UserHelper extends WBHObject {
 
 	function delete_user(int $uid) {
 		$ud = new User($this->logger, $this->lookups);
-		$ud->set_user_by_id($uid);
+		$ud->set_by_id($uid);
 		$ud->delete_user();
 	}
 	

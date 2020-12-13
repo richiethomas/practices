@@ -10,7 +10,7 @@ function get_workshop_info($id) {
 		return $row;
 
 	}
-	return false;
+	return array();
 }
 
 function fill_out_workshop_row($row, $get_enrollment_stats = true) {

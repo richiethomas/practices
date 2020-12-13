@@ -30,7 +30,7 @@ class User extends WBHObject {
 
 	}
 
-	function set_user_by_email(string $email) {
+	function set_by_email(string $email) {
 		
 		global $last_insert_id;
 
@@ -46,7 +46,7 @@ class User extends WBHObject {
 		// didn't find one? make one
 		if ($this->validate_email($email)) {
 			$stmt = \DB\pdo_query("insert into users (email, joined) VALUES (:email, '".date("Y-m-d H:i:s")."')", array(':email' => $email));
-			$this->set_user_by_id($last_insert_id); // fast way to get all fields in this object
+			$this->set_by_id($last_insert_id); // fast way to get all fields in this object
 			$this->set_nice_name();
 			$this->get_key();
 			return true;
@@ -57,7 +57,7 @@ class User extends WBHObject {
 	}
 
 
-	function set_user_by_id(int $id) {
+	function set_by_id(int $id) {
 		
 		if (!$id) {
 			$this->error = "We need a non-zero id number. You gave me: '{$id}'";
@@ -74,7 +74,7 @@ class User extends WBHObject {
 		return true;
 	}
 
-	function set_user_by_key($key) {
+	function set_by_key($key) {
 		$this->fields = array();
 		
 		$stmt = \DB\pdo_query("select * from users where ukey = :key", array(':key' => $key));
@@ -130,14 +130,10 @@ class User extends WBHObject {
 		} elseif (isset($_COOKIE['c_key']) && $_COOKIE['c_key']) {
 			$key = $_COOKIE['c_key'];
 		}
-
-		// remember it, return it
-		return $this->remember_key($key);
-	}
-
-	function remember_key(string $key) {
 		$_SESSION['s_key'] = $key;
 		setcookie('c_key', $key, time() + 31449600); // a year!
+
+		// remember it, return it
 		return $key;
 	}
 
@@ -293,7 +289,7 @@ class User extends WBHObject {
 
 		global $logger;
 	
-		$this->set_user_by_id($ouid); // set this instance to the old user
+		$this->set_by_id($ouid); // set this instance to the old user
 	
 		$logger->info("change email phase two: request to set user id $ouid to new email '$newe'");
 	
@@ -301,7 +297,7 @@ class User extends WBHObject {
 		$stmt = \DB\pdo_query("select u.* from users u where email = :email", array(':email' => $newe));
 		$news = new User();
 		while ($row = $stmt->fetch()) {
-			$news->set_user_by_id($row['id']);
+			$news->set_by_id($row['id']);
 			$logger->info("change email phase two: found user '{$news->fields['id']}' with email '{$news->fields['email']}'");
 		
 		}	
