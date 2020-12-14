@@ -11,10 +11,11 @@ $eh = new EnrollmentsHelper();
 
 $unpaid = array();
 $students = array();
+$statuses = $lookups->statuses;
 
 if (is_array($workshops)) {
 	$statuses[0] = 'all'; // modifying global $statuses
-	foreach ($lookups->statuses as $stid => $status_name) { 
+	foreach ($statuses as $stid => $status_name) { 
 		foreach ($workshops as $workshop_id) {
 			if ($workshop_id) {
 				$stds = $eh->get_students($workshop_id, $stid);

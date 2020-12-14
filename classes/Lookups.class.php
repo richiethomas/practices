@@ -4,6 +4,7 @@ class Lookups extends WBHObject {
 	
 	public array $statuses;
 	public array $carriers;
+	public array $carriers_drop;
 	public array $locations;
 	public array $groups;
 	
@@ -16,6 +17,7 @@ class Lookups extends WBHObject {
 		$stmt = \DB\pdo_query("select * from carriers order by id");
 		while ($row = $stmt->fetch()) {
 			$this->carriers[$row['id']] = $row;
+			$this->carriers_drop[$row['id']] = $row['network'];
 		}
 		
 		$stmt = \DB\pdo_query("select * from locations order by id");

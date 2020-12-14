@@ -84,8 +84,9 @@ class EnrollmentsHelper extends WBHObject {
 		return null;
 	}
 	
+	// returns student basic registration info
 	function get_students(int $wid, int $status_id = ENROLLED) {
-		$sql = "select u.*, r.status_id,  r.paid, r.registered, r.last_modified  from registrations r, users u where r.workshop_id = :wid and r.user_id = u.id ";
+		$sql = "select u.*, r.id as enrollment_id, r.status_id,  r.paid, r.registered, r.last_modified from registrations r, users u where r.workshop_id = :wid and r.user_id = u.id";
 		if ($status_id) { 
 			$sql .= " and status_id = :sid order by last_modified"; 
 			$stmt = \DB\pdo_query($sql, array(':wid' => $wid, ':sid' => $status_id));
@@ -100,7 +101,7 @@ class EnrollmentsHelper extends WBHObject {
 		}
 		return $stds;
 	}
-	
+
 	function get_transcript_tabled(User $u, bool $admin = false, int $page = 1) {
 		global $view;
 		if (!$u->logged_in() || !isset($u->fields['id'])) {

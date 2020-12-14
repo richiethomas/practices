@@ -3,7 +3,15 @@
 	<div class="row justify-content-center">
 		<div class="col-md-10 col-12">
 
+
+<div class="p-4 bg-primary text-light">
+<h2 class="my-4">NO JAMS DECEMBER 18-JANUARY 1</h2>
+<p>Happy holidays! See you starting January 8!</p>
+</div>
+
 <h2 class="my-4">Friday Jams</h2>
+
+<p>No Jams DECEMBER 18-JANUARY 1 -- see you January 8</p>
 
 <p>For WGIS students! 12:15pm and 6:15 PST (California time)</p>
 

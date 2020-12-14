@@ -118,7 +118,7 @@ class Enrollment extends WBHObject {
 			}
 		} else { // insert
 			$stmt = \DB\pdo_query("INSERT INTO registrations (workshop_id, user_id, status_id, registered, last_modified) VALUES (:wid, :uid, :status_id, '".date("Y-m-d H:i:s")."', '".date("Y-m-d H:i:s")."')", array(':wid' => $this->wk['id'], ':uid' => $this->u->fields['id'], ':status_id' => $status_id));
-			$this->set_by_id($_GLOBALS['last_insert_id']);
+			$this->set_by_id($GLOBALS['last_insert_id']);
 		}
 		
 		$this->update_change_log($status_id);	
@@ -171,26 +171,27 @@ class Enrollment extends WBHObject {
 		}
 		return $this->message = "No invites sent.";
 	}
-
-	function update_paid(int $wid = null, int $uid = null, int $paid = 1, int $eid = null) {
+	
+	
+	function update_paid_by_enrollment_id(int $eid, int $new_paid) {
+		$this->set_by_id($eid);
+		return $this->update_paid($new_paid);
+	}
+	
+	function update_paid_by_uid_wid(int $uid, int $wid, int $new_paid) {
+		$this->set_by_uid_wid($uid, $wid);
+		return $this->update_paid($new_paid);
+	}
+	
+	private function update_paid(int $new_paid) {
 		
-		// set enrollment fields, user, workshop	
-		if ($eid) {
-			$this->set_by_id($eid);
-		} else {
-			$this->set_by_uid_wid($wid, $uid);
-		}
-		$this->reset_user_and_workshop();
-	
-		// get paid status before
-		$paid_before = $this->fields['paid'];
-	
-		if ($paid != $paid_before) {
-			$stmt = \DB\pdo_query("update registrations set paid = :paid where id = :rid", array(':paid' => $paid, ':rid' => $this->fields['id']));
-			$this->fields['paid'] = $paid;
+		if ($this->fields['paid'] != $new_paid) {
+			$stmt = \DB\pdo_query("update registrations set paid = :paid where id = :rid", array(':paid' => $new_paid, ':rid' => $this->fields['id']));
+
+			$this->reset_user_and_workshop();
 			
 			// send payment confirmation
-			if ($paid == 1) {
+			if ($new_paid == 1) {
 		
 				$body = "<p>This is automated email to confirm that I've received your payment for class.</p>";
 				$body .= "<p>Class: {$this->wk['title']} {$this->wk['showstart']} (California time, PST)</p>\n";

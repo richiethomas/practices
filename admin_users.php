@@ -66,9 +66,9 @@ switch ($ac) {
 		$msg = null;
 		foreach ($all_enrollments as $eid) {
 			if (in_array($eid, $paids)) {
-				$msg = $e->update_paid(null, null, 1, $eid);
+				$msg = $e->update_paid_by_enrollment_id($eid, 1);
 			} else {
-				$msg = $e->update_paid(null, null, 0, $eid);
+				$msg = $e->update_paid_by_enrollment_id($eid, 0);
 			}
 			if ($msg) {
 				$message .= $msg."<br>\n";
@@ -83,7 +83,7 @@ if (!$guest->logged_in()) {
 	$view->data['key'] = $guest->get_key(); 
 	$view->data['guest'] = $guest; // user profile of user we are modifying
 	$view->data['needle'] = trim($needle);
-	$view->data['transcripts'] = $e->get_transcript_tabled($guest, true, $page);
+	$view->data['transcripts'] = $eh->get_transcript_tabled($guest, true);
 	$view->data['userhelper'] = new UserHelper($sc);
 	$view->data['lookups'] = $lookups;
 	$view->renderPage('admin/users');

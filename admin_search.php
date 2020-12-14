@@ -2,14 +2,16 @@
 $heading = "search";
 include 'lib-master.php';
 
-$userhelper = new UserHelperX();
+$userhelper = new UserHelper($sc);
 
 $vars = array('needle', 'sort', 'guest_id');
 Wbhkit\set_vars($vars);
 
 
 $guest = new User();
-$guest->set_by_id($guest_id);
+if ($guest_id) {
+	$guest->set_by_id($guest_id);
+}
 
 $needle = trim($needle);
 

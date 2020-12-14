@@ -98,11 +98,7 @@ function fill_out_workshop_row($row, $get_enrollment_stats = true) {
 function format_workshop_startend($row) {
 	$row['showstart'] = \Wbhkit\friendly_date($row['start']).' '.\Wbhkit\friendly_time($row['start']);
 	$row['showend'] = \Wbhkit\friendly_time($row['end']);
-	if ($row['cancelled']) {
-		$row['title'] = "CANCELLED: {$row['title']}";
-	}
 	$row['when'] = "{$row['showstart']}-{$row['showend']}";
-		
 	return $row;
 }
 

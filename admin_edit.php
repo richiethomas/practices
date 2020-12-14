@@ -96,6 +96,7 @@ switch ($ac) {
 		
 		
 	case 'at':
+	
 		$users = (isset($_REQUEST['users']) && is_array($_REQUEST['users'])) ? $_REQUEST['users'] : array();
 
 		$msg = null;
@@ -104,9 +105,9 @@ switch ($ac) {
 				$stds = $eh->get_students($wid, $sid);
 				foreach ($stds as $as) {
 					if (in_array($as['id'], $users)) {
-						$msg = $e->update_paid($wid, $as['id'], 1);
+						$msg = $e->update_paid_by_uid_wid($as['id'], $wid, 1);
 					} else {
-						$msg = $e->update_paid($wid, $as['id'], 0);
+						$msg = $e->update_paid_by_uid_wid($as['id'], $wid,  0);
 					}
 					if ($msg) {
 						$message .= $msg."<br>\n";

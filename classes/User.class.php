@@ -76,25 +76,24 @@ class User extends WBHObject {
 
 	function set_by_key($key) {
 		$this->fields = array();
-		
 		$stmt = \DB\pdo_query("select * from users where ukey = :key", array(':key' => $key));
 		while ($row = $stmt->fetch()) {
 			$this->set_into_fields($row);
+			$this->set_nice_name();
+			return $this->fields['id'];
 		}
-		$this->set_nice_name();
 		return false;
 	}
 
 
-
+	// needs display_name, email
 	function set_nice_name() {	
-		if ($this->fields['display_name']) {
+		if (isset($this->fields['display_name']) && $this->fields['display_name']) {
 			$this->fields['nice_name'] = $this->fields['display_name']; 	
 			$this->fields['fullest_name'] = "{$this->fields['display_name']} ({$this->fields['email']})";	
 		} else {
 			$this->fields['nice_name'] = $this->fields['fullest_name'] = $this->fields['email'];
 		}
-		$this->get_key(); // sets key if needed
 		return true;
 	}
 
@@ -218,8 +217,10 @@ class User extends WBHObject {
 	
 	
 
-	function update_display_name() {
+	function update_display_name($display_name) {
 
+		$this->fields['display_name'] = $display_name;
+		
 		// update user info
 		$stmt = \DB\pdo_query("update users set display_name = :name where id = :uid", array(':name' => $this->fields['display_name'], ':uid' => $this->fields['id']));
 		return true;
@@ -238,7 +239,7 @@ class User extends WBHObject {
 	}	
 
 
-	function update_text_preferences(int $phone, int $send_text, int $carrier_id) {
+	function update_text_preferences(string $phone, string $send_text, string $carrier_id) {
 		
 		$this->fields['phone'] = $phone;
 		$this->fields['send_text'] = $send_text;

@@ -10,7 +10,7 @@ if ($ac == 'force') {
 }
 
 
-$view->data['reminders'] = Reminders::get_reminders();
+$view->data['reminders'] = Reminders\get_reminders();
 $view->renderPage('admin/reminders');
 
 

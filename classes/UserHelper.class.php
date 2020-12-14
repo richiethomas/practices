@@ -86,14 +86,14 @@ class UserHelper extends WBHObject {
 	function edit_text_preferences(User $u) {
 		$body = '';
 		$body .= "";
-		
+				
 		$body .= \Wbhkit\form_validation_javascript('edit_text_preferences');
 		$body .= "<div class='row'><div class='col'>\n";
 		$body .= "<form id='edit_text_preferences' action='{$this->sc}' method='post' novalidate>\n";
 		$body .= \Wbhkit\hidden('guest_id', $u->fields['id']);
 		$body .= \Wbhkit\hidden('ac', 'updateu');
 		$body .= \Wbhkit\checkbox('send_text', 1, 'Send text updates?', $u->fields['send_text']);
-		$body .= \Wbhkit\drop('carrier_id', $lookups->carriers, $u->fields['carrier_id'], 'phone network', null, "You must pick a carrier if you want text updates.", ' required ');
+		$body .= \Wbhkit\drop('carrier_id', $this->lookups->carriers_drop, $u->fields['carrier_id'], 'phone network', null, "You must pick a carrier if you want text updates.", ' required ');
 		$body .= \Wbhkit\texty('phone', $u->fields['phone'], 'phone number', null, '10 digit phone number', 'Phone must be 10 digits, no letters or spaces or dashes', ' required minlength="10" maxlength="11" pattern="\d+" ');
 		$body .= \Wbhkit\submit('Update Text Preferences');
 		$body .= "</form>\n";
@@ -107,7 +107,7 @@ class UserHelper extends WBHObject {
 		return "<form action='{$this->sc}' method='post'>\n".
 		\Wbhkit\hidden('guest_id', $u->fields['id']).
 		\Wbhkit\hidden('ac', 'updategroup').
-		\Wbhkit\drop('group_id', $lookups->groups, $u->fields['group_id'], 'Group', 'Clearance level').
+		\Wbhkit\drop('group_id', $this->lookups->groups, $u->fields['group_id'], 'Group', 'Clearance level').
 		\Wbhkit\submit('Update Group Level').
 		"</form>\n";	
 	}
