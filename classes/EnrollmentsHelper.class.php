@@ -35,11 +35,13 @@ class EnrollmentsHelper extends WBHObject {
 	function get_status_change_log(array $wk = null) {
 
 		$sql = "select s.*, u.email, u.display_name, st.status_name, wk.title, wk.start, wk.end, wk.cancelled from status_change_log s, users u, statuses st, workshops wk where WORKSHOPMAYBE  s.workshop_id = wk.id and s.user_id = u.id and s.status_id = st.id order by happened desc";
-		if ($wk) { 
+		if (isset($wk['id']) && $wk['id']) { 
+			// if we got a workshop, only show changes for that
 			$sql = preg_replace('/WORKSHOPMAYBE/', " workshop_id = :wid and ", $sql);
 			$stmt = \DB\pdo_query($sql, array(':wid' => $wk['id']));
 		} else {
-			$sql = preg_replace('/WORKSHOPMAYBE/', '', $sql);
+			// if we are showing all, only show last 3 days
+			$sql = preg_replace('/WORKSHOPMAYBE/', 'wk.start >= "'.date("Y-m-d H:i:s", strtotime("7 days ago")).'" and ', $sql);
 			$stmt = \DB\pdo_query($sql);
 		}
 		
@@ -50,12 +52,6 @@ class EnrollmentsHelper extends WBHObject {
 		while ($row = $stmt->fetch()) {
 			$row = \Workshops\format_workshop_startend($row);
 			$row = $u->set_nice_name_in_row($row);
-			if (!$wk) {
-				// skip old ones for the global change log
-				if (strtotime($row['start']) < strtotime("24 hours ago")) {
-					continue;
-				}
-			}
 			$log[] = $row;
 		}
 		foreach ($log as $id => $l) {

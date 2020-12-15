@@ -82,6 +82,7 @@ function fill_out_workshop_row($row, $get_enrollment_stats = true) {
 	
 	if ($get_enrollment_stats) {
 		$row = set_enrollment_stats($row);
+		$row['paid'] = how_many_paid($row);
 		if ($row['enrolled'] + $row['waiting'] + $row['invited'] >= $row['capacity']) { 
 			$row['soldout'] = 1;
 		} else {
@@ -113,7 +114,6 @@ function set_enrollment_stats($row) {
 	foreach ($lookups->statuses as $sid => $sname) {
 		$row[$sname] = $enrollments[$sid];
 	}	
-	$row['paid'] = how_many_paid($row);
 	$row['open'] = ($row['enrolled'] >= $row['capacity'] ? 0 : $row['capacity'] - $row['enrolled']);
 	return $row;
 }
@@ -148,6 +148,22 @@ function check_last_minuteness($wk) {
 		}
 	}
 	return $wk;
+}
+
+
+function get_unavailable_workshops() {
+	
+	$mysqlnow = date("Y-m-d H:i:s");
+	
+	$stmt = \DB\pdo_query("
+select * from workshops where date(start) >= :when1 and when_public >= :when2 order by when_public asc, start asc", array(":when1" => $mysqlnow, ":when2" => $mysqlnow)); 
+		
+	$sessions = array();
+	while ($row = $stmt->fetch()) {
+		$sessions[] = fill_out_workshop_row($row);
+	}
+	return $sessions;
+	
 }
 
 function get_workshops_dropdown($start = null, $end = null) {
@@ -245,17 +261,27 @@ function get_sessions_to_come() {
 	$mysqlnow = date("Y-m-d H:i:s", strtotime("-3 hours"));
 	
 	$stmt = \DB\pdo_query("
-(select w.id, title, start, end, capacity, cost, 0 as xtra, 0 as class_show, notes, teacher_id, 1 as rank, '' as override_url, online_url from workshops w where start >= date('$mysqlnow'))
+(select w.id, title, start, end, capacity, cost, 0 as xtra, 0 as class_show, notes, teacher_id, 1 as rank, '' as override_url, online_url 
+from workshops w
+where start >= date('$mysqlnow'))
 union
-(select x.workshop_id, w.title, x.start, x.end, w.capacity, w.cost, 1 as xtra, x.class_show, w.notes, w.teacher_id, x.rank, x.online_url as override_url, w.online_url from xtra_sessions x, workshops w, users u where w.id = x.workshop_id and x.start >= date('$mysqlnow'))
+(select x.workshop_id, w.title, x.start, x.end, w.capacity, w.cost, 1 as xtra, x.class_show, w.notes, w.teacher_id, x.rank, x.online_url as override_url, w.online_url
+from xtra_sessions x, workshops w 
+where w.id = x.workshop_id and x.start >= date('$mysqlnow'))
 order by start asc"); 
 		
+		
+	$teachers = \Teachers\get_all_teachers(); // avoid getting same teacher multiple times	
 	$sessions = array();
 	while ($row = $stmt->fetch()) {
-		$trow = \Teachers\get_teacher_by_id($row['teacher_id']);
-		$row['teacher_name'] = $trow['nice_name'];
-		$row['teacher_user_id'] = $trow['user_id'];
-		$sessions[] = set_enrollment_stats($row);
+		$teach = \Teachers\find_teacher_in_teacher_array($row['teacher_id'], $teachers);
+		if ($teach) {
+			$row['teacher_name'] = $teach['nice_name'];
+			$row['teacher_user_id'] = $teach['user_id'];
+		}
+		$row['paid'] = how_many_paid($row);
+		$row = set_enrollment_stats($row);
+		$sessions[] = $row;
 	}
 	return $sessions;
 }

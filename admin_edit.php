@@ -74,7 +74,7 @@ switch ($ac) {
 		Wbhkit\set_vars(array('email', 'con'));
 		$guest->set_by_email($email);
 		$e = new Enrollment();
-		$e->set_by_u_wk($u, $wk);
+		$e->set_by_u_wk($guest, $wk);
 		$message = $e->change_status(ENROLLED, $con); 
 		break;
 	

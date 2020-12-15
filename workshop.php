@@ -30,15 +30,20 @@ if (Workshops\is_public($wk)) {
 			$before_status = $e->fields['id'] ? $e->fields['status_id']  : null;
 			$current_capacity = $wk['enrolled']+$wk['invited']+$wk['waiting'];
 			if ($before_status == INVITED) { $current_capacity--; } // take away one if WE are the invited
+			//echo "<!--{$current_capacity}, {$wk['enrolled']}, {$wk['invited']}, {$wk['waiting']}-->\n";
 			
 			// figure target status: enroll or wait?
-			$target_status= ($current_capacity < $wk['capacity']) ? ENROLLED : WAITING;
+			$target_status = ($current_capacity < $wk['capacity']) ? ENROLLED : WAITING;
 			
+			$e->error = null; // reset error message
 			$e->change_status($target_status);  // wk and u set above
+			if ($e->error) {
+				$error = $e->error;
+			}
 			
 			// finicky confirmation message
 			if ($target_status == ENROLLED) {
-				$message = "'{$u->fields['nice_name']}' is now enrolled in '{$wk['title']}'!".($confirm ? " Info emailed to <b>{$u->fields['email']}</b>." : '');
+				$message = "'{$u->fields['nice_name']}' is now enrolled in '{$wk['title']}'! Info emailed to <b>{$u->fields['email']}</b>.";
 			} elseif ($target_status == WAITING) {
 				$message = "This practice is full. '{$u->fields['nice_name']}' is now on the waiting list.";
 			} 
@@ -62,15 +67,12 @@ if (Workshops\is_public($wk)) {
 			
 				break;
 			}
-	
-			if ($u->logged_in()) {
-								
-				$message = "Do you really want to drop '{$wk['title']}'? Then click <a class='btn btn-warning' href=\"$sc?ac=condrop&key={$u->fields['ukey']}&wid={$wid}\">confirm drop</a>";
-				$show_other_action = false;
-			
-				if ($e->fields['while_soldout']) { 
-					$message .= '<br><br>'.Emails\get_dropping_late_warning();
-				}
+									
+			$message = "Do you really want to drop '{$wk['title']}'? Then click <a class='btn btn-warning' href=\"$sc?ac=condrop&key={$u->fields['ukey']}&wid={$wid}\">confirm drop</a>";
+			$show_other_action = false;
+		
+			if ($e->fields['while_soldout']) { 
+				$message .= '<br><br>'.Emails\get_dropping_late_warning();
 			}
 			break;
 		
@@ -86,7 +88,6 @@ if (Workshops\is_public($wk)) {
 			}
 	
 			$message = $e->change_status(DROPPED, 1);
-			$wk =  Workshops\get_workshop_info($wk['id']);
 			$e->check_waiting($wk);
 			$message = "Dropped user ({$u->fields['email']}) from practice '{$wk['title']}.'";
 			break;	
@@ -147,7 +148,7 @@ if (Workshops\is_public($wk)) {
 // maybe check the $wk or $wk['id'] here?
 
 if (isset($wk) && isset($wk['id']) && $wk['id']) {
-	$wk = Workshops\fill_out_workshop_row($wk);
+	$wk = Workshops\set_enrollment_stats($wk);
 	$view->data['e'] = $e;
 	$view->data['show_other_action'] = $show_other_action;
 	$view->data['admin'] = 0;

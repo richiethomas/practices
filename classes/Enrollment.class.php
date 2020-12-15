@@ -117,15 +117,27 @@ class Enrollment extends WBHObject {
 				return $this->message = "User ({$this->u->fields['email']}) was already status '{$statuses[$status_id]}' for {$this->wk['title']}.";
 			}
 		} else { // insert
-			$stmt = \DB\pdo_query("INSERT INTO registrations (workshop_id, user_id, status_id, registered, last_modified) VALUES (:wid, :uid, :status_id, '".date("Y-m-d H:i:s")."', '".date("Y-m-d H:i:s")."')", array(':wid' => $this->wk['id'], ':uid' => $this->u->fields['id'], ':status_id' => $status_id));
+			$datestring_now = date("Y-m-d H:i:s");
+			$stmt = \DB\pdo_query("INSERT INTO registrations (workshop_id, user_id, status_id, registered, last_modified) VALUES (:wid, :uid, :status_id, '{$datestring_now}', '{$datestring_now}')", array(':wid' => $this->wk['id'], ':uid' => $this->u->fields['id'], ':status_id' => $status_id));
 			$this->set_by_id($GLOBALS['last_insert_id']);
+			
+			//speed this up -> manually set properties
+			$this->fields = array(
+				'id' => $GLOBALS['last_insert_id'],
+				'user_id' => $this->u->fields['id'],	
+				'workshop_id' => $this->wk['id'],
+				'status_id' => $status_id,
+				'registered'=> $datestring_now,
+				'last_modified' => $datestring_now,
+				'paid' => false,
+				'while_soldout' => false);
 		}
 		
 		$this->update_change_log($status_id);	
 		if ($confirm) { 
 			\Emails\confirm_email($this->wk, $this->u, $status_id); 
 		}
-		return $this->message = "Updated user ({$this->u->fields['email']}) to status '{$statuses[$status_id]}' for {$this->wk['title']}.";
+		return $this->message = "Updated user ({$this->u->fields['email']}) to '{$statuses[$status_id]}' for {$this->wk['title']}.";
 
 	}
 
@@ -158,7 +170,8 @@ class Enrollment extends WBHObject {
 		
 			while ($row = $stmt->fetch()) {
 				$this->set_by_uid_wid($row['user_id'], $wk['id']);
-				$this->reset_user_and_workshop();
+				$this->u = new User();
+				$this->u->set_by_id($row['user_id']);
 				$msg .= $this->change_status(INVITED, true);
 				
 				//adjust our totals so we don't get caught infinite loop!

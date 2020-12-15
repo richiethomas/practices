@@ -36,7 +36,7 @@ echo "<div class='row mt-md-3 admin-edit-workshop'>\n";
 		echo  Wbhkit\textarea('roster', $roster, 0);			
 		
 		
-		echo  $status_log; // from a snippet "admin_status"
+		echo  "<h5>See <a href='admin_status_log.php?wid={$wk['id']}'>status log</a> for this class?</h5>";
 
 		echo  "</div>"; // end of column
 		

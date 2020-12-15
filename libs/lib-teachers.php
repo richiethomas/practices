@@ -67,7 +67,7 @@ function get_all_teachers($only_active = false) {
 	$teachers = array();
 	while ($row = $stmt->fetch()) {
 		$row = fill_out_teacher_row($row); 
-		$teachers[] = $row;
+		$teachers[$row['id']] = $row;
 	}
 	
 	usort($teachers, function($a, $b) {
@@ -75,6 +75,16 @@ function get_all_teachers($only_active = false) {
 	});
 	
 	return $teachers;
+}
+
+
+function find_teacher_in_teacher_array(int $id, array $teachers) {
+	foreach ($teachers as $tid => $teach) {
+		if ($id == $teach['id']) {
+			return $teach;
+		}
+	}
+	return false;
 }
 
 function get_faculty() {

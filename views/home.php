@@ -41,6 +41,15 @@
   <div id="classes">
 	<div class="container-fluid classes-header container-header-banner"><h3 class="container-lg container-fluid">Current & Upcoming Classes</h3></div>
 	<h4 class="text-center class-time-announcement mt-5 mb-5 col-12">All Class Dates and Times are California Time (PST)</h4>
+	
+	
+<?php
+if (count($unavailable_workshops) > 0) {
+	include 'unavailable_workshops.php';	
+} 
+?>
+	
+	
 	<div class="container-lg container-fluid" id="classes-listings">
 		  
 		  
