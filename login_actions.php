@@ -36,7 +36,7 @@ switch ($ac) {
 	// log out	
 	case 'lo':
 		$logger->info("{$u->fields['nice_name']} logging out.");
-		$u->logout();
+		$u->hard_logout();
 		header("Location: ".URL);
 		die();
 		break;	
@@ -55,11 +55,15 @@ switch ($ac) {
 			break;
 		}
 
-		$u->change_email_phase_one($newemail);
-		$message = "Okay, a link has been sent to the new email address ({$newemail}). Check your spam folder if you don't see it.";
-		$logger->debug($message);
+		if ($u->change_email_phase_one($newemail)) {
+			$message = "Okay, a link has been sent to the new email address ({$newemail}). Check your spam folder if you don't see it.";
+			$logger->debug($message);
+		} else {
+			// if error, email already being used
+			$error = $u->error;
+			$logger->debug($error);
+		}
 		break;
-
 
 
 	// update display name
@@ -102,14 +106,17 @@ switch ($ac) {
 			$logger->debug($error);
 			break;
 		}
-		//actually change the email
+		
 		$oldemail = $u->fields['email'];
-		$u->change_email($u->fields['id'], $u->fields['new_email']);
-		$message = "Email changed from '{$oldemail}' to '{$u->fields['email']}'";
-		$logger->info($message);
-
-		// make session key equal to database key
-		$_SESSION['s_key'] = $u->fields['ukey'];
+		$newemail = $u->fields['new_email'];
+		if ($u->user_finish_change_email()) {
+			$message = "Email changed from '{$oldemail}' to '{$newemail}'";
+			$logger->info($message);
+		} else {
+			// if error, email being used
+			$error = $u->error;
+			$logger->debug($error);
+		}
 		break;
 
 }	

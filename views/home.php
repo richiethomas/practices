@@ -1,3 +1,6 @@
+<main role="main">
+	
+	
 <?php if ($link_email_sent_flag) { ?>	
 <script
   src="https://code.jquery.com/jquery-3.5.1.min.js"
@@ -15,10 +18,8 @@
 		<p>Would you mind entering a name? Nickname is fine.</p>
 	<?php echo $userhelper->edit_display_name($u); ?>
 		</div>
-<?php 		}  ?>
+<?php 		}  ?>	
 	
-
-<main role="main">
   <!-- Main jumbotron for a primary  message -->
   <div class="jumbotron">
 	<div class="container-lg container-fluid">

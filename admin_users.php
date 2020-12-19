@@ -47,7 +47,7 @@ switch ($ac) {
 			if (!$guest->validate_email($newemail)) {
 				$error = "'$newemail' is not a valid email?";
 			} else {
-				$guest->change_email($guest->fields['id'], $newemail);
+				$guest->admin_change_email($guest->fields['email'], $newemail);
 				$message = "Email changed from '{$guest->fields['email']}' to '$newemail'";
 				$guest->set_by_email($newemail);
 			}
@@ -78,6 +78,7 @@ switch ($ac) {
 		
 }
 if (!$guest->logged_in()) {
+	$view->data['error_message'] = "<p>perhaps try going to the <a href='admin_search.php'>page where you can search for students</a></p>";
 	$view->renderPage('admin/error');	
 } else {
 	$view->data['key'] = $guest->get_key(); 

@@ -182,18 +182,21 @@ class User extends WBHObject {
 		}
 	}
 
-
-	function logout() {
-	
-		if ($this->logged_in()) {
-			$this->get_key(true); // force change the key
-		}
-	
+	function soft_logout() {
 		unset($_SESSION['s_key']);
 	    unset($_COOKIE['c_key']);
 	    setcookie('c_key', null, -1);
 		$this->fields = array(); // clear current user
 		$this->message = 'You are logged out!';
+	}
+
+	function hard_logout() {
+	
+		if ($this->logged_in()) {
+			$this->get_key(true); // force change the key
+		}
+		$this->soft_logout();
+	
 	}
 
 	function check_user_level(int $level) {
@@ -226,18 +229,6 @@ class User extends WBHObject {
 		return true;
 
 	}
-
-	function change_email_phase_one(string $new_email) {
-	
-		$stmt = \DB\pdo_query("update users set new_email = :email where id = :uid", array(':email' => $new_email, ':uid' => $this->fields['id']));
-		
-		$sub = 'email update at WGIS';
-		$link = URL."you.php?key={$this->fields['ukey']}&ac=concemail";
-		$ebody = "<p>You requested to change what email you use at the WGIS web site. Use the link below to do that:</p><p>$link</p>";
-		\Emails\centralized_email($new_email, $sub, $ebody);
-
-	}	
-
 
 	function update_text_preferences(string $phone, string $send_text, string $carrier_id) {
 		
@@ -286,53 +277,89 @@ class User extends WBHObject {
 	}	
 
 
-	function change_email(int $ouid, string $newe) {
-
-		global $logger;
-	
-		$this->set_by_id($ouid); // set this instance to the old user
-	
-		$logger->info("change email phase two: request to set user id $ouid to new email '$newe'");
-	
-		//does someone already have this email?
-		$stmt = \DB\pdo_query("select u.* from users u where email = :email", array(':email' => $newe));
-		$news = new User();
-		while ($row = $stmt->fetch()) {
-			$news->set_by_id($row['id']);
-			$logger->info("change email phase two: found user '{$news->fields['id']}' with email '{$news->fields['email']}'");
+	function change_email_phase_one(string $new_email) {
 		
-		}	
+		if ($this->is_email_available($new_email)) {
+			$stmt = \DB\pdo_query("update users set new_email = :email where id = :uid", array(':email' => $new_email, ':uid' => $this->fields['id']));
+		
+			$sub = 'email update at WGIS';
+			$link = URL."you.php?key={$this->fields['ukey']}&ac=concemail";
+			$ebody = "<p>You requested to change what email you use at the WGIS web site. Use the link below to do that:</p><p>$link</p>";
+			\Emails\centralized_email($new_email, $sub, $ebody);
+			return true;
+		} else {
+			$this->error = "The email '{$new_email}' is already being used! Pick a different email or email ".WEBMASTER." for help.";
+			return false;
+		}
+	}	
+
+
+	// assumes email is in 'new email' 
+	function user_finish_change_email() {
+		if ($this->is_email_available($this->fields['new_email'])) {
+			// now we can update email
+			$stmt = \DB\pdo_query("update users set email = :email where id = :uid", array(':email' => $this->fields['new_email'], ':uid' => $this->fields['id']));	
+			$this->fields['email'] = $this->fields['new_email'];
+			$this->set_nice_name();
+			$this->logger->info("change email phase two: update email for user '{$this->fields['id']}' to new email '{$this->fields['email']}'");
+			return true;
+		} else {
+			$this->error = "The email '{$this->fields['new_email']}' is already being used! Pick a different email or email ".WEBMASTER." for help.";
+			return false;
+		}
+		
+	}
+
+	function admin_change_email(string $old_email, string $new_email) {
+
+		$oldu = new User();
+		$oldu->set_by_email($old_email);
+		$newu = new User();
+		$newu->set_by_email($new_email);
 	
-		if ($news->logged_in()) {
+		$this->logger->info("admin change email: '$old_email' to '$new_email' (start)");
+		
+		//print_r($oldu->fields);
+		//print_r($newu->fields);
+		
+		if ($newu->logged_in()) {
+			
 			// new student exists, so merge old info into new
-			$stmt = \DB\pdo_query("select workshop_id from registrations where user_id = :uid", array(':uid' => $news->fields['id']));
+			$stmt = \DB\pdo_query("select workshop_id from registrations where user_id = :uid", array(':uid' => $newu->fields['id']));
 			while ($row = $stmt->fetch()) {
 			
 				//does current (old) email already have this registation?
-				$stmt2 = \DB\pdo_query("select * from registrations where user_id = :uid and workshop_id = :wid", array(':uid' => $this->fields['id'], ':wid' => $row['workshop_id']));
+				$stmt2 = \DB\pdo_query("select * from registrations where user_id = :uid and workshop_id = :wid", array(':uid' => $oldu->fields['id'], ':wid' => $row['workshop_id']));
 				$rows2 = $stmt2->fetchAll();
 				if (count($rows2) == 0) {
-					$stmt3 = \DB\pdo_query("update registrations set user_id = :uid where workshop_id = :wid and user_id = :uid2", array(':uid' => $this->fields['id'], ':wid' => $row['workshop_id'], ':uid2' => $news->fields['id']));
-					$logger->info("change email phase two: update registration uid '{$news->fields['id']}' wid {$row['workshop_id']} to uid {$this->fields['id']}");
+					$stmt3 = \DB\pdo_query("update registrations set user_id = :uid where workshop_id = :wid and user_id = :uid2", array(':uid' => $oldu->fields['id'], ':wid' => $row['workshop_id'], ':uid2' => $newu->fields['id']));
+					$this->logger->info("admin change email: update registration uid for workshop {$row['workshop_id']} from uid '{$newu->fields['id']}' to uid {$oldu->fields['id']}");
 				}
 			}
 						
 			// update records in change log
-			$stmt = \DB\pdo_query("update status_change_log set user_id = :uid where user_id = :uid2", array(':uid' => $this->fields['id'], ':uid2' => $news->fields['id']));
+			$stmt = \DB\pdo_query("update status_change_log set user_id = :uid where user_id = :uid2", array(':uid' => $oldu->fields['id'], ':uid2' => $newu->fields['id']));
 		
 			//update teacher records
-			$stmt = \DB\pdo_query("update teachers set user_id = :uid where user_id = :uid2", array(':uid' => $this->fields['id'], ':uid2' => $news->fields['id']));
+			$stmt = \DB\pdo_query("update teachers set user_id = :uid where user_id = :uid2", array(':uid' => $oldu->fields['id'], ':uid2' => $newu->fields['id']));
 		
 		
-			$news->delete_user(); // we've absorbed your data, now you may die
+			$newu->delete_user(); // we've absorbed your data, now you may die
 			
 		}
 		// now we can update email
-		$stmt = \DB\pdo_query("update users set email = :email where id = :uid", array(':email' => $newe, ':uid' => $ouid));	
-		$this->fields['email'] = $newe;
-		$this->set_nice_name();
-		$logger->info("change email phase two: update email for '$ouid' to new email '$newe'");
+		$stmt = \DB\pdo_query("update users set email = :email where id = :uid", array(':email' => $new_email, ':uid' => $oldu->fields['id']));	
+		$this->logger->info("admin change email: update email for uid '{$oldu->fields['id']}' to new email '$new_email'");
 		return true;
+	}
+
+
+	private function is_email_available($email) {
+		$stmt = \DB\pdo_query("select * from users where email = :email", array(':email' => $email));
+		while ($row = $stmt->fetch()) {
+			return false; // not available
+		}	
+		return true; // available
 	}
 
 	
