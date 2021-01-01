@@ -300,9 +300,9 @@ function get_workshops_list_bydate($start = null, $end = null) {
 	if (!$start) { $start = "Jan 1 1000"; }
 	if (!$end) { $end = "Dec 31 3000"; }
 	
-	//echo "select w.* from workshops w WHERE w.start >= '".date('Y-m-d H:i:s', strtotime($start))."' and w.end <= '".date('Y-m-d H:i:s', strtotime($end))."' order by start desc";
+	//echo "select w.* from workshops w WHERE w.start >= '".date('Y-m-d H:i:s', strtotime($start))."' and w.start <= '".date('Y-m-d H:i:s', strtotime($end))."' order by teacher_id, start desc";
 	
-	$stmt = \DB\pdo_query("select w.* from workshops w WHERE w.start >= :start and w.end <= :end order by teacher_id, start desc", array(':start' => date('Y-m-d H:i:s', strtotime($start)), ':end' => date('Y-m-d H:i:s', strtotime($end))));
+	$stmt = \DB\pdo_query("select w.* from workshops w WHERE w.start >= :start and w.start <= :end order by teacher_id, start desc", array(':start' => date('Y-m-d H:i:s', strtotime($start)), ':end' => date('Y-m-d H:i:s', strtotime($end))));
 	
 	$workshops = array();
 	while ($row = $stmt->fetch()) {
@@ -333,7 +333,7 @@ function get_teacher_pay($wid) {
 		from xtra_sessions x
 		where x.workshop_id = :id", array(':id' => $wid));
 	while ($row = $stmt->fetch()) {
-		$pay += $row['override_pay'] ? $row['override_pay'] : $default_pay;
+		$pay += $row['actual_pay'] ? $row['actual_pay'] : $default_pay;
 	}
 	
 	return $pay;

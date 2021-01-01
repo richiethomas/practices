@@ -24,7 +24,7 @@
   <div class="jumbotron">
 	<div class="container-lg container-fluid">
 	  <div class="row align-items-center justify-content-center">
-		<p class="col-12 col-sm-10 col-md-8">We teach online classes in <span class="color-long-form-improv">long-form improv</span>. <!--<span class="color-character">character</span> and <span class="color-sketch">sketch</span>.--></p>
+		<p class="col-12 col-sm-10 col-md-8">We teach online classes in <span class="color-long-form-improv">long-form improv</span> <!--<span class="color-character">character</span>--> and <span class="color-sketch">sketch</span>. New classes going up on January 2!</p>
 	  </div>
 	  
 	  <div class="row news-summary pb-4">

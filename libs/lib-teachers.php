@@ -212,4 +212,32 @@ function empty_teacher() {
 	
 }
 
+// figure teacher pay for a workshop
+// go through all sessions
+// add either actual_pay or default_pay
+function get_teacher_pay(int $wid) {
+
+	$pay = 0;
+	$default_pay = 0;
+	
+	$stmt = \DB\pdo_query("select t.default_rate, w.actual_pay 
+		from workshops w, teachers t
+		where w.teacher_id = t.id
+		and w.id = :id", array(':id' => $wid));
+	while ($row = $stmt->fetch()) {
+		$default_pay = $row['default_rate'];
+		$pay += $row['actual_pay'] ? $row['actual_pay'] : $default_pay;
+	}
+
+	$stmt = \DB\pdo_query("select x.actual_pay
+		from xtra_sessions x
+		where x.workshop_id = :id", array(':id' => $wid));
+	while ($row = $stmt->fetch()) {
+		$pay += $row['override_pay'] ? $row['override_pay'] : $default_pay;
+	}
+
+	return $pay;
+}
+
+
 

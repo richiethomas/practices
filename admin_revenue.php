@@ -16,8 +16,6 @@ if (!$searchstart && !$searchend) {
 if ($searchstart) { $searchstart = date('Y-m-d 00:00:00', strtotime($searchstart)); }
 if ($searchend) { $searchend = date('Y-m-d 23:59:59', strtotime($searchend)); }
 
-
-
 $lastweekstart = change_date_string($searchstart, '-7 days');
 $lastweekend = change_date_string($searchend, '-7 days');
 $nextweekstart = change_date_string($searchstart, '+7 days');

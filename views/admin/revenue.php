@@ -1,5 +1,5 @@
 <div class='row'><div class='col-md-10'><h2>Revenues</h2>
-<form action='<?php echo $sc; ?>' method='post'>
+<form action='<?php echo $sc; ?>' method='get'>
 <?php echo \Wbhkit\texty('searchstart', $searchstart, 'Search Start'); ?>
 <?php echo \Wbhkit\texty('searchend', $searchend, 'Search End'); ?>
 <?php echo \Wbhkit\submit('Update'); ?>
