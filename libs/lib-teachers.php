@@ -122,8 +122,8 @@ function get_teacher_all_classes($tid) {
 }
 
 
-function teachers_dropdown_array() {
-	$teachers = get_all_teachers();
+function teachers_dropdown_array($only_active = false) {
+	$teachers = get_all_teachers($only_active);
 	$opts = array();
 	foreach ($teachers as $t) {
 		$opts[$t['id']] = $t['nice_name'];

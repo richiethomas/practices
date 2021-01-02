@@ -5,7 +5,11 @@ namespace XtraSessions;
 
 function get_xtra_sessions($workshop_id) {
 	
-	$stmt = \DB\pdo_query("select * from xtra_sessions where workshop_id = :id order by start", array(':id' => $workshop_id));
+	$stmt = \DB\pdo_query("
+select *
+from xtra_sessions x
+where workshop_id = :id 
+order by start", array(':id' => $workshop_id));
 	$sessions = array();
 	while ($row = $stmt->fetch()) {
 		$row['friendly_when'] = \Wbhkit\friendly_when($row['start']).'-'.\Wbhkit\friendly_time($row['end']);
@@ -34,7 +38,6 @@ function empty_xtra_session() {
 		'workshop_id' => null,
 		'start' => null,
 		'end' => null,
-		'class_show' => null,
 		'rank' => null,
 		'online_url' => null,
 		'reminder_sent' => null
@@ -47,19 +50,16 @@ function xtra_session_fields($wk) {
 	\Wbhkit\texty('start', null, null, null, null, 'Required', ' required ').
 	\Wbhkit\texty('end', null, null, null, null, 'Required', ' required ').
 	\Wbhkit\texty('online_url').
-	\Wbhkit\checkbox('class_show', 1, 'Class Show?', 0).				
 	\Wbhkit\hidden('wid', $wk['id']);
 	
 }
 
-function add_xtra_session($workshop_id, $start, $end, $class_show = 0, $online_url = null) {
-	if (!$class_show) { $class_show = 0; }	
-	$stmt = \DB\pdo_query("insert into xtra_sessions (workshop_id, start, end, class_show, online_url)
-	VALUES (:wid, :start, :end, :class_show, :url)",
+function add_xtra_session($workshop_id, $start, $end, $online_url = null) {
+	$stmt = \DB\pdo_query("insert into xtra_sessions (workshop_id, start, end, online_url)
+	VALUES (:wid, :start, :end, :url)",
 	array(':wid' => $workshop_id, 
 	':start' => date('Y-m-d H:i:s', strtotime($start)), 
 	':end' => date('Y-m-d H:i:s', strtotime($end)),
-	':class_show' => $class_show,
 	':url' => $online_url));
 	update_ranks($workshop_id);
 	
@@ -98,18 +98,4 @@ function delete_xtra_session($xtra_session_id) {
 	
 }
 
-function add_sessions_to_when($when, $sessions) {
-	
-	$sessions_list = '';
-	if (!empty($sessions)) {
-		$sessions_list = "{$when}"; // first session is the $when
-		foreach ($sessions as $s) {
-			$sessions_list .= "<br>\n{$s['friendly_when']}".($s['class_show'] ? ' <b>(show)</b> ': '')."";
-		}
-		$sessions_list .= "<br>\n";
-		return $sessions_list; // return the list of sessions, which includes the $when
-	}
-	return $when; // if sessions is empty, return just the $when
-	
-}
 	

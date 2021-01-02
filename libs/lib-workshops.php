@@ -40,38 +40,31 @@ function fill_out_workshop_row($row, $get_enrollment_stats = true) {
 	// xtra session info
 	$row['sessions'] = \XtraSessions\get_xtra_sessions($row['id']);	
 	$row['total_class_sessions'] = 1;
-	$row['total_show_sessions'] = 0;
 	foreach ($row['sessions'] as $sess) {
-		if ($sess['class_show']) {
-			$row['total_show_sessions']++;
-		} else {
-			$row['total_class_sessions']++;
-		}
+		$row['total_class_sessions']++;
+	}
+	
+	$row['total_show_sessions'] = 0;
+	$row['class_shows'] = get_class_shows($row);
+	foreach ($row['class_shows'] as $cs) {
+		$row['total_show_sessions']++;
 	}
 	$row['total_sessions'] = $row['total_class_sessions'] + $row['total_show_sessions'];
-	
-	// when is the next starting session
-	// if all are in past, set this to most recent one
-	$row['nextstart_raw'] = $row['start'];
-	$row['nextend_raw'] = $row['end'];
-	$row['nextstart_url'] = $row['online_url'];
-	$row['nextsession_show'] = 0;
-	$row['nextsession_extra'] = 0;
-	if (!\Wbhkit\is_future($row['nextstart_raw'])) {
+
+	// set full when
+	$row['full_when'] = $row['when'];
+	if (!empty($row['sessions'])) {
+		$row['full_when'] .= "<br>\n";
 		foreach ($row['sessions'] as $s) {
-			if (\Wbhkit\is_future($s['start'])) {
-				$row['nextsesssion_extra'] = 1;
-				$row['nextstart_raw'] = $s['start'];
-				$row['nextend_raw'] = $s['end'];
-				if ($s['online_url']) { $row['nextstart_url'] = $s['online_url']; }
-				if ($s['class_show'] == 1) { $row['nextsession_show'] = 1; }
-				break; // found the next start
-			}
+			$row['full_when'] .= "{$s['friendly_when']}<br>\n";
 		}
 	}
-	// now that we've found it, format it nicely
-	$row['nextstart'] = \Wbhkit\friendly_when($row['nextstart_raw']);
-	$row['nextend'] = \Wbhkit\friendly_when($row['nextend_raw']);
+	if (count($row['class_shows']) > 0 ) {
+		if (empty($row['sessions'])) {  $row['full_when'] .= "<br>\n"; }
+		foreach ($row['class_shows'] as $cs) {
+			$row['full_when'] .= "Show: {$cs->fields['friendly_when']}<br>\n"; 
+		}
+	}
 		
 	if (strtotime($row['end']) >= strtotime('now')) { 
 		$row['upcoming'] = 1; 
@@ -259,15 +252,21 @@ function get_sessions_to_come() {
 	
 	// get IDs of workshops
 	$mysqlnow = date("Y-m-d H:i:s", strtotime("-3 hours"));
+
 	
 	$stmt = \DB\pdo_query("
 (select w.id, title, start, end, capacity, cost, 0 as xtra, 0 as class_show, notes, teacher_id, 1 as rank, '' as override_url, online_url 
 from workshops w
 where start >= date('$mysqlnow'))
 union
-(select x.workshop_id, w.title, x.start, x.end, w.capacity, w.cost, 1 as xtra, x.class_show, w.notes, w.teacher_id, x.rank, x.online_url as override_url, w.online_url
+(select x.workshop_id, w.title, x.start, x.end, w.capacity, w.cost, 1 as xtra,  0 as class_show, w.notes, w.teacher_id, x.rank, x.online_url as override_url, w.online_url
 from xtra_sessions x, workshops w 
 where w.id = x.workshop_id and x.start >= date('$mysqlnow'))
+union
+(select ws.workshop_id, w.title, s.start, s.end, w.capacity, w.cost, 1 as xtra, 1 as class_show, w.notes, s.teacher_id, 0 as rank, null as override_url, s.online_url
+	from shows s, workshops w, workshops_shows ws
+	where ws.show_id = s.id and ws.workshop_id = w.id
+	and s.start >= date('$mysqlnow'))
 order by start asc"); 
 		
 		
@@ -353,16 +352,25 @@ function get_sessions_bydate($start = null, $end = null) {
 	$mysqlnow = date("Y-m-d H:i:s", strtotime("-3 hours"));
 	
 	$stmt = \DB\pdo_query("
-(select w.id, 0 as xtra_id, title, start, end, capacity, cost, 0 as xtra, 0 as class_show, notes, teacher_id, 1 as rank, '' as override_url, online_url, when_teacher_paid, actual_pay
-	from workshops w 
-	where w.start >= :start1 and w.end <= :end1)
+(select w.id, 0 as xtra_id, 0 as show_id, title, start, end, capacity, cost, 0 as xtra, 0 as class_show, notes, teacher_id, 1 as rank, '' as override_url, online_url, when_teacher_paid, actual_pay, 0 as show_teacher_id
+from workshops w 
+where w.start >= :start1 and w.end <= :end1)
 union
-(select x.workshop_id, x.id as xtra_id, w.title, x.start, x.end, w.capacity, w.cost, 1 as xtra, x.class_show, w.notes, w.teacher_id, x.rank, x.online_url as override_url, w.online_url, x.when_teacher_paid, x.actual_pay from xtra_sessions x, workshops w, users u where w.id = x.workshop_id and x.start >= :start2 and x.end <= :end2)
-order by teacher_id, start asc",
+(select x.workshop_id, x.id as xtra_id, 0 as show_id,  w.title, x.start, x.end, w.capacity, w.cost, 1 as xtra, 0 as class_show, w.notes, w.teacher_id, x.rank, x.online_url as override_url, w.online_url, x.when_teacher_paid, x.actual_pay, 0 as show_teacher_id 
+from xtra_sessions x, workshops w
+where w.id = x.workshop_id and x.start >= :start2 and x.end <= :end2)
+union
+(select ws.workshop_id, 0 as xtra_id, s.id as show_id, w.title, s.start, s.end, w.capacity, w.cost, 1 as xtra, 1 as class_show, w.notes, w.teacher_id, 0 as rank, s.online_url as override_url, w.online_url, s.when_teacher_paid, s.actual_pay, s.teacher_id as show_teacher_id
+from workshops_shows ws, workshops w, shows s
+where w.id = ws.workshop_id and ws.show_id = s.id and s.start >= :start3 and s.end <= :end3)
+order by teacher_id, start asc
+",
 array(':start1' => $mysqlstart,
 ':end1' => $mysqlend,
-'start2' => $mysqlstart,
-'end2' => $mysqlend)); 	
+':start2' => $mysqlstart,
+':end2' => $mysqlend,
+':start3' => $mysqlstart,
+':end3' => $mysqlend)); 	
 	
 //	$stmt = \DB\pdo_query("select w.* from workshops w WHERE w.start >= :start and w.end <= :end order by teacher_id, start desc", array(':start' => date('Y-m-d H:i:s', strtotime($start)), ':end' => date('Y-m-d H:i:s', strtotime($end))));
 	
@@ -472,6 +480,7 @@ function add_update_workshop($wk, $ac = 'up') {
 }
 
 function delete_workshop($workshop_id) {
+	$stmt = \DB\pdo_query("delete from workshops_shows where workshop_id = :wid", array(':wid' => $workshop_id));
 	$stmt = \DB\pdo_query("delete from registrations where workshop_id = :wid", array(':wid' => $workshop_id));
 	$stmt = \DB\pdo_query("delete from xtra_sessions where workshop_id = :wid", array(':wid' => $workshop_id));
 	$stmt = \DB\pdo_query("delete from workshops where id = :wid", array(':wid' => $workshop_id));
@@ -490,6 +499,23 @@ function is_complete_workshop($wk) {
 		return true;
 	}
 	return false;
+}
+
+function get_class_shows($wk) {
+	$class_shows = array();
+
+	$stmt = \DB\pdo_query("select show_id
+		from workshops_shows ws, shows s
+		where ws.show_id = s.id and ws.workshop_id = :id order by start", array(':id' => $wk['id']));
+		
+	//echo \DB\interpolateQuery("select show_idvfrom workshops_shows wsvxwhere ws.workshop_id = :id", array(':id' => $wk['id']));
+	
+	while ($row = $stmt->fetch()) {
+		$cs = new \ClassShow();
+		$cs->set_by_id($row['show_id']);
+		$class_shows[] = $cs;
+	}
+	return $class_shows;
 }
 
 function get_cut_and_paste_roster($wk, $enrolled = null) {
@@ -511,13 +537,26 @@ function get_cut_and_paste_roster($wk, $enrolled = null) {
 	$class_dates = $wk['when']."\n";
 	if (!empty($wk['sessions'])) {
 		foreach ($wk['sessions'] as $s) {
-			$class_dates .= "{$s['friendly_when']}".($s['class_show'] ? ' (show)': '').
+			$class_dates .= "{$s['friendly_when']}".
 			($s['online_url'] ? " - {$s['online_url']}" : '')."\n";
 		}
 	}
 	if ($class_dates) {
-		$class_dates = "\n\nClass Sessions:\n(some sessions may their own zoom links)\n------------\n{$class_dates}";
+		$class_dates = "\n\nClass Sessions:\n------------\n{$class_dates}";
 	}
+	
+	$class_shows_text = '';
+	foreach ($wk['class_shows'] as $cs) {
+		$class_shows_text .= "{$cs->fields['friendly_when']}";
+		if ($cs->fields['online_url'] != $wk['online_url']) {
+			$class_shows_text .= ", {$cs->fields['online_url']}";
+		}
+		$class_shows_text .= "\n";
+	}
+	if ($class_shows_text) {
+		$class_shows_text = "\n\nClass Shows:\n------------\n{$class_shows_text}\n";
+	}
+
 	
 	return 
 		preg_replace("/\n\n+/", 
@@ -525,7 +564,16 @@ function get_cut_and_paste_roster($wk, $enrolled = null) {
 					"{$wk['title']} - {$wk['showstart']}\n\n".
 					"Main zoom link:\n".($wk['location_id'] == ONLINE_LOCATION_ID ? "{$wk['online_url']}\n" : '').
 						$class_dates.
+						$class_shows_text.
 					"\nNames and Emails\n---------------\n".implode("\n", $names)."\n\nJust the emails\n---------------\n".implode(",\n", $just_emails));
 	
 }
 
+function get_recent_workshops_dropdown($limit = 25) {
+	$stmt = \DB\pdo_query("select * from workshops order by id desc limit $limit");
+	$all = array();
+	while ($row = $stmt->fetch()) {
+		$all[$row['id']] = $row['title'];
+	}
+	return $all;
+}

@@ -2,9 +2,6 @@
 
 
 $sessions = '';
-if (!empty($wk['sessions'])) {
-	$wk['when'] = \XtraSessions\add_sessions_to_when($wk['when'], $wk['sessions']);
-}	
 
 	
 if (!\Workshops\is_public($wk)) {
@@ -60,7 +57,7 @@ echo "
 <div class='row my-3 py-3'><div class='col-sm-6'>
 <h2>{$wk['title']}</h2>
 <p>{$wk['notes']}</p>
-<p>{$wk['when']} (".TIMEZONE.")<br><br>
+<p>{$wk['full_when']} (".TIMEZONE.")<br><br>
 {$wk['costdisplay']}, {$wk['enrolled']} (of {$wk['capacity']}) enrolled, ".($wk['waiting']+$wk['invited'])." waiting</p>
 </div>
 

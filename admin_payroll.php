@@ -16,16 +16,17 @@ switch ($ac) {
 			$rev = null;
 			if (substr($key, 0, 9) == 'whenpaid_') {
 				$ps = explode('_', $key);
-				//echo "key: $key, value $value<br>\n";
-				$query = "update ".($ps[2] ? 'xtra_sessions' : 'workshops')." 
+				list ($table, $id) = get_table_id($ps);
+				//echo "key: $key, value $value, table: $table, id: $id<br>\n";
+				
+				$query = "update $table 
 					set when_teacher_paid = :when_paid where id = :id";
 					$params = array(
 						':when_paid' => $value ?  date("Y-m-d H:i:s", strtotime($value)) : NULL, 
-						':id' => $ps[2] ? $ps[2] : $ps[1]);
+						':id' => $id);
 						
 						$db = \DB\get_connection();
 						$stmt = $db->prepare($query);
-						$id = $ps[2] ? $ps[2] : $ps[1];
 						$stmt->bindParam(':id', $id);
 						if ($value) {
 							$datetoinsert = date("Y-m-d H:i:s", strtotime($value));
@@ -38,11 +39,13 @@ switch ($ac) {
 			}
 			if (substr($key, 0, 7) == 'actual_') {
 				$ps = explode('_', $key);
-				//echo "key: $key, value $value<br>\n";
-				$query = "update ".($ps[2] ? 'xtra_sessions' : 'workshops')." 
+				list ($table, $id) = get_table_id($ps);
+				//echo "key: $key, value $value, table: $table, id: $id<br>\n";
+				
+				$query = "update $table 
 					set actual_pay = :override where id = :id";
 				$params = array(':override' => $value, 
-					':id' => ($ps[2] ? $ps[2] : $ps[1]));
+					':id' => $id);
 				$stmt = \DB\pdo_query($query, $params);
 				//echo \DB\interpolateQuery($query, $params)."<br>\n";
 			}
@@ -86,4 +89,22 @@ function change_date_string($timestring, $change) {
 	return date_format($lastweek, 'Y-m-d');
 }
 
+function get_table_id(array $ps) {
+	
+	$table = '';
+	$id = '';
+	
+	if ($ps[3]) {
+		$table = 'shows';
+		$id = $ps[3];
+	} elseif ($ps[2]) {
+		$table = 'xtra_sessions';
+		$id = $ps[2];
+	} else {
+		$table = 'workshops';
+		$id = $ps[1];
+	}
+	return array($table, $id);
+	
+}
 

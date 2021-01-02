@@ -30,8 +30,7 @@ foreach ($faculty as $f) {
 	if (count($f['classes']) > 0) {
 		echo "<p class='teacher-bio px-3'>Upcoming classes for {$f['nice_name']}:<ul>\n";
 		foreach ($f['classes'] as $c) {
-			$c['when'] = \XtraSessions\add_sessions_to_when($c['when'], $c['sessions']);
-			echo "	<li class='teacher-bio'><a href=\"workshop.php?wid={$c['id']}\">{$c['title']}</a>, {$c['capacity']} people max, \${$c['cost']} USD<br><div class='mx-4'>{$c['when']}</div></li>\n";
+			echo "	<li class='teacher-bio'><a href=\"workshop.php?wid={$c['id']}\">{$c['title']}</a>, {$c['capacity']} people max, \${$c['cost']} USD<br><div class='mx-4'>{$c['full_when']}</div></li>\n";
 		}
 		echo "</ul></p>\n";
 	}					   

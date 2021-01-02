@@ -5,7 +5,7 @@ include 'lib-master.php';
 Wbhkit\set_vars(array('ac'));
 
 if ($ac == 'force') {
-	Reminders::check_reminders(true); // force a new reminder check
+	Reminders\check_reminders(true); // force a new reminder check
 	$message = "Reminder check FORCED";
 }
 

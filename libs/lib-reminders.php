@@ -1,6 +1,7 @@
 <?php
 namespace Reminders;
 
+define('REMINDER_TEST',false);
 
 function get_reminders($how_many = 100) {
 	
@@ -25,7 +26,7 @@ update xtra_sessions set reminder_sent = 0;
 	// check reminder database -- has it been 6 hours?
 	$stmt = \DB\pdo_query("select * from reminder_checks order by id desc limit 1"); // most recent check
 	while ($row = $stmt->fetch()) {
-		if ((time() - strtotime($row['time_checked'])) / 3600 <= 4 && ($force !== true)) { return false; } // checked less than six hours ago
+		if ((time() - strtotime($row['time_checked'])) / 3600 <= 4 && ($force !== true)) { return false; } // checked less than four hours ago
 		 
 	}
 	
@@ -41,22 +42,31 @@ update xtra_sessions set reminder_sent = 0;
 	$stmt = \DB\pdo_query("select id as workshop_id, start from workshops w where start > :now and reminder_sent = 0", array(':now' => $mysqlnow)); // workshops in the future
 	while ($row = $stmt->fetch()) {
 		if ((strtotime($row['start']) - time()) / 3600 < REMINDER_HOURS) {
-			$classes_to_remind[] = array($row['workshop_id'], 0);
+			$classes_to_remind[] = array($row['workshop_id'], 0, 0);
 		}
 	}
 	
 	$stmt = \DB\pdo_query("select id, workshop_id, start from xtra_sessions where start > :now and reminder_sent = 0", array(':now' => $mysqlnow)); // workshops in the future
 	while ($row = $stmt->fetch()) {
 		if ((strtotime($row['start']) - time()) / 3600 < REMINDER_HOURS) {
-			$classes_to_remind[] = array($row['workshop_id'], $row['id']); 
+			$classes_to_remind[] = array($row['workshop_id'], $row['id'], 0); 
 		}
 	}
 	
-	// go through each workshop that start in that window, and send remidners
+	$stmt = \DB\pdo_query("select s.id, ws.workshop_id, s.start from shows s, workshops_shows ws where ws.show_id = s.id and s.start > :now and s.reminder_sent = 0", array(':now' => $mysqlnow)); // workshops in the future
+	while ($row = $stmt->fetch()) {
+		if ((strtotime($row['start']) - time()) / 3600 < REMINDER_HOURS) {
+			$classes_to_remind[] = array($row['workshop_id'], 0, $row['id']); 
+		}
+	}
+	
+	// go through each workshop that start in that window, and send reminders
 	$wk = array();
 	foreach ($classes_to_remind as $class) {
 		remind_enrolled($class);
-		if ($class[1] > 0) {
+		if ($class[2] > 0) {
+			$stmt = \DB\pdo_query("update shows set reminder_sent = 1 where id = :id", array(':id' => $class[2])); // most recent check
+		} elseif ($class[1] > 0) {
 			$stmt = \DB\pdo_query("update xtra_sessions set reminder_sent = 1 where id = :id", array(':id' => $class[1])); // most recent check
 		} else {
 			$stmt = \DB\pdo_query("update workshops set reminder_sent = 1 where id = :id", array(':id' => $class[0])); // most recent check
@@ -71,11 +81,13 @@ update xtra_sessions set reminder_sent = 0;
 function remind_enrolled($class) {
 	
 	$guest = new \User();
+	$cs = new \ClassShow();
 	
 	$wk = \Workshops\get_workshop_info($class[0]);
 	$xtra = \XtraSessions\get_xtra_session($class[1]);
+	$cs->set_by_id($class[2]);
 	
-	$reminder = get_reminder_message_data($wk, $xtra);
+	$reminder = get_reminder_message_data($wk, $xtra, $cs);
 	
 	$subject = $reminder['subject'];
 	$note = $reminder['note'];
@@ -84,15 +96,15 @@ function remind_enrolled($class) {
 	$eh = new \EnrollmentsHelper();
 	$stds = $eh->get_students($class[0], ENROLLED);
 
-	$base_msg =	$note.\Emails\get_workshop_summary($wk);
+	//$base_msg =	$note.\Emails\get_workshop_summary($wk);
 
 	foreach ($stds as $std) {
 		
 		// add note if student has to pay
 		$note = $reminder['note'];
 		if (!$std['paid'] && $wk['cost']) {
-			$note .= "<p>Our records show you have not yet paid. If that's true, please pay by the beginning of class. Send {$wk['cost']} USD via venmo @willhines or paypal whines@gmail.com.<br>
-If you've got  questions/concerns about this, send them to ".WEBMASTER."</p>";
+			$note .= "<p>Our records show you have not yet paid. Just a reminder: payment is due by the start of class. Send {$wk['cost']} USD via venmo @willhines or paypal whines@gmail.com.<br>
+Questions/concerns: ".WEBMASTER."</p>";
 		}
 		$base_msg =	$note.\Emails\get_workshop_summary($wk);
 		
@@ -102,21 +114,21 @@ If you've got  questions/concerns about this, send them to ".WEBMASTER."</p>";
 		
 		//\Emails\centralized_email('whines@gmail.com', $subject, $msg); // for testing, i get everything
 
-		if (!LOCAL) {
+		if (!LOCAL || REMINDER_TEST) {
 			\Emails\centralized_email($std['email'], $subject, $msg);
 			$guest->set_by_id($std['id']);
 			\Emails\send_text($guest, $sms); // routine will check if they want texts and have proper info
 		}
 	}
 	//remind teacher
-	if (!LOCAL) {
+	if (!LOCAL || REMINDER_TEST) {
 				
 		$trans = URL."workshop.php?key={$wk['teacher_key']}&wid={$wk['id']}";
-		$teacher_reminder = get_reminder_message_data($wk, $xtra, true);
+		$teacher_reminder = get_reminder_message_data($wk, $xtra, $cs, true);
 		$msg = $teacher_reminder['note']."<p>Class info online:<br>$trans</p>\n";
 		
-		if (!$xtra['id']) { // is it first session? send teacher the roster
-			$msg .= "<h3>List of students in your class</h3>\n".
+		if (!$xtra['id'] && !$cs->fields['id']) { // is it first session? send teacher the roster
+			$msg .= "<h3>Full info for class</h3>\n".
 				preg_replace('/\n/', "<br>\n", \Workshops\get_cut_and_paste_roster($wk));
 		}
 		
@@ -124,7 +136,7 @@ If you've got  questions/concerns about this, send them to ".WEBMASTER."</p>";
 	}
 	
 	// if not full -- point it out to Will
-	if ($wk['enrolled'] < $wk['capacity'] && !LOCAL) {
+	if ($wk['enrolled'] < $wk['capacity'] && (!LOCAL || REMINDER_TEST)) {
 		
 		$alert_msg = "'{$wk['title']}' is not full. {$wk['enrolled']} of {$wk['capacity']} signed up<br>\n".
 			URL."admin_edit.php?wid={$wk['id']}<br>\n".
@@ -138,13 +150,21 @@ If you've got  questions/concerns about this, send them to ".WEBMASTER."</p>";
 	
 }
 
-function get_reminder_message_data($wk, $xtra, $teacher = false) {
+function get_reminder_message_data($wk, $xtra, $cs, $teacher = false) {
 	
-	
-	if ($xtra['id']) {
-		$subject = "REMINDER: {$wk['title']} ".($xtra['class_show'] ? 'CLASS SHOW - ' : '')."{$xtra['friendly_when']}";
+	if ($cs->fields['id']) {
+		$start = $cs->fields['friendly_when'];
+		$link = $cs->fields['online_url'];
+		$subject = "WGIS class reminder: {$wk['title']} CLASS SHOW - {$start}";
+		
+	} elseif ($xtra['id']) {
+		$start = $xtra['friendly_when'];
+		$link = $xtra['online_url'] ? $xtra['online_url'] : $wk['online_url'];
+		$subject = "WGIS class reminder: {$wk['title']} {$start}";
 	} else {
-		$subject = "REMINDER: {$wk['title']} {$wk['when']}";
+		$start = $wk['when'];
+		$link = $wk['online_url'];
+		$subject = "WGIS class reminder: {$wk['title']} {$start}";
 	}
 	
 	
@@ -152,7 +172,7 @@ function get_reminder_message_data($wk, $xtra, $teacher = false) {
 		$subject .= " at {$wk['place']}";	
 	}
 	
-	if ($xtra['class_show'] == 1) {
+	if ($cs->fields['id']) {
 		$note = "<p>Greetings. ".($teacher ? "You are teaching" :  "You have")." a class show soonish, ";
 	} elseif ($xtra['id']) {
 		$note = "<p>Greetings. ".($teacher ? "You are teaching" :  "You have")." another session of this class soonish, ";
@@ -160,22 +180,22 @@ function get_reminder_message_data($wk, $xtra, $teacher = false) {
 		$note = "<p>Greetings. ".($teacher ? "You are teaching" :  "You are enrolled in")." a class that starts soonish, ";
 	}
 
-	$note .= "specifically ".\TimeDifference\nicetime($xtra['id'] ? $xtra['start'] : $wk['start']).".</p>\n";
+	$note .= "specifically at $start (".TIMEZONE.").</p>\n";
 	
 	if ($wk['location_id'] == ONLINE_LOCATION_ID) {
 		
-		$note .= "<p>Here's the zoom link: ".($xtra['online_url'] ? $xtra['online_url'] : $wk['online_url'])."</p>\n";  
+		$note .= "<p>Here's the zoom link: $link</p>\n";  
 		// should be workshop url or xtra_session url, set in lib_workshops.php fill_out_workshop_row
-		if ($xtra['online_url']) {
+		if ($link != $wk['online_url']) {
 			$note .= "<p>Please note: this is a DIFFERENT LINK than you usually use for this class!</p>\n";
 		}
 		
-		if ($xtra['class_show'] == 1) {
-			$note .= "<p>Invite your friends and family to watch the show at the YouTube Channel:<br>https://www.youtube.com/channel/UCxM09rN2BoddZYtqnlPBucQ<br>(Every show is streamed to that channel - same YouTube link for all class shows)</p>\n";
+		if ($cs->fields['id']) {
+			$note .= "<p>Invite your friends and family to watch the show at the Twitch channel:<br>https://www.twitch.tv/wgimprovschool</p>\n";
 		}
 	}			
 	
-	$sms = "Reminder: {$wk['title']} ".($xtra['class_show'] ? 'class show' : 'class').", {$wk['nextstart']}, ".URL;
+	$sms = "Reminder: {$wk['title']} ".($cs->fields['id'] ? 'class show' : 'class').", {$start}, ".URL;
 	
 	return array(
 	 'subject' => $subject,

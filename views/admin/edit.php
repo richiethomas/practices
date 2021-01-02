@@ -60,7 +60,7 @@ echo "<div class='row mt-md-3 admin-edit-workshop'>\n";
 		if (!empty($wk['sessions'])) {
 			echo "<ul>\n";
 			foreach ($wk['sessions'] as $s) {
-				echo "<li>({$s['rank']}) {$s['friendly_when']}".($s['class_show'] ? ' <b>(show)</b> ': '')." <a href='$sc?ac=delxtra&xtraid={$s['id']}&wid={$wk['id']}'>delete</a>".($s['reminder_sent'] ? ' <em>- reminder sent</em>' : '').
+				echo "<li>({$s['rank']}) {$s['friendly_when']} <a href='$sc?ac=delxtra&xtraid={$s['id']}&wid={$wk['id']}'>delete</a>".($s['reminder_sent'] ? ' <em>- reminder sent</em>' : '').
 					($s['online_url'] ? "<ul><li><a href='{$s['online_url']}'>{$s['online_url']}</a></li></ul>" : '').
 					"</li>\n";
 			}
@@ -73,6 +73,16 @@ echo "<div class='row mt-md-3 admin-edit-workshop'>\n";
 		Wbhkit\hidden('ac', 'adxtra').
 		Wbhkit\submit('Add Session');
 		echo "</fieldset></form>\n";
+		
+		// list class shows here
+		if (count($wk['class_shows']) > 0) {
+			echo "<h3>Class Shows</h3>\n";
+			echo "<ul>\n";
+			foreach ($wk['class_shows'] as $cs) {
+				echo "<li><a href='admin_shows.php?ac=ed&show_id={$cs->fields['id']}'>{$cs->fields['friendly_when']}</a></li>\n";
+			}
+			echo "</ul>\n";
+		}
 		
 
 	echo  \Wbhkit\form_validation_javascript('add_student');

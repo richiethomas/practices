@@ -31,11 +31,20 @@ class WBHObject
 		foreach ($row as $n => $v) {
 			$this->fields[$n] = $v;
 		}
+		return true;
 	}
 	
 	function replace_fields(array $row) {
 		$this->fields = array();
 		$this->set_into_fields($row);
+	}
+	
+	function set_mysql_datetime_field(string $fn, ?string $ts = null) {
+		if ($ts) {
+			$this->fields[$fn] = date('Y-m-d H:i:s', strtotime($ts));
+		} else {
+			$this->fields[$fn] = null;
+		}
 	}
 
 }

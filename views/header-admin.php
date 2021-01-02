@@ -48,6 +48,7 @@
 			<li class="nav-item"><a class="nav-link active" href="admin.php">Dashboard</a></li>
 			<li class="nav-item"><hr/></li>
 			<li class="nav-item"><a class="nav-link" href="admin_listall.php">Classes</a></li>
+			<li class="nav-item"><a class="nav-link" href="admin_shows.php">Shows</a></li>
 			<li class="nav-item"><a class="nav-link" href="admin_teachers.php">Teachers</a></li>
 			<li class="nav-item"><a class="nav-link" href="admin_search.php">Students</a> </li>
 			<li class="nav-item"><a class="nav-link" href="admin_emails.php">Emails</a> </li>

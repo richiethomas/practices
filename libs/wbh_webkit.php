@@ -282,7 +282,7 @@ function friendly_time($time_string) {
 	}
 }
 
-function friendly_date($time_string) {
+function friendly_date($time_string, $show_year = false) {
 	
 	$ts = strtotime($time_string);
 	
@@ -290,15 +290,21 @@ function friendly_date($time_string) {
 	$wk_doy = date('z', strtotime($time_string)); // workshop day of year
 
 
-	if (date('Y', $ts) != date('Y')) {  
+	if (date('Y', $ts) != date('Y') || $show_year) {  
 		return date('D M j, Y', $ts);
 	} else {
 		return date('D M j', $ts);
 	}
 }	
 
-function friendly_when($time_string) {
-	return friendly_date($time_string).' '.friendly_time($time_string);
+function friendly_when($time_string, $show_year = false) {
+	if (!$time_string) { return ''; }
+	return friendly_date($time_string, $show_year).' '.friendly_time($time_string);
+}
+
+function business_when($time_string) {
+	if (!$time_string) { return ''; }
+	return date('M j Y', strtotime($time_string)).' '.friendly_time($time_string);
 }
 
 function is_future($time_string) {

@@ -23,8 +23,6 @@ if ($admin) {
 		}
 		
 		
-		$t['when'] = \XtraSessions\add_sessions_to_when($t['when'], $t['sessions']);
-				
 		echo "<div class='row workshop-row workshop-$cl my-3 py-3 border-top'>\n"; // workshop row start
 				
 			echo "	<div class='col-sm'>";
@@ -36,7 +34,7 @@ if ($admin) {
 			echo "</div>\n";  // title cell
 			
 		
-			echo "	<div class='col-sm'>{$t['when']} (".TIMEZONE.")<br>
+			echo "	<div class='col-sm'>{$t['full_when']} (".TIMEZONE.")<br>
 				Instructor: <a href=\"teachers.php?tid={$t['teacher_id']}\">{$t['teacher_name']}</a></div>\n"; // when col	
 			if ($admin) { echo "<div class='col-sm my-2'>{$t['place']}</div>\n"; } // where col
 			echo "	<div class='col-sm'>{$statuses[$t['status_id']]}";

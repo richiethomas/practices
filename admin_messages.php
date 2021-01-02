@@ -8,9 +8,6 @@ if (!$st) { $st = ENROLLED; }
 
 $long_where = "{$wk['place']} {$wk['lwhere']}";
 
-// multiple sessions?
-//$wk['when'] = \XtraSessions\add_sessions_to_when($wk['when'], $wk['sessions']);
-
 $eh = new EnrollmentsHelper();
 $guest = new User();
 

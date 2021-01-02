@@ -71,10 +71,7 @@ function confirm_email($wk, $u, $status_id = ENROLLED) {
 	$late = '';
 	$textpoint = '';
 	$notifications = '';	
-	
-	//multiple sessions?
-	$wk['when'] = \XtraSessions\add_sessions_to_when($wk['when'], $wk['sessions']);	
-	
+		
 	$send_faq = false;
 	switch ($status_id) {
 		case 'already':
@@ -153,7 +150,7 @@ function confirm_email($wk, $u, $status_id = ENROLLED) {
 --------------------------------<br>
 <b>Title:</b> {$wk['title']}<br>
 <b>Teacher:</b> {$wk['teacher_name']}<br>
-<b>When:</b> {$wk['when']} (".TIMEZONE." - California time)<br>
+<b>When:</b> {$wk['full_when']} (".TIMEZONE." - California time)<br>
 <b>Cost:</b> \${$wk['cost']} USD<br>".
 ($status_id == ENROLLED ? "<b>Zoom link:</b> {$wk['online_url']}" : "<b>Zoom link</b>: We'll email you the zoom link if/once you are enrolled.")."<br>
 <b>Description:</b> {$wk['notes']}</p>
@@ -254,15 +251,12 @@ Zoom available at: http://www.zoom.us/</dd>
 
 function get_workshop_summary($wk) {
 	
-	$wk['when'] = \XtraSessions\add_sessions_to_when($wk['when'], $wk['sessions']);
-	
-	
 		return "<br>
 <p>-----------------------------<br>
 <b>Class information:</b><br>
 <b>Title:</b> {$wk['title']}<br>
 <b>Teacher:</b> {$wk['teacher_name']}<br>
-<b>When:</b> {$wk['when']} (".TIMEZONE." - California time)";
+<b>When:</b> {$wk['full_when']} (".TIMEZONE." - California time)";
 
 }
 
