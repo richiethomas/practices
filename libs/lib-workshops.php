@@ -573,7 +573,7 @@ function get_recent_workshops_dropdown($limit = 25) {
 	$stmt = \DB\pdo_query("select * from workshops order by id desc limit $limit");
 	$all = array();
 	while ($row = $stmt->fetch()) {
-		$all[$row['id']] = $row['title'];
+		$all[$row['id']] = $row['title']. ' ('.	\Wbhkit\friendly_date($row['start']).' '.\Wbhkit\friendly_time($row['start']).')';
 	}
 	return $all;
 }

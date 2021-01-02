@@ -53,13 +53,17 @@ echo \Wbhkit\drop('wid', \Workshops\get_recent_workshops_dropdown(), null, 'Work
 <?php
 foreach ($shows as $upcoming_cs) {
 	echo "<li class='m-2'><a href='admin_shows.php?ac=ed&show_id={$upcoming_cs->fields['id']}'>".$upcoming_cs->fields['friendly_when']."</a> (<a href='admin_shows.php?ac=del&show_id={$upcoming_cs->fields['id']}'>delete</a>)";
+	echo "<ul>\n";
+	if ($upcoming_cs->teacher->fields['id']) {
+		echo "<li>Teacher: {$upcoming_cs->teacher->fields['nice_name']}</li>";
+	}
+	echo "<li>Link: <small>{$upcoming_cs->fields['online_url']}</small></li>\n";
 	if (count($upcoming_cs->wks) > 0) {
-		echo "<ul>\n";
 		foreach ($upcoming_cs->wks as $w) {
 			echo "<li><a href='admin_edit.php?wid={$w['workshop_id']}'>{$w['title']}</a></li>\n";
 		}
-		echo "</ul>\n";
 	}
+	echo "</ul>\n";
 	echo "</li>\n";
 }
 ?>

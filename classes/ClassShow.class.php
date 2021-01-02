@@ -4,6 +4,7 @@ class ClassShow extends WBHObject {
 	
 	public array $fields;	
 	public array $wks;
+	public User $teacher;
 	
 	
 	function __construct() {		
@@ -18,7 +19,8 @@ class ClassShow extends WBHObject {
 				'online_url' => null,
 				'reminder_sent' => 0,
 				'when_teacher_paid' => null);	
-			
+		
+		$this->teacher = new User();
 		$this->wks = array();			
 
 	}
@@ -47,6 +49,7 @@ class ClassShow extends WBHObject {
 		$this->set_mysql_datetime_field('end', $this->fields['end']);
 		$this->set_mysql_datetime_field('when_teacher_paid', $this->fields['when_teacher_paid']);
 		if (!$this->fields['actual_pay']) { $this->fields['actual_pay'] = 0; }
+		if (!$this->fields['reminder_sent']) { $this->fields['reminder_sent'] = 0; }
 		$this->fields['friendly_when'] = \Wbhkit\friendly_when($this->fields['start']).'-'.\Wbhkit\friendly_time($this->fields['end']);
 	}	
 	
@@ -57,7 +60,7 @@ class ClassShow extends WBHObject {
 		$this->format_start_end();
 		
 		// set params string
-		$fieldnames = array('start', 'end', 'teacher_id', 'online_url', 'actual_pay', 'when_teacher_paid');
+		$fieldnames = array('start', 'end', 'teacher_id', 'online_url', 'actual_pay', 'reminder_sent', 'when_teacher_paid');
 		$params = array();
 		foreach ($fieldnames as $f) {
 			$params[":{$f}"] = $this->fields[$f];
@@ -69,9 +72,20 @@ class ClassShow extends WBHObject {
 			$stmt = \DB\pdo_query("update shows set start = :start, end = :end, teacher_id = :teacher_id, online_url = :online_url, actual_pay = :actual_pay, when_teacher_paid = :when_teacher_paid, reminder_sent = :reminder_sent where id = :id", $params);
 			return true;
 		} else {
-			//echo \DB\interpolateQuery("insert into shows (start, end, teacher_id, online_url, actual_pay) VALUES (:start, :end, :teacher_id, :online_url, :actual_pay)", $params);
-			$stmt = \DB\pdo_query("insert into shows (start, end, teacher_id, online_url, actual_pay, when_teacher_paid, reminder_sent) VALUES (:start, :end, :teacher_id, :online_url, :actual_pay, :when_teacher_paid, :reminder_sent)", $params);
-			$this->fields['id'] = $last_insert_id;
+			$query = "insert into shows (start, end, teacher_id, online_url, actual_pay, when_teacher_paid, reminder_sent) VALUES (:start, :end, :teacher_id, :online_url, :actual_pay, :when_teacher_paid, :reminder_sent)";
+			
+			$db = \DB\get_connection();
+			$stmt = $db->prepare($query);
+			
+			foreach ($fieldnames as $f) {
+				if ($this->fields[$f] !== null) {
+					$stmt->bindParam(":{$f}", $this->fields[$f]);
+				} else {
+					$stmt->bindValue(":{$f}", null, PDO::PARAM_INT);
+				}
+			}
+			$stmt->execute();
+			$this->fields['id'] = $db->lastInsertId();
 			return true;	
 		}
 	}
@@ -89,6 +103,21 @@ class ClassShow extends WBHObject {
 			$this->wks[] = $row;
 		}	
 		return true;
+	}
+	
+	function set_teacher() {
+		if (!$this->fields['teacher_id']) {
+			$this->error = "No id set for teacher.";
+			return false;
+		}
+		$stmt = \DB\pdo_query("select user_id from teachers where id = :id", array(':id' => $this->fields['teacher_id']));
+		while ($row = $stmt->fetch()) {
+			$this->teacher = new User();
+			$this->teacher->set_by_id($row['user_id']);
+			return true;
+		}	
+		$this->error = "No teacher found for id {$this->fields['teacher_id']}";
+		return false;	
 	}
 	
 	function associate_workshop(int $wid) {

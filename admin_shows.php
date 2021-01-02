@@ -75,6 +75,7 @@ function get_class_shows(int $limit = 25) {
 		$cs = new ClassShow();
 		$cs->set_by_id($row['id']);
 		$cs->set_workshops();
+		$cs->set_teacher();
 		$all[] = $cs;
 	}
 	return $all;

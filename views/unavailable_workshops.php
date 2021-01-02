@@ -23,9 +23,9 @@ foreach ($unavailable_workshops as $wk) {
 	$wkdate = date("l F j", strtotime($wk['start']));
 	$start = Wbhkit\friendly_time($wk['start']);
 	$end = Wbhkit\friendly_time($wk['end']);	
-	echo "<li>$wkdate: <a href='workshop.php?wid={$wk['id']}'>{$wk['title']}</a>, $start-$end \${$wk['cost']} (USD), Instructor: {$wk['teacher_name']}</li>\n";	
+	echo "<li class='mb-2'>$wkdate: <a href='workshop.php?wid={$wk['id']}'>{$wk['title']}</a><br><small>$start \${$wk['cost']} (USD), Instructor: {$wk['teacher_name']}</small></li>\n";	
 }	
 
 echo "</ul>\n";
-echo "<p class=\"font-weight-light\">(All times PDT - California time)</p></div></div>\n";
+echo "<p class=\"font-weight-light\">(All times ".TIMEZONE." - California time)</p></div></div>\n";
 

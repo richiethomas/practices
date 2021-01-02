@@ -25,15 +25,15 @@ switch ($ac) {
 						':when_paid' => $value ?  date("Y-m-d H:i:s", strtotime($value)) : NULL, 
 						':id' => $id);
 						
-						$db = \DB\get_connection();
-						$stmt = $db->prepare($query);
-						$stmt->bindParam(':id', $id);
-						if ($value) {
-							$datetoinsert = date("Y-m-d H:i:s", strtotime($value));
-							$stmt->bindParam(':when_paid', $datetoinsert);
-						} else {
-							$stmt->bindValue(':when_paid', null, PDO::PARAM_INT);
-						}
+				$db = \DB\get_connection();
+				$stmt = $db->prepare($query);
+				$stmt->bindParam(':id', $id);
+				if ($value) {
+					$datetoinsert = date("Y-m-d H:i:s", strtotime($value));
+					$stmt->bindParam(':when_paid', $datetoinsert);
+				} else {
+					$stmt->bindValue(':when_paid', null, PDO::PARAM_INT);
+				}
 				//echo \DB\interpolateQuery($query, $params)."<br>\n";
 				$stmt = \DB\pdo_query($query, $params);
 			}
