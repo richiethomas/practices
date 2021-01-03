@@ -29,7 +29,6 @@ function texty($key, $value = '', $label = null, $placeholder = null, $help = nu
 	return $texty;
 }
 
-
 function fileupload($key, $label = null) {
 	
 	$l = label($label, $key);
@@ -110,7 +109,7 @@ function radio($name, $opts, $selection = null) {
 	$b = "<div class='form-check form-check-inline'>";
 	foreach ($opts as $key => $label) {
 		$ch = ($key == $selection && !is_null($selection) ? 'checked' : '');
-		$b .= '<label class="form-check-label"><input class="form-check-input" type="radio" id="'.$name.'" name="'.$name.'" id="radio'.$i.'" value="'.$key.'" '.$ch.'> '.$label."</label>\n";
+		$b .= '<label class="form-check-label"><input class="form-check-input" type="radio" id="'.$name.$i.'" name="'.$name.'" value="'.$key.'" '.$ch.'> '.$label."</label>\n";
 		$i++;
 	}
 	$b .= "</div>\n";
@@ -367,4 +366,11 @@ function add_empty_fields($varlist, $fields) {
 		$varlist[] = $k;
 	}
 	return $varlist;
+}
+
+function plural( $amount, $singular = '', $plural = 's' ) {
+    if ( $amount === 1 ) {
+        return $singular;
+    }
+    return $plural;
 }

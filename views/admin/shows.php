@@ -47,7 +47,7 @@ echo \Wbhkit\drop('wid', \Workshops\get_recent_workshops_dropdown(), null, 'Work
 
 <hr>
 
-<div class="row"><div class="col-md-6">
+<div class="row"><div class="col-md-12">
 <h3>Upcoming Class Shows</h3>
 <ul>
 <?php

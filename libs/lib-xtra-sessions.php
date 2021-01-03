@@ -47,9 +47,9 @@ function empty_xtra_session() {
 function xtra_session_fields($wk) {
 	
 	return
-	\Wbhkit\texty('start', null, null, null, null, 'Required', ' required ').
-	\Wbhkit\texty('end', null, null, null, null, 'Required', ' required ').
-	\Wbhkit\texty('online_url').
+	\Wbhkit\texty('start_xtra', null, null, null, null, 'Required', ' required ').
+	\Wbhkit\texty('end_xtra', null, null, null, null, 'Required', ' required ').
+	\Wbhkit\texty('online_url_xtra').
 	\Wbhkit\hidden('wid', $wk['id']);
 	
 }

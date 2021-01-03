@@ -85,18 +85,20 @@ echo "<div class='row mt-md-3 admin-edit-workshop'>\n";
 		}
 		
 
-	echo  \Wbhkit\form_validation_javascript('add_student');
+	include 'ajax-jquery-search.php';
 	echo  "<h2>Add Student</h2><form id='add_student' class='form-inline' action='$sc' method='post' novalidate><fieldset name='new_student'>".
-	Wbhkit\hidden('ac', 'enroll').
-	Wbhkit\texty('email', '', 0, 'email', null, 'Must be an email', 'required', 'email').
-	Wbhkit\radio('con', array('1' => 'confirm', '0' => 'don\'t'), '0').
+	Wbhkit\hidden('ac', 'enroll');
+	echo "<div class='form-group'>
+			<label for='search-box' class='form-label'>Email: </label>
+			<input type='text' class='form-control' id='search-box' name='email' autocomplete='off'>
+			<div id='suggesstion-box'></div>
+			</div>\n";	
+	echo Wbhkit\radio('con', array('1' => 'confirm', '0' => 'don\'t'), '0').
 	Wbhkit\hidden('wid', $wk['id']).
 	Wbhkit\submit('Enroll').
 	"</fieldset></form>\n";
 		
 		echo  "</div>"; // end of column
-		
-		
 		echo  "</div>\n"; //end of row
 		
 ?>

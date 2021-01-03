@@ -32,7 +32,7 @@
 				echo "<div class='col-md-6'>\n"; // start of second column
 			
 					echo "{$row['when']} (".TIMEZONE.") {$public}<br>
-						".number_format($row['total_class_sessions'], 0)." classes, ".number_format($row['total_show_sessions'], 0)." shows<br>\n";
+						".number_format($row['total_class_sessions'], 0)." class".\Wbhkit\plural($row['total_class_sessions'], '', 'es').", ".number_format($row['total_show_sessions'], 0)." show".\Wbhkit\plural($row['total_show_sessions'])."<br>\n";
 					echo "Instructor: {$row['teacher_name']}<br>\n";	
 					echo number_format($row['paid'])." / "
 						.number_format($row['enrolled'], 0)." / ".number_format($row['capacity'], 0)." / ".number_format($row['waiting']+$row['invited'])."\n"; // enrollments

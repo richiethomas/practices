@@ -75,7 +75,7 @@ echo "
 	<li>All times are California local time (PDT).</li>
 	<li>Pay over Venmo / PayPal -- the specific account info will be sent after you sign up</li>
 	<li>Classes are held over <a href=\"http://www.zoom.us/\">Zoom</a></li>
-	<li><b>LATE DROP POLICY: If you are enrolled, and the class is sold out, and you drop within ".LATE_HOURS." hours of the start of the workshop, you still must pay. Otherwise, full refund available.</b></li>
+	<li><b>LATE DROP POLICY: If drop ".LATE_HOURS." hours before the start of the workshop, you still must pay! Unless we sell your spot in which case, it's cool.</b></li>
 </ul>
 </div>
 

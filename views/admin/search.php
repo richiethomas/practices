@@ -2,7 +2,18 @@
 <form action ='<?php echo $sc; ?>' method='post'>
 <?php	
 	echo Wbhkit\hidden('ac', 'search');
-	echo Wbhkit\texty('needle', $needle, 'Enter an email or part of an email:');
+	
+?>	
+<?php
+include 'ajax-jquery-search.php';
+?>
+	<div class="form-group">
+	<label for="search-box" class="form-label">Email address</label>
+	<input type="text" class="form-control" id="search-box" name="needle" autocomplete="off" value="<?php if ($needle) { echo $needle; } ?>">
+	<div id="suggesstion-box"></div>
+	</div>
+<?php	
+	//echo Wbhkit\texty('needle', $needle, 'Enter an email or part of an email:');
 	echo "Sort by: ".Wbhkit\radio('sort', $search_opts, $sort);
 ?>
 <div class="clearfix"><?php echo Wbhkit\submit('search'); ?></div>

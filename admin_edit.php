@@ -3,7 +3,7 @@ $heading = "edit workshop";
 include 'lib-master.php';
 
 
-$wk_vars = array('wid', 'title', 'notes', 'start', 'end', 'lid', 'online_url', 'cost', 'capacity', 'notes', 'when_public', 'email', 'con', 'cancelled', 'xtraid', 'guest_id', 'reminder_sent', 'sold_out_late', 'teacher_id');
+$wk_vars = array('wid', 'title', 'notes', 'start', 'end', 'lid', 'online_url', 'cost', 'capacity', 'notes', 'when_public', 'email', 'con', 'cancelled', 'xtraid', 'guest_id', 'reminder_sent', 'sold_out_late', 'teacher_id', 'start_xtra', 'end_xtra', 'online_url_xtra');
 Wbhkit\set_vars($wk_vars);
 
 $e = new Enrollment();
@@ -84,7 +84,7 @@ switch ($ac) {
 
 		
 	case 'adxtra':	
-		XtraSessions\add_xtra_session($wid, $start, $end, $online_url);
+		XtraSessions\add_xtra_session($wid, $start_xtra, $end_xtra, $online_url_xtra);
 		$wk = Workshops\fill_out_workshop_row($wk);
 		break;
 		
