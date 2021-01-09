@@ -5,6 +5,7 @@
 	
 ?>	
 <?php
+$search = 1;
 include 'ajax-jquery-search.php';
 ?>
 	<div class="form-group">

@@ -139,7 +139,7 @@ Questions/concerns: ".WEBMASTER."</p>";
 	if ($wk['enrolled'] < $wk['capacity'] && (!LOCAL || REMINDER_TEST)) {
 		
 		$alert_msg = "'{$wk['title']}' is not full. {$wk['enrolled']} of {$wk['capacity']} signed up<br>\n".
-			URL."admin_edit.php?wid={$wk['id']}<br>\n".
+			URL."admin_edit2.php?wid={$wk['id']}<br>\n".
 				\Emails\get_workshop_summary($wk);
 		
 		\Emails\centralized_email(WEBMASTER, "'{$wk['title']}' is not full.", $alert_msg);

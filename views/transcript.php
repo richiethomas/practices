@@ -27,7 +27,7 @@ if ($admin) {
 				
 			echo "	<div class='col-sm'>";
 			if ($admin) {
-				echo Wbhkit\checkbox('paids', $t['enrollment_id'], "<a href=\"admin_edit.php?wid={$t['workshop_id']}\">{$t['title']}</a>", $t['paid'], true);
+				echo Wbhkit\checkbox('paids', $t['enrollment_id'], "<a href=\"admin_edit2.php?wid={$t['workshop_id']}\">{$t['title']}</a>", $t['paid'], true);
 			} else {
 				echo "<a href=\"workshop.php?wid={$t['workshop_id']}\">{$t['title']}</a>";
 			}

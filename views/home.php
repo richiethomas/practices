@@ -30,7 +30,7 @@
 	  <div class="row news-summary pb-4">
 		<div class="col-12 d-flex align-items-start justify-content-start ">
 		  <span class="badge badge-pill badge-primary h6"><a class="text-light" href="news.php">Shows and Jams</a></span>
-		  <span class="h6 news-item pl-1"> EVERY FRIDAY -- see the <a href="news.php">shows/jams</a> page for details!</span>
+		  <span class="h6 news-item pl-1"> - <a href="news.php">shows/jams</a> page for details!</span>
 		</div>
 	  </div>
 	  
@@ -67,7 +67,7 @@ if (count($unavailable_workshops) > 0) {
   	  <div class="row justify-content-between">
 		
 			<div class="col-md-11 classes-listings-class mb-5">
-			  <h3 class="mb-3"><a href="workshop.php?wid=<?php echo $wk['id']; ?>"><?php echo $wk['title'];?></a></h3>
+			  <h3 class="m-3 p-3 border-top"><a href="workshop.php?wid=<?php echo $wk['id']; ?>"><?php echo $wk['title'];?></a></h3>
 			  <p><?php
 				  if ($wk['soldout']) { echo "<span class=\"text-danger\">Sold Out!</span> - ";  } 
 				  echo $wk['notes']; 

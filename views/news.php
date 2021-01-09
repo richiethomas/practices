@@ -4,140 +4,146 @@
 		<div class="col-md-10 col-12">
 
 
-<div class="p-4 bg-primary text-light">
-<h2 class="my-4">NO JAMS DECEMBER 18-JANUARY 1</h2>
-<p>Happy holidays! See you starting January 8!</p>
-</div>
-
 <h2 class="my-4">Friday Jams</h2>
 
-<p>No Jams DECEMBER 18-JANUARY 1 -- see you January 8</p>
+<p>Friday Jams back January 8</p>
 
-<p>For WGIS students! 12:15pm and 6:15 PST (California time)</p>
+<p><b>Earlier times: 11am and 5pm PST (California time)</b></p>
 
 <p><a href="https://us02web.zoom.us/j/84345581543?pwd=M2o5bllONE8zalhIQnFZdHdmVGsyZz09">https://us02web.zoom.us/j/84345581543?pwd=M2o5bllONE8zalhIQnFZdHdmVGsyZz09</a><br>
 Meeting ID: 843 4558 1543<br>
 Passcode: 077289</p>
 
-<h2 class="my-4">Friday Shows (all times PST California time)</h2>
+<h2 class="my-4">Thursday Shows</h2>
 
-<p>Former classes perform together. Here's the schedule for November and December 2020.</p>
+<p>Current/former students perform together. Here's the schedule for January and February 2020.</p>
 
-<p>Watch on the YouTube channel!: <a href="https://www.youtube.com/channel/UCxM09rN2BoddZYtqnlPBucQ">https://www.youtube.com/channel/UCxM09rN2BoddZYtqnlPBucQ</a></p>
+<p>Watch on the Twitch channel: <a href="https://www.twitch.tv/wgimprovschool">https://www.twitch.tv/wgimprovschool</a></p>
 
-<p>Friday November 6<br>
-11am: HORSE TRACK / CARPET<br>
-5pm: MARBLES  / ICE CREAM</p>
+<p><b>All times California PST time</b></p>
 
-<p>Friday November 13<br>
-11am: CARPET / MAILBOX<br>
-5pm: ICE CREAM / HANDKERCHIEF</p>
-
-<p>Friday November 20 <br>
+<p>January 7<br>
 11am: MAILBOX / POSTAGE<br>
-5pm: HANDKERCHIEF / BULLFROG</p>
+5pm: CURTAINS / BULLFROG</p>
 
-<p>Friday November 27<br>
+<p>January 14
+11am: POSTAGE / SCOTLAND<br>
+5pm: BULLFROG / WATERSHIP</p>
+
+<p>January 21
+11am: SCOTLAND / HORSE TRACK<br>
+5pm: WATERSHIP / PIONEER</p>
+
+<p>January 28
+11am: HORSE TRACK / MAILBOX<br>
+5pm: PIONEER / CURTAINS</p>
+
+<p>February 4
+11am: MAILBOX / SCOTLAND<br>
+5pm: CURTAINS / WATERSHIP</p>
+
+<p>February 11
+11am: SCOTLAND / POSTAGE<br>
+5pm: WATERSHIP / BULLFROG</p>
+
+<p>February 18
 11am: POSTAGE / HORSE TRACK<br>
-5pm:  BULLFROG  / MARBLES</p>
+5pm: BULLFROG / PIONEER</p>
 
-<p>Friday December 4<br>
-11am: HORSE TRACK / CARPET<br>
-5pm: MARBLES / ICE CREAM</p>
+<p>February 25
+11am: HORSE TRACK / MAILBOX<br>
+5pm: PIONEER / CURTAINS</p>
 
-<p>Friday December 11 <br>
-11am: CARPET  / MAILBOX<br>
-5pm: ICE CREAM / HANDKERCHIEF</p>
-
-<p>Friday December 18 <br>
-11am: MAILBOX / POSTAGE<br>
-5pm: HANDKERCHIEF / BULLFROG</p>
 
 <h3>11am Teams</h3>
 
-<p>Team Horse Track - 
+<p><b>HORSE TRACK</b> - 
 Elena M,
 Ethan S,
-Gareth O'C,
-James W,
-Julia K,
 Kedren W,
+Julia K,
 Laurie S,
-Maxwell B</p>
+Gareth O,
+Max B,
+James W,
+Amy R</p>
 
-<p>Team Carpet - 
-Alan D,
-Chris M,
-Deividas B,
-Flaviu,
-John M,
-Jordana M,
-Mike K,
-Paul H,
-Stephen S</p>
 
-<p>Team Mailbox - 
-Cara P,
-Chloe G,
-Christine S,
+<p><b>MAILBOX</b> - 
 Clothilde M,
-Karen D,
-Lucie P,
 Michelle G,
-Monika S</p>
+Monika S,
+Chloe G,
+Cara P,
+Karen D,
+Christine S,
+Lucie P</p>
 
-<p>Team Postage -
-Béatrice L,
-Erick A,
+
+<p><b>POSTAGE</b> - 
+Beatrice L,
 Halfdan B,
-Jon B,
+Sarah McG,
+Peter P,
 Martin B,
 Melissa S,
-Peter P,
-Sarah McG</p>
+Peter T,
+Erick A</p>
 
-<h3>5pm Teams</h3>
-<p>Team Marbles - 
-Andy M,
-Annika A,
-Belinda B,
-Belinda F,
-David Z,
-Isabella G,
-Jason E,
-Kevin D,
-Michael B</p>
 
-<p>Team Ice Cream - 
-Alissa P,
-Eric W,
-Jai H,
-Jeremy K,
-Kathryn B,
-Keith E,
-Thomas B,
-Rachel M</p>
+<p><b>SCOTLAND</b> -
+Sharpie,
+Chris M,
+Jordana M,
+Al D,
+David B,
+Flaviu</p>
 
-<p>Team Handkerchief -
-Patrick C,
-Balint H,
-David N,
+<p>5pm Teams</p>
+
+<p><b>CURTAINS</b> - 
 John R,
-John T,
 Sahil D,
+David Z,
 Sam B,
-Winnie Y</p>
+Balint H,
+Winnie Y,
+Isabel G,
+Mike K</p>
 
-<p>Team Bullfrog - 
-Corinne A,
-Eileen B,
-Harrison M,
-James J,
-Jenny P,
-Kelsey P
-Lauren B,
+
+<p><b>BULLFROG</b> -
+Kelsey,
+Jenny,
 Max M,
-Tom M</p>
+Tom M,
+Corrine A,
+Lauren B,
+Eileen B</p>
+
+
+<p><b>WATERSHIP</b> -
+Jeremy K,
+Jai H,
+Eric W,
+Rachel M,
+Jason E,
+Thomas B,
+Keith E,
+David N,
+Whitney D</p>
+
+
+<p><b>PIONEER</b> - 
+Kathryn B,
+Randl M,
+Michael B,
+Belinda B,
+Patrick C,
+Jon B,
+Andy M,
+John T,
+Harrison M</p>
 
 
 <h2 class="my-4">Facebook Group</h2>

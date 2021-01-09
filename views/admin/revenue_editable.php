@@ -33,7 +33,7 @@ echo $weeknav;
 			'suggested_capacity' => 0
 		);
 		foreach ($workshops_list as $wid => $wk) {
-			echo "<tr><td>({$wk['id']}) <a href='admin_edit.php?wid={$wk['id']}'>{$wk['title']}</a> <small>({$wk['showstart']})</small><br><span class='text-secondary'>{$wk['place']}</span></td>
+			echo "<tr><td>({$wk['id']}) <a href='admin_edit2.php?wid={$wk['id']}'>{$wk['title']}</a> <small>({$wk['showstart']})</small><br><span class='text-secondary'>{$wk['place']}</span></td>
 			<td>{$wk['paid']} / {$wk['enrolled']} / {$wk['capacity']}</td>
 			<td>{$wk['cost']}</td>
 			<td>".($wk['cost']*$wk['paid'])." / ".($wk['cost']*$wk['enrolled'])." / ".($wk['cost']*$wk['capacity'])."</td>

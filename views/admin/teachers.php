@@ -46,7 +46,7 @@
 				<?php
 				foreach ($t_classes as $tc) {
 					echo "<tr>
-								<td><a href=\"admin_edit.php?wid={$tc['id']}\">{$tc['title']}</a></td>
+								<td><a href=\"admin_edit2.php?wid={$tc['id']}\">{$tc['title']}</a></td>
 						 		<td>{$tc['showstart']}</td>
 								<td>{$tc['total_class_sessions']} sessions</td>
 							</tr>\n";

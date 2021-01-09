@@ -83,7 +83,7 @@ $table_open = "<table class='table table-striped my-3'>
 			// but only the show teacher gets paid for it
 			if ($wk['show_teacher_id'] == 0 || $teacher_id == $wk['show_teacher_id']) {
 				echo "<tr>
-				<td width='300'><a href='admin_edit.php?wid={$wk['id']}'>{$wk['title']}</a> <small>({$wk['start']})</small></td>
+				<td width='300'><a href='admin_edit2.php?wid={$wk['id']}'>{$wk['title']}</a> <small>({$wk['start']})</small></td>
 				<td>".($wk['class_show'] ? "<b>show</b>" : "{$wk['rank']}")."</td>
 				<td class='tdr'>".\Wbhkit\texty(
 						"tdr_{$wk['id']}_{$wk['xtra_id']}_{$wk['show_id']}", 

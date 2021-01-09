@@ -26,7 +26,7 @@ echo
 <ul>
 <?php
 foreach ($cs->wks as $w) {
-	echo "<li><a href='admin_edit.php?wid={$w['workshop_id']}'>{$w['title']}</a> - <a href='admin_shows.php?ac=rem&show_id={$w['show_id']}&wid={$w['workshop_id']}'>remove</a></li>\n";
+	echo "<li><a href='admin_edit2.php?wid={$w['workshop_id']}'>{$w['title']}</a> - <a href='admin_shows.php?ac=rem&show_id={$w['show_id']}&wid={$w['workshop_id']}'>remove</a></li>\n";
 }
 ?>
 </ul>
@@ -60,7 +60,7 @@ foreach ($shows as $upcoming_cs) {
 	echo "<li>Link: <small>{$upcoming_cs->fields['online_url']}</small></li>\n";
 	if (count($upcoming_cs->wks) > 0) {
 		foreach ($upcoming_cs->wks as $w) {
-			echo "<li><a href='admin_edit.php?wid={$w['workshop_id']}'>{$w['title']}</a></li>\n";
+			echo "<li><a href='admin_edit2.php?wid={$w['workshop_id']}'>{$w['title']}</a></li>\n";
 		}
 	}
 	echo "</ul>\n";

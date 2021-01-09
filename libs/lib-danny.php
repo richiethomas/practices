@@ -62,7 +62,8 @@ function admin_box_teacher_callback_function($admin_box_title){
 function get_nav_items(){
 	$nav_items = array();
 	//$nav_items[] = array('title' => "Classes", "href" => "classes.php");
-	$nav_items[] = array('title' => "Home", "href" => "index.php");
+	//$nav_items[] = array('title' => "Home", "href" => "index.php");
+	$nav_items[] = array('title' => "Calendar", "href" => "calendar.php");
 	$nav_items[] = array('title' => "Teachers", "href" => "teachers.php");
 	$nav_items[] = array('title' => "About", "href" => "about_school.php", 'children' => array(
 

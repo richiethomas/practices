@@ -210,12 +210,12 @@ class User extends WBHObject {
 	function reject_user_below(int $at_least) {
 		global $view;
 		
-		if ($this->logged_in() && isset($this->fields['group_id']) && $this->fields['group_id'] < $at_least) {
-			$view->renderPage('admin/notcleared');
-			exit();
-			return false;
-		}
-		return true;
+		if ($this->logged_in() && isset($this->fields['group_id']) && $this->fields['group_id'] >= $at_least) {
+			return true;
+		} 
+		$view->renderPage('admin/notcleared');
+		exit();
+		return false;		
 	}	
 	
 	

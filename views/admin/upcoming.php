@@ -44,7 +44,7 @@ foreach ($workshops as $wk) {
 	$start = Wbhkit\friendly_time($wk['start']);
 	$end = Wbhkit\friendly_time($wk['end']);
 	
-	echo "<li class='mt-3' data-teacher=\"teacher-{$wk['teacher_id']}\" ".($wk['class_show'] ? ' class="show"' : '')."><a href='admin_edit.php?wid={$wk['id']}'>{$wk['title']}</a> ({$wk['rank']}".($wk['class_show'] ? ' - show' : '')."), $start-$end (".number_format($wk['paid'], 0)." / ".number_format($wk['enrolled'], 0)." /  ".number_format($wk['capacity'], 0)." / ".number_format($wk['waiting']+$wk['invited']).")";
+	echo "<li class='mt-3' data-teacher=\"teacher-{$wk['teacher_id']}\" ".($wk['class_show'] ? ' class="show"' : '')."><a href='admin_edit2.php?wid={$wk['id']}'>{$wk['title']}</a> ({$wk['rank']}".($wk['class_show'] ? ' - show' : '')."), $start-$end (".number_format($wk['paid'], 0)." / ".number_format($wk['enrolled'], 0)." /  ".number_format($wk['capacity'], 0)." / ".number_format($wk['waiting']+$wk['invited']).")";
 	echo " - {$wk['teacher_name']}";
 	echo "<small>";
 	if ($wk['override_url']) {

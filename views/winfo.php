@@ -7,7 +7,7 @@ $sessions = '';
 if (!\Workshops\is_public($wk)) {
 	$point = "This workshop is not available for signups yet. It will be available at <b>".date("l M j, g:ia", strtotime($wk['when_public']))."</b> California time (PDT)";
 } elseif ($wk['upcoming'] == 0) {
-	$point = "This workshop is IN THE PAST.";
+	$point = "This workshop had started or is in the past.";
 } elseif ($wk['cancelled'] == true) {
 	$point = "This workshop is CANCELLED.";
 } else {
@@ -63,7 +63,7 @@ echo "
 
 <div class='col-sm-6'>
 <figure class=\"figure\">
-  ".\Teachers\teacher_photo($wk['teacher_user_id'], " figure-img rounded")."
+<a href='teachers.php?tid={$wk['teacher_id']}'><img class='img-fluid border figure-img rounded' src='".\Teachers\get_teacher_photo_src($wk['teacher_user_id'])."'></a>
   <figcaption class=\"figure-caption\"><b>Teacher: <a href='teachers.php?tid={$wk['teacher_id']}'>{$wk['teacher_name']}</a></b></figcaption>
 </figure>
 </div></div>

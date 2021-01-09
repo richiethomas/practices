@@ -28,7 +28,9 @@ function centralized_email($to, $sub, $body) {
 	  if (LOCAL) {
 	  	// connect to SMTP
 		$smtp = get_smtp_object();
+		
  	 	$sent = $smtp->send($to, $headers, $body);  // laptop can use the SMTP server on willhines.net
+		
  	  } else {
 		  unset($headers['Subject']);
 		  unset($headers['To']);
@@ -56,10 +58,10 @@ function centralized_email($to, $sub, $body) {
 	return $return;
 }
 
-function confirm_email($wk, $u, $status_id = ENROLLED) {
-	
-	$e = new \Enrollment();	
-	$e->set_by_u_wk($u, $wk);
+function confirm_email($e, $status_id = ENROLLED) {
+
+	$wk = $e->wk;
+	$u = $e->u;
 	
 	$drop = URL."workshop.php?key={$u->fields['ukey']}&ac=drop&wid={$wk['id']}";
 	$trans = URL."workshop.php?key={$u->fields['ukey']}&wid={$wk['id']}";
@@ -85,7 +87,7 @@ function confirm_email($wk, $u, $status_id = ENROLLED) {
 			}
 			
 			if ($wk['cost'] > 0) {
-				$point .= "<p>Payment due by start of class. Send \${$wk['cost']} (USD) via Venmo @willhines or PayPal whines@gmail.com</p>";
+				$point .= "<p>Payment due by start of class. Send \${$wk['cost']} (USD) via Venmo @willhines or PayPal payments@wgimprovschool.com</p>";
 			}
 
 			$call = "To DROP, click here:\n{$drop}<br>If you drop within ".LATE_HOURS." hours of the start, you must still pay for your spot. Before that, full refund available.";
@@ -115,9 +117,8 @@ function confirm_email($wk, $u, $status_id = ENROLLED) {
 			
 			// tell webmaster if this person needs a refund
 			if ($e->fields['paid'] == 1) {
-				centralized_email(WEBMASTER, "refund requested", "<p>{$u->fields['nice_name']} just dropped from the class '{$wk['title']}', and had already paid</p><p>See workshop info: ".URL."admin_edit.php?wid={$wk['id']}</p>");
+				centralized_email(WEBMASTER, "refund requested", "<p>{$u->fields['nice_name']} just dropped from the class '{$wk['title']}', and had already paid</p><p>See workshop info: ".URL."admin_edit2.php?wid={$wk['id']}</p>");
 			}
-			
 			
 			break;
 		default:
@@ -236,7 +237,7 @@ Zoom available at: http://www.zoom.us/</dd>
 <dd>Yes, use the link in your confirmation email to go to the web site, where you can drop out. If you drop within ".LATE_HOURS." of the start of class, you must still pay for your spot.</dd>
 
 <dt>How should I pay?</dt>
-<dd>Venmo @willhines, or paypal whines@gmail.com.</dd>
+<dd>Venmo @willhines, or paypal payments@wgimprovschool.com.</dd>
 
 <dt>What if I'm on a waiting list?</dt>
 <dd>You'll get an email the moment a spot opens up, with a link to ACCEPT or DECLINE.</dd>

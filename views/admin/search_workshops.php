@@ -27,7 +27,7 @@
 		
 			echo "<div class='row workshop-$cl py-3 border-top'>\n"; // workshop row start
 			
-				echo "<div class='col-md-6'>".($row['soldout'] == 1 ? 'SOLD OUT: ' : '')."<a href='admin_edit.php?wid={$row['id']}'>{$row['title']}</a><br><small><a href=\"admin_listall.php?wid={$row['id']}#addworkshop\">(Clone)</a></small></div>"; // title cell
+				echo "<div class='col-md-6'>".($row['soldout'] == 1 ? 'SOLD OUT: ' : '')."<a href='admin_edit2.php?wid={$row['id']}'>{$row['title']}</a><br><small><a href=\"admin_listall.php?wid={$row['id']}#addworkshop\">(Clone)</a></small></div>"; // title cell
 				
 				echo "<div class='col-md-6'>\n"; // start of second column
 			

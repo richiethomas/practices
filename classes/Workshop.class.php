@@ -195,7 +195,7 @@ class Workshop extends WBHObject {
 
 
 	function add_workshop_form() {
-		return "<form id='add_wk' action='admin_edit.php' method='post' novalidate>".
+		return "<form id='add_wk' action='admin_edit2.php' method='post' novalidate>".
 		\Wbhkit\form_validation_javascript('add_wk').
 		"<fieldset name='session_add'><legend>Add Workshop</legend>".
 		\Wbhkit\hidden('ac', 'ad').

@@ -125,15 +125,12 @@ if (!$wid) {
 	exit();
 }
 
-
 $stats = array();
 $lists = array();
 foreach ($lookups->statuses as $stid => $status_name) {
 	$lists[$stid] = $eh->get_students($wid, $stid);
 	$stats[$stid] = count($lists[$stid]);
 }
-$data['log'] = $eh->get_status_change_log($wk);
-$status_log = $view->renderSnippet('admin/status', $data);
 
 $view->add_globals(array('stats', 'lists', 'status_log'));	
 $view->data['statuses'] = $lookups->statuses;

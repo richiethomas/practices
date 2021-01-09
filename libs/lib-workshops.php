@@ -28,12 +28,14 @@ function fill_out_workshop_row($row, $get_enrollment_stats = true) {
 	
 	
 	//get teacher info
-	$trow = \Teachers\get_teacher_by_id($row['teacher_id']);
-	$row['teacher_email'] = $trow['email'];
-	$row['teacher_name'] = $trow['nice_name'];
-	$row['teacher_user_id'] = $trow['user_id'];
-	$row['teacher_id'] = $trow['id'];
-	$row['teacher_key'] = $trow['ukey'];
+	if (!isset($row['teacher_user_id'])) {
+		$trow = \Teachers\get_teacher_by_id($row['teacher_id']);
+		$row['teacher_email'] = $trow['email'];
+		$row['teacher_name'] = $trow['nice_name'];
+		$row['teacher_user_id'] = $trow['user_id'];
+		$row['teacher_id'] = $trow['id'];
+		$row['teacher_key'] = $trow['ukey'];
+	}
 		
 	$row['costdisplay'] = $row['cost'] ? "\${$row['cost']} USD" : 'Free';
 	
@@ -75,7 +77,6 @@ function fill_out_workshop_row($row, $get_enrollment_stats = true) {
 	
 	if ($get_enrollment_stats) {
 		$row = set_enrollment_stats($row);
-		$row['paid'] = how_many_paid($row);
 		if ($row['enrolled'] + $row['waiting'] + $row['invited'] >= $row['capacity']) { 
 			$row['soldout'] = 1;
 		} else {
@@ -104,10 +105,12 @@ function set_enrollment_stats($row) {
 	$eh = new \EnrollmentsHelper();
 	
 	$enrollments = $eh->set_enrollments_for_workshop($row['id']);
-	foreach ($lookups->statuses as $sid => $sname) {
-		$row[$sname] = $enrollments[$sid];
+	foreach ($enrollments as $sname => $svalue) {
+		$row[$sname] = $svalue;
 	}	
-	$row['open'] = ($row['enrolled'] >= $row['capacity'] ? 0 : $row['capacity'] - $row['enrolled']);
+	
+	$row['open'] = $row['capacity'] - ($row['enrolled'] + $row['invited'] + $row['waiting']);
+	if ($row['open'] < 0) { $row['open'] = 0; }
 	return $row;
 }
 
@@ -202,9 +205,22 @@ function get_search_results($page = 1, $needle = null) {
 }
 
 
-function get_workshops_list_no_html($admin = 0, $page = 1) {
+function get_workshops_list_no_html() {
 	
-	$sql = build_workshop_list_sql($admin);
+	// get IDs of workshops
+	$mysqlnow = date("Y-m-d H:i:s");
+
+	$sql = "(select w.* from workshops w where when_public < '$mysqlnow' and start >= '$mysqlnow')"; // get public ones to come
+	
+	$sql .=
+		" UNION
+		(select w.* from workshops w, xtra_sessions x where x.workshop_id = w.id and w.when_public < '$mysqlnow' and x.start >= '$mysqlnow')";  
+	
+	$sql .=
+		" UNION
+		(select w.* from workshops w, workshops_shows sw, shows s where sw.workshop_id = w.id and sw.show_id = s.id and w.when_public < '$mysqlnow' and s.start > '$mysqlnow')";  
+
+	$sql .= " order by start asc";  // temporary, should be asc
 	
 	$stmt = \DB\pdo_query($sql);
 	$workshops = array();
@@ -216,43 +232,11 @@ function get_workshops_list_no_html($admin = 0, $page = 1) {
 }
 
 
-function build_workshop_list_sql($admin) {
-	
-	// get IDs of workshops
-	$mysqlnow = date("Y-m-d H:i:s");
-
-	$sql = '(select w.* from workshops w ';
-	if (!$admin) {
-		$sql .= "where when_public < '$mysqlnow' and date(start) >= date('$mysqlnow')"; // get public ones to come
-	}
-	$sql .= ")"; // end first select statement of UNION
-	
-	// second select: search xtra sessions. 
-	// UNION should automatically remove duplicate rows,
-	// so multiple workshop/xtra sessions should only show up once in results?
-	$sql .=
-		"UNION
-		(select w.* from workshops w, xtra_sessions x where x.workshop_id = w.id
-	and w.when_public < '$mysqlnow' and date(x.start) >= date('$mysqlnow'))";  
-
-	if ($admin) {
-		$sql .= " order by start desc"; // get all
-	} else {
-		$sql .= " order by start asc";  // temporary, should be asc
-	}
-
-	return $sql;
-	
-	
-}
-
-
 // data only, for admin_calendar
 function get_sessions_to_come() {
 	
 	// get IDs of workshops
 	$mysqlnow = date("Y-m-d H:i:s", strtotime("-3 hours"));
-
 	
 	$stmt = \DB\pdo_query("
 (select w.id, title, start, end, capacity, cost, 0 as xtra, 0 as class_show, notes, teacher_id, 1 as rank, '' as override_url, online_url 
@@ -268,19 +252,26 @@ union
 	where ws.show_id = s.id and ws.workshop_id = w.id
 	and s.start >= date('$mysqlnow'))
 order by start asc"); 
-		
-		
+	
 	$teachers = \Teachers\get_all_teachers(); // avoid getting same teacher multiple times	
 	$sessions = array();
+	$enrollments = array();
+	
 	while ($row = $stmt->fetch()) {
 		$teach = \Teachers\find_teacher_in_teacher_array($row['teacher_id'], $teachers);
 		if ($teach) {
 			$row['teacher_name'] = $teach['nice_name'];
 			$row['teacher_user_id'] = $teach['user_id'];
 		}
-		$row['paid'] = how_many_paid($row);
-		$row = set_enrollment_stats($row);
-		$sessions[] = $row;
+		
+		foreach ($enrollments as $e_wid => $e_row) {
+			if ($row['id'] == $e_wid) {
+				$sessions[] = array_merge($row, $e_row);
+				continue(2);
+			}
+		}
+		$enrollments[$row['id']] = set_enrollment_stats(array('id' => $row['id'], 'capacity' => $row['capacity']));
+		$sessions[] = array_merge($row, $enrollments[$row['id']]);
 	}
 	return $sessions;
 }
@@ -407,7 +398,7 @@ function get_empty_workshop() {
 
 function add_workshop_form($wk) {
 	global $sc;
-	return "<form id='add_wk' action='admin_edit.php' method='post' novalidate>".
+	return "<form id='add_wk' action='admin_edit2.php' method='post' novalidate>".
 	\Wbhkit\form_validation_javascript('add_wk').
 	"<fieldset name='session_add'><legend>Add Workshop</legend>".
 	\Wbhkit\hidden('ac', 'ad').
@@ -504,7 +495,7 @@ function is_complete_workshop($wk) {
 function get_class_shows($wk) {
 	$class_shows = array();
 
-	$stmt = \DB\pdo_query("select show_id
+	$stmt = \DB\pdo_query("select s.*
 		from workshops_shows ws, shows s
 		where ws.show_id = s.id and ws.workshop_id = :id order by start", array(':id' => $wk['id']));
 		
@@ -512,7 +503,8 @@ function get_class_shows($wk) {
 	
 	while ($row = $stmt->fetch()) {
 		$cs = new \ClassShow();
-		$cs->set_by_id($row['show_id']);
+		$cs->set_into_fields($row);
+		$cs->format_start_end();
 		$class_shows[] = $cs;
 	}
 	return $class_shows;

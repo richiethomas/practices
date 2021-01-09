@@ -56,7 +56,7 @@ $table_open = "<table class='table table-striped my-3'>
 			
 			$teacher_pay = \Workshops\get_teacher_pay($wk['id']);
 			
-			echo "<tr><td width='300'>({$wk['id']}-{$wk['teacher_id']}) <a href='admin_edit.php?wid={$wk['id']}'>{$wk['title']}</a> <small>({$wk['showstart']})</small></td>
+			echo "<tr><td width='300'>({$wk['id']}-{$wk['teacher_id']}) <a href='admin_edit2.php?wid={$wk['id']}'>{$wk['title']}</a> <small>({$wk['showstart']})</small></td>
 			<td>{$wk['paid']} / {$wk['enrolled']} / {$wk['capacity']}</td>
 			<td>{$wk['cost']}</td>
 			<td>".($wk['cost']*$wk['paid'])." / ".($wk['cost']*$wk['enrolled'])." / ".($wk['cost']*$wk['capacity'])."</td>

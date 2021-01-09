@@ -146,7 +146,7 @@ class WorkshopsHelper extends WBHObject {
 			$wk = new Workshop()l
 			$wk->set_into_fields($row);
 			$wk->fields['paid'] = $wk->how_many_paid($row);
-			$$wk->set_enrollment_stats();
+			$wk->set_enrollment_stats();
 			$sessions[] = $wk;
 		}
 		return $sessions;

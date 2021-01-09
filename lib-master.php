@@ -4,6 +4,21 @@ using Bootstrap 4.5
 tested on PHP 7.4.2
 */
 
+define('TIMER', FALSE);
+$start_hrtime = 0;
+if (TIMER) {
+	$start_hrtime=hrtime(true);
+}
+
+function show_hrtime() {
+	global $start_hrtime;
+	echo figure_hrtime($start_hrtime);
+}
+
+function figure_hrtime($start) {
+	return ((hrtime(true)-$start) / 1e+6);
+}
+
 if (!isset($sc)) { $sc = $_SERVER['SCRIPT_NAME']; }
 
 require "vendor/autoload.php"; // i barely understand this; might not have enough classes to justify it
@@ -69,6 +84,8 @@ define('ENROLLED', $lookups->find_status_by_value('enrolled'));
 define('WAITING', $lookups->find_status_by_value('waiting'));
 define('DROPPED', $lookups->find_status_by_value('dropped'));
 define('INVITED', $lookups->find_status_by_value('invited'));
+define('SMARTENROLL', 100); // special status ENROLL or WAIT pending capacity -- see Enrollment.class.php
+
 $error = '';
 $message = '';
 $body = '';

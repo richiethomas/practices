@@ -12,12 +12,17 @@ class EnrollmentsHelper extends WBHObject {
 	// registrations
 	function set_enrollments_for_workshop(int $workshop_id) {
 	
-		$stmt = \DB\pdo_query("select count(*) as total, status_id from registrations where workshop_id = :wid group by status_id", array(':wid' => $workshop_id));
-		while ($row = $stmt->fetch()) {
-			$this->enrollments[$row['status_id']] = $row['total'];
-		}
+		// set enrollment data to zero
+		$this->enrollments = array();
 		foreach ($this->lookups->statuses as $sid => $sname) {
-			if (!isset($this->enrollments[$sid])) { $this->enrollments[$sid] = 0; }		
+			$this->enrollments[$sname] = 0;
+		}
+		$this->enrollments['paid'] = 0;
+	
+		$stmt = \DB\pdo_query("select r.status_id, r.paid from registrations r where r.workshop_id = :wid", array(':wid' => $workshop_id));
+		while ($row = $stmt->fetch()) {
+			$this->enrollments[$this->lookups->statuses[$row['status_id']]]++;
+			if ($row['paid']) { $this->enrollments['paid']++; }
 		}
 		return $this->enrollments;
 	}

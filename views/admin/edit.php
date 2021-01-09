@@ -23,7 +23,7 @@ echo "<div class='row mt-md-3 admin-edit-workshop'>\n";
 			foreach ($lists[$stid] as $s) {
 				echo "<div class='row my-3'><div class='col-md-6'>".Wbhkit\checkbox('users', $s['id'], "<a href='admin_users.php?guest_id={$s['id']}&wid={$wk['id']}'>{$s['nice_name']}</a> <small>".date('M j g:ia', strtotime($s['last_modified']))."</small>", $s['paid'], true)."</div>".
 				"<div class='col-md-6'>
-				<a class='btn btn-outline-secondary btn-sm' href='admin_change_status.php?wid={$wk['id']}&guest_id={$s['id']}'>change status</a>  <a  class='btn btn-outline-secondary btn-sm' href='admin_edit.php?ac=conrem&guest_id={$s['id']}&wid={$wk['id']}'>remove</a></div>".
+				<a class='btn btn-outline-secondary btn-sm' href='admin_change_status.php?wid={$wk['id']}&guest_id={$s['id']}'>change status</a>  <a  class='btn btn-outline-secondary btn-sm' href='admin_edit2.php?ac=conrem&guest_id={$s['id']}&wid={$wk['id']}'>remove</a></div>".
 				"</div>\n";
 			}
 		}
@@ -50,12 +50,12 @@ echo "<div class='row mt-md-3 admin-edit-workshop'>\n";
 		Wbhkit\hidden('ac', 'up').
 		Wbhkit\hidden('wid', $wk['id']).
 		Wbhkit\submit('Update').
-		"<a class='btn btn-outline-primary' href=\"admin_edit.php?wid={$wk['id']}&ac=cdel\">Delete This Practice</a>".
+		"<a class='btn btn-outline-primary' href=\"admin_edit2.php?wid={$wk['id']}&ac=cdel\">Delete This Practice</a>".
 		"</fieldset></form>\n";
 	
 
 		//xtra sessions 
-		echo  \Wbhkit\form_validation_javascript('xtra_edit');
+		//echo  \Wbhkit\form_validation_javascript('xtra_edit');
 		echo  "<h2>Xtra Sessions</h2>";
 		if (!empty($wk['sessions'])) {
 			echo "<ul>\n";

@@ -89,58 +89,68 @@ class Enrollment extends WBHObject {
 			$this->wk = \Workshops\get_workshop_info($this->fields['workshop_id']);
 		}
 	}
-	
-	// assumes we have set u and wk
-	function change_status(int $status_id = ENROLLED, bool $confirm = true) {
 		
-		if (!$this->u->fields['id']) { 
-			$this->error = "No user set!";
-			return false;
+	// assumes we have set u and wk
+	function change_status(int $target_status = ENROLLED, bool $confirm = true) {
+		
+		// just to make the subsequent lines less bulky
+		$wk = $this->wk;
+		$u = $this->u;
+		$statuses = $this->lookups->statuses;
+		$before_status = $this->fields['status_id'];
+		$last_insert_id = null;
+		$datestring_now = date("Y-m-d H:i:s");
+
+		$db = \DB\get_connection();
+
+		// workshop full or nah?
+		if ($target_status == SMARTENROLL) {
+			$target_status = ($wk['enrolled'] + $wk['invited'] + $wk['waiting'] < $wk['capacity']) ? ENROLLED : WAITING;
+			//echo "({$wk['enrolled']} + {$wk['invited']} + {$wk['waiting']} < {$wk['capacity']}) = status $target_status, also eid = {$this->fields['id']}<br>";
 		}
 		
-		if (!$this->wk['id']) {
-			$this->error = "No workshop set!";
-			return false;
+		// update or insert?
+		if ($this->fields['id']) {
+			
+			if ($this->fields['status_id'] != $target_status) {
+				$stmt = $db->prepare("update registrations set status_id = :status_id,  last_modified = '{$datestring_now}' where id = :eid");
+				$stmt->execute(array(':status_id' => $target_status, ':eid' => $this->fields['id']));
+			} else {
+				$this->message = "user {$u->fields['email']} ({$u->fields['id']}) was already status $target_status for {$wk['title']} ({$wk['id']})";
+			}
+					
+		} else {
+			$stmt = $db->prepare("INSERT INTO registrations (workshop_id, user_id, status_id, registered, last_modified) VALUES (:wid, :uid, :status_id, '{$datestring_now}', '{$datestring_now}')");
+			$stmt->execute(array(':wid' => $wk['id'], ':uid' => $u->fields['id'], ':status_id' => $target_status));
+			$last_insert_id = $db->lastInsertId();
 		}
 
-		$statuses = $this->lookups->statuses;
-		
-		//update or insert?
-		if ($this->fields['id']) { // update
-			// are we changing a status or nah
-			if ($this->fields['status_id'] != $status_id) {
-		
-				$stmt = \DB\pdo_query("update registrations set status_id = :status_id,  last_modified = '".date("Y-m-d H:i:s")."' where workshop_id = :wid and user_id = :uid", array(':status_id' => $status_id, ':wid' => $this->fields['workshop_id'], ':uid' => $this->fields['user_id']));
-		
-				$this->fields['status_id'] = $status_id;
-			} else { // no need to update
-				return $this->message = "User ({$this->u->fields['email']}) was already status '{$statuses[$status_id]}' for {$this->wk['title']}.";
-			}
-		} else { // insert
-			$datestring_now = date("Y-m-d H:i:s");
-			$stmt = \DB\pdo_query("INSERT INTO registrations (workshop_id, user_id, status_id, registered, last_modified) VALUES (:wid, :uid, :status_id, '{$datestring_now}', '{$datestring_now}')", array(':wid' => $this->wk['id'], ':uid' => $this->u->fields['id'], ':status_id' => $status_id));
-			$this->set_by_id($GLOBALS['last_insert_id']);
+		$this->set_into_fields(
+			array('user_id' => $u->fields['id'],	
+			'workshop_id' => $wk['id'],
+			'status_id' => $target_status,
+			'last_modified' => $datestring_now,
+			'paid' => false,
+			'while_soldout' => false));	
 			
-			//speed this up -> manually set properties
-			$this->fields = array(
-				'id' => $GLOBALS['last_insert_id'],
-				'user_id' => $this->u->fields['id'],	
-				'workshop_id' => $this->wk['id'],
-				'status_id' => $status_id,
-				'registered'=> $datestring_now,
-				'last_modified' => $datestring_now,
-				'paid' => false,
-				'while_soldout' => false);
+		if ($last_insert_id) { $this->fields['id'] = $last_insert_id; }
+
+		if ($before_status != $target_status) {
+			$this->update_change_log($target_status);	
+			if ($confirm) { 
+				\Emails\confirm_email($this, $target_status); 
+			}
+			if ($target_status == WAITING) {
+				$this->figure_rank();
+			}
+			
 		}
-		
-		$this->update_change_log($status_id);	
-		if ($confirm) { 
-			\Emails\confirm_email($this->wk, $this->u, $status_id); 
-		}
-		return $this->message = "Updated user ({$this->u->fields['email']}) to '{$statuses[$status_id]}' for {$this->wk['title']}.";
+
+
+		return $this->message = "Updated user ({$this->u->fields['email']}) to '{$statuses[$target_status]}' for {$this->wk['title']}.";
 
 	}
-
+	
 	function update_change_log($status_id) {
 	
 		$statuses = $this->lookups->statuses;
@@ -159,7 +169,7 @@ class Enrollment extends WBHObject {
 	// this checks for open spots, and makes sure invites have gone out to anyone on waiting list
 	// i call this in places just to make sure i haven't neglected the waiting list
 	function check_waiting(array $wk) {
-		$wk = \Workshops\fill_out_workshop_row($wk); // make sure it's up to date
+		$wk = \Workshops\set_enrollment_stats($row); // make sure it's up to date
 		$msg = '';
 		if ($wk['upcoming'] == 0) {
 			return 'Workshop is in the past';
