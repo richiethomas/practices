@@ -35,6 +35,7 @@ function fill_out_workshop_row($row, $get_enrollment_stats = true) {
 		$row['teacher_user_id'] = $trow['user_id'];
 		$row['teacher_id'] = $trow['id'];
 		$row['teacher_key'] = $trow['ukey'];
+		$row['teacher_default_rate'] = $trow['default_rate'];
 	}
 		
 	$row['costdisplay'] = $row['cost'] ? "\${$row['cost']} USD" : 'Free';
@@ -309,28 +310,54 @@ function get_workshops_list_bydate($start = null, $end = null) {
 // figure teacher pay for a workshop
 // go through all sessions
 // add either actual_pay or default_pay
-function get_teacher_pay($wid) {
+function get_teacher_pay(array $wk) {
 	
+	
+	/*
 	$pay = 0;
 	$default_pay = 0;
+	$teacher_id = 0;
 		
-	$stmt = \DB\pdo_query("select t.default_rate, w.actual_pay 
-		from workshops w, teachers t
-		where w.teacher_id = t.id
-		and w.id = :id", array(':id' => $wid));
+	$stmt = \DB\pdo_query("select p.amount 
+		from payrolls p
+	where p.task = 'workshops'
+	and p.table_id = w.id
+		and w.id = :id", array(':id' => $wk['id']));
 	while ($row = $stmt->fetch()) {
-		$default_pay = $row['default_rate'];
-		$pay += $row['actual_pay'] ? $row['actual_pay'] : $default_pay;
+		$pay += $row['amount'];
+		$teacher_id = $row['teacher_id'];
 	}
 
-	$stmt = \DB\pdo_query("select x.actual_pay
-		from xtra_sessions x
-		where x.workshop_id = :id", array(':id' => $wid));
+	$stmt = \DB\pdo_query("select p.amount
+		from payrolls p, xtra_sessions x
+		where p.task = 'class'
+		and p.table_id = x.id
+		and x.workshop_id = :id", array(':id' => $wk['id']));
 	while ($row = $stmt->fetch()) {
-		$pay += $row['actual_pay'] ? $row['actual_pay'] : $default_pay;
+		$pay += $row['amount'];
 	}
+
+	$stmt = \DB\pdo_query("select p.amount
+		from payrolls p, shows s, workshops_shows ws, workshops w
+		where p.task = 'show'
+		and p.table_id = s.id
+		and ws.show_id = s.id
+		and w.id = ws.workshop_id
+		and s.teacher_id = w.teacher_id
+		and ws.workshop_id = :id", array(':id' => $wk['id']));
+	while ($row = $stmt->fetch()) {
+		$pay += $row['amount'];
+	}
+	*/
 	
-	return $pay;
+	if ($teacher_id == 1) {
+		return 0;
+	} else {
+		return ($wk['total_class_sessions'] * $wk['teacher_default_rate']) +
+			($wk['total_show_sessions'] * ($wk['teacher_default_rate'] / 2));
+	}
+
+	return 0;
 }
 
 

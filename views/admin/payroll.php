@@ -63,7 +63,7 @@ foreach ($payrolls as $p) {
 		if ($last_when_paid != 0) {
 			total_row($last_teacher_name, $pay_teacher_total);
 			$pay_teacher_total = 0;
-			total_row($last_when_paid, $pay_date_total);
+			total_row(date('j-M-Y', strtotime($last_when_paid)), $pay_date_total);
 			$pay_date_total = 0;
 		}
 		echo "<h3 class='mt-2'>".date('j-M-Y', strtotime($p->fields['when_paid']))."</h3>";
@@ -77,7 +77,7 @@ foreach ($payrolls as $p) {
 		echo teacher_header($p->fields['teacher_name']);
 	}
 	echo "<div class='row'>\n";
-	echo "<div class='col-6'>({$p->fields['table_id']}) {$p->fields['title']} (".($p->fields['rank'] ? $p->fields['rank'] : 'show').")</div>";
+	echo "<div class='col-6'>{$p->fields['title']} <small>(".date('D ga', strtotime($p->fields['start'])).' #'.($p->fields['rank'] ? $p->fields['rank'] : 'show').")</small></div>";
 	echo "<div class='col'>{$p->fields['amount']} <span class='ml-3'><small>(<a href='admin_payroll.php?ac=del&pid={$p->fields['id']}&searchstart=$searchstart&searchend=$searchend'>delete</a>)</small></span></div>";
 	echo "</div>\n";
 
@@ -89,6 +89,8 @@ foreach ($payrolls as $p) {
 	
 }
 
+total_row($last_teacher_name, $pay_teacher_total);
+total_row(date('j-M-Y', strtotime($last_when_paid)), $pay_date_total);
 total_row('Grand Total', $pay_grand_total);
 
 // list unclaimed items
@@ -127,7 +129,7 @@ foreach ($claims as $c) {
 	echo "<tr>\n";
 	echo "<td>".\Wbhkit\drop("teacher_id", $teacher_opts, $c['teacher_id'], 
 	0)."</td>\n";
-	echo "<td>({$c['table_id']}) {$c['title']} (".($c['rank'] ? $c['rank'] : 'show').")</td>\n";
+	echo "<td>{$c['title']} <small>(".date('D ga', strtotime($c['start'])).' #'.($c['rank'] ? $c['rank'] : 'show').")</small></td>\n";
 	echo "<td>".\Wbhkit\texty("amount", $t['default_rate'], 0)."</td>\n";
 	echo "<td>".\Wbhkit\texty("when_paid", date("j-M-Y"), 0)."</td>\n";
 	echo "<td>".\Wbhkit\submit('claim')."</td>\n";
