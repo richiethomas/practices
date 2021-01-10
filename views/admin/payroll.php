@@ -9,28 +9,15 @@ $( document ).ready(function() {
 	$( "#todays_date" ).click(function(e) {
 		var d = new Date();
 		var td = (d.getMonth()+1)+'/'+d.getDate()+'/'+d.getFullYear();
-		$("input[name*='whenpaid_']").val(td);
+		$("input[name*='whenpaid']").val(td);
 		e.preventDefault();
 	});
 
-
-	$( "#clear_dates" ).click(function(e) {
-		$("input[name*='whenpaid_']").val('');
-		e.preventDefault();
-	});
-
-
-	$( "#copy_default" ).click(function(e) {
-		e.preventDefault();
-		$("input[name*='actual_']").each(function() {
-			var dr = $(this).parents('td').prev('td').find('input').val();
-			$(this).val(dr);
-		});
-
-	});	
 });
 </script>
-<div class='row'><div class='col-md-10'><h2>Payroll</h2>
+<div class='row'><div class='col-md-10'>
+	
+<h2>Payroll</h2>
 <form action='admin_payroll.php' method='post'>
 <?php echo \Wbhkit\texty('searchstart', $searchstart, 'Search Start'); ?>
 <?php echo \Wbhkit\texty('searchend', $searchend, 'Search End'); ?>
@@ -39,111 +26,122 @@ $( document ).ready(function() {
 
 <?php
 
-// update data in database
 $weeknav = "<p><a href='admin_payroll.php?searchstart=$lastweekstart&searchend=$lastweekend'>last week</a> | <a href='admin_payroll.php'>this week</a> | <a href='admin_payroll.php?searchstart=$nextweekstart&searchend=$nextweekend'>next week</a></p>\n";
 echo $weeknav;
 
-echo "<form action='admin_payroll.php' method='post'>\n";
-echo \Wbhkit\hidden('ac', 'up');
-echo \Wbhkit\hidden('searchstart', $searchstart);
-echo \Wbhkit\hidden('searchend', $searchend);
+// list payroll items with delete button
+echo "<h2 class='mt-4'>Payroll Items (Claimed)</h2>\n";
+if (count($payrolls) ==0) {
+	echo "<p>None!</p>\n";
+}
+
+$last_when_paid = null;
+$last_teacher_name = null;
+$pay_teacher_total = null;
+$pay_date_total = null;
+$pay_grand_total = null;
+	
+	
+function total_row($name, $total) {
+	echo "<div class='row border-top mt-1'><div class='col-6'>Total for {$name}:</div><div class='col'><b>$total</b></div></div>\n";
+}
+function teacher_header($name) {
+	echo "<h4 class='mt-3'>{$name}</h4>\n";
+	
+}
+		
+foreach ($payrolls as $p) {
+	
+	//break it down by date
+	//within date, break it down by teacher
+	//show it in a way that doesn't take a ton of room
+	// show session number (which means you have to get it from db)
+	// are we getting primary id from payrolls?
+	
+	
+	if ($p->fields['when_paid'] != $last_when_paid) {
+		if ($last_when_paid != 0) {
+			total_row($last_teacher_name, $pay_teacher_total);
+			$pay_teacher_total = 0;
+			total_row($last_when_paid, $pay_date_total);
+			$pay_date_total = 0;
+		}
+		echo "<h3 class='mt-2'>".date('j-M-Y', strtotime($p->fields['when_paid']))."</h3>";
+		echo teacher_header($p->fields['teacher_name']);
+		
+	} elseif ($p->fields['teacher_name'] != $last_teacher_name) {
+		if ($last_teacher_name) {
+			total_row($last_teacher_name, $pay_teacher_total);
+			$pay_teacher_total = 0;
+		}
+		echo teacher_header($p->fields['teacher_name']);
+	}
+	echo "<div class='row'>\n";
+	echo "<div class='col-6'>({$p->fields['table_id']}) {$p->fields['title']} (".($p->fields['rank'] ? $p->fields['rank'] : 'show').")</div>";
+	echo "<div class='col'>{$p->fields['amount']} <span class='ml-3'><small>(<a href='admin_payroll.php?ac=del&pid={$p->fields['id']}&searchstart=$searchstart&searchend=$searchend'>delete</a>)</small></span></div>";
+	echo "</div>\n";
+
+	$pay_teacher_total += $p->fields['amount'];
+	$pay_date_total += $p->fields['amount'];
+	$pay_grand_total += $p->fields['amount'];
+	$last_teacher_name = $p->fields['teacher_name'];
+	$last_when_paid = $p->fields['when_paid'];
+	
+}
+
+total_row('Grand Total', $pay_grand_total);
+
+// list unclaimed items
+
+echo "<h2 class='mt-4'>Claims</h2>\n";
+
+$faculty  = \Teachers\get_all_teachers();
+$teacher_opts = \Teachers\teachers_dropdown_array(false, $faculty);
 
 
-$table_open = "<table class='table table-striped my-3'>
+echo "<table class='table table-striped my-3'>
 	<thead><tr>
-		<th>workshop</th>
-		<th>session #</th>
-		<th>default pay</th>
-		<th>actual pay</th>
-		<th>when paid</th>
+		<th>who</th>
+		<th>what</th>
+		<th>how much</th>
+		<th>when</th>
+		<th>action</th>
 	</thead><tbody>";
 
-		$teacher_id = 0;
-		$previous_wk = array();
-		$total_pay = $teacher_pay = 0;
-		
-		foreach ($workshops_list as $wk) {
-			
-			if ($wk['teacher_id'] != $teacher_id) { // new teacher
-				if ($teacher_id != 0) {
-					show_teacher_totals($previous_wk, $teacher_pay);
-					echo "</tbody></table>\n";
-								}
-				//start new teacher section
-				$total_pay += $teacher_pay;
-				$teacher_pay = 0;
-				$teacher_id = $wk['teacher_id'];
-				
-				echo "<h2 class='my-3'>{$wk['teacher_name']}</h2>\n";
-				echo $table_open;
-				$teacher_id = $wk['teacher_id'];
-			}
-			
-			// class shows show up in every associated teacher's feed
-			// but only the show teacher gets paid for it
-			if ($wk['show_teacher_id'] == 0 || $teacher_id == $wk['show_teacher_id']) {
-				echo "<tr>
-				<td width='300'><a href='admin_edit2.php?wid={$wk['id']}'>{$wk['title']}</a> <small>({$wk['start']})</small></td>
-				<td>".($wk['class_show'] ? "<b>show</b>" : "{$wk['rank']}")."</td>
-				<td class='tdr'>".\Wbhkit\texty(
-						"tdr_{$wk['id']}_{$wk['xtra_id']}_{$wk['show_id']}", 
-						$wk['teacher_default_rate'],
-						0)."</td>
-				<td class='or'>".\Wbhkit\texty(
-						"actual_{$wk['id']}_{$wk['xtra_id']}_{$wk['show_id']}", 
-						$wk['actual_pay'],
-						0)."</td>
-				<td>".\Wbhkit\texty(
-						"whenpaid_{$wk['id']}_{$wk['xtra_id']}_{$wk['show_id']}", 					set_when_paid_date($wk['when_teacher_paid']),
-						0)."</td>
-				</tr>\n";
-			
-				$teacher_pay += $wk['actual_pay'];
-			}
-						
-
-			$previous_wk = $wk; // remember this workshop during next loop
-		}
-		
-		show_teacher_totals($wk, $teacher_pay);
-		$total_pay += $teacher_pay;
-		
-		echo "<tr><td colspan='6'></td></tr>\n";
-		
-		echo "<tr><td>Total Pay:</td>
-		<td colspan=2>&nbsp;</td>
-		<td>{$total_pay}</td>
-		<td>&nbsp;</td>		
-		</tr>\n";
-		
-		echo "</tbody></table>\n";
-		
-		echo "<button id=\"todays_date\" class=\"btn btn-success m-1\"  role=\"button\">Make Paid Dates Today</a>\n";
-		echo "<button id=\"clear_dates\" class=\"btn btn-success m-1\"  role=\"button\">Clear All Paid Dates</a>\n";
-		echo "<button id=\"copy_default\" class=\"btn btn-success m-1\"  role=\"button\">Copy Default as Override</a>\n";
-		echo \Wbhkit\submit('Update');
-
-		
-		echo "</form>\n";
-		echo "</div></div>\n";
-
-
-function show_teacher_totals($wk, $teacher_pay) {
-	// wrap up previous teacher revenue
-	echo "<tr class=\"table-info\">
-		<td>{$wk['teacher_name']} pay:</td>
-	<td colspan=2>&nbsp;</td>
-	<td>{$teacher_pay}</td>
-	<td>&nbsp;</td>
-	</tr>\n";	
-}
+foreach ($claims as $c) {
 	
-
-function set_when_paid_date($ts) {
-	if ($ts === null || $ts == '') {
-		return null;
+	foreach ($payrolls as $p) {
+		if ($p->fields['task'] == $c['task'] && $p->fields['table_id'] == $c['table_id']) {
+			continue(2); // already claimed
+		}
 	}
-	return date('M d Y', strtotime($ts));
+	
+	$t = \Teachers\find_teacher_in_teacher_array($c['teacher_id'], $faculty);
+	if ($c['task'] == 'show') { $t['default_rate'] = $t['default_rate'] / 2; }
+	
+	echo "<form action='admin_payroll.php' method='post'>\n";
+	echo \Wbhkit\hidden('ac', 'add');
+	echo \Wbhkit\hidden('searchstart', $searchstart);
+	echo \Wbhkit\hidden('searchend', $searchend);
+	
+	echo "<tr>\n";
+	echo "<td>".\Wbhkit\drop("teacher_id", $teacher_opts, $c['teacher_id'], 
+	0)."</td>\n";
+	echo "<td>({$c['table_id']}) {$c['title']} (".($c['rank'] ? $c['rank'] : 'show').")</td>\n";
+	echo "<td>".\Wbhkit\texty("amount", $t['default_rate'], 0)."</td>\n";
+	echo "<td>".\Wbhkit\texty("when_paid", date("j-M-Y"), 0)."</td>\n";
+	echo "<td>".\Wbhkit\submit('claim')."</td>\n";
+	echo \Wbhkit\hidden("when_happened", $c['start']);
+	echo \Wbhkit\hidden("task", $c['task']);
+	echo \Wbhkit\hidden("table_id", $c['table_id']);
+	echo "</tr>\n";
+	echo "</form>\n";
+
+
 }
+echo "</tbody></table>\n";
+
+echo "<button id=\"todays_date\" class=\"btn btn-success m-1\"  role=\"button\">Make Paid Dates Today</a>\n";
+
 	
 ?>

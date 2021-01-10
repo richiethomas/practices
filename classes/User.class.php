@@ -3,9 +3,6 @@
 class User extends WBHObject {
 	
 	
-	public array $fields;	
-
-	
 	function __construct() {		
 		parent::__construct(); // load logger, lookups
 						

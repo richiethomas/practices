@@ -2,7 +2,6 @@
 
 class Enrollment extends WBHObject {
 	
-	public array $fields;	
 	public User $u;
 	public array $wk;
 	

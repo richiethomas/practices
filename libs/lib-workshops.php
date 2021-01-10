@@ -233,7 +233,7 @@ function get_workshops_list_no_html() {
 
 
 // data only, for admin_calendar
-function get_sessions_to_come() {
+function get_sessions_to_come(bool $get_enrollments = true) {
 	
 	// get IDs of workshops
 	$mysqlnow = date("Y-m-d H:i:s", strtotime("-3 hours"));
@@ -264,14 +264,18 @@ order by start asc");
 			$row['teacher_user_id'] = $teach['user_id'];
 		}
 		
-		foreach ($enrollments as $e_wid => $e_row) {
-			if ($row['id'] == $e_wid) {
-				$sessions[] = array_merge($row, $e_row);
-				continue(2);
+		if ($get_enrollments) {
+			foreach ($enrollments as $e_wid => $e_row) {
+				if ($row['id'] == $e_wid) {
+					$sessions[] = array_merge($row, $e_row);
+					continue(2);
+				}
 			}
+			$enrollments[$row['id']] = set_enrollment_stats(array('id' => $row['id'], 'capacity' => $row['capacity']));
+			$sessions[] = array_merge($row, $enrollments[$row['id']]);
+		} else {
+			$sessions[] = $row;
 		}
-		$enrollments[$row['id']] = set_enrollment_stats(array('id' => $row['id'], 'capacity' => $row['capacity']));
-		$sessions[] = array_merge($row, $enrollments[$row['id']]);
 	}
 	return $sessions;
 }
@@ -504,7 +508,7 @@ function get_class_shows($wk) {
 	while ($row = $stmt->fetch()) {
 		$cs = new \ClassShow();
 		$cs->set_into_fields($row);
-		$cs->format_start_end();
+		$cs->format_row();
 		$class_shows[] = $cs;
 	}
 	return $class_shows;

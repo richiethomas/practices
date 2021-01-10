@@ -4,7 +4,7 @@ using Bootstrap 4.5
 tested on PHP 7.4.2
 */
 
-define('TIMER', FALSE);
+define('TIMER', false);
 $start_hrtime = 0;
 if (TIMER) {
 	$start_hrtime=hrtime(true);
