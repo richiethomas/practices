@@ -168,7 +168,7 @@ class Enrollment extends WBHObject {
 	// this checks for open spots, and makes sure invites have gone out to anyone on waiting list
 	// i call this in places just to make sure i haven't neglected the waiting list
 	function check_waiting(array $wk) {
-		$wk = \Workshops\set_enrollment_stats($row); // make sure it's up to date
+		$wk = \Workshops\set_enrollment_stats($wk); // make sure it's up to date
 		$msg = '';
 		if ($wk['upcoming'] == 0) {
 			return 'Workshop is in the past';

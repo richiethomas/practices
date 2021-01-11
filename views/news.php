@@ -88,16 +88,17 @@ Peter P,
 Martin B,
 Melissa S,
 Peter T,
-Erick A</p>
+Erick A,
+James J</p>
 
 
 <p><b>SCOTLAND</b> -
 Sharpie,
 Chris M,
 Jordana M,
-Al D,
 David B,
-Flaviu</p>
+Flaviu,
+Karen D</p>
 
 <p>5pm Teams</p>
 
