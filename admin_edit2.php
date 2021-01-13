@@ -15,7 +15,6 @@ if ($guest_id > 0) {
 }
 
 
-
 switch ($ac) {
 
 
@@ -54,7 +53,6 @@ switch ($ac) {
 		break;
 		
 	case 'cw':
-		$e = new Enrollment();
 		$message = $e->check_waiting($wk);
 		break;
 

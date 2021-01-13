@@ -87,7 +87,7 @@ function confirm_email($e, $status_id = ENROLLED) {
 			}
 			
 			if ($wk['cost'] > 0) {
-				$point .= "<p>Payment due by start of class. Send \${$wk['cost']} (USD) via Venmo @willhines or PayPal payments@wgimprovschool.com</p>";
+				$point .= "<p>Payment due by start of class. Send \${$wk['cost']} (USD) via Venmo @wgimprovschool or PayPal payments@wgimprovschool.com</p>";
 			}
 
 			$call = "To DROP, click here:\n{$drop}<br>If you drop within ".LATE_HOURS." hours of the start, you must still pay for your spot. Before that, full refund available.";
@@ -237,7 +237,7 @@ Zoom available at: http://www.zoom.us/</dd>
 <dd>Yes, use the link in your confirmation email to go to the web site, where you can drop out. If you drop within ".LATE_HOURS." of the start of class, you must still pay for your spot.</dd>
 
 <dt>How should I pay?</dt>
-<dd>Venmo @willhines, or paypal payments@wgimprovschool.com.</dd>
+<dd>Venmo @wgimprovschool, or paypal payments@wgimprovschool.com.</dd>
 
 <dt>What if I'm on a waiting list?</dt>
 <dd>You'll get an email the moment a spot opens up, with a link to ACCEPT or DECLINE.</dd>

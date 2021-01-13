@@ -176,11 +176,13 @@ class Enrollment extends WBHObject {
 		while (($wk['enrolled']+$wk['invited']) < $wk['capacity'] && $wk['waiting'] > 0) {
 		
 			$stmt = \DB\pdo_query("select * from registrations where workshop_id = :wid and status_id = '".WAITING."' order by last_modified limit 1", array(':wid' => $wk['id']));
+
 		
 			while ($row = $stmt->fetch()) {
-				$this->set_by_uid_wid($row['user_id'], $wk['id']);
 				$this->u = new User();
 				$this->u->set_by_id($row['user_id']);
+				$this->wk = $wk;
+				$this->set_by_uid_wid($this->u->fields['id'], $wk['id']);
 				$msg .= $this->change_status(INVITED, true);
 				
 				//adjust our totals so we don't get caught infinite loop!

@@ -111,7 +111,7 @@ class EnrollmentsHelper extends WBHObject {
 		$mysqlnow = date("Y-m-d H:i:s");
 	
 		$sql = "select *, r.id as enrollment_id 
-		from registrations r, workshops w, locations l 
+		from registrations r, workshops w, locations l
 		where r.workshop_id = w.id 
 		and w.location_id = l.id 
 		and r.user_id = :uid 
@@ -131,23 +131,11 @@ class EnrollmentsHelper extends WBHObject {
 		$past_classes = array();
 		$e = new Enrollment();
 		foreach ($rows->data as $d) {
-		
-			// build a workshop array from data we have
-			$wk_fields = \Workshops\get_empty_workshop();
-			foreach ($wk_fields as $field => $fieldvalue) {
-				$wk[$field] = $d[$field];
-			}
-			$wk['id'] = $d['workshop_id']; // make sure id is correct
-			$wk = \Workshops\fill_out_workshop_row($wk);
-			$d['soldout'] = $wk['soldout'];
-			$d['upcoming'] = $wk['upcoming'];
-			$d['when'] = $wk['when'];
-			$d['sessions'] = $wk['sessions'];
-			$d['teacher_name'] = $wk['teacher_name'];
-			$d['teacher_id'] = $wk['teacher_id'];
+			$d = \Workshops\fill_out_workshop_row($d);
 			if ($d['status_id'] == WAITING) {
-				$e->set_by_u_wk($u, $wk); 
-				$d['rank'] = $e->fields['rank']; 
+				$e->fields['id'] = $d['enrollment_id'];
+				$e->fields['workshops_id'] = $d['id']; 
+				$d['rank'] = $e->figure_rank();
 			} else {
 				$d['rank'] = null;
 			}
