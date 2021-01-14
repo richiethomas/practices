@@ -51,8 +51,8 @@ function textarea($key, $value = null, $label = null, $rows = 5, $cols = 40, $he
 	return $ta;
 }
  
-function hidden($key, $value = '') {
-	return "<input type='hidden' name='$key' value='$value'>\n";
+function hidden($key, $value = '', $showid = false) {
+	return "<input type='hidden' ".($showid ? "id='$key'" : '')." name='$key' value='$value'>\n";
 }
 
 function submit($value = 'Submit') {

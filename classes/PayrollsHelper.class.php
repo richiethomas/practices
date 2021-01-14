@@ -84,18 +84,26 @@ class PayrollsHelper extends WBHObject {
 		':when_paid' => date('Y-m-d H:i:s', strtotime($when_paid)),
 		':when_happened' => date('Y-m-d H:i:s', strtotime($when_happened)));
 		
-		$stmt = \Db\pdo_query("update payrolls 
-			set teacher_id = :teacher_id, 
-		amount = :amount, 
-		when_paid = :when_paid, 
-		when_happened = :when_happened 
-		where task = :task and table_id = :table_id", $params);
-		if ($stmt->rowCount() == 0) {
+		$exists = false;
+		$stmt = \DB\pdo_query("select * from payrolls where task = :task and table_id = :table_id", array(':task' => $task, ':table_id' => $table_id));
+		while ($row = $stmt->fetch()) {
+			$exists = true;
+		}
+		
+		if ($exists) {
+			$stmt = \DB\pdo_query("update payrolls 
+				set teacher_id = :teacher_id, 
+			amount = :amount, 
+			when_paid = :when_paid, 
+			when_happened = :when_happened 
+			where task = :task and table_id = :table_id", $params);
+		} else {
 			$stmt = \DB\pdo_query("insert into payrolls 
 				(task, table_id, teacher_id, amount, when_paid, when_happened)
 				VALUES (:task, :table_id, :teacher_id, :amount, :when_paid, :when_happened)", $params);
+			
 		}
-		return $stmt->rowCount();
+		return true;
 	}	
 }
 	

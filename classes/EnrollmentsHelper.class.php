@@ -110,7 +110,7 @@ class EnrollmentsHelper extends WBHObject {
 		}
 		$mysqlnow = date("Y-m-d H:i:s");
 	
-		$sql = "select *, r.id as enrollment_id 
+		$sql = "select *, r.id as enrollment_id, r.paid 
 		from registrations r, workshops w, locations l
 		where r.workshop_id = w.id 
 		and w.location_id = l.id 
@@ -131,7 +131,10 @@ class EnrollmentsHelper extends WBHObject {
 		$past_classes = array();
 		$e = new Enrollment();
 		foreach ($rows->data as $d) {
-			$d = \Workshops\fill_out_workshop_row($d);
+			$d = \Workshops\fill_out_workshop_row($d, false);
+			
+//			print_r($d);
+			
 			if ($d['status_id'] == WAITING) {
 				$e->fields['id'] = $d['enrollment_id'];
 				$e->fields['workshops_id'] = $d['id']; 

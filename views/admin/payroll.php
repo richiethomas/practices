@@ -12,8 +12,27 @@ $( document ).ready(function() {
 		$("input[name*='whenpaid']").val(td);
 		e.preventDefault();
 	});
+	$( "#this_date" ).click(function(e) {
+		var td = $('#this_date_val').val();
+		$("input[name*='whenpaid']").val(td);
+		e.preventDefault();
+	});
 
 });
+
+
+function single_claim(task, tableid) {
+	var id = 'pd_'+task+'_'+tableid+'_';
+	var amt = document.getElementById(id+'amount').value;
+	var wp = document.getElementById(id+'whenpaid').value;
+	var wh = document.getElementById(id+'whenhappened').value;
+	var tid = document.getElementById(id+'teacherid').value;
+	var link =encodeURI( '?ac=singleadd&task='+task+'&table_id='+tableid+'&amount='+amt+'&teacher_id='+tid+'&when_paid='+wp+'&when_happened='+wh);
+	//console.log(link);
+	window.location.href = link;
+	return false;
+}
+
 </script>
 <div class='row'><div class='col-md-10'>
 	
@@ -101,6 +120,11 @@ $faculty  = \Teachers\get_all_teachers();
 $teacher_opts = \Teachers\teachers_dropdown_array(false, $faculty);
 
 
+echo "<form action='admin_payroll.php' method='post'>\n";
+echo \Wbhkit\hidden('ac', 'add');
+echo \Wbhkit\hidden('searchstart', $searchstart);
+echo \Wbhkit\hidden('searchend', $searchend);
+
 echo "<table class='table table-striped my-3'>
 	<thead><tr>
 		<th>who</th>
@@ -112,6 +136,7 @@ echo "<table class='table table-striped my-3'>
 
 foreach ($claims as $c) {
 	
+	
 	foreach ($payrolls as $p) {
 		if ($p->fields['task'] == $c['task'] && $p->fields['table_id'] == $c['table_id']) {
 			continue(2); // already claimed
@@ -120,30 +145,25 @@ foreach ($claims as $c) {
 	
 	$t = \Teachers\find_teacher_in_teacher_array($c['teacher_id'], $faculty);
 	if ($c['task'] == 'show') { $t['default_rate'] = $t['default_rate'] / 2; }
-	
-	echo "<form action='admin_payroll.php' method='post'>\n";
-	echo \Wbhkit\hidden('ac', 'add');
-	echo \Wbhkit\hidden('searchstart', $searchstart);
-	echo \Wbhkit\hidden('searchend', $searchend);
+		
+	$id = "pd_{$c['task']}_{$c['table_id']}_";
 	
 	echo "<tr>\n";
-	echo "<td>".\Wbhkit\drop("teacher_id", $teacher_opts, $c['teacher_id'], 
+	echo "<td>".\Wbhkit\drop("{$id}teacherid", $teacher_opts, $c['teacher_id'], 
 	0)."</td>\n";
 	echo "<td>{$c['title']} <small>(".date('D ga', strtotime($c['start'])).' #'.($c['rank'] ? $c['rank'] : 'show').")</small></td>\n";
-	echo "<td>".\Wbhkit\texty("amount", $t['default_rate'], 0)."</td>\n";
-	echo "<td>".\Wbhkit\texty("when_paid", date("j-M-Y"), 0)."</td>\n";
-	echo "<td>".\Wbhkit\submit('claim')."</td>\n";
-	echo \Wbhkit\hidden("when_happened", $c['start']);
-	echo \Wbhkit\hidden("task", $c['task']);
-	echo \Wbhkit\hidden("table_id", $c['table_id']);
+	echo "<td>".\Wbhkit\texty("{$id}amount", $t['default_rate'], 0)."</td>\n";
+	echo "<td>".\Wbhkit\texty("{$id}whenpaid", date("j-M-Y"), 0)."</td>\n";
+	echo "<td><button class='btn btn-success btn-sm' onClick=\"return single_claim('".$c['task']."', '".$c['table_id']."')\">Claim</button></td>\n";
+	echo \Wbhkit\hidden("{$id}whenhappened", $c['start'], true);
 	echo "</tr>\n";
-	echo "</form>\n";
-
 
 }
 echo "</tbody></table>\n";
+echo \Wbhkit\submit("Submit All Claims");
+echo "</form>\n";
 
-echo "<button id=\"todays_date\" class=\"btn btn-success m-1\"  role=\"button\">Make Paid Dates Today</a>\n";
+echo "<button id=\"todays_date\" class=\"btn btn-success m-1\"  role=\"button\">Make Paid Dates Today</button> | <button id=\"this_date\" class=\"btn btn-success m-1\"  role=\"button\">Use This Date:</button><input type='text' class='mx-md-1' id='this_date_val' name='this_date_val'  value='".date("j-M-Y")."'>\n";
 
 	
 ?>
