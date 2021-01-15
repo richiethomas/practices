@@ -29,8 +29,8 @@
 	  
 	  <div class="row news-summary pb-4">
 		<div class="col-12 d-flex align-items-start justify-content-start ">
-		  <span class="badge badge-pill badge-primary h6"><a class="text-light" href="news.php">Shows and Jams</a></span>
-		  <span class="h6 news-item pl-1"> - <a href="news.php">shows/jams</a> page for details!</span>
+		  <span class="badge rounded-pill bg-primary h6 mx-2"><a class="text-light" href="news.php">Shows and Jams</a></span>
+		  <span class="h6 news-item pl-1"> See the <a href="news.php">shows/jams</a> page for details!</span>
 		</div>
 	  </div>
 	  
@@ -64,10 +64,10 @@ if (count($unavailable_workshops) > 0) {
 				$classes_shown++; // count how many classes we actually list
 				
 		?>
-  	  <div class="row justify-content-between">
+  	  <div class="row justify-content-between mt-3">
 		
 			<div class="col-md-11 classes-listings-class mb-5">
-			  <h3 class="m-3 p-3 border-top"><a href="workshop.php?wid=<?php echo $wk['id']; ?>"><?php echo $wk['title'];?></a></h3>
+			  <h3 class="my-3 py-3 border-top"><a href="workshop.php?wid=<?php echo $wk['id']; ?>"><?php echo $wk['title'];?></a></h3>
 			  <p><?php
 				  if ($wk['soldout']) { echo "<span class=\"text-danger\">Sold Out!</span> - ";  } 
 				  echo $wk['notes']; 
