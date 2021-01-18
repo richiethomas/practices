@@ -83,28 +83,43 @@ function confirm_email($e, $status_id = ENROLLED) {
 			$textpoint = $point." ";
 
 			if ($wk['location_id'] == ONLINE_LOCATION_ID) {
-				$point .= "<p>The Zoom link to your workshop is: {$wk['online_url']}. That should start working about five minutes before your class starts.</p>";
+				$point .= "<p>ZOOM LINK:<br>\n----------<br>\nThe Zoom link to your workshop is: {$wk['online_url']}. Try to show up 2-3 minutes early if you can so we can get started right away.  If your class is multiple sessions, that link should work for all of them. We'll send you an email if we need to change it.</p>";
 			}
 			
 			if ($wk['cost'] > 0) {
-				$point .= "<p>Payment due by start of class. Send \${$wk['cost']} (USD) via Venmo @wgimprovschool or PayPal payments@wgimprovschool.com</p>";
+				$point .= "<p>PAYMENT:<br>\n--------<br>\nClass costs \${$wk['cost']} (USD). You can't pay on our web site. Instead, pay via Venmo @wgimprovschool or PayPal payments@wgimprovschool.com. It's due by the start of class. Once payment comes in, you'll get another email confirming that it was received.</p>";
 			}
 
-			$call = "To DROP, click here:\n{$drop}<br>If you drop within ".LATE_HOURS." hours of the start, you must still pay for your spot. Before that, full refund available.";
+			$call = "<p>CLASS INFO<br>\n----------<br>\nDescription and times/dates are both in this email and also listed here:<br>\n{$trans}</p><p>DROPPING THE CLASS<br>\n------------------<br>\nIf you need to drop, you can do it yourself on the web site at the class info link (just above this paragraph). That way if there's a waiting list, the next person will be automatically invited. If you're dropping a paid class within ".LATE_HOURS." of the start, please pay anyway. Earlier than that, no need to pay.</p>";
 
 			$send_faq = false;
 			break;
 		case WAITING:
 			$sub = "WAIT LIST: {$wk['title']}";
-			$point = "You are WAIT LIST spot {$e->fields['rank']} for \"{$wk['title']}\".";
+			$point = "You are on the WAIT LIST for \"{$wk['title']}\", spot {$e->fields['rank']}";
 			$textpoint = $point." ";
-			$call = "To DROP, click here:\n{$drop}";
+			
+			$call = "<p>WHAT DOES 'WAIT LIST' MEAN?<br>
+---------------------------<br>
+It means if someone drops the class, you'll get an email inviting you to join. At that point, you can accept or decline the spot.</p>
+
+DROPPING OUT:<br>
+------------------<br>
+If you know you're not going to want a spot, you can drop the class on the web site here: <br>
+{$trans}<br><br>
+That way if a spot opens up, we won't be waiting for you to tell us you don't want the spot.</p>";
 			break;
+			
 		case INVITED:
 			$sub = "INVITED: {$wk['title']} -- PLEASE RESPOND";
-			$point = "You are INVITED to enroll in ({$wk['title']}.";
-			$textpoint = $point." ACCEPT or DECLINE: ";
-			$call = "To ACCEPT, click here:\n{$accept}<br><br>To DECLINE, click here:\n{$decline}";
+			$point = "A spot opened in ({$wk['title']}. Wnt it?";
+			$textpoint = $point;
+			$call = "<p>DO YOU WANT THE SPOT? - PLEASE CLICK AND ANSWER<br>
+----------------------<br>
+Please GO TO THIS LINK where you can click ACCEPT OR DECLINE the spot.<br>
+{$trans}<br
+Others might be waiting for the spot if you don't want it.</p>";
+
 			break;
 		case DROPPED:
 			$sub = "DROPPED: {$wk['title']}";
@@ -124,7 +139,7 @@ function confirm_email($e, $status_id = ENROLLED) {
 		default:
 			$statuses = $lookups->statuses;
 			$sub = "{$statuses[$status_id]}: {$wk['title']}";
-			$point = "You are a status of '{$statuses[$status_id]}' for {$wk['title']}";
+			$point = "You have a status of '{$statuses[$status_id]}' for {$wk['title']}";
 			$textpoint = $point." ";
 			break;
 	}
@@ -147,7 +162,7 @@ function confirm_email($e, $status_id = ENROLLED) {
 
 <p>$call</p>
 
-<p>Summary of class infomation:<br>
+<p>CLASS INFORMATION<br>
 --------------------------------<br>
 <b>Title:</b> {$wk['title']}<br>
 <b>Teacher:</b> {$wk['teacher_name']}<br>
@@ -155,6 +170,7 @@ function confirm_email($e, $status_id = ENROLLED) {
 <b>Cost:</b> \${$wk['cost']} USD<br>".
 ($status_id == ENROLLED ? "<b>Zoom link:</b> {$wk['online_url']}" : "<b>Zoom link</b>: We'll email you the zoom link if/once you are enrolled.")."<br>
 <b>Description:</b> {$wk['notes']}</p>
+<p>Web page for this class:<br>\n{$trans}</p>
 
 $notifications
 
@@ -205,7 +221,7 @@ function shorten_link($link) {
 
 
 function get_dropping_late_warning() {
-	return "NOTE: You are dropping within ".LATE_HOURS." hours of the start. Please still pay for your spot!";
+	return "NOTE: You are dropping within ".LATE_HOURS." hours of the start. If this class was sold out and you had your spot for a while, please still pay for it. If you're not sure if you should, sent an email to payments@wgimprovschool.com and ask.";
 	
 }
 
@@ -221,8 +237,8 @@ $faqadd
 
 <p>Thanks!</p>
 
-<p>-Will Hines<br>
-HQ: 1948 Hillhurst Ave. Los Angeles, CA 90027</p>";
+<p>World's Greatest Improv School<br>
+<a href='http://www.wgimprovschool.com/'>http://www.wgimprovschool.com/</a></p>";
 }
 
 function get_faq() {

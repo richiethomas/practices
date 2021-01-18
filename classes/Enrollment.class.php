@@ -104,8 +104,16 @@ class Enrollment extends WBHObject {
 
 		// workshop full or nah?
 		if ($target_status == SMARTENROLL) {
-			$target_status = ($wk['enrolled'] + $wk['invited'] + $wk['waiting'] < $wk['capacity']) ? ENROLLED : WAITING;
-			//echo "({$wk['enrolled']} + {$wk['invited']} + {$wk['waiting']} < {$wk['capacity']}) = status $target_status, also eid = {$this->fields['id']}<br>";
+			
+			if ($this->fields['status_id'] == ENROLLED) {
+				$target_status = ENROLLED;
+				return $this->message = "user {$u->fields['email']} ({$u->fields['id']}) was already status $target_status for {$wk['title']} ({$wk['id']})";
+				
+			} else {
+				$target_status = ($wk['enrolled'] + $wk['invited'] + $wk['waiting'] < $wk['capacity']) ? ENROLLED : WAITING;
+				//echo "({$wk['enrolled']} + {$wk['invited']} + {$wk['waiting']} < {$wk['capacity']}) = status $target_status, also eid = {$this->fields['id']}<br>";
+			}
+		
 		}
 		
 		// update or insert?

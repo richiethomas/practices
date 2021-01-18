@@ -31,7 +31,7 @@ if (isset($fb_image)) {
 	<header>
 	<nav class="navbar navbar-expand-md navbar-light bg-white container-lg container-fluid">
 		 <a class="navbar-brand" href="index.php"><span>World's Greatest Improv School</span></a>
-		  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+		  <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
 			<span class="navbar-toggler-icon"></span>
 		  </button>
 		  <div class="collapse navbar-collapse" id="navbarsExampleDefault">
@@ -47,7 +47,7 @@ if (isset($fb_image)) {
 					if (isset($nav_item['children'])){
 						?>
 						<li class="nav-item dropdown">
-							<a class="nav-link dropdown-toggle" href="#" id="dropdown<?php echo $i; $i++;?>" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><?php echo $nav_item['title']; ?></a>
+							<a class="nav-link dropdown-toggle" href="#" id="dropdown<?php echo $i; $i++;?>" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><?php echo $nav_item['title']; ?></a>
 							<div class="dropdown-menu" aria-labelledby="dropdown01">
 							<?php
 							foreach( $nav_item['children'] as $nav_item_child){
@@ -69,7 +69,7 @@ if (isset($fb_image)) {
 				<li class="nav-item"><a class="user-logged-in" href="you.php" title="User Profile"><span class="oi oi-person" title="person" aria-hidden="true"></span>  <?php echo "{$u->fields['nice_name']}"; ?></a></li>
 				
 				<?php } else { ?>
-			    <li class="nav-item"> <a class="btn btn-outline-primary my-2 my-sm-0" data-toggle="modal" data-target="#login-modal">Login</a></li>
+			    <li class="nav-item"> <a class="btn btn-outline-primary my-2 my-sm-0" data-bs-toggle="modal" data-bs-target="#login-modal">Login</a></li>
 			    <?php } ?>
 			</ul>
 		  </div>

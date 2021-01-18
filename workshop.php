@@ -27,7 +27,13 @@ if (Workshops\is_public($wk)) {
 			if ($e->change_status(SMARTENROLL)) {
 				// finicky confirmation message
 				if ($e->fields['status_id'] == ENROLLED) {
-					$message = "'{$u->fields['nice_name']}' is now enrolled in '{$wk['title']}'! Info emailed to <b>{$u->fields['email']}</b>.";
+					$message = "'{$u->fields['nice_name']}' is now enrolled in '{$wk['title']}'!<ul><li>The zoom link, and other class info, was just emailed to <b>{$u->fields['email']}</b></li>";
+					
+					if ($wk['cost'] > 0) {
+						$message .= "<li>Payment ({$wk['cost']} USD) is due by start of class. Either venmo @wgimprovschool or paypal payments@wgimprovschool.com.</li>";
+					}
+					$message .= "<li>Any questions? Ask will@wgimprovschool.com. Thanks!</li></ul>\n";
+					
 				} elseif ($e->fields['status_id'] == WAITING) {
 					$message = "This practice is full. '{$u->fields['nice_name']}' is now on the waiting list.";
 				} 

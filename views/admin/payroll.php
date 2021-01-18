@@ -96,7 +96,7 @@ foreach ($payrolls as $p) {
 		echo teacher_header($p->fields['teacher_name']);
 	}
 	echo "<div class='row'>\n";
-	echo "<div class='col-6'>{$p->fields['title']} <small>(".date('D ga', strtotime($p->fields['start'])).' #'.($p->fields['rank'] ? $p->fields['rank'] : 'show').")</small></div>";
+	echo "<div class='col-6'>{$p->fields['title']} <small>(".date('D M j ga', strtotime($p->fields['start'])).' #'.($p->fields['rank'] ? $p->fields['rank'] : 'show').")</small></div>";
 	echo "<div class='col'>{$p->fields['amount']} <span class='ml-3'><small>(<a href='admin_payroll.php?ac=del&pid={$p->fields['id']}&searchstart=$searchstart&searchend=$searchend'>delete</a>)</small></span></div>";
 	echo "</div>\n";
 
