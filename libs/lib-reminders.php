@@ -1,7 +1,7 @@
 <?php
 namespace Reminders;
 
-define('REMINDER_TEST',false);
+define('REMINDER_TEST', false);
 
 function get_reminders($how_many = 100) {
 	
@@ -103,19 +103,27 @@ function remind_enrolled($class) {
 		// add note if student has to pay
 		$note = $reminder['note'];
 		if (!$std['paid'] && $wk['cost']) {
-			$note .= "<p>Our records show you have not yet paid. Just a reminder: payment is due by the start of class. Send {$wk['cost']} USD via venmo @willhines or paypal whines@gmail.com.<br>
+			$note .= "<p>PAYMENT<br>
+-------<br>
+Our records show you have not yet paid. That's fine! This is just a reminder: payment is due by the start of class. Send {$wk['cost']} USD via venmo @wgimprovschool or paypal payments@wgimprovschool.com.<br>
 Questions/concerns: ".WEBMASTER."</p>";
 		}
-		$base_msg =	$note.\Emails\get_workshop_summary($wk);
-		
 		
 		$trans = URL."workshop.php?key={$std['ukey']}&wid={$wk['id']}";
-		$msg = $base_msg."<p>Class info online:<br>$trans</p>\n";
+
+		$note .= "<p>DROPPING OUT / OTHER CLASS INFO<br>\n
+---------------------------------<br>\n
+If you need to drop the class (and it's before the first week), you can do so on this web site at this link. That way if someone is on the waiting list, we can notify them right away they have a chance to join.<br>
+{$trans}</p>\n
+";
 		
-		//\Emails\centralized_email('whines@gmail.com', $subject, $msg); // for testing, i get everything
+		$base_msg =	$note.\Emails\get_workshop_summary($wk)."<br>
+Class info on web site: $trans";
+				
+		//\Emails\centralized_email('whines@gmail.com', $subject, $base_msg); // for testing, i get everything
 
 		if (!LOCAL || REMINDER_TEST) {
-			\Emails\centralized_email($std['email'], $subject, $msg);
+			\Emails\centralized_email($std['email'], $subject, $base_msg);
 			$guest->set_by_id($std['id']);
 			\Emails\send_text($guest, $sms); // routine will check if they want texts and have proper info
 		}
@@ -184,14 +192,17 @@ function get_reminder_message_data($wk, $xtra, $cs, $teacher = false) {
 	
 	if ($wk['location_id'] == ONLINE_LOCATION_ID) {
 		
-		$note .= "<p>Here's the zoom link: $link</p>\n";  
+		$note .= "<p>ZOOM LINK:<br>
+Here's the zoom link. Try to sign in a few minutes early if you can.<br>
+$link</p>\n";  
 		// should be workshop url or xtra_session url, set in lib_workshops.php fill_out_workshop_row
 		if ($link != $wk['online_url']) {
 			$note .= "<p>Please note: this is a DIFFERENT LINK than you usually use for this class!</p>\n";
-		}
+		}		
 		
 		if ($cs->fields['id']) {
-			$note .= "<p>Invite your friends and family to watch the show at the Twitch channel:<br>https://www.twitch.tv/wgimprovschool</p>\n";
+			$note .= "<p>Invite your friends and family to watch the show at the Twitch channel:<br>
+https://www.twitch.tv/wgimprovschool</p>\n";
 		}
 	}			
 	

@@ -10,9 +10,10 @@
 
 <p><b>Earlier times: 11am and 5pm PST (California time)</b></p>
 
-<p><a href="https://us02web.zoom.us/j/84345581543?pwd=M2o5bllONE8zalhIQnFZdHdmVGsyZz09">https://us02web.zoom.us/j/84345581543?pwd=M2o5bllONE8zalhIQnFZdHdmVGsyZz09</a><br>
-Meeting ID: 843 4558 1543<br>
-Passcode: 077289</p>
+<p>NEW LINK AS OF JAN 17 and going forward<br>
+<a href="https://zoom.us/j/94363676979?pwd=aGdtTVA5c216N3AycDRxM1NHYzc2UT09">https://zoom.us/j/94363676979?pwd=aGdtTVA5c216N3AycDRxM1NHYzc2UT09</a><br>
+Meeting ID: 943 6367 6979<br>
+Passcode: 129538</p>
 
 <h2 class="my-4">Thursday Shows</h2>
 

@@ -68,7 +68,7 @@
 			<li><hr/></li>
 			<li class="nav-item"><a class="nav-link" href="admin_reminders.php">Reminders</a></li>
     <li class="nav-item dropdown">
-      <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Logs</a>
+      <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Logs</a>
       <div class="dropdown-menu nav-item">
         <a class="dropdown-item nav-link" href="admin_debug_log.php">Debug Log</a>
         <a class="dropdown-item nav-link" href="admin_error_log.php">Error Log</a>
