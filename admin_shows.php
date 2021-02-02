@@ -2,7 +2,7 @@
 $heading = "class shows";
 include 'lib-master.php';
 
-Wbhkit\set_vars(array('ac', 'show_id', 'start', 'end', 'online_url', 'actual_pay', 'teacher_id', 'wid', 'when_teacher_paid', 'reminder_sent'));
+Wbhkit\set_vars(array('ac', 'show_id', 'start', 'end', 'online_url', 'teacher_id', 'wid', 'reminder_sent'));
 
 $cs = new ClassShow();
 
@@ -17,9 +17,7 @@ if ($ac == 'ad' || $ac == 'up') {
 			'start' => $start,
 			'end' => $end,
 			'online_url' => $online_url,
-			'actual_pay' => $actual_pay,
 			'teacher_id' => $teacher_id,
-			'when_teacher_paid' => $when_teacher_paid,
 			'reminder_sent' => $reminder_sent));
 }
 

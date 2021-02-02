@@ -58,10 +58,17 @@ echo "
 <h2>{$wk['title']}</h2>
 <p>{$wk['notes']}</p>
 <p>{$wk['full_when']} (".TIMEZONE.")<br><br>
-{$wk['costdisplay']}, {$wk['enrolled']} (of {$wk['capacity']}) enrolled, ".($wk['waiting']+$wk['invited'])." waiting</p>
-</div>
+{$wk['costdisplay']}, {$wk['enrolled']} (of {$wk['capacity']}) enrolled, ".($wk['waiting']+$wk['invited'])." waiting</p>\n";
 
-<div class='col-sm-6'>
+if ($e->fields['status_id'] == ENROLLED && $wk['location_id'] == ONLINE_LOCATION_ID) {
+	
+	echo "<p class='alert alert-success'><b>Zoom link</b>:<br>{$wk['online_url']}</p>\n";
+	
+}
+echo "</div>\n";
+
+
+echo "<div class='col-sm-6'>
 <figure class=\"figure\">
 <a href='teachers.php?tid={$wk['teacher_id']}'><img class='img-fluid border figure-img rounded' src='".\Teachers\get_teacher_photo_src($wk['teacher_user_id'])."'></a>
   <figcaption class=\"figure-caption\"><b>Teacher: <a href='teachers.php?tid={$wk['teacher_id']}'>{$wk['teacher_name']}</a></b></figcaption>

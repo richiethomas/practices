@@ -2,18 +2,6 @@
 	<div class="admin-box" id="admin-box-upcoming-workshops">
 		<div class="admin-box-title">
 			<h5>Upcoming Workshops</h5>
-			
-			<div class="admin-box-title-toolbar-items">
-				<span id="admin-box-upcoming-workshops-teacher-filter-class-count"></span>
-				<select id="admin-box-upcoming-workshops-teacher-filter">
-					<option value="*">All Teachers</option>
-					<?php
-					foreach ($faculty as $teacher) {
-						echo "<option value='{$teacher['id']}'>{$teacher['nice_name']}</option>";
-					}
-					?>
-				</select>
-			</div>
 		</div>
 		<div class="admin-box-content">
 			<p><i>(paid / enrolled / capacity / waiting)</i></p>

@@ -1,6 +1,3 @@
 <?php
-$heading = 'shows and jams';
-include 'lib-master.php';
-
-
-$view->renderPage('news');
+header("Location: /shows.php");
+die();

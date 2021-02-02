@@ -16,10 +16,8 @@ class ClassShow extends WBHObject {
 				'start' => null,
 				'end' => null,
 				'teacher_id' => null,
-				'actual_pay' => null,
 				'online_url' => null,
-				'reminder_sent' => 0,
-				'when_teacher_paid' => null);
+				'reminder_sent' => 0);
 				
 		$this->cols = $this->fields; // let fields be given extra cols later
 		
@@ -31,8 +29,6 @@ class ClassShow extends WBHObject {
 	function format_row() {
 		$this->set_mysql_datetime_field('start', $this->fields['start']);
 		$this->set_mysql_datetime_field('end', $this->fields['end']);
-		$this->set_mysql_datetime_field('when_teacher_paid', $this->fields['when_teacher_paid']);
-		if (!$this->fields['actual_pay']) { $this->fields['actual_pay'] = 0; }
 		if (!$this->fields['reminder_sent']) { $this->fields['reminder_sent'] = 0; }
 		$this->fields['friendly_when'] = \Wbhkit\friendly_when($this->fields['start']).'-'.\Wbhkit\friendly_time($this->fields['end']);
 	}	

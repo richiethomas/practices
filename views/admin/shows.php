@@ -11,8 +11,6 @@ echo
 	\Wbhkit\texty('end', \Wbhkit\business_when($cs->fields['end'], true), null, null, null, 'Required', ' required ').
 	\wbhkit\texty('online_url', $cs->fields['online_url'], null, null, null, 'Required', ' required ').
 	\Wbhkit\drop('teacher_id', \Teachers\teachers_dropdown_array(true), $cs->fields['teacher_id'], 'Teacher', null, 'Required', ' required ').
-	\Wbhkit\texty('actual_pay', $cs->fields['actual_pay']).
-	\Wbhkit\texty('when_teacher_paid', \Wbhkit\business_when($cs->fields['when_teacher_paid'])).
 	\Wbhkit\checkbox('reminder_sent', 1, 'Reminder sent?', $cs->fields['reminder_sent']).
 	\Wbhkit\hidden('ac', $cs->fields['id'] ? 'up' : 'ad').
 	($cs->fields['id'] ? \Wbhkit\hidden('show_id', $cs->fields['id']) : '').

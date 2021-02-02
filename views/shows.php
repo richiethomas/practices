@@ -3,6 +3,21 @@
 	<div class="row justify-content-center">
 		<div class="col-md-10 col-12">
 
+<h2 class="my-4">Twitch Channel</h2>
+<p>All WGIS shows are on our Twitch channel: <a href="https://www.twitch.tv/wgimprovschool">https://www.twitch.tv/wgimprovschool</a></p>
+
+<h2 class="my-4">Three Me Up, Scotty!</h2>
+
+<img class='float-start me-4' src='images/3meup.jpg'>
+
+		<p><b>Three Me Up, Scotty</b> is a show for WGIS students to do 3prov. There are TWO Three Me Up Scotty shows each week!</p>
+		<ul>
+			<li>Monday 12:30pm PST -- Three Me Up Scotty, European Edition - hosted by Erick Acuna and Christne Simpson</li>
+			<li>Monday 6pm PST - Three Me Up Scotty - hosted by Elena Martinez and Ethan Smith</li>
+		</ul>
+		
+		<p>For the 6pm show, email threemeupscotty@gmail.com for information on getting a slow. Info coming on registering for the 12:30pm edition!</p>
+	
 
 <h2 class="my-4">Friday Jams</h2>
 
@@ -151,9 +166,5 @@ Harrison M</p>
 <h2 class="my-4">Facebook Group</h2>
 <p>The school has an optional Facebook group. This is for students to meet each other, plug show, ask questions etc.</p> 
 <p><a href="https://www.facebook.com/groups/wgimprovschool">https://www.facebook.com/groups/wgimprovschool</a></p>
-
-
-
-
 
 </div></div>

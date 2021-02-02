@@ -4,6 +4,23 @@ using Bootstrap 4.5
 tested on PHP 7.4.2
 */
 
+
+function get_nav_items(){
+	$nav_items = array();
+	//$nav_items[] = array('title' => "Classes", "href" => "classes.php");
+	//$nav_items[] = array('title' => "Home", "href" => "index.php");
+	$nav_items[] = array('title' => "Calendar", "href" => "calendar.php");
+	$nav_items[] = array('title' => "Teachers", "href" => "teachers.php");
+	$nav_items[] = array('title' => "About", "href" => "about_school.php", 'children' => array(
+
+		array('title' => "School", "href" => "about_school.php"),
+		array('title' => "Catalog", "href" => "about_catalog.php"),
+		array('title' => "How It Works", "href" => "about_works.php")
+	));
+	$nav_items[] = array('title' => "Shows / Jams", "href" => "shows.php");
+	return $nav_items;
+}
+
 define('TIMER', false);
 $start_hrtime = 0;
 if (TIMER) {
@@ -66,13 +83,11 @@ include 'libs/lib-logger.php';
 include 'libs/db_pdo.php';
 include 'libs/wbh_webkit.php';
 include 'libs/wbh_webkit_pagination.php';
-include 'libs/time_difference.php';
 include 'libs/lib-workshops.php';
 include 'libs/lib-emails.php';
 include 'libs/lib-xtra-sessions.php';
 include 'libs/lib-teachers.php';
 include 'libs/lib-reminders.php';
-include 'libs/lib-danny.php';
 	
 //include 'libs/lib-enrollments.php';
 //include 'libs/lib-lookups.php';
