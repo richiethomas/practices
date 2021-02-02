@@ -87,7 +87,7 @@ function confirm_email($e, $status_id = ENROLLED) {
 			}
 			
 			if ($wk['cost'] > 0) {
-				$point .= "<p>PAYMENT:<br>\n--------<br>\nClass costs \${$wk['cost']} (USD). You can't pay on our web site. Instead, pay via Venmo @wgimprovschool or PayPal payments@wgimprovschool.com. It's due by the start of class, no rush. Will sends out confirmation emails as he records payments -- depending on what time it is in California, that might take up to 12 hours, usually much faster.</p>";
+				$point .= "<p>PAYMENT:<br>\n--------<br>\nClass costs \${$wk['cost']} (USD). You can't pay on our web site. Instead, pay via Venmo @wgimprovschool or PayPal payments@wgimprovschool.com. It's due by the start of class, no rush. Once the payment is recorded, you'll get a confirmation email. That confirmatin email for your payment can take up to 12 hours to go out (usually a lot faster) because it's done manually by the stubborn man who built this web site.</p>";
 			}
 
 			$call = "<p>CLASS INFO<br>\n----------<br>\nDescription and times/dates are both in this email and also listed here:<br>\n{$trans}</p><p>DROPPING THE CLASS<br>\n------------------<br>\nIf you need to drop, you can do it yourself on the web site at the class info link (just above this paragraph). That way if there's a waiting list, the next person will be automatically invited. If you're dropping a paid class within ".LATE_HOURS." of the start, please pay anyway. Earlier than that, no need to pay.</p>";
