@@ -592,7 +592,7 @@ function get_cut_and_paste_roster($wk, $enrolled = null) {
 	
 }
 
-function get_recent_workshops_dropdown($limit = 25) {
+function get_recent_workshops_dropdown($limit = 40) {
 	$stmt = \DB\pdo_query("select * from workshops order by id desc limit $limit");
 	$all = array();
 	while ($row = $stmt->fetch()) {

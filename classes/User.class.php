@@ -48,7 +48,7 @@ class User extends WBHObject {
 			$this->get_key();
 			return true;
 		} else {
-			$this->error = "Invalid email: {$email}";
+			$this->error = "Invalid email: '{$email}'";
 		}
 		return false; // invalid email
 	}
@@ -127,10 +127,14 @@ class User extends WBHObject {
 			$key = $_COOKIE['c_key'];
 		}
 		$_SESSION['s_key'] = $key;
-		setcookie('c_key', $key, time() + 31449600); // a year!
+		$this->remember_key($key); // sets the cookie
 
 		// remember it, return it
 		return $key;
+	}
+
+	function remember_key($key) {
+		setcookie('c_key', $key, time() + 31449600); // a year!
 	}
 
 

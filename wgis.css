@@ -1,5 +1,9 @@
 @import url("shared.css");
 
+.hidden {
+	display: none;
+}
+
 /* Nav Bar */
 body:not(.home) header {
   margin-bottom: 3rem;

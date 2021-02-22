@@ -62,7 +62,7 @@ function submit($value = 'Submit') {
 function drop($name, $opts, $selected = null, $label = null, $help = null, $error = null, $validation = null) {
 	$l = label($label, $name);	
 	$select = form_element_start();	
-	$select .= "{$l} <select class='form-control' name='$name' id='$name'";
+	$select .= "{$l} <select class='form-select' name='$name' id='$name'";
 	if ($validation) { $select .= $validation; }
 	$select .= figure_aria_attribute($name, $help, $error);
 	$select .= "<option label=' ' value=''></option>\n";

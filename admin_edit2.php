@@ -71,6 +71,10 @@ switch ($ac) {
 	case 'enroll':
 		Wbhkit\set_vars(array('email', 'con'));
 		$guest->set_by_email($email);
+		if ($guest->error) {
+			$error = $guest->error;
+			break;
+		}
 		$e = new Enrollment();
 		$e->set_by_u_wk($guest, $wk);
 		$message = $e->change_status(ENROLLED, $con); 
@@ -114,6 +118,11 @@ switch ($ac) {
 				}
 			}		
 		}
+		break;
+		
+	case 'week':
+		$wk = \XtraSessions\add_a_week($wk);
+		break;
 							
 }
 

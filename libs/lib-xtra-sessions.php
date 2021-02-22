@@ -98,4 +98,24 @@ function delete_xtra_session($xtra_session_id) {
 	
 }
 
+function add_a_week($wk) {
+	//function add_xtra_session($workshop_id, $start, $end, $online_url = null) {
+
+	$start = $wk['start'];
+	$end = $wk['end'];
+	foreach ($wk['sessions'] as $s) {
+		$start = $s['start'];
+		$end = $s['end'];
+	}
+	
+	$start = date('Y-m-d H:i:s', strtotime("+1 week", strtotime($start)));
+	$end = date('Y-m-d H:i:s', strtotime("+1 week", strtotime($end)));
+	
+	add_xtra_session($wk['id'], $start, $end);
+	return \Workshops\fill_out_workshop_row($wk); 
+	
+	
+
+}
+
 	

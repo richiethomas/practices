@@ -21,10 +21,9 @@ class PayrollsHelper extends WBHObject {
 		$mysqlend = date("Y-m-d H:i:s", strtotime($end));
 
 		$stmt = \DB\pdo_query("select * from payrolls
-			where (when_paid > :start and when_paid < :end) or
-			(when_happened > :start2 and when_happened < :end2)
+			where (when_paid > :start and when_paid < :end) 
 		order by when_paid, teacher_id, task, table_id", 
-		array(':start' => $mysqlstart, ':end' => $mysqlend, ':start2' => $mysqlstart, ':end2' => $mysqlend));
+		array(':start' => $mysqlstart, ':end' => $mysqlend));
 
 		$this->payrolls = array();
 		while ($row = $stmt->fetch()) {
@@ -45,15 +44,15 @@ class PayrollsHelper extends WBHObject {
 		$mysqlend = date("Y-m-d H:i:s", strtotime($end));
 	
 		$stmt = \DB\pdo_query("
-	(select 'workshop' as task, w.id as table_id, w.title, w.start, w.teacher_id, 1 as rank
+	(select 'workshop' as task, w.id as table_id, w.title, w.start, w.teacher_id, 1 as rank, w.id as workshop_id
 	from workshops w
 	where w.start >= :start1 and w.start <= :end1)
 	union
-	(select 'class' as task, x.id as table_id, w.title, x.start, w.teacher_id, x.rank as rank
+	(select 'class' as task, x.id as table_id, w.title, x.start, w.teacher_id, x.rank as rank, w.id as workshop_id
 	from xtra_sessions x, workshops w
 	where w.id = x.workshop_id and x.start >= :start2 and x.start <= :end2)
 	union
-	(select 'show' as task, s.id as table_id, w.title, s.start, w.teacher_id, 0 as rank
+	(select 'show' as task, s.id as table_id, w.title, s.start, w.teacher_id, 0 as rank, w.id as workshop_id
 	from workshops_shows ws, workshops w, shows s
 	where w.id = ws.workshop_id and ws.show_id = s.id and s.start >= :start3 and s.start <= :end3)
 	order by teacher_id, task, start asc",

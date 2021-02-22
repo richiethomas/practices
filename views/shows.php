@@ -6,19 +6,25 @@
 <h2 class="my-4">Twitch Channel</h2>
 <p>All WGIS shows are on our Twitch channel: <a href="https://www.twitch.tv/wgimprovschool">https://www.twitch.tv/wgimprovschool</a></p>
 
-<h2 class="my-4">Three Me Up, Scotty!</h2>
-
-<img class='float-start me-4' src='images/3meup.jpg'>
-
-		<p><b>Three Me Up, Scotty</b> is a show for WGIS students to do 3prov. There are TWO Three Me Up Scotty shows each week!</p>
-		<ul>
-			<li>Monday 12:30pm PST -- Three Me Up Scotty, European Edition - hosted by Erick Acuna and Christne Simpson</li>
-			<li>Monday 6pm PST - Three Me Up Scotty - hosted by Elena Martinez and Ethan Smith</li>
-		</ul>
+		<h2 class="my-4">Three Me Up, Scotty!</h2>
+		<img src='images/3meup.jpg'>
 		
-		<p>For the 6pm show, email threemeupscotty@gmail.com for information on getting a slow. Info coming on registering for the 12:30pm edition!</p>
+				<p><b>Three Me Up, Scotty</b> is a show for WGIS students to do 3prov. There are TWO Three Me Up Scotty shows each week!</p>
+				<ul>
+					<li>Monday 12:30pm PST -- Three Me Up Scotty, European Edition - hosted by Erick Acuna and Christne Simpson
+			
+					<ul>
+						<li>To apply, fill out this form: <a href='https://forms.gle/978iYx5jzVGQtuZu6'>https://forms.gle/978iYx5jzVGQtuZu6</a></li>
+					</ul>
+					</li>
+					<li>Monday 6pm PST - Three Me Up Scotty - hosted by Elena Martinez and Ethan Smith
+					<ul>
+						<li>email threemeupscotty@gmail.com</li>
+					</ul>
+			
+					</li>
+				</ul>
 	
-
 <h2 class="my-4">Friday Jams</h2>
 
 <p>Friday Jams back January 8</p>
@@ -42,31 +48,31 @@ Passcode: 129538</p>
 11am: MAILBOX / POSTAGE<br>
 5pm: CURTAINS / BULLFROG</p>
 
-<p>January 14
+<p>January 14<br>
 11am: POSTAGE / SCOTLAND<br>
 5pm: BULLFROG / WATERSHIP</p>
 
-<p>January 21
+<p>January 21<br>
 11am: SCOTLAND / HORSE TRACK<br>
 5pm: WATERSHIP / PIONEER</p>
 
-<p>January 28
+<p>January 28<br>
 11am: HORSE TRACK / MAILBOX<br>
 5pm: PIONEER / CURTAINS</p>
 
-<p>February 4
+<p>February 4<br>
 11am: MAILBOX / SCOTLAND<br>
 5pm: CURTAINS / WATERSHIP</p>
 
-<p>February 11
+<p>February 11<br>
 11am: SCOTLAND / POSTAGE<br>
 5pm: WATERSHIP / BULLFROG</p>
 
-<p>February 18
+<p>February 18<br>
 11am: POSTAGE / HORSE TRACK<br>
 5pm: BULLFROG / PIONEER</p>
 
-<p>February 25
+<p>February 25<br>
 11am: HORSE TRACK / MAILBOX<br>
 5pm: PIONEER / CURTAINS</p>
 

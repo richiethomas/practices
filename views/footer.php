@@ -45,14 +45,46 @@
 				  xhr.onload = function() {
 				    console.log('Signed in as: ' + xhr.responseText);
 					createInput(xhr.responseText);
-					$("#google-signinbutton").hide();
-					$("#google-signout").show();
+					window.location.reload(true); 
 				  };
 				  xhr.send('idtoken=' + id_token);
 				}
+				
+				var initClient = function() {
+				    gapi.load('auth2', function(){
+				        /**
+				         * Retrieve the singleton for the GoogleAuth library and set up the
+				         * client.
+				         */
+				        auth2 = gapi.auth2.init({
+				            client_id: '989168310652-al6inpe49ep29r9i2ppb0t8j58k1pt22.apps.googleusercontent.com'
+				        });
+
+				        // Attach the click handler to the sign-in button
+				        auth2.attachClickHandler('signin-button', {}, onSuccess, onFailure);
+				    });
+				};
+
+				/**
+				 * Handle successful sign-ins.
+				 */
+				var onSuccess = function(user) {
+					$("#google-signinbutton").hide();
+					$("#google-signout").show();
+				    console.log('Signed in as ' + user.getBasicProfile().getName());
+				 };
+
+				/**
+				 * Handle sign-in failures.
+				 */
+				var onFailure = function(error) {
+					$("#google-signinbutton").show();
+					$("#google-signout").false();
+				    console.log(error);
+				};				
 
 				function createInput(key){
-				    var $input = $('<p>Connected to Google! <a class="btn btn-primary" href="index.php?key='+key+'">Log in to wgimprovschool.com</a></p>');
+				    var $input = $('<p>You are connected to Google! Now you can log in to this website: <a class="btn btn-primary" href="index.php?key='+key+'">Click here to log in to wgimprovschool.com</a></p>');
 				    $input.appendTo($("#google-authenticated"));
 				}
 
@@ -79,7 +111,8 @@
 
 		<h2>or 2) Sign in Via Google</h2>
 		<div id="google-signinbutton" class="g-signin2" data-onsuccess="onSignIn"></div> 
-		<p id="google-signout" class="my-3">Want to sign-out of Google? <a class="text-dark" href="#" onclick="signOut();">(Click here)</a></p>
+		
+		<p id="google-signout" class="my-3 hidden">Want to sign-out of Google? <a class="text-dark" href="#" onclick="signOut();">(Click here)</a></p>
 		<div id="google-authenticated"></div>
   
 	</div>
@@ -91,6 +124,13 @@
   </div>
 </div>
 </html>
+
+<script>
+$( document ).ready(function() {
+  $('#google-signout').removeClass('hidden');
+}
+</script>
+
 <?php
 if (TIMER) {
 	echo show_hrtime();

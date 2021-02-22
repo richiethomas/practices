@@ -57,15 +57,16 @@ echo "<div class='row mt-md-3 admin-edit-workshop'>\n";
 		//xtra sessions 
 		//echo  \Wbhkit\form_validation_javascript('xtra_edit');
 		echo  "<h2>Xtra Sessions</h2>";
+		echo "<ul>\n";
 		if (!empty($wk['sessions'])) {
-			echo "<ul>\n";
 			foreach ($wk['sessions'] as $s) {
 				echo "<li>({$s['rank']}) {$s['friendly_when']} <a href='$sc?ac=delxtra&xtraid={$s['id']}&wid={$wk['id']}'>delete</a>".($s['reminder_sent'] ? ' <em>- reminder sent</em>' : '').
 					($s['online_url'] ? "<ul><li><a href='{$s['online_url']}'>{$s['online_url']}</a></li></ul>" : '').
 					"</li>\n";
 			}
-			echo "</ul>\n";
 		}
+		echo "<li><a href='admin_edit2.php?ac=week&wid={$wk['id']}'>Add a week</a></li>\n";
+		echo "</ul>\n";
 		
 		echo "<form id='xtra_edit' action='$sc' method='post' novalidate>
 		<fieldset name=\"sessions_edit\">".

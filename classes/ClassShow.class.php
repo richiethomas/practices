@@ -41,7 +41,7 @@ class ClassShow extends WBHObject {
 			return false;
 		}
 		
-		$stmt = \DB\pdo_query("select ws.*, wk.title from workshops_shows ws, workshops wk where ws.workshop_id = wk.id and ws.show_id = :id order by id", array(':id' => $this->fields['id']));
+		$stmt = \DB\pdo_query("select ws.*, wk.title, wk.start from workshops_shows ws, workshops wk where ws.workshop_id = wk.id and ws.show_id = :id order by id", array(':id' => $this->fields['id']));
 		$this->wks = array();
 		while ($row = $stmt->fetch()) {
 			$this->wks[] = $row;

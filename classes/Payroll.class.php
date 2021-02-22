@@ -34,7 +34,7 @@ class Payroll extends WBHObject {
 		
 		if ($this->fields['task'] && $this->fields['table_id']) {
 			if ($this->fields['task'] == 'workshop') {
-				$stmt = \DB\pdo_query("select w.title, w.start, 1 as rank
+				$stmt = \DB\pdo_query("select w.title, w.start, 1 as rank, w.id as workshop_id
 					from workshops w
 				where w.id = :id",
 				 array(':id' => $this->fields['table_id']));
@@ -44,7 +44,7 @@ class Payroll extends WBHObject {
 			}
 
 			if ($this->fields['task'] == 'class') {
-				$stmt = \DB\pdo_query("select w.title, x.start, x.rank as rank
+				$stmt = \DB\pdo_query("select w.title, x.start, x.rank as rank, w.id as workshop_id
 					from workshops w, xtra_sessions x
 				where x.id = :id
 				and w.id = x.workshop_id ",
@@ -55,18 +55,20 @@ class Payroll extends WBHObject {
 			}
 
 			if ($this->fields['task'] == 'show') {
-				$stmt = \DB\pdo_query("select w.title, s.start , 0 as rank
+				$stmt = \DB\pdo_query("select w.title, s.start , 0 as rank, w.id as workshop_id
 					from workshops w, workshops_shows ws, shows s 
 				where s.id = :id
+				and ws.show_id = s.id 
 				and w.id = ws.workshop_id",
  
 				array(':id' => $this->fields['table_id']));
 				$titles = null;
 				while ($row = $stmt->fetch()) {
-					if ($titles) { $titles .= ", "; }
+					if ($titles) { $titles .= ",<br> "; }
 					$titles .= $row['title'];					
+					$this->set_into_fields($row);
 				}
-				$row['titles'] = $titles;
+				$row['title'] = $titles;
 				$this->set_into_fields($row);
 			}
 		}

@@ -39,7 +39,7 @@ if (!\Workshops\is_public($wk)) {
 				break;
 		}
 	} else {
-		$point = "If you wish to enroll, you must first log in <a href='index.php'>on the front page</a>.";	
+		$point = "If you wish to enroll, you must first log in! Click the 'login' button at the top! If you are on a phone, click the square with three lines and then you will see the login button.";	
 	}
 }
 ?>
@@ -59,6 +59,27 @@ echo "
 <p>{$wk['notes']}</p>
 <p>{$wk['full_when']} (".TIMEZONE.")<br><br>
 {$wk['costdisplay']}, {$wk['enrolled']} (of {$wk['capacity']}) enrolled, ".($wk['waiting']+$wk['invited'])." waiting</p>\n";
+
+
+if ($u->check_user_level(2)) { 
+	$eh = new EnrollmentsHelper();
+	$lists = $eh->get_students($wk['id'], ENROLLED);
+	echo "<div class='m-3 p-3 bg-info'>\n";
+	echo "<h3>Teacher/Admin Info</h3>\n";
+	echo "<h4>Enrolled Students</h4><ul>";
+	foreach ($lists as $l) {
+		echo "<li>".$l['nice_name']."</li>\n";
+	}
+	echo "</ul>\n";
+	
+	echo "<h4>Just emails</h4>\n";
+	foreach ($lists as $l) {
+		echo $l['email']."<br>\n";
+	}
+	echo "</div>\n";
+}
+
+
 
 if ($e->fields['status_id'] == ENROLLED && $wk['location_id'] == ONLINE_LOCATION_ID) {
 	
