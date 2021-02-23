@@ -14,8 +14,6 @@
 	
 	<!-- Custom styles for this template -->
 	<link href="wgis.css" rel="stylesheet">
-	<meta name="google-signin-client_id" content="989168310652-al6inpe49ep29r9i2ppb0t8j58k1pt22.apps.googleusercontent.com">
-	<script src="https://apis.google.com/js/platform.js" async defer></script>
 	
     <!-- iconic (open source version) -->
     <link href="open-iconic/font/css/open-iconic-bootstrap.css" rel="stylesheet">

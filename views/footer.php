@@ -31,105 +31,22 @@
 	<div class="modal-content">
 	  <div class="modal-header">
 		  
-		<h5 class="modal-title">Two Ways to Login</h5>
+		<h5 class="modal-title">To Log In, We Email You A Link</h5>
 		<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 	  </div>
 	  <div class="modal-body">
-			<script type="text/javascript">
-				function onSignIn(googleUser) {
-					console.log('inside onSignIn');
-				  var id_token = googleUser.getAuthResponse().id_token;
-				  var xhr = new XMLHttpRequest();
-				  xhr.open('POST', 'https://wgimprovschool.com/gsign.php');
-				  xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-				  xhr.onload = function() {
-				    console.log('Signed in as: ' + xhr.responseText);
-					createInput(xhr.responseText);
-					window.location.reload(true); 
-				  };
-				  xhr.send('idtoken=' + id_token);
-				}
-				
-				var initClient = function() {
-				    gapi.load('auth2', function(){
-				        /**
-				         * Retrieve the singleton for the GoogleAuth library and set up the
-				         * client.
-				         */
-				        auth2 = gapi.auth2.init({
-				            client_id: '989168310652-al6inpe49ep29r9i2ppb0t8j58k1pt22.apps.googleusercontent.com'
-				        });
-
-				        // Attach the click handler to the sign-in button
-				        auth2.attachClickHandler('signin-button', {}, onSuccess, onFailure);
-				    });
-				};
-
-				/**
-				 * Handle successful sign-ins.
-				 */
-				var onSuccess = function(user) {
-					$("#google-signinbutton").hide();
-					$("#google-signout").show();
-				    console.log('Signed in as ' + user.getBasicProfile().getName());
-				 };
-
-				/**
-				 * Handle sign-in failures.
-				 */
-				var onFailure = function(error) {
-					$("#google-signinbutton").show();
-					$("#google-signout").false();
-				    console.log(error);
-				};				
-
-				function createInput(key){
-				    var $input = $('<p>You are connected to Google! Now you can log in to this website: <a class="btn btn-primary" href="index.php?key='+key+'">Click here to log in to wgimprovschool.com</a></p>');
-				    $input.appendTo($("#google-authenticated"));
-				}
-
-			  function signOut() {
-			    var auth2 = gapi.auth2.getAuthInstance();
-			    auth2.signOut().then(function () {
-			      console.log('User signed out.');
-				  window.location.reload(false); 
-			    });
-			  }
-			</script>
-
-
-		<h2>1) We Email You A Link</h2>
 		<?php echo \Wbhkit\form_validation_javascript('log_in'); ?>
 	
 		<form id='log_in' action='index.php' method='post' novalidate>
 		<?php echo \Wbhkit\hidden('ac', 'link').
 		\Wbhkit\texty('email', '', 'Email', 'something@something.com', 'We will send you an email with a link to click.', 'Must be a valid email you have access to', ' required ', 'email').
 		\Wbhkit\submit('Send Me An Email'); ?>
-		</form>
-
-<hr>
-
-		<h2>or 2) Sign in Via Google</h2>
-		<div id="google-signinbutton" class="g-signin2" data-onsuccess="onSignIn"></div> 
-		
-		<p id="google-signout" class="my-3 hidden">Want to sign-out of Google? <a class="text-dark" href="#" onclick="signOut();">(Click here)</a></p>
-		<div id="google-authenticated"></div>
-  
+		</form>  
 	</div>
-	  <div class="modal-footer">
-	 
-	 
-	  </div>
 	</div>
   </div>
 </div>
 </html>
-
-<script>
-$( document ).ready(function() {
-  $('#google-signout').removeClass('hidden');
-}
-</script>
 
 <?php
 if (TIMER) {
