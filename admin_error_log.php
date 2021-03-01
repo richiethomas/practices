@@ -17,7 +17,7 @@ switch ($ac) {
 			$newlog = array();
 			foreach ($log as $l) {
 				foreach ($deldate as $d) {
-					if (preg_match("/^\[$d /", $l)) {
+					if (preg_match("/^\[$d/", $l)) {
 						continue 2;
 					}
 				}
@@ -34,7 +34,7 @@ switch ($ac) {
 //get days
 $dates = array();
 foreach ($log as $l) {
-	if (preg_match('/^\[(.+?) /', $l, $matches)) {
+	if (preg_match('/^\[(.+?)(T| )/', $l, $matches)) {
 		if (empty($dates[$matches[1]])) {
 			$dates[$matches[1]] = 1;
 		} else {

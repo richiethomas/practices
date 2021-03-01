@@ -142,11 +142,16 @@ if (count($unavailable_workshops) > 0) {
 		  </div>
 	  </div>
 	</div>
-	
+
+<div class="container mb-5">
+<h3 class="mb-3">Facebook Group</h2>
+<p>The school has an Facebook group. This is for students to meet each other, plug show, ask questions etc.</p> 
+<p><a href="https://www.facebook.com/groups/wgimprovschool">https://www.facebook.com/groups/wgimprovschool</a></p>
+</div>
+
   <div id="buy-the-book" class="container mb-5">
 	<h3 class="mb-3">Buy the Book</h3>
-<div class="row">
-  <img src="images/htbtgioe_cover.jpg" class="col-sm-12 col-md-3 align-self-start mb-2" />
+<div class="row"><img src="images/htbtgioe_cover.jpg" class="col-sm-12 col-md-3 align-self-start mb-2" />
 	<p class="col-sm-12 col-md-9">If the workshops are sold out, you could buy "How to Be the Greatest Improviser on Earth" written by Will Hines, the founder of this school. Print and digital versions <a href="https://www.amazon.com/dp/0982625723">on Amazon</a>.</p></div>
   </div>
   

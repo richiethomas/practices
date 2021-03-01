@@ -1,4 +1,5 @@
 <div class='row'><div class='col-md-12'><h2>Transcript for <a href='<?php echo "$sc?guest_id={$guest->fields['id']}&needle=".$needle; ?>'><?php echo $guest->fields['nice_name']; ?></a></h2>
+	<?php echo "<p>Cut and pastable: {$guest->fields['display_name']} {$guest->fields['email']}</p>"; ?>
 
 
 <?php 

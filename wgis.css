@@ -346,3 +346,11 @@ footer .footer-colophon {
   flex-grow: 1;
   margin-left: 1em;
 }
+
+.showrow {
+	margin-top: 4em;
+}
+.showrow h2 {
+	padding: 1em;
+	text-align: center;
+}
