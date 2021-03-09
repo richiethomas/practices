@@ -29,8 +29,8 @@
 	  
 	  <div class="row news-summary pb-4">
 		<div class="col-12 d-flex align-items-start justify-content-start ">
-		  <span class="badge rounded-pill bg-primary h6 mx-2"><a class="text-light" href="news.php">Shows and Jams</a></span>
-		  <span class="h6 news-item pl-1"> See the <a href="news.php">shows/jams</a> page for details!</span>
+		  <span class="badge rounded-pill bg-primary h6 mx-2"><a class="text-light" href="shows.php">Shows and Jams</a></span>
+		  <span class="h6 news-item pl-1"> See the <a href="shows.php">shows/jams</a> page for details!</span>
 		</div>
 	  </div>
 	  

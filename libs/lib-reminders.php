@@ -105,7 +105,7 @@ function remind_enrolled($class) {
 		if (!$std['paid'] && $wk['cost']) {
 			$note .= "<p>PAYMENT<br>
 -------<br>
-Our records show you have not yet paid. That's fine! This is just a reminder: payment is due by the start of class. Send {$wk['cost']} USD via venmo @wgimprovschool or paypal payments@wgimprovschool.com.<br>
+Our records show you have not yet paid. That's fine! This is just a reminder: payment is due by the start of class. Send {$wk['cost']} USD via venmo @wgimprovschool (it's a business, not a person) or paypal payments@wgimprovschool.com.<br>
 Questions/concerns: ".WEBMASTER."</p>";
 		}
 		
@@ -115,6 +115,10 @@ Questions/concerns: ".WEBMASTER."</p>";
 ---------------------------------<br>\n
 If you need to drop the class (and it's before the first week), you can do so on this web site at this link. That way if someone is on the waiting list, we can notify them right away they have a chance to join.<br>
 {$trans}</p>\n
+<p>SHOWS AND JAMS<br>\n
+------------------<br>\n
+There are online shows and jams that you can play in, if you wish! See the shows/jams page on the web site for more info:<br>\n
+http://www.wgimprovschool.com/shows</p>
 ";
 		
 		$base_msg =	$note.\Emails\get_workshop_summary($wk)."<br>

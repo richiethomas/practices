@@ -61,16 +61,11 @@ function centralized_email($to, $sub, $body) {
 function confirm_email($e, $status_id = ENROLLED) {
 
 	$wk = $e->wk;
-	$u = $e->u;
-	
-	$drop = URL."workshop.php?key={$u->fields['ukey']}&ac=drop&wid={$wk['id']}";
+	$u = $e->u;	
 	$trans = URL."workshop.php?key={$u->fields['ukey']}&wid={$wk['id']}";
-	$accept = URL."workshop.php?ac=accept&wid={$wk['id']}&key={$u->fields['ukey']}";
-	$decline = URL."workshop.php?ac=decline&wid={$wk['id']}&key={$u->fields['ukey']}";
-	$enroll = URL."workshop.php?key={$u->fields['ukey']}&ac=enroll&wid={$wk['id']}";
 	$textpref = URL."you.php?key={$u->fields['ukey']}";
-	$call = '';
-	$late = '';
+	
+	$body = '';
 	$textpoint = '';
 	$notifications = '';	
 		
@@ -79,27 +74,34 @@ function confirm_email($e, $status_id = ENROLLED) {
 		case 'already':
 		case ENROLLED:
 			$sub = "ENROLLED: {$wk['title']}";
-			$point = "You are ENROLLED in the workshop \"{$wk['title']}\".";
-			$textpoint = $point." ";
+			$body = $textpoint = "You are ENROLLED in the workshop \"{$wk['title']}\".";
+			$body = "<p>$body</p>";
 
 			if ($wk['location_id'] == ONLINE_LOCATION_ID) {
-				$point .= "<p>ZOOM LINK:<br>\n----------<br>\nThe Zoom link to your workshop is: {$wk['online_url']}. Try to show up 2-3 minutes early if you can so we can get started right away.  If your class is multiple sessions, that link should work for all of them. We'll send you an email if we need to change it.</p>";
+				$$body .= "<p>ZOOM LINK:<br>\n----------<br>\nThe Zoom link to your workshop is: {$wk['online_url']}. Try to show up 5 minutes early if you can so we can get started right away.  If your class is multiple sessions, that link should work for all of them. We'll send you an email if the link changes.</p>";
 			}
 			
 			if ($wk['cost'] > 0) {
-				$point .= "<p>PAYMENT:<br>\n--------<br>\nClass costs \${$wk['cost']} (USD). You can't pay on our web site. Instead, pay via Venmo @wgimprovschool or PayPal payments@wgimprovschool.com. It's due by the start of class, no rush. Once the payment is recorded, you'll get a confirmation email. That confirmatin email for your payment can take up to 12 hours to go out (usually a lot faster) because it's done manually by the stubborn man who built this web site.</p>";
+				$body .= "<p>PAYMENT:<br>\n--------<br>\nClass costs \${$wk['cost']} (USD). You can't pay on our web site. Instead, pay via Venmo @wgimprovschool (business, not a person) or PayPal payments@wgimprovschool.com. It's due by the start of class, no rush. Once the payment is recorded, you'll get a confirmation email. That confirmation email can take up to 12 hours to go out because it's done manually by the stubborn man who built this web site.</p>";
 			}
 
-			$call = "<p>CLASS INFO<br>\n----------<br>\nDescription and times/dates are both in this email and also listed here:<br>\n{$trans}</p><p>DROPPING THE CLASS<br>\n------------------<br>\nIf you need to drop, you can do it yourself on the web site at the class info link (just above this paragraph). That way if there's a waiting list, the next person will be automatically invited. If you're dropping a paid class within ".LATE_HOURS." of the start, please pay anyway. Earlier than that, no need to pay.</p>";
+			$body .= 
+"<p>CLASS INFO<br>\n----------<br>\nDescription and times/dates are both in this email and also listed here:<br>\n{$trans}</p>\n
+<p>DROPPING THE CLASS<br>\n------------------<br>\nIf you need to drop, you can do it yourself on the web site at the class info link (just above this paragraph). That way if there's a waiting list, the next person will be automatically invited. If you're drop a paid class within ".LATE_HOURS." of the start, please pay anyway.</p>
+<p>SHOWS AND JAMS<br>\n
+------------------<br>\n
+There are online shows and jams that you can play in, if you wish! See the shows/jams page on the web site for more info:<br>\n
+http://www.wgimprovschool.com/shows</p>";
 
 			$send_faq = false;
 			break;
 		case WAITING:
 			$sub = "WAIT LIST: {$wk['title']}";
-			$point = "You are on the WAIT LIST for \"{$wk['title']}\", spot {$e->fields['rank']}";
-			$textpoint = $point." ";
+			$body = $textpoint = "You are on the WAIT LIST for \"{$wk['title']}\", spot {$e->fields['rank']}";
+			$body = "<p>$body</p>";
 			
-			$call = "<p>WHAT DOES 'WAIT LIST' MEAN?<br>
+			
+			$body .= "<p>WHAT DOES 'WAIT LIST' MEAN?<br>
 ---------------------------<br>
 It means if someone drops the class, you'll get an email inviting you to join. At that point, you can accept or decline the spot.</p>
 
@@ -112,9 +114,10 @@ That way if a spot opens up, we won't be waiting for you to tell us you don't wa
 			
 		case INVITED:
 			$sub = "INVITED: {$wk['title']} -- PLEASE RESPOND";
-			$point = "A spot opened in ({$wk['title']}. Wnt it?";
-			$textpoint = $point;
-			$call = "<p>DO YOU WANT THE SPOT? - PLEASE CLICK AND ANSWER<br>
+			$body = $textpoint = "A spot opened in ({$wk['title']}. Want it?";
+			$body = "<p>$body</p>";
+			
+			$body .= "<p>DO YOU WANT THE SPOT? - PLEASE CLICK AND ANSWER<br>
 ----------------------<br>
 Please GO TO THIS LINK where you can click ACCEPT OR DECLINE the spot.<br>
 {$trans}<br
@@ -123,12 +126,13 @@ Others might be waiting for the spot if you don't want it.</p>";
 			break;
 		case DROPPED:
 			$sub = "DROPPED: {$wk['title']}";
-			$point = "You have DROPPED out of {$wk['title']}";
-			$textpoint = $point." ";
+			$body = $textpoint = "You have DROPPED out of {$wk['title']}";
+			$body = "<p>$body</p>";
+			
 			if ($e->fields['while_soldout'] == 1) {
-				$late .= "<br><i>".get_dropping_late_warning()."</i>";
+				$body .= "<br><i>".get_dropping_late_warning()."</i>";
 			}
-			$call = "If you change your mind, re-enroll here:\n{$enroll}";
+			$body .= "If you change your mind, re-enroll here:\n{$enroll}";
 			
 			// tell webmaster if this person needs a refund
 			if ($e->fields['paid'] == 1) {
@@ -139,8 +143,9 @@ Others might be waiting for the spot if you don't want it.</p>";
 		default:
 			$statuses = $lookups->statuses;
 			$sub = "{$statuses[$status_id]}: {$wk['title']}";
-			$point = "You have a status of '{$statuses[$status_id]}' for {$wk['title']}";
-			$textpoint = $point." ";
+			$body = $textpoint = "You have a status of '{$statuses[$status_id]}' for {$wk['title']}";
+			$body = "<p>$body</p>";
+			
 			break;
 	}
 
@@ -152,17 +157,9 @@ Others might be waiting for the spot if you don't want it.</p>";
 	}
 	
 	
-	$notifcations = '';
-	if (!$u->fields['send_text']) {
-		$notifications = "<p>Would you want to be notified via text? You can set text preferences:<br>".$textpref."</p>";
-	}
 
 
-	$body = "<p>$point $late</p>
-
-<p>$call</p>
-
-<p>CLASS INFORMATION<br>
+	$body .= "<p>CLASS INFORMATION<br>
 --------------------------------<br>
 <b>Title:</b> {$wk['title']}<br>
 <b>Teacher:</b> {$wk['teacher_name']}<br>
@@ -170,11 +167,11 @@ Others might be waiting for the spot if you don't want it.</p>";
 <b>Cost:</b> \${$wk['cost']} USD<br>".
 ($status_id == ENROLLED ? "<b>Zoom link:</b> {$wk['online_url']}" : "<b>Zoom link</b>: We'll email you the zoom link if/once you are enrolled.")."<br>
 <b>Description:</b> {$wk['notes']}</p>
-<p>Web page for this class:<br>\n{$trans}</p>
+<p>Web page for this class:<br>\n{$trans}</p>";	
 
-$notifications
-
-";	
+if (!$u->fields['send_text']) {
+	$body .= "<p>Would you want to be notified via text? You can set text preferences:<br>".$textpref."</p>";
+}
 
 	return centralized_email($u->fields['email'], "{$sub}", $body);
 }
@@ -221,7 +218,7 @@ function shorten_link($link) {
 
 
 function get_dropping_late_warning() {
-	return "NOTE: You are dropping within ".LATE_HOURS." hours of the start. If this class was sold out and you had your spot for a while, please still pay for it. If you're not sure if you should, sent an email to payments@wgimprovschool.com and ask.";
+	return "NOTE: You are dropping within ".LATE_HOURS." hours of the start. Please still pay for it! If someone takes your spot and pays, you'll be refunded. Questions to payments@wgimprovschool.com";
 	
 }
 

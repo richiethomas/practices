@@ -30,7 +30,7 @@ if (Workshops\is_public($wk)) {
 					$message = "'{$u->fields['nice_name']}' is now enrolled in '{$wk['title']}'!<ul><li>The zoom link, and other class info, was just emailed to <b>{$u->fields['email']}</b></li>";
 					
 					if ($wk['cost'] > 0) {
-						$message .= "<li>Payment ({$wk['cost']} USD) is due by start of class. Either venmo @wgimprovschool or paypal payments@wgimprovschool.com.</li>";
+						$message .= "<li>Payment ({$wk['cost']} USD) is due by start of class. Either venmo @wgimprovschool (it's a business, not a person) or paypal payments@wgimprovschool.com.</li>";
 					}
 					$message .= "<li>Any questions? Ask will@wgimprovschool.com. Thanks!</li></ul>\n";
 					

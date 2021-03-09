@@ -6,9 +6,9 @@
 <ul>
 	<li><a href="#formtune">Wheel of Formtune</a></li>
 	<li><a href="#threemeup">Three Me Up Scotty!</a></li>
-	<li><a href="#week">How Was Your Week?</a></li>
 	<li><a href="#jams">Friday Jams</a></li>
 	<li><a href="#presents">Yer Da Presents</a></li>
+	<li><a href="#week">How Was Your Week?</a></li>
 	<li><a href="#thursday">Thursday Teams</a></li>	
 </ul>
 </div>
@@ -71,24 +71,9 @@
 	<div class="col">
 		<img src='images/3meup.jpg'>
 		<img src='images/3meupeuro.jpg'>
-		
 	</div>
 
 </div>
-
-<a name="jams"></a>
-<div class="showrow row"><div class="col">
-<h2 class="mt-4 mb-2">Friday Jams</h2>
-<p>Fridays 11am and 5pm PST (California time)</p>
-
-<p>Join our improv jams!</p>
-
-<a href="https://zoom.us/j/94363676979?pwd=aGdtTVA5c216N3AycDRxM1NHYzc2UT09">https://zoom.us/j/94363676979?pwd=aGdtTVA5c216N3AycDRxM1NHYzc2UT09</a><br>
-Meeting ID: 943 6367 6979<br>
-Passcode: 129538</p>
-</div></div>
-
-
 
 <a name="jams"></a>
 <div class="showrow row"><div class="col">
@@ -108,6 +93,24 @@ Passcode: 129538</p>
 		<h2 class="mb-4">Yer Da Presents</h2>
 		<p>Friday 12pm PST</p>
 		<p>In <b>Yer Da Presents</b> a team of improvisers from Scotland does a set. There's also always an opening team.</p>
+	</div>
+	<div class="col">
+		<img src='images/yerdakilts.png'>
+	</div>
+</div>
+
+
+
+<a name="week"></a>
+<div class="showrow row">
+	<div class="col">
+		<h2 class="mt-4 mb-2">How Was Your Week?</h2>
+		<p>Fridays 6:30 PST (California time)</p>
+
+		<p>Will Hines hosts a cast of improvisers who make up scenes based on whatever happened to them that week!</p>
+	</div>
+	<div class="col">
+		<img src='images/hwyw.png'>
 	</div>
 </div>
 
