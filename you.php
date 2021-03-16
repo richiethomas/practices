@@ -7,7 +7,7 @@ include 'login_actions.php';
 
 
 if (!$u->logged_in()) {
-	$view->data['error_message'] = "<h1>Whoops!</h1><p>You are asking to look at info about a student, probably you, but I (the computer) cannot tell which student you mean. Sorry!</p>\n";
+	$view->data['error_message'] = "<h1>Not Logged In</h1><p class='my-3'>You need to log in! Click 'Login' in the upper-right hand corner of the screen.<br><br>If you're on a phone, you'll see a square with three lines at the top of the page. Click that, then click 'Login'.</p>\n";
 	$view->renderPage('error');
 	exit();
 } else {

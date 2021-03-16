@@ -27,7 +27,9 @@ function single_claim(task, tableid) {
 	var wp = document.getElementById(id+'whenpaid').value;
 	var wh = document.getElementById(id+'whenhappened').value;
 	var tid = document.getElementById(id+'teacherid').value;
-	var link =encodeURI( '?ac=singleadd&task='+task+'&table_id='+tableid+'&amount='+amt+'&teacher_id='+tid+'&when_paid='+wp+'&when_happened='+wh);
+	var ss = document.getElementById('searchstart').value;
+	var se = document.getElementById('searchend').value;
+	var link =encodeURI( '?ac=singleadd&task='+task+'&table_id='+tableid+'&amount='+amt+'&teacher_id='+tid+'&when_paid='+wp+'&when_happened='+wh+'&searchstart='+ss+'&searchend='+se);
 	//console.log(link);
 	window.location.href = link;
 	return false;
@@ -151,7 +153,7 @@ foreach ($claims as $c) {
 	echo "<tr>\n";
 	echo "<td>".\Wbhkit\drop("{$id}teacherid", $teacher_opts, $c['teacher_id'], 
 	0)."</td>\n";
-	echo "<td>{$c['title']} <small>({$c['workshop_id']}) (".date('D ga', strtotime($c['start'])).' #'.($c['rank'] ? $c['rank'] : 'show').")</small></td>\n";
+	echo "<td>{$c['title']} <small>({$c['workshop_id']}) (".date('D M j ga', strtotime($c['start'])).' #'.($c['rank'] ? $c['rank'] : 'show').")</small></td>\n";
 	echo "<td>".\Wbhkit\texty("{$id}amount", $t['default_rate'], 0)."</td>\n";
 	echo "<td>".\Wbhkit\texty("{$id}whenpaid", date("j-M-Y"), 0)."</td>\n";
 	echo "<td><button class='btn btn-success btn-sm' onClick=\"return single_claim('".$c['task']."', '".$c['table_id']."')\">Claim</button></td>\n";

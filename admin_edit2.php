@@ -3,7 +3,7 @@ $heading = "edit workshop";
 include 'lib-master.php';
 
 
-$wk_vars = array('wid', 'title', 'notes', 'start', 'end', 'lid', 'online_url', 'cost', 'capacity', 'notes', 'when_public', 'email', 'con', 'cancelled', 'xtraid', 'guest_id', 'reminder_sent', 'sold_out_late', 'teacher_id', 'start_xtra', 'end_xtra', 'online_url_xtra');
+$wk_vars = array('wid', 'title', 'notes', 'start', 'end', 'lid', 'online_url', 'cost', 'capacity', 'notes', 'when_public', 'email', 'con', 'cancelled', 'xtraid', 'guest_id', 'reminder_sent', 'sold_out_late', 'teacher_id', 'co_teacher_id', 'start_xtra', 'end_xtra', 'online_url_xtra');
 Wbhkit\set_vars($wk_vars);
 
 $e = new Enrollment();

@@ -64,7 +64,7 @@ define('DEBUG_LOG', 'info.txt');
 define('ERROR_LOG', 'error_log.txt');
 define('URL', "https://{$_SERVER['HTTP_HOST']}/");
 define('ONLINE_LOCATION_ID', 8);
-define('TIMEZONE', 'PST');
+define('TIMEZONE', 'PDT');
 define('LATE_HOURS', 24);
 define('REMINDER_HOURS', 24);
 define('USER_PHOTO_MAX_BYTES', 5000000);
@@ -135,7 +135,7 @@ $view = new View();
 
 // group 2 or higher for admin pasges
 if (strpos($sc, 'admin') !== false) {
-	$u->reject_user_below(2); // group 2 or higher for admin
+	$u->reject_user_below(3); // group 3 or higher for admin
 }
 
 // check to see if we should send reminders every time anyone loads a page

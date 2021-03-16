@@ -62,8 +62,8 @@ function confirm_email($e, $status_id = ENROLLED) {
 
 	$wk = $e->wk;
 	$u = $e->u;	
-	$trans = URL."workshop.php?key={$u->fields['ukey']}&wid={$wk['id']}";
-	$textpref = URL."you.php?key={$u->fields['ukey']}";
+	$trans = URL."workshop.php?wid={$wk['id']}";
+	$textpref = URL."you.php";
 	
 	$body = '';
 	$textpoint = '';
@@ -78,16 +78,16 @@ function confirm_email($e, $status_id = ENROLLED) {
 			$body = "<p>$body</p>";
 
 			if ($wk['location_id'] == ONLINE_LOCATION_ID) {
-				$$body .= "<p>ZOOM LINK:<br>\n----------<br>\nThe Zoom link to your workshop is: {$wk['online_url']}. Try to show up 5 minutes early if you can so we can get started right away.  If your class is multiple sessions, that link should work for all of them. We'll send you an email if the link changes.</p>";
+				$body .= "<p>ZOOM LINK:<br>\n----------<br>\nThe Zoom link to your workshop is: {$wk['online_url']}. Try to show up 5 minutes early if you can so we can get started right away.  If your class is multiple sessions, that link should work for all of them. We'll send you an email if the link changes.</p>";
 			}
 			
 			if ($wk['cost'] > 0) {
-				$body .= "<p>PAYMENT:<br>\n--------<br>\nClass costs \${$wk['cost']} (USD). You can't pay on our web site. Instead, pay via Venmo @wgimprovschool (business, not a person) or PayPal payments@wgimprovschool.com. It's due by the start of class, no rush. Once the payment is recorded, you'll get a confirmation email. That confirmation email can take up to 12 hours to go out because it's done manually by the stubborn man who built this web site.</p>";
+				$body .= "<p>PAYMENT:<br>\n--------<br>\nClass costs \${$wk['cost']} (USD). Pay via Venmo @wgimprovschool (business) or PayPal payments@wgimprovschool.com. Due by the start of class. Confirmation email for payment can take up to 12 hours to arrive because it's triggered manually by the stubborn human who built this web site.</p>";
 			}
 
 			$body .= 
 "<p>CLASS INFO<br>\n----------<br>\nDescription and times/dates are both in this email and also listed here:<br>\n{$trans}</p>\n
-<p>DROPPING THE CLASS<br>\n------------------<br>\nIf you need to drop, you can do it yourself on the web site at the class info link (just above this paragraph). That way if there's a waiting list, the next person will be automatically invited. If you're drop a paid class within ".LATE_HOURS." of the start, please pay anyway.</p>
+<p>DROPPING THE CLASS<br>\n------------------<br>\nYou can drop out by going to class's web page (the link is just above this paragraph). If you're dropping within ".LATE_HOURS." of the start, please pay anyway.</p>
 <p>SHOWS AND JAMS<br>\n
 ------------------<br>\n
 There are online shows and jams that you can play in, if you wish! See the shows/jams page on the web site for more info:<br>\n
@@ -132,7 +132,7 @@ Others might be waiting for the spot if you don't want it.</p>";
 			if ($e->fields['while_soldout'] == 1) {
 				$body .= "<br><i>".get_dropping_late_warning()."</i>";
 			}
-			$body .= "If you change your mind, re-enroll here:\n{$enroll}";
+			$body .= "If you change your mind, re-enroll here:\n{$trans}";
 			
 			// tell webmaster if this person needs a refund
 			if ($e->fields['paid'] == 1) {
@@ -162,7 +162,7 @@ Others might be waiting for the spot if you don't want it.</p>";
 	$body .= "<p>CLASS INFORMATION<br>
 --------------------------------<br>
 <b>Title:</b> {$wk['title']}<br>
-<b>Teacher:</b> {$wk['teacher_name']}<br>
+<b>Teacher:</b> {$wk['teacher_info']['nice_name']}".($wk['co_teacher_id'] ?  ", {$wk['co_teacher_info']['nice_name']}" : '')."<br>
 <b>When:</b> {$wk['full_when']} (".TIMEZONE." - California time)<br>
 <b>Cost:</b> \${$wk['cost']} USD<br>".
 ($status_id == ENROLLED ? "<b>Zoom link:</b> {$wk['online_url']}" : "<b>Zoom link</b>: We'll email you the zoom link if/once you are enrolled.")."<br>
@@ -269,7 +269,7 @@ function get_workshop_summary($wk) {
 <p>-----------------------------<br>
 <b>Class information:</b><br>
 <b>Title:</b> {$wk['title']}<br>
-<b>Teacher:</b> {$wk['teacher_name']}<br>
+<b>Teacher:</b> {$wk['teacher_info']['nice_name']}".($wk['co_teacher_id'] ?  ", {$wk['co_teacher_info']['nice_name']}" : '')."<br>
 <b>When:</b> {$wk['full_when']} (".TIMEZONE." - California time)";
 
 }

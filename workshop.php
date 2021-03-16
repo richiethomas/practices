@@ -63,7 +63,7 @@ if (Workshops\is_public($wk)) {
 				break;
 			}
 									
-			$message = "Do you really want to drop '{$wk['title']}'? Then click <a class='btn btn-warning' href=\"$sc?ac=condrop&key={$u->fields['ukey']}&wid={$wid}\">confirm drop</a>";
+			$message = "Do you really want to drop '{$wk['title']}'? Then click <a class='btn btn-warning' href=\"$sc?ac=condrop&wid={$wid}\">confirm drop</a>";
 			$show_other_action = false;
 		
 			if ($e->fields['while_soldout']) { 
@@ -149,7 +149,7 @@ if (isset($wk) && isset($wk['id']) && $wk['id']) {
 	$view->data['show_other_action'] = $show_other_action;
 	$view->data['admin'] = 0;
 	$heading = $wk['title'];
-	$view->data['fb_image'] = "http://{$_SERVER['HTTP_HOST']}".Teachers\get_teacher_photo_src($wk['teacher_user_id']);
+	$view->data['fb_image'] = "http://{$_SERVER['HTTP_HOST']}".Teachers\get_teacher_photo_src($wk['teacher_info']['user_id']);
 	$view->renderPage('winfo');
 } else {
 	$view->data['error_message'] = "<h1>Whoops!</h1><p>You are asking to look at info about a workshop, but I (the computer) cannot tell which workshop you mean. Sorry!</p>\n";

@@ -38,7 +38,7 @@ switch ($ac) {
 
 		foreach ($stds as $std) {
 			
-			$trans = URL."workshop.php?key={$std['ukey']}&wid={$wk['id']}";
+			$trans = URL."workshop.php?wid={$wk['id']}";
 			$msg = $base_msg."<p>Drop/re-enroll/see more info here:<br>$trans</p>\n";
 			
 			Emails\centralized_email($std['email'], $subject, $msg);

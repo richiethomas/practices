@@ -28,6 +28,7 @@ function fill_out_workshop_row($row, $get_enrollment_stats = true) {
 	
 	
 	//get teacher info
+	/*
 	if (!isset($row['teacher_user_id'])) {
 		$trow = \Teachers\get_teacher_by_id($row['teacher_id']);
 		$row['teacher_email'] = $trow['email'];
@@ -37,6 +38,15 @@ function fill_out_workshop_row($row, $get_enrollment_stats = true) {
 		$row['teacher_key'] = $trow['ukey'];
 		$row['teacher_default_rate'] = $trow['default_rate'];
 	}
+	*/
+
+	if ($row['teacher_id']) {
+		$row['teacher_info'] = \Teachers\get_teacher_by_id($row['teacher_id']);
+	}
+	if ($row['co_teacher_id']) {
+		$row['co_teacher_info'] = \Teachers\get_teacher_by_id($row['co_teacher_id']);
+	}
+		
 		
 	$row['costdisplay'] = $row['cost'] ? "\${$row['cost']} USD" : 'Free';
 	
@@ -240,15 +250,15 @@ function get_sessions_to_come(bool $get_enrollments = true) {
 	$mysqlnow = date("Y-m-d H:i:s", strtotime("-3 hours"));
 	
 	$stmt = \DB\pdo_query("
-(select w.id, title, start, end, capacity, cost, 0 as xtra, 0 as class_show, notes, teacher_id, 1 as rank, '' as override_url, online_url 
+(select w.id, title, start, end, capacity, cost, 0 as xtra, 0 as class_show, notes, teacher_id, co_teacher_id, 1 as rank, '' as override_url, online_url 
 from workshops w
 where start >= date('$mysqlnow'))
 union
-(select x.workshop_id, w.title, x.start, x.end, w.capacity, w.cost, 1 as xtra,  0 as class_show, w.notes, w.teacher_id, x.rank, x.online_url as override_url, w.online_url
+(select x.workshop_id, w.title, x.start, x.end, w.capacity, w.cost, 1 as xtra,  0 as class_show, w.notes, w.teacher_id, w.co_teacher_id, x.rank, x.online_url as override_url, w.online_url
 from xtra_sessions x, workshops w 
 where w.id = x.workshop_id and x.start >= date('$mysqlnow'))
 union
-(select ws.workshop_id, w.title, s.start, s.end, w.capacity, w.cost, 1 as xtra, 1 as class_show, w.notes, s.teacher_id, 0 as rank, null as override_url, s.online_url
+(select ws.workshop_id, w.title, s.start, s.end, w.capacity, w.cost, 1 as xtra, 1 as class_show, w.notes, s.teacher_id, 0 as co_teacher_id, 0 as rank, null as override_url, s.online_url
 	from shows s, workshops w, workshops_shows ws
 	where ws.show_id = s.id and ws.workshop_id = w.id
 	and s.start >= date('$mysqlnow'))
@@ -263,6 +273,15 @@ order by start asc");
 		if ($teach) {
 			$row['teacher_name'] = $teach['nice_name'];
 			$row['teacher_user_id'] = $teach['user_id'];
+		}
+		
+		if ($row['co_teacher_id']) {
+			$co_teach = \Teachers\find_teacher_in_teacher_array($row['co_teacher_id'], $teachers);
+			if ($co_teach) {
+				$row['co_teacher_name'] = $co_teach['nice_name'];
+				$row['co_teacher_user_id'] = $co_teach['user_id'];
+			}
+			
 		}
 		
 		if ($get_enrollments) {
@@ -295,8 +314,6 @@ function get_workshops_list_bydate($start = null, $end = null) {
 	if (!$start) { $start = "Jan 1 1000"; }
 	if (!$end) { $end = "Dec 31 3000"; }
 	
-	//echo "select w.* from workshops w WHERE w.start >= '".date('Y-m-d H:i:s', strtotime($start))."' and w.start <= '".date('Y-m-d H:i:s', strtotime($end))."' order by teacher_id, start desc";
-	
 	$stmt = \DB\pdo_query("select w.* from workshops w WHERE w.start >= :start and w.start <= :end order by teacher_id, start desc", array(':start' => date('Y-m-d H:i:s', strtotime($start)), ':end' => date('Y-m-d H:i:s', strtotime($end))));
 	
 	$workshops = array();
@@ -307,54 +324,13 @@ function get_workshops_list_bydate($start = null, $end = null) {
 }	
 
 
-// figure teacher pay for a workshop
-// go through all sessions
-// add either actual_pay or default_pay
 function get_teacher_pay(array $wk) {
 	
-	
-	/*
-	$pay = 0;
-	$default_pay = 0;
-	$teacher_id = 0;
-		
-	$stmt = \DB\pdo_query("select p.amount 
-		from payrolls p
-	where p.task = 'workshops'
-	and p.table_id = w.id
-		and w.id = :id", array(':id' => $wk['id']));
-	while ($row = $stmt->fetch()) {
-		$pay += $row['amount'];
-		$teacher_id = $row['teacher_id'];
-	}
-
-	$stmt = \DB\pdo_query("select p.amount
-		from payrolls p, xtra_sessions x
-		where p.task = 'class'
-		and p.table_id = x.id
-		and x.workshop_id = :id", array(':id' => $wk['id']));
-	while ($row = $stmt->fetch()) {
-		$pay += $row['amount'];
-	}
-
-	$stmt = \DB\pdo_query("select p.amount
-		from payrolls p, shows s, workshops_shows ws, workshops w
-		where p.task = 'show'
-		and p.table_id = s.id
-		and ws.show_id = s.id
-		and w.id = ws.workshop_id
-		and s.teacher_id = w.teacher_id
-		and ws.workshop_id = :id", array(':id' => $wk['id']));
-	while ($row = $stmt->fetch()) {
-		$pay += $row['amount'];
-	}
-	*/
-	
-	if ($teacher_id == 1) {
+	if ($wk['teacher_id'] == 1) {
 		return 0;
 	} else {
-		return ($wk['total_class_sessions'] * $wk['teacher_default_rate']) +
-			($wk['total_show_sessions'] * ($wk['teacher_default_rate'] / 2));
+		return ($wk['total_class_sessions'] * $wk['teacher_info']['default_rate']) +
+			($wk['total_show_sessions'] * ($wk['teacher_info']['default_rate'] / 2));
 	}
 
 	return 0;
@@ -423,6 +399,7 @@ function get_empty_workshop() {
 		'sold_out_late' => null,
 		'cancelled' => null,
 		'teacher_id' => 1,
+		'co_teacher_id' => null,
 		'reminder_sent' => 0
 	);
 }
@@ -452,6 +429,7 @@ function workshop_fields($wk) {
 	\Wbhkit\texty('capacity', $wk['capacity']).
 	\Wbhkit\textarea('notes', $wk['notes']).
 	\Wbhkit\drop('teacher_id', \Teachers\teachers_dropdown_array(), $wk['teacher_id'], 'Teacher', null, 'Required', ' required ').
+	\Wbhkit\drop('co_teacher_id', \Teachers\teachers_dropdown_array(), $wk['co_teacher_id'], 'Co-teacher', null).
 	\Wbhkit\checkbox('cancelled', 1, null, $wk['cancelled']).	
 	\Wbhkit\texty('when_public', $wk['when_public'], 'When Public').
 	\Wbhkit\checkbox('reminder_sent', 1, 'Reminder sent?', $wk['reminder_sent']);
@@ -471,6 +449,7 @@ function add_update_workshop($wk, $ac = 'up') {
 	if (!$wk['start']) { $wk['start'] = NULL; }
 	if (!$wk['end']) { $wk['end'] = NULL; }
 	if (!$wk['teacher_id']) { $wk['teacher_id'] = 1; }
+	if (!$wk['co_teacher_id']) { $wk['co_teacher_id'] = NULL; }
 	if (!$wk['reminder_sent']) { $wk['reminder_sent'] = 0; }
 	
 		
@@ -485,16 +464,17 @@ function add_update_workshop($wk, $ac = 'up') {
 		':public' => date('Y-m-d H:i:s', strtotime($wk['when_public'])),
 		':cancelled' => $wk['cancelled'],
 		':tid' => $wk['teacher_id'],
+		':ctid' => $wk['co_teacher_id'],
 		':reminder_sent' => $wk['reminder_sent']);
 		
 		if ($ac == 'up') {
 			$params[':wid'] = $wk['id'];
-			$sql = "update workshops set title = :title, start = :start, end = :end, cost = :cost, capacity = :capacity, location_id = :lid, online_url = :online_url, notes = :notes, when_public = :public, cancelled = :cancelled, reminder_sent = :reminder_sent, teacher_id = :tid where id = :wid";			
+			$sql = "update workshops set title = :title, start = :start, end = :end, cost = :cost, capacity = :capacity, location_id = :lid, online_url = :online_url, notes = :notes, when_public = :public, cancelled = :cancelled, reminder_sent = :reminder_sent, teacher_id = :tid, co_teacher_id = :ctid where id = :wid";			
 			$stmt = \DB\pdo_query($sql, $params);
 			return $wk['id'];
 		} elseif ($ac = 'ad') {
-			$stmt = \DB\pdo_query("insert into workshops (title, start, end, cost, capacity, location_id, online_url, notes, when_public, cancelled, reminder_sent, teacher_id)
-			VALUES (:title, :start, :end, :cost, :capacity, :lid, :online_url, :notes,  :public, :cancelled, :reminder_sent, :tid)",
+			$stmt = \DB\pdo_query("insert into workshops (title, start, end, cost, capacity, location_id, online_url, notes, when_public, cancelled, reminder_sent, teacher_id, co_teacher_id)
+			VALUES (:title, :start, :end, :cost, :capacity, :lid, :online_url, :notes,  :public, :cancelled, :reminder_sent, :tid, :ctid)",
 			$params);
 			return $last_insert_id; // set as a global by my dbo routines
 		}

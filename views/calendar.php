@@ -20,7 +20,13 @@ foreach ($workshops as $wk) {
 	
 	echo "<div class='row mt-2'><div class='col-md-6'><a href='workshop.php?wid={$wk['id']}'>{$wk['title']}</a> (".($wk['class_show'] ? 'show' : $wk['rank']).")</div>
 	<div class='col-md-2'>$start-$end</div>
-	<div class='col-md-4'><a href='faculty.php?tid={$wk['teacher_id']}'>{$wk['teacher_name']}</a></div>
+	<div class='col-md-4'><a href='faculty.php?tid={$wk['teacher_id']}'>{$wk['teacher_name']}</a>";
+	
+	if ($wk['co_teacher_id']) {
+		echo ", <a href='faculty.php?tid={$wk['co_teacher_id']}'>{$wk['co_teacher_name']}</a>";
+	}
+	
+	echo "</div>
 	</div>\n";
 	
 }	

@@ -226,7 +226,7 @@ class Enrollment extends WBHObject {
 			if ($new_paid == 1) {
 		
 				$body = "<p>This is automated email to confirm that I've received your payment for class.</p>";
-				$body .= "<p>Class: {$this->wk['title']} {$this->wk['showstart']} (California time, PST)</p>\n";
+				$body .= "<p>Class: {$this->wk['title']} {$this->wk['showstart']} (California time, ".TIMEZONE.")</p>\n";
 				$body .= "<p>Student: {$this->u->fields['nice_name']}</p>";
 				$body .= "<p>Amount: \${$this->wk['cost']} (USD)</p>\n";
 				
@@ -235,7 +235,7 @@ class Enrollment extends WBHObject {
 				}
 				
 				$body .= "<p>To see all other info on the class go here:<br>";
-				$body .= URL."workshop.php?key={$this->u->fields['ukey']}&wid={$this->wk['id']}</p>\n";
+				$body .= URL."workshop.php?wid={$this->wk['id']}</p>\n";
 
 				
 				$body .= "<p>Thanks!<br>-Will</p>\n";

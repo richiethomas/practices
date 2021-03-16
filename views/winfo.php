@@ -16,13 +16,13 @@ if (!\Workshops\is_public($wk)) {
 
 		switch ($e->fields['status_id']) {
 			case ENROLLED:
-				$point = "You are ENROLLED in the practice listed below. Would you like to <a class='btn btn-primary' href='$sc?ac=drop&wid={$wk['id']}&key={$u->fields['ukey']}&v=winfo'>drop</a> it?";
+				$point = "You are ENROLLED in the practice listed below. Would you like to <a class='btn btn-primary' href='$sc?ac=drop&wid={$wk['id']}&v=winfo'>drop</a> it?";
 				break;
 			case WAITING:
-				$point = "You are spot number {$e->fields['rank']} on the WAIT LIST for the practice listed below. Would you like to <a class='btn btn-primary' href='$sc?ac=drop&wid={$wk['id']}&key={$u->fields['ukey']}&v=winfo'>drop</a> it?";
+				$point = "You are spot number {$e->fields['rank']} on the WAIT LIST for the practice listed below. Would you like to <a class='btn btn-primary' href='$sc?ac=drop&wid={$wk['id']}&v=winfo'>drop</a> it?";
 				break;
 			case INVITED:
-				$point = "A spot opened up in the practice listed below. Would you like to <a class='btn btn-primary' href='$sc?ac=accept&wid={$wk['id']}&key={$u->fields['ukey']}&v=winfo'>accept</a> it, or <a class='btn btn-primary' href='$sc?ac=decline&wid={$wk['id']}&key={$u->fields['ukey']}&v=winfo'>decline</a> it?";
+				$point = "A spot opened up in the practice listed below. Would you like to <a class='btn btn-primary' href='$sc?ac=accept&wid={$wk['id']}&v=winfo'>accept</a> it, or <a class='btn btn-primary' href='$sc?ac=decline&wid={$wk['id']}&v=winfo'>decline</a> it?";
 				break;
 			case DROPPED:
 				$point = "You have dropped out of the practice listed below. ".
@@ -39,7 +39,7 @@ if (!\Workshops\is_public($wk)) {
 				break;
 		}
 	} else {
-		$point = "If you wish to enroll, you must first log in! Click the 'login' button at the top! If you are on a phone, click the square with three lines and then you will see the login button.";	
+		$point = "You are not logged in. You must be logged in to enroll.<br><br>To log in, click the 'Login' button at the top-right corner of this page.<br><br>If you're on a phone, you'll see a square with three lines at the top of the page. Click that, then click 'Login'.";	
 	}
 }
 ?>
@@ -48,10 +48,6 @@ if (!\Workshops\is_public($wk)) {
 
 <?php
 	
-
-if ($show_other_action)  {
-	echo "<p class='alert alert-info'>{$point}</p>\n";
-}
 	
 echo "	
 <div class='row my-3 py-3'><div class='col-sm-6'>
@@ -59,6 +55,10 @@ echo "
 <p>{$wk['notes']}</p>
 <p>{$wk['full_when']} (".TIMEZONE.")<br><br>
 {$wk['costdisplay']}, {$wk['enrolled']} (of {$wk['capacity']}) enrolled, ".($wk['waiting']+$wk['invited'])." waiting</p>\n";
+
+if ($show_other_action)  {
+	echo "<p class='alert alert-info'>{$point}</p>\n";
+}
 
 
 if ($u->check_user_level(2)) { 
@@ -91,19 +91,32 @@ echo "</div>\n";
 
 echo "<div class='col-sm-6'>
 <figure class=\"figure\">
-<a href='teachers.php?tid={$wk['teacher_id']}'><img class='img-fluid border figure-img rounded' src='".\Teachers\get_teacher_photo_src($wk['teacher_user_id'])."'></a>
-  <figcaption class=\"figure-caption\"><b>Teacher: <a href='teachers.php?tid={$wk['teacher_id']}'>{$wk['teacher_name']}</a></b></figcaption>
-</figure>
-</div></div>
+<a href='teachers.php?tid={$wk['teacher_id']}'><img class='img-fluid border figure-img rounded' src='".\Teachers\get_teacher_photo_src($wk['teacher_info']['user_id'])."'></a>
+  <figcaption class=\"figure-caption\"><b>Teacher: <a href='teachers.php?tid={$wk['teacher_id']}'>{$wk['teacher_info']['nice_name']}</a></b></figcaption>
+</figure>\n";
+
+
+if ($wk['co_teacher_id']) {
+	
+echo "<figure class=\"figure\">
+<a href='teachers.php?tid={$wk['co_teacher_id']}'><img class='img-fluid border figure-img rounded' src='".\Teachers\get_teacher_photo_src($wk['co_teacher_info']['user_id'])."'></a>
+  <figcaption class=\"figure-caption\"><b>Teacher: <a href='teachers.php?tid={$wk['co_teacher_id']}'>{$wk['co_teacher_info']['nice_name']}</a></b></figcaption>
+</figure>\n";
+
+
+}
+
+
+echo "</div></div>
 </div>
 
 <div class=\"row m-3 p-3 justify-content-center\"><div class=\"col-md-8 border border-info\">
 <h2>How This Works</h2>
 <ul>
 	<li>All times are California local time (PDT).</li>
-	<li>Pay over Venmo / PayPal -- the specific account info will be sent after you sign up</li>
+	<li>Pay via Venmo (@wgimprovschool - a business) or Paypal (payments@wgimprovschool.com)</li>
 	<li>Classes are held over <a href=\"http://www.zoom.us/\">Zoom</a></li>
-	<li><b>LATE DROP POLICY: If drop ".LATE_HOURS." hours before the start of the workshop, you still must pay! Unless we sell your spot in which case, it's cool.</b></li>
+	<li><b>LATE DROP POLICY: If drop less than ".LATE_HOURS." hours before, you still must pay! Unless we sell your spot in which case, it's cool.</b></li>
 </ul>
 </div>
 

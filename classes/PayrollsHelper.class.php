@@ -21,9 +21,10 @@ class PayrollsHelper extends WBHObject {
 		$mysqlend = date("Y-m-d H:i:s", strtotime($end));
 
 		$stmt = \DB\pdo_query("select * from payrolls
-			where (when_paid > :start and when_paid < :end) 
+			where (when_paid > :start and when_paid < :end) or
+		(when_happened > :start2 and when_happened < :end2)
 		order by when_paid, teacher_id, task, table_id", 
-		array(':start' => $mysqlstart, ':end' => $mysqlend));
+		array(':start' => $mysqlstart, ':end' => $mysqlend, ':start2' => $mysqlstart, ':end2' => $mysqlend));
 
 		$this->payrolls = array();
 		while ($row = $stmt->fetch()) {

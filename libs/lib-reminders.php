@@ -109,7 +109,7 @@ Our records show you have not yet paid. That's fine! This is just a reminder: pa
 Questions/concerns: ".WEBMASTER."</p>";
 		}
 		
-		$trans = URL."workshop.php?key={$std['ukey']}&wid={$wk['id']}";
+		$trans = URL."workshop.php?wid={$wk['id']}";
 
 		$note .= "<p>DROPPING OUT / OTHER CLASS INFO<br>\n
 ---------------------------------<br>\n
@@ -135,7 +135,7 @@ Class info on web site: $trans";
 	//remind teacher
 	if (!LOCAL || REMINDER_TEST) {
 				
-		$trans = URL."workshop.php?key={$wk['teacher_key']}&wid={$wk['id']}";
+		$trans = URL."workshop.php?wid={$wk['id']}";
 		$teacher_reminder = get_reminder_message_data($wk, $xtra, $cs, true);
 		$msg = $teacher_reminder['note']."<p>Class info online:<br>$trans</p>\n";
 		
@@ -144,7 +144,7 @@ Class info on web site: $trans";
 				preg_replace('/\n/', "<br>\n", \Workshops\get_cut_and_paste_roster($wk));
 		}
 		
-		\Emails\centralized_email($wk['teacher_email'], $teacher_reminder['subject'], $msg);
+		\Emails\centralized_email($wk['teacher_info']['email'], $teacher_reminder['subject'], $msg);
 	}
 	
 	// if not full -- point it out to Will

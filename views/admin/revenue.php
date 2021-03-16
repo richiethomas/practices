@@ -49,7 +49,7 @@ $table_open = "<table class='table table-striped my-3'>
 				$teacher_id = $wk['teacher_id'];
 				$teacher_totals = $empty_totals;
 				
-				echo "<h2 class='my-3'>{$wk['teacher_name']}</h2>\n";
+				echo "<h2 class='my-3'>{$wk['teacher_info']['nice_name']}</h2>\n";
 				echo $table_open;
 				$teacher_id = $wk['teacher_id'];
 			}
@@ -99,7 +99,7 @@ $table_open = "<table class='table table-striped my-3'>
 function show_teacher_totals($wk, $teacher_totals) {
 	// wrap up previous teacher revenue
 	echo "<tr class=\"table-info\">
-		<td>{$wk['teacher_name']} sub totals:</td>
+		<td>{$wk['teacher_info']['nice_name']} sub totals:</td>
 	<td colspan=2>&nbsp;</td>
 	<td>{$teacher_totals['suggested_paid']} / {$teacher_totals['suggested_enrolled']} / {$teacher_totals['suggested_capacity']}</td>
 	<td>".number_format($teacher_totals['teacher_pay'])."</td>

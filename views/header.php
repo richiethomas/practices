@@ -35,7 +35,7 @@ if (isset($fb_image)) {
 		  <div class="collapse navbar-collapse" id="navbarsExampleDefault">
 			<ul class="navbar-nav ml-auto justify-content-end">
 				
-			    <?php if ($u->check_user_level(2)) { ?>
+			    <?php if ($u->check_user_level(3)) { ?>
 				 	<li class="nav-item"> <a class="btn btn-outline-primary nav-link" href="admin.php">Admin</a> </li>	  
 			    <?php } // end of check user level 2 ?>
 				
