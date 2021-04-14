@@ -12,7 +12,7 @@
 	
 	<ul>
 		<li>Level One: No experience required</li>
-		<li>Level Two: YOu should have taken one or two classes from any long-form improv theater</li>
+		<li>Level Two: You should have taken one or two classes from any long-form improv theater</li>
 		<li>Level Three: You should have a year of experience performing or studying somewhere.</li>
 		<li>Level Four: You should have more than a year performing or studying.</li>
 	</ul>
@@ -27,7 +27,7 @@
   <dt class="col-sm-3">Level One: Monologue Show</dt>
   <dd class="col-sm-9">This is an intro to  “game of the scene” work. It's meant for new people and vets who want to strengthen game of the scene. We go over looking for the "unusual thing" and also being a good "voice of reason." We also practice pulling premises from a monologue.  Class show: monologues and scenes.</dd>
 
-  <dt class="col-sm-3">Leve Two: Monoscene / Pretty Flower</dt>
+  <dt class="col-sm-3">Level Two: Monoscene / Pretty Flower</dt>
   <dd class="col-sm-9">
 Depending on the teacher, it's either Monoscene or Pretty Flower (those are forms). The focus here is "point of view." What is YOUR character's deal? Class show: A Monoscene or Pretty Flower. 
   </dd>

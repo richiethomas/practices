@@ -348,10 +348,19 @@ footer .footer-colophon {
 }
 
 .showrow {
-	margin-top: 5em;
-	margin-bottom: 5em;
+	margin-top: 6em;
+	margin-bottom: 6em;
 }
 .showrow h2 {
-	padding: 1em;
 	text-align: center;
+	padding: 1em;
+}
+
+/* carousel formatting */
+button.carousel-control-prev, button.carousel-control-next {
+	border: 0;
+	background-color: #fff;
+	opacity: 0;
+	
+	
 }

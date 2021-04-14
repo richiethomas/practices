@@ -5,7 +5,8 @@
 <h2>Current Shows</h2>
 <ul>
 	<li><a href="#formtune">Wheel of Formtune</a></li>
-	<li><a href="#threemeup">Three Me Up Scotty!</a></li>
+	<li><a href="#threemeup">Three Me Up Scotty!</a> (US and European!)</li>
+	<li><a href="#hotgirlshyt">Hot Girl Shyt</a></li>
 	<li><a href="#jams">Friday Jams</a></li>
 	<li><a href="#presents">Yer Da Presents</a></li>
 	<li><a href="#week">How Was Your Week?</a></li>
@@ -29,9 +30,9 @@
 <div class="showrow row">
 	<div class="col">
 		<h2 class="mb-4">Wheel of Formtune!</h2>
-		<p>Mondays 12:30pm PST, every other week</p>
+		<p>Mondays 11am <?php echo TIMEZONE; ?>, every other week</p>
 		
-		<p><b>Wheel of Formtune</b> runs every other week on Mondays 12:30pm PST. The trio JMG International (Julia Kelly, Max Bank and Gareth O'Connor) hosts a few improv groups trying out a new form each week!</p>
+		<p><b>Wheel of Formtune</b> runs every other week on Mondays 11am <?php echo TIMEZONE; ?>. The trio JMG International (Julia Kelly, Max Bank and Gareth O'Connor) hosts a few improv groups trying out a new form each week!</p>
 		
 			<ul>
 				<li>To apply, fill out this form: <a href='https://forms.gle/uJgAsmYRA8BYokR58'>https://forms.gle/uJgAsmYRA8BYokR58</a></li>
@@ -39,7 +40,10 @@
 			
 	</div>
 	<div class="col">
-		<img src='images/formtune.png'>
+		<figure class="figure">
+		  <img src="images/formtune.png" class="figure-img img-fluid rounded" alt="Wheel of Formtune!">
+		  <figcaption class="figure-caption text-end">art by Gareth O'Connor</figcaption>
+		</figure>
 	</div>
 
 </div>
@@ -54,13 +58,13 @@
 		
 		<p><b>Three Me Up, Scotty</b> is a show for WGIS students to do 3prov. There are TWO Three Me Up Scotty shows each week!</p>
 		<ul>
-			<li>Monday 12:30pm PST (every other week) -- Three Me Up Scotty, European Edition - hosted by Erick Acuna and Christne Simpson
+			<li>Monday 12:30pm <?php echo TIMEZONE; ?> (every other week) -- Three Me Up Scotty, European Edition - hosted by Erick Acuna and Christne Simpson
 	
 			<ul>
 				<li>To apply, fill out this form: <a href='https://forms.gle/978iYx5jzVGQtuZu6'>https://forms.gle/978iYx5jzVGQtuZu6</a></li>
 			</ul>
 			</li>
-			<li>Monday 6pm PST - Three Me Up Scotty - hosted by Elena Martinez and Ethan Smith
+			<li>Monday 6pm <?php echo TIMEZONE; ?> - Three Me Up Scotty - hosted by Elena Martinez and Ethan Smith
 			<ul>
 				<li>Too apply for this, fill out this form: <a href='https://threemeup.link/perform'>https://threemeup.link/perform</a></li>
 			</ul>
@@ -69,16 +73,37 @@
 		</ul>
 	</div>
 	<div class="col">
-		<img src='images/3meup.jpg'>
-		<img src='images/3meupeuro.jpg'>
+		<figure class="figure">
+		  <img src="images/3meup.jpg" class="figure-img img-fluid rounded" alt="3meup Scotty!">
+		  <figcaption class="figure-caption text-end">art by Ethan Smith</figcaption>
+		</figure>
+		<figure class="figure">
+		  <img src="images/3meupeuro.jpg" class="figure-img img-fluid rounded" alt="3meup Scotty European!">
+		  <figcaption class="figure-caption text-end">art by Ethan Smith and probably Christine Simpson</figcaption>
+		</figure>
 	</div>
 
 </div>
 
+
+<a name="hotgirlshyt"></a>
+<div class="showrow row"><div class="col">
+<h2 class="mt-4 mb-2">Hot Girl Shyt!</h2>
+<p>Every Other Thursday 6pm <?php echo TIMEZONE; ?> (California time)</p>
+
+<p>A jam for female-identifying improvisers!</p>
+<p>Hosted by: Amy Halpin Riley, Elena Martinez, Julia Kelly, Michelle J. Gilliam and Kedren Werner!</p>
+<p>Hosts will do a short set up top, then we JAM! Come play!</p>
+
+<p>Zoom link: <a href="https://us02web.zoom.us/j/88364628827">https://us02web.zoom.us/j/88364628827</a><br>
+Meeting ID: 88364628827</p>
+</div></div>
+
+
 <a name="jams"></a>
 <div class="showrow row"><div class="col">
 <h2 class="mt-4 mb-2">Friday Jams</h2>
-<p>Fridays 11am and 5pm PST (California time)</p>
+<p>Fridays 11am and 5pm <?php echo TIMEZONE; ?> (California time)</p>
 
 <p>Join our improv jams!</p>
 
@@ -91,11 +116,14 @@ Passcode: 129538</p>
 <div class="showrow row">
 	<div class="col">
 		<h2 class="mb-4">Yer Da Presents</h2>
-		<p>Friday 12pm PST</p>
+		<p>Friday 12pm <?php echo TIMEZONE; ?></p>
 		<p>In <b>Yer Da Presents</b> a team of improvisers from Scotland does a set. There's also always an opening team.</p>
 	</div>
 	<div class="col">
-		<img src='images/yerdakilts.png'>
+		<figure class="figure">
+		  <img src="images/yerdakilts.png" class="figure-img img-fluid rounded" alt="Yer Da Presents!">
+		  <figcaption class="figure-caption text-end">art by Christine Simpson</figcaption>
+		</figure>
 	</div>
 </div>
 
@@ -105,12 +133,15 @@ Passcode: 129538</p>
 <div class="showrow row">
 	<div class="col">
 		<h2 class="mt-4 mb-2">How Was Your Week?</h2>
-		<p>Fridays 6:30 PST (California time)</p>
+		<p>Fridays 6:30 <?php echo TIMEZONE; ?> (California time)</p>
 
 		<p>Will Hines hosts a cast of improvisers who make up scenes based on whatever happened to them that week!</p>
 	</div>
 	<div class="col">
-		<img src='images/hwyw.png'>
+		<figure class="figure">
+		  <img src="images/hwyw.png" class="figure-img img-fluid rounded" alt="How Was Your Week?">
+		  <figcaption class="figure-caption text-end">art by Ethan Smith</figcaption>
+		</figure>
 	</div>
 </div>
 
@@ -118,7 +149,7 @@ Passcode: 129538</p>
 <div class="showrow row"><div class="col">
 	
 <h2 class="my-4">Thursday Teams</h2>
-<p>Thursdays 11am and 5pm, PST</p>
+<p>Thursdays 11am and 5pm, <?php echo TIMEZONE; ?></p>
 
 <p>Current/former students perform together. Here's the schedule for March and April 2021</p>
 

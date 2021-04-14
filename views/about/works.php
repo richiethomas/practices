@@ -6,8 +6,6 @@
 
 <p>Sign in to the site. You enter an email, we send you a link. No passwords.</p>
 
-<p>Or you login via Google (click "login" on the front page, upper right corner, and you'll see the Google button).</p>
-
 <p>Once signed in, you click on a class and then "enroll" to enroll. If it's full you can join the waiting list.</p>
 
 <p>All classes happen via Zoom. After you are enrolled, you'll get an email with a link to a Zoom session.</p>
@@ -17,9 +15,9 @@
 
 <h2>How Do I Pay?</h2>
 
-<p>You pay via Venmo or Paypal when you can, before start of class. Payment info is sent after you enroll.</p>
+<p>You pay via Venmo (@wgimprovschool) or Paypal (payments@wgimprovschool.com) when you can, before start of class.</p>
 
-<p>If you drop out of a class with less than 24 hours notce, we may ask you pay anyway, especially if it was a sold out class with a long waiting list (meaning we could have sold the spot). But if we do fill your spot, we won't ask that you pay (or we'll refund you if you paid early).</p>
+<p>If you drop out of a class with less than 24 hours notice, we may ask you pay anyway. If we fill your spot, we'll refund you.</p>
 
 <h2>Does Improv and Sketch Really Work Over Zoom?</h2>
 

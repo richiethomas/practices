@@ -1,11 +1,7 @@
+
 <main role="main">
-	
-	
+
 <?php if ($link_email_sent_flag) { ?>	
-<script
-  src="https://code.jquery.com/jquery-3.5.1.min.js"
-  integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0="
-  crossorigin="anonymous"></script>
 <script type="text/javascript">
     $(window).on('load',function(){
         $('#checkYourEmail').modal('show');
@@ -19,29 +15,64 @@
 	<?php echo $userhelper->edit_display_name($u); ?>
 		</div>
 <?php 		}  ?>	
-	
-  <!-- Main jumbotron for a primary  message -->
-  <div class="jumbotron">
+
+
+
+
+<div class="jumbotron">
 	<div class="container-lg container-fluid">
 	  <div class="row align-items-center justify-content-center">
 		<p class="col-12 col-sm-10 col-md-8">We teach online classes in <span class="color-long-form-improv">long-form improv</span> <!--<span class="color-character">character</span>--> and <span class="color-sketch">sketch</span>.</p>
 	  </div>
-	  
-	  <div class="row news-summary pb-4">
+
+	<!--   <div class="row news-summary pb-4">
 		<div class="col-12 d-flex align-items-start justify-content-start ">
 		  <span class="badge rounded-pill bg-primary h6 mx-2"><a class="text-light" href="shows.php">Shows and Jams</a></span>
 		  <span class="h6 news-item pl-1"> See the <a href="shows.php">shows/jams</a> page for details!</span>
 		</div>
-	  </div>
+	  </div>-->
 	  
 	</div>
   </div>
   
+<div class="container-fluid classes-header container-header-banner"><h3 class="container-lg container-fluid">Latest News</h3></div>
+	
+	<div class="container-lg container-fluid" id="news">
+		
+		<div class="row">
+			<div class="col-sm-5">
+				
+				<figure class="figure">
+				  <a href="wgif.php"><img src="images/festival_500.png" class="figure-img img-fluid rounded" alt="WGIF"></a>
+				  <figcaption class="figure-caption text-end">art by Gareth O'Connor</figcaption>
+				</figure>
+			</div>
+			<div class="col-sm-7">
+
+  <dl class="row mt-3">
+    <dt class="col-sm-3">World's Greatest Improv Festival</dt>
+    <dd class="col-sm-9">To celebrate the anniversary of WGIS, we're doing a <b>28 hour (!)</b> online festival! Starts Friday night April 30 8pm through midnight May 1 (<?php echo TIMEZONE; ?>). Too much improv, too much online, too much everything! For more info, see <a href="wgif.php">here</a>.</dd>
+
+    <dt class="col-sm-3">Shows on Twitch</dt>
+    <dd class="col-sm-9">
+  We have lots of shows on our twitch channel: <a href="http://www.twitch.tv/wgimprovschool">http://www.twitch.tv/wgimprovschool</a>. Many let students sign up for slots. See the <a href="shows.php">shows page</a> for a list!
+    </dd>
+
+    <dt class="col-sm-3">Jams</dt>
+    <dd class="col-sm-9">We have great jams for new improvisers to get reps! Our newest one is HOT GIRL SHYT -- for female-identifying improvisers (every other Thursday 6pm <?php echo TIMEZONE; ?>) -- also see the <a href="shows.php">shows page</a> for details on those!</dd>
+  
+  </dl>
+  
+	</div></div>
+  
+  	  
+</div>
+
 
   
   <div id="classes">
 	<div class="container-fluid classes-header container-header-banner"><h3 class="container-lg container-fluid">Current & Upcoming Classes</h3></div>
-	<h4 class="text-center class-time-announcement mt-5 mb-5 col-12">All Class Dates and Times are California Time (PST)</h4>
+	<h4 class="text-center class-time-announcement mt-5 mb-5 col-12">All Class Dates and Times are California Time (<?php echo TIMEZONE; ?>)</h4>
 	
 	
 <?php
@@ -61,6 +92,11 @@ if (count($unavailable_workshops) > 0) {
 				if (!Wbhkit\is_future($wk['start'])) {
 					continue; // skip ones that already started
 				}
+				if ($wk['soldout']) {
+					continue; // skip sold out classes
+				}
+				
+				
 				$classes_shown++; // count how many classes we actually list
 				
 		?>
