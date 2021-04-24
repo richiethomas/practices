@@ -5,8 +5,8 @@
 		<div class="col-md-10 col-12">
 
 <figure class="figure">
-  <img src="images/festival_500.png" class="figure-img img-fluid rounded" alt="WGIF">
-  <figcaption class="figure-caption text-end">art by Gareth O'Connor</figcaption>
+  <a href="images/festival_full.png"><img src="images/festival_500.png" class="figure-img img-fluid rounded" alt="WGIF"></a>
+  <figcaption class="figure-caption text-end">art by Gareth O'Connor, click for full res</figcaption>
 </figure>
 
 
@@ -15,14 +15,26 @@ through midnight Saturday May 1, <?php echo TIMEZONE; ?> California time</p>
 
 <p>To celebrate the anniversary of the World's Greatest Improv School, we are doing a festival. Featuring lots of performers and teams from WGIS and elsewhere, it's going to excessive, dumb, fun and great!</p>
 
-
-<p>IF YOU WANT TO SUBMIT A SHOW (you should have some kind of connection to WGIS), <a href="https://forms.gle/ddvMP6oQPDKEqReg6">submit here</a>.</p>
-
-
-<p>IF YOU WANT TO VOLUNTEER AS A TECH (we will pay a small stipend), <a href="https://forms.gle/RMf3kkHEqAbFS3AB6">submit here</a>.</p>
-
-
 <p>More details to come soon! Watch this space or see our <a href="https://www.facebook.com/groups/wgimprovschool">Facebook group</a>!</p>
+
+
+<h2>Press Kit</h2>
+<p>If you make flyers for your show, include one of these in it to help brand them WGIS shows</p>
+
+<div class="row"><div class="col-sm-5">
+<figure class="figure m-4">
+   <a href="images/wgif_words_badge.png"><img src="images/wgif_words_badge.png" class="figure-img img-fluid rounded" alt="words badge"></a>
+  <figcaption class="figure-caption">Words Badge - click for full res</figcaption>
+</figure>
+
+<figure class="figure m-4">
+  <a href="images/wgif_initials_badge.png"><img src="images/wgif_initials_badge.png" class="figure-img img-fluid rounded" alt="initials badge"></a>
+  <figcaption class="figure-caption">Initials Badge - click for full res</figcaption>
+</figure>
+</div></div>
+
+
+
 
 
 
