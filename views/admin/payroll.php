@@ -63,14 +63,21 @@ $pay_date_total = null;
 $pay_grand_total = null;
 	
 	
-function total_row($name, $total) {
+function total_row($name, $total, &$guts) {
 	echo "<div class='row border-top mt-1'><div class='col-6'>Total for {$name}:</div><div class='col'><b>$total</b></div></div>\n";
+	
+	if ($guts) {
+		echo \Wbhkit\textarea($name.'ta', $guts, 0);
+	}
+	$guts = null;
+	
 }
 function teacher_header($name) {
 	echo "<h4 class='mt-3'>{$name}</h4>\n";
 	
 }
-		
+
+$guts = null; // cut and paste version of teacher pay items
 foreach ($payrolls as $p) {
 	
 	//break it down by date
@@ -82,9 +89,9 @@ foreach ($payrolls as $p) {
 	
 	if ($p->fields['when_paid'] != $last_when_paid) {
 		if ($last_when_paid != 0) {
-			total_row($last_teacher_name, $pay_teacher_total);
+			total_row($last_teacher_name, $pay_teacher_total, $guts);
 			$pay_teacher_total = 0;
-			total_row(date('j-M-Y', strtotime($last_when_paid)), $pay_date_total);
+			total_row(date('j-M-Y', strtotime($last_when_paid)), $pay_date_total, $guts);
 			$pay_date_total = 0;
 		}
 		echo "<h3 class='mt-2'>".date('j-M-Y', strtotime($p->fields['when_paid']))."</h3>";
@@ -92,12 +99,15 @@ foreach ($payrolls as $p) {
 		
 	} elseif ($p->fields['teacher_name'] != $last_teacher_name) {
 		if ($last_teacher_name) {
-			total_row($last_teacher_name, $pay_teacher_total);
+			total_row($last_teacher_name, $pay_teacher_total, $guts);
 			$pay_teacher_total = 0;
 		}
 		echo teacher_header($p->fields['teacher_name']);
 	}
 	echo "<div class='row'>\n";
+	
+	$guts .= "{$p->fields['title']} (".date('D M j ga', strtotime($p->fields['start'])).' #'.($p->fields['rank'] ? $p->fields['rank'] : 'show').") {$p->fields['amount']}\n";
+	
 	echo "<div class='col-6'>{$p->fields['title']} <small>({$p->fields['workshop_id']}) (".date('D M j ga', strtotime($p->fields['start'])).' #'.($p->fields['rank'] ? $p->fields['rank'] : 'show').")</small></div>";
 	echo "<div class='col'>{$p->fields['amount']} <span class='ml-3'><small>(<a href='admin_payroll.php?ac=del&pid={$p->fields['id']}&searchstart=$searchstart&searchend=$searchend'>delete</a>)</small></span></div>";
 	echo "</div>\n";
@@ -110,9 +120,9 @@ foreach ($payrolls as $p) {
 	
 }
 
-total_row($last_teacher_name, $pay_teacher_total);
-total_row(date('j-M-Y', strtotime($last_when_paid)), $pay_date_total);
-total_row('Grand Total', $pay_grand_total);
+total_row($last_teacher_name, $pay_teacher_total, $guts);
+total_row(date('j-M-Y', strtotime($last_when_paid)), $pay_date_total, $guts);
+total_row('Grand Total', $pay_grand_total, $guts);
 
 // list unclaimed items
 

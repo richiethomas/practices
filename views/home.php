@@ -43,23 +43,35 @@
 			<div class="col-sm-5">
 				
 				<figure class="figure">
-				  <a href="wgif.php"><img src="images/festival_500.png" class="figure-img img-fluid rounded" alt="WGIF"></a>
-				  <figcaption class="figure-caption text-end">art by Gareth O'Connor</figcaption>
+				  <a href="shows.php"><img src="images/htgs.jpg" class="figure-img img-fluid rounded" alt="Hot Girl Shyt"></a>
+				  <figcaption class="figure-caption text-end">art by Ethan Smith</figcaption>
 				</figure>
 			</div>
 			<div class="col-sm-7">
 
+<h2>Recent News</h2>
   <dl class="row mt-3">
-    <dt class="col-sm-3">World's Greatest Improv Festival</dt>
-    <dd class="col-sm-9">To celebrate the anniversary of WGIS, we're doing a <b>28 hour (!)</b> online festival! Starts Friday night April 30 8pm through midnight May 1 (<?php echo TIMEZONE; ?>). Too much improv, too much online, too much everything! For more info, see <a href="wgif.php">here</a>.</dd>
+    <dt class="col-sm-3">Hot Girl Shyt</dt>
+    <dd class="col-sm-9">Every other week, Thursday 6pm <?php echo TIMEZONE; ?>, WGIS hosts a jam for female-identifying improvisers. For more details on this and other shows see our <a href="shows.php">shows page</a>.</dd>
 
-    <dt class="col-sm-3">Shows on Twitch</dt>
+    <dt class="col-sm-3">Discord Server</dt>
+    <dd class="col-sm-9">We have a server on the Discord chat service. To join, <a href="https://discord.gg/GXbP3wgbrc">click here</a>.</dd>
+
+    <dt class="col-sm-3">Facebook Group</dt>
+    <dd class="col-sm-9">We also have a Facebook group, you can see that <a href="https://www.facebook.com/groups/wgimprovschool">here</a>.</dd>
+
+    <dt class="col-sm-3">Twitch Channel</dt>
+    <dd class="col-sm-9">We also broacast class shows and other performances on our Twitch channel, see that <a href="https://www.twitch.tv/wgimprovschool">here</a>.</dd>
+
+
+
+<!--     <dt class="col-sm-3">Shows on Twitch</dt>
     <dd class="col-sm-9">
   We have lots of shows on our twitch channel: <a href="http://www.twitch.tv/wgimprovschool">http://www.twitch.tv/wgimprovschool</a>. Many let students sign up for slots. See the <a href="shows.php">shows page</a> for a list!
     </dd>
 
     <dt class="col-sm-3">Jams</dt>
-    <dd class="col-sm-9">We have great jams for new improvisers to get reps! Our newest one is HOT GIRL SHYT -- for female-identifying improvisers (every other Thursday 6pm <?php echo TIMEZONE; ?>) -- also see the <a href="shows.php">shows page</a> for details on those!</dd>
+    <dd class="col-sm-9">We have great jams for new improvisers to get reps! Our newest one is HOT GIRL SHYT -- for female-identifying improvisers (every other Thursday 6pm <?php echo TIMEZONE; ?>) -- also see the <a href="shows.php">shows page</a> for details on those!</dd> -->
   
   </dl>
   
@@ -92,9 +104,9 @@ if (count($unavailable_workshops) > 0) {
 				if (!Wbhkit\is_future($wk['start'])) {
 					continue; // skip ones that already started
 				}
-				if ($wk['soldout']) {
-					continue; // skip sold out classes
-				}
+				//if ($wk['soldout']) {
+				//	continue; // skip sold out classes
+				//}
 				
 				
 				$classes_shown++; // count how many classes we actually list

@@ -34,6 +34,8 @@
 		
 		<p><b>Wheel of Formtune</b> runs every other week on Mondays 11am <?php echo TIMEZONE; ?>. The trio JMG International (Julia Kelly, Max Bank and Gareth O'Connor) hosts a few improv groups trying out a new form each week!</p>
 		
+		<p><B>NOTE: Shows are at 10am <?php echo TIMEZONE; ?> for May!</b></p>
+		
 			<ul>
 				<li>To apply, fill out this form: <a href='https://forms.gle/uJgAsmYRA8BYokR58'>https://forms.gle/uJgAsmYRA8BYokR58</a></li>
 			</ul>
@@ -97,7 +99,21 @@
 
 <p>Zoom link: <a href="https://us02web.zoom.us/j/88364628827">https://us02web.zoom.us/j/88364628827</a><br>
 Meeting ID: 88364628827</p>
-</div></div>
+</div>
+
+
+	<div class="col">
+		<figure class="figure">
+		  <img src="images/htgs.jpg" class="figure-img img-fluid rounded" alt="Hot Girl Shyt">
+		  <figcaption class="figure-caption text-end">art by Ethan Smith</figcaption>
+		</figure>
+	</div>
+
+</div>
+
+
+
+
 
 
 <a name="jams"></a>
