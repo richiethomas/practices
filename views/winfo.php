@@ -66,6 +66,10 @@ if ($u->check_user_level(2)) {
 	$lists = $eh->get_students($wk['id'], ENROLLED);
 	echo "<div class='m-3 p-3 bg-info'>\n";
 	echo "<h3>Teacher/Admin Info</h3>\n";
+	
+	echo "<h4>Zoom link</h4>\n";
+	echo "<p><a href='{$wk['online_url']}'>{$wk['online_url']}</a></p>\n";
+	
 	echo "<h4>Enrolled Students</h4><ul>";
 	foreach ($lists as $l) {
 		echo "<li>".$l['nice_name']."</li>\n";
