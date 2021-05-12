@@ -4,6 +4,39 @@
 			<h5>Upcoming Workshops</h5>
 		</div>
 		<div class="admin-box-content">
+			
+			
+			<div class="issues float-end border border-4 p-2 m-2">
+				<h4>Outstanding Invites</h4>
+				<ul>
+				<?php
+				$last_wk = null;
+				foreach ($invites as $in) {
+					if ($last_wk != $in['title']) {
+						echo "<p class='m-0'><b><a href='admin_edit2.php?wid={$in['workshop_id']}'>{$in['title']}</a> - ".date('D M j', strtotime($in['start']))."</b></p>\n";
+						$last_wk = $in['title'];
+					}
+					echo "<p class='m-0 ps-4'>{$in['nice_name']} <small>(".date('M j g:ia', strtotime($in['last_modified'])).")</small></p>\n";
+				}
+				?>
+				</ul>
+				
+				<h4>Unpaid</h4>
+				<ul>
+				<?php
+				$last_wk = null;
+				foreach ($unpaid as $up) {
+					if ($last_wk != $up['title']) {
+						echo "<p class='m-0'><b><a href='admin_edit2.php?wid={$up['workshop_id']}'>{$up['title']}</a> - ".date('D M j', strtotime($up['start']))."</b></p>\n";
+						$last_wk = $up['title'];
+					}
+					echo "<p class='m-0 ps-4'>{$up['nice_name']}</p>\n";
+				}
+				?>
+				</ul>
+			</div>
+			
+			
 			<p><i>(paid / enrolled / capacity / waiting)</i></p>
 
 <?php		
@@ -50,5 +83,6 @@ foreach ($workshops as $wk) {
 
 echo "</ul>\n";
 ?>
+
 		</div>
 	</div>

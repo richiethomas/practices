@@ -24,6 +24,8 @@ $view->data['faculty'] = Teachers\get_all_teachers(true); // active teachers
 $view->data['workshops'] = Workshops\get_sessions_to_come();
 $view->data['filter_by'] = $filter_by; 
 $view->data['your_teacher_id'] = $your_teacher_id; 
+$view->data['unpaid'] = Workshops\get_unpaid_students();
+$view->data['invites'] = Workshops\get_outstanding_invites();
 
 $view->renderPage('admin/upcoming');
 

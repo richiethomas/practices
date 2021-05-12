@@ -87,6 +87,7 @@ if (isset($fb_image)) {
 	 	<div class=\"container-lg container-fluid\">
 	 	<article> <!-- Using the <article> tag to signify this is a straight page or post -->
 ";
+ 	
  }
 
  ?>
