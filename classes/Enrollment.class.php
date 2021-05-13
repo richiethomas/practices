@@ -228,7 +228,7 @@ class Enrollment extends WBHObject {
 				$body = "<p>This is automated email to confirm that I've received your payment for class.</p>";
 				$body .= "<p>Class: {$this->wk['title']} {$this->wk['showstart']} (California time, ".TIMEZONE.")</p>\n";
 				$body .= "<p>Student: {$this->u->fields['nice_name']}</p>";
-				$body .= "<p>Amount: \${$this->wk['cost']} (USD)</p>\n";
+				$body .= "<p>Amount: ".($this->wk['cost'] == 1 ? 'Pay what you can' : "\${$this->wk['cost']}  (USD)")."</p>\n";
 				
 				if ($this->wk['online_url']) {
 					$body .= "<p>Zoom link for this classs: {$this->wk['online_url']}</p>\n";

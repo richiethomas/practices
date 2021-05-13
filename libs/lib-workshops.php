@@ -47,8 +47,13 @@ function fill_out_workshop_row($row, $get_enrollment_stats = true) {
 		$row['co_teacher_info'] = \Teachers\get_teacher_by_id($row['co_teacher_id']);
 	}
 		
-		
-	$row['costdisplay'] = $row['cost'] ? "\${$row['cost']} USD" : 'Free';
+	if ($row['cost'] == 1) {
+		$row['costdisplay'] = 'Pay what you can';
+	} elseif ($row['cost'] > 1) {
+		$row['costdisplay'] = "\${$row['cost']} USD";
+	} else {
+		$row['costdisplay'] = 'Free';
+	}
 	
 	// xtra session info
 	$row['sessions'] = \XtraSessions\get_xtra_sessions($row['id']);	

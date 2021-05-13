@@ -102,10 +102,16 @@ function remind_enrolled($class) {
 		
 		// add note if student has to pay
 		$note = $reminder['note'];
-		if (!$std['paid'] && $wk['cost']) {
+		if (!$std['paid'] && $wk['cost'] > 1) {
 			$note .= "<p>PAYMENT<br>
 -------<br>
 Our records show you have not yet paid. That's fine! This is just a reminder: payment is due by the start of class. Send {$wk['cost']} USD via venmo @wgimprovschool (it's a business, not a person) or paypal payments@wgimprovschool.com.<br>
+Questions/concerns: ".WEBMASTER."</p>";
+		}
+		if (!$std['paid'] && $wk['cost'] == 1) {
+			$note .= "<p>PAYMENT<br>
+-------<br>
+Our records show you have not yet paid. That's fine! This is just a reminder: payment is due by the start of class. Also, this is a PAY WHAT YOU CAN class, so pay anything from zero to $40USD (the usual full cost). If you're going to pay something, do so via venmo @wgimprovschool (it's a business, not a person) or paypal payments@wgimprovschool.com or https://paypal.me/WGImprovSchool.<br>
 Questions/concerns: ".WEBMASTER."</p>";
 		}
 		

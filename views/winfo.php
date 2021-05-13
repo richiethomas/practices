@@ -56,6 +56,10 @@ echo "
 <p>{$wk['full_when']} (".TIMEZONE.")<br><br>
 {$wk['costdisplay']}, {$wk['enrolled']} (of {$wk['capacity']}) enrolled, ".($wk['waiting']+$wk['invited'])." waiting</p>\n";
 
+if ($wk['cost'] == 1) {
+	echo "<p class='m-5'><em>This is a PAY WHAT YOU CAN workshop. Pay anything from zero to $40USD (the usual full price).</em></p>";
+}
+
 if ($show_other_action)  {
 	echo "<p class='alert alert-info'>{$point}</p>\n";
 }

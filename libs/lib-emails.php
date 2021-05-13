@@ -25,6 +25,9 @@ function centralized_email($to, $sub, $body) {
 	  $headers['charset'] = "ISO-8859-1";
 
 
+
+	  $body = wordwrap($body, 80, "<br>\n");
+
 	  if (LOCAL) {
 	  	// connect to SMTP
 		$smtp = get_smtp_object();
@@ -81,9 +84,14 @@ function confirm_email($e, $status_id = ENROLLED) {
 				$body .= "<p>ZOOM LINK:<br>\n----------<br>\nThe Zoom link to your workshop is: {$wk['online_url']}. Try to show up 5 minutes early if you can so we can get started right away.  If your class is multiple sessions, that link should work for all of them. We'll send you an email if the link changes.</p>";
 			}
 			
-			if ($wk['cost'] > 0) {
-				$body .= "<p>PAYMENT:<br>\n--------<br>\nClass costs \${$wk['cost']} (USD). Pay via Venmo @wgimprovschool (business) or PayPal payments@wgimprovschool.com. Due by the start of class. Confirmation email for payment can take up to 12 hours to arrive because it's triggered manually by the stubborn human who built this web site.</p>";
+			if ($wk['cost'] > 1) {
+				$body .= "<p>PAYMENT:<br>\n--------<br>\nClass costs \${$wk['cost']} (USD). Pay via Venmo @wgimprovschool (business) or PayPal payments@wgimprovschool.com or https://paypal.me/WGImprovSchool. Due by the start of class. Confirmation email for payment can take up to 12 hours to arrive because it's triggered manually by the stubborn human who built this web site.</p>";
 			}
+			if ($wk['cost'] == 1) {
+				$body .= "<p>PAYMENT:<br>\n--------<br>This is a PAY WHAT YOU CAN class. Full price is usually $40USD, but pay anything from zero to $40USD, whatever you like. If you are going to pay something, venmo @wgimprovschool (it's a business, not a person) or paypal payments@wgimprovschool.com or https://paypal.me/WGImprovSchool</p>";
+			}
+			
+			
 
 			$body .= 
 "<p>CLASS INFO<br>\n----------<br>\nDescription and times/dates are both in this email and also listed here:<br>\n{$trans}</p>\n
@@ -164,7 +172,7 @@ Others might be waiting for the spot if you don't want it.</p>";
 <b>Title:</b> {$wk['title']}<br>
 <b>Teacher:</b> {$wk['teacher_info']['nice_name']}".($wk['co_teacher_id'] ?  ", {$wk['co_teacher_info']['nice_name']}" : '')."<br>
 <b>When:</b> {$wk['full_when']} (".TIMEZONE." - California time)<br>
-<b>Cost:</b> \${$wk['cost']} USD<br>".
+<b>Cost:</b> {$wk['costdisplay']}<br>".
 ($status_id == ENROLLED ? "<b>Zoom link:</b> {$wk['online_url']}" : "<b>Zoom link</b>: We'll email you the zoom link if/once you are enrolled.")."<br>
 <b>Description:</b> {$wk['notes']}</p>
 <p>Web page for this class:<br>\n{$trans}</p>";	

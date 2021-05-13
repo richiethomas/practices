@@ -142,7 +142,7 @@ if (count($unavailable_workshops) > 0) {
 				
 				
 				<span class="class-price">
-				  <?php echo $wk['cost']; ?> USD
+				  <?php echo $wk['costdisplay']; ?> 
 				</span>
 				<span class="class-enroll">
 					
