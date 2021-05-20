@@ -16,7 +16,15 @@
 						echo "<p class='m-0'><b><a href='admin_edit2.php?wid={$in['workshop_id']}'>{$in['title']}</a> - ".date('D M j', strtotime($in['start']))."</b></p>\n";
 						$last_wk = $in['title'];
 					}
-					echo "<p class='m-0 ps-4'>{$in['nice_name']} <small>(".date('M j g:ia', strtotime($in['last_modified'])).")</small></p>\n";
+					$then = new DateTime($in['last_modified']);
+					$now = new DateTime("now");
+					$interval = $then->diff($now);
+					$fmt = null;
+					if ($interval->d > 0) { $fmt .= "%d days "; }
+					if ($interval->h > 0) { $fmt .= "%h hrs "; }
+					if ($interval->i > 0) { $fmt .= "%i mins"; }
+					
+					echo "<p class='m-0 ps-4'>{$in['nice_name']} <small>(".$then->format('M j g:ia').") - ".$interval->format($fmt)."</small></p>\n";
 				}
 				?>
 				</ul>

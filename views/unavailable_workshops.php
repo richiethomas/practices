@@ -23,7 +23,7 @@ foreach ($unavailable_workshops as $wk) {
 	$wkdate = date("l F j", strtotime($wk['start']));
 	$start = Wbhkit\friendly_time($wk['start']);
 	$end = Wbhkit\friendly_time($wk['end']);	
-	echo "<li class='mb-2'>$wkdate: <a href='workshop.php?wid={$wk['id']}'>{$wk['title']}</a><br><small>$start \${$wk['costdisplay']} (USD), Instructor: {$wk['teacher_info']['nice_name']}</small></li>\n";	
+	echo "<li class='mb-2'>$wkdate: <a href='workshop.php?wid={$wk['id']}'>{$wk['title']}</a><br><small>$start {$wk['costdisplay']} (USD), Instructor: {$wk['teacher_info']['nice_name']}</small></li>\n";	
 }	
 
 echo "</ul>\n";

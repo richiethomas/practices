@@ -152,8 +152,10 @@ if (isset($wk) && isset($wk['id']) && $wk['id']) {
 	$view->data['e'] = $e;
 	$view->data['show_other_action'] = $show_other_action;
 	$view->data['admin'] = 0;
-	$heading = $wk['title'];
+	
+	$heading = $view->data['fb_title'] = $wk['title'];
 	$view->data['fb_image'] = "http://{$_SERVER['HTTP_HOST']}".Teachers\get_teacher_photo_src($wk['teacher_info']['user_id']);
+	$view->data['fb_description'] = $wk['notes'];
 	$view->renderPage('winfo');
 } else {
 	$view->data['error_message'] = "<h1>Whoops!</h1><p>You are asking to look at info about a workshop, but I (the computer) cannot tell which workshop you mean. Sorry!</p>\n";

@@ -208,6 +208,12 @@ if (count($unavailable_workshops) > 0) {
 <p><a href="https://www.facebook.com/groups/wgimprovschool">https://www.facebook.com/groups/wgimprovschool</a></p>
 </div>
 
+<div class="container mb-5">
+<h3 class="mb-3">Discord Server</h2>
+<p>We have a server on the Discord chat service. To join, <a href="https://discord.gg/GXbP3wgbrc">click here</a>.</p> 
+</div>
+
+
   <div id="buy-the-book" class="container mb-5">
 	<h3 class="mb-3">Buy the Book</h3>
 <div class="row"><img src="images/htbtgioe_cover.jpg" class="col-sm-12 col-md-3 align-self-start mb-2" />

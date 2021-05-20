@@ -22,9 +22,21 @@
     <link href="open-iconic/font/css/open-iconic-bootstrap.css" rel="stylesheet">
 	
 <?php
-if (isset($fb_image)) {
-	echo "<meta property=\"og:image\" content=\"{$fb_image}\">\n";
+if (!isset($fb_image)) {
+	$fb_image = "http://wgimprovschool.com/images/logo_square_small.jpg";
 }
+echo "	<meta property=\"og:image\" content=\"{$fb_image}\">\n";
+
+
+if (!isset($fb_title)) {
+	$fb_title = $heading;
+}
+echo "	<meta property=\"og:title\" content=\"{$fb_title}\">\n";
+
+if (isset($fb_description)) {
+	echo "	<meta property=\"og:description\" content=\"{$fb_description}\">\n";
+}
+
 ?>	
 	
   </head>
