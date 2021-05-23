@@ -87,7 +87,7 @@ class EnrollmentsHelper extends WBHObject {
 	
 	// returns student basic registration info
 	function get_students(int $wid, int $status_id = ENROLLED) {
-		$sql = "select u.*, r.id as enrollment_id, r.status_id,  r.paid, r.registered, r.last_modified from registrations r, users u where r.workshop_id = :wid and r.user_id = u.id";
+		$sql = "select u.*, r.id as enrollment_id, r.status_id,  r.paid, r.registered, r.last_modified, r.pay_override from registrations r, users u where r.workshop_id = :wid and r.user_id = u.id";
 		if ($status_id) { 
 			$sql .= " and status_id = :sid order by last_modified"; 
 			$stmt = \DB\pdo_query($sql, array(':wid' => $wid, ':sid' => $status_id));
@@ -110,7 +110,7 @@ class EnrollmentsHelper extends WBHObject {
 		}
 		$mysqlnow = date("Y-m-d H:i:s");
 	
-		$sql = "select *, r.id as enrollment_id, r.paid 
+		$sql = "select *, r.id as enrollment_id, r.paid, r.pay_override 
 		from registrations r, workshops w, locations l
 		where r.workshop_id = w.id 
 		and w.location_id = l.id 

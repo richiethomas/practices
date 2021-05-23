@@ -17,7 +17,6 @@ if ($guest_id > 0) {
 
 switch ($ac) {
 
-
 	case 'sar':
 		Reminders\remind_enrolled(array($wk['id'], 0));
 		$message = "Reminders sent to enrolled.";
@@ -98,18 +97,30 @@ switch ($ac) {
 		
 		
 	case 'at':
+		
+		$pay_overrides = array();
+		foreach ($_REQUEST as $k => $v) {
+			if (substr($k, 0, 12) == 'payoverride_') {
+				$po = explode('_', $k);
+				$pay_overrides[$po[1]][$po[2]] = $v;
+			}
+		}
 	
 		$users = (isset($_REQUEST['users']) && is_array($_REQUEST['users'])) ? $_REQUEST['users'] : array();
-
 		$msg = null;
 		if ($wid) {
 			foreach ($lookups->statuses as $sid => $sts) {
 				$stds = $eh->get_students($wid, $sid);
 				foreach ($stds as $as) {
+					$po = 0;
+					if (isset($pay_overrides[$as['id']][$wid])) {
+						$po = $pay_overrides[$as['id']][$wid];
+					}
+						
 					if (in_array($as['id'], $users)) {
-						$msg = $e->update_paid_by_uid_wid($as['id'], $wid, 1);
+						$msg = $e->update_paid_by_uid_wid($as['id'], $wid, 1, $po);
 					} else {
-						$msg = $e->update_paid_by_uid_wid($as['id'], $wid,  0);
+						$msg = $e->update_paid_by_uid_wid($as['id'], $wid,  0, $po);
 					}
 					if ($msg) {
 						$message .= $msg."<br>\n";

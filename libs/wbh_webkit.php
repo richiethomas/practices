@@ -13,6 +13,49 @@ namespace Wbhkit;
 // 2.1 - added html5 form validation, modal sub - 11/2017
 
 
+// next four subs deal with error messages
+function form_element_start() {
+	return "<div class='form-group'>";
+} 
+
+function form_help_block($id, $help = null, $error = null) {
+	$id = figure_help_id($id);
+	$element = '';
+	if ($help) { $element = "<small id ='$id' class='form-text'>$help</small>"; }
+	if ($error) { $element .= "<div class='invalid-feedback'>{$error}</div>\n"; }
+	return $element;
+}
+
+function figure_help_id($key) {
+	return "{$key}HelpBlock";
+}
+
+function figure_aria_attribute($key, $help = null, $error = null) {
+	if ($help || $error) {
+		return " aria-describedby='".figure_help_id($key)."'>";
+	} else {
+		return ">";
+	}	
+}
+
+function label($label, $key, $colon = false) {
+	if ($label === 0) { 
+		return '';
+	} else {
+		$l = figure_label($label, $key, $colon = false);
+		return "<label for='{$key}'>{$l}</label>\n";
+	}
+}
+
+function figure_label($label, $key, $colon = false) {
+	if ($label === 0) { 
+		return '';
+	} else {
+		return ($label ? $label : ucwords(str_replace("_"," ",$key))).($colon ? ': ' : '');
+	}	
+}
+
+
 function texty($key, $value = '', $label = null, $placeholder = null, $help = null, $error = null, $validation = null, $ttype = null) {
 	
 	if (!$ttype) { $ttype = 'text'; }
@@ -125,47 +168,7 @@ function checkbox($name, $value, $label = null, $checked = false, $multiple = fa
 	</label></div>";
 }
 
-function label($label, $key, $colon = false) {
-	$l = figure_label($label, $key, $colon = false);
-	if ($l === 0) { 
-		return '';
-	} else {
-		return "<label for='{$key}'>{$l}</label>\n";
-	}
-}
 
-function figure_label($label, $key, $colon = false) {
-	if ($label === 0) { 
-		return '';
-	} else {
-		return ($label ? $label : ucwords(str_replace("_"," ",$key))).($colon ? ': ' : '');
-	}	
-}
-
-// next four subs deal with error messages
-function form_element_start() {
-	return "<div class='form-group'>";
-} 
-
-function form_help_block($id, $help = null, $error = null) {
-	$id = figure_help_id($id);
-	$element = '';
-	if ($help) { $element = "<small id ='$id' class='form-text'>$help</small>"; }
-	if ($error) { $element .= "<div class='invalid-feedback'>{$error}</div>\n"; }
-	return $element;
-}
-
-function figure_help_id($key) {
-	return "{$key}HelpBlock";
-}
-
-function figure_aria_attribute($key, $help = null, $error = null) {
-	if ($help || $error) {
-		return " aria-describedby='".figure_help_id($key)."'>";
-	} else {
-		return ">";
-	}	
-}
 
 function set_vars($vars) {
 	foreach ($vars as $va) {

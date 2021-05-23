@@ -205,20 +205,27 @@ class Enrollment extends WBHObject {
 	}
 	
 	
-	function update_paid_by_enrollment_id(int $eid, int $new_paid) {
+	function update_paid_by_enrollment_id(int $eid, int $new_paid, string $pay_override = '0', bool $send_email = true) {
 		$this->set_by_id($eid);
-		return $this->update_paid($new_paid);
+		return $this->update_paid($new_paid, $pay_override, $send_email);
 	}
 	
-	function update_paid_by_uid_wid(int $uid, int $wid, int $new_paid) {
+	function update_paid_by_uid_wid(int $uid, int $wid, int $new_paid, string $pay_override = '0', bool $send_email = true) {
 		$this->set_by_uid_wid($uid, $wid);
-		return $this->update_paid($new_paid);
+		return $this->update_paid($new_paid, $pay_override, $send_email);
 	}
 	
-	private function update_paid(int $new_paid) {
+	private function update_paid(int $new_paid, string $pay_override = '0', bool $send_email = true) {
 		
+		
+		if ($pay_override == '') { $pay_override = 0; }
+		
+		// update database even if there is no change -- sometimes pay_override changes even if "paid" does not
+		$stmt = \DB\pdo_query("update registrations set paid = :paid, pay_override = :po where id = :rid", array(':paid' => $new_paid, ':rid' => $this->fields['id'], ':po' => $pay_override));
+
+
+		// send message only if there was a change
 		if ($this->fields['paid'] != $new_paid) {
-			$stmt = \DB\pdo_query("update registrations set paid = :paid where id = :rid", array(':paid' => $new_paid, ':rid' => $this->fields['id']));
 
 			$this->reset_user_and_workshop();
 			
@@ -228,7 +235,11 @@ class Enrollment extends WBHObject {
 				$body = "<p>This is automated email to confirm that I've received your payment for class.</p>";
 				$body .= "<p>Class: {$this->wk['title']} {$this->wk['showstart']} (California time, ".TIMEZONE.")</p>\n";
 				$body .= "<p>Student: {$this->u->fields['nice_name']}</p>";
-				$body .= "<p>Amount: ".($this->wk['cost'] == 1 ? 'Pay what you can' : "\${$this->wk['cost']}  (USD)")."</p>\n";
+				$body .= "<p>Amount: ".($this->wk['cost'] == 1 ? 'Pay what you can' : "\${$this->wk['cost']} (USD)")."</p>\n";
+				
+				if ($pay_override) {
+					$body .= "<p>You paid: \${$pay_override} (USD)</p>\n";
+				}
 				
 				if ($this->wk['online_url']) {
 					$body .= "<p>Zoom link for this classs: {$this->wk['online_url']}</p>\n";
@@ -240,7 +251,9 @@ class Enrollment extends WBHObject {
 				
 				$body .= "<p>Thanks!<br>-Will</p>\n";
 				
-				\Emails\centralized_email($this->u->fields['email'], "Payment received for {$this->wk['title']} {$this->wk['showstart']} (PDT)", $body); 
+				if ($send_email) {
+					\Emails\centralized_email($this->u->fields['email'], "Payment received for {$this->wk['title']} {$this->wk['showstart']} (PDT)", $body); 
+				}
 			
 				return $this->message = "Set user '{$this->u->fields['nice_name']}' to 'paid' for workshop '{$this->wk['title']}'";
 			} else {

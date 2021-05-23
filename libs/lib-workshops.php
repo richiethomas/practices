@@ -92,6 +92,7 @@ function fill_out_workshop_row($row, $get_enrollment_stats = true) {
 	$row = check_last_minuteness($row);
 	
 	if ($get_enrollment_stats) {
+		$row = set_actual_revenue($row);
 		$row = set_enrollment_stats($row);
 		if ($row['enrolled'] + $row['waiting'] + $row['invited'] >= $row['capacity']) { 
 			$row['soldout'] = 1;
@@ -127,6 +128,20 @@ function set_enrollment_stats($row) {
 	
 	$row['open'] = $row['capacity'] - ($row['enrolled'] + $row['invited'] + $row['waiting']);
 	if ($row['open'] < 0) { $row['open'] = 0; }
+	return $row;
+}
+
+
+function set_actual_revenue($row) {
+	
+	$stmt = \DB\pdo_query("select paid, pay_override from registrations r where r.workshop_id = :wid", array(':wid' => $row['id']));
+	$total = 0;
+	while ($reg = $stmt->fetch()) {
+		if ($reg['paid']) {
+			$total += ($reg['pay_override'] ? $reg['pay_override'] : $row['cost']);
+		}
+	}
+	$row['actual_revenue'] = $total;
 	return $row;
 }
 

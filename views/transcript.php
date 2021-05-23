@@ -20,14 +20,15 @@ if ($admin) {
 			$cl .= 'success';
 		} else {
 			$cl .= 'warning';
-		}
-		
+		}	
 		
 		echo "<div class='row workshop-row workshop-$cl my-3 py-3 border-top'>\n"; // workshop row start
 				
 			echo "	<div class='col-sm'>";
 			if ($admin) {
 				echo Wbhkit\checkbox('paids', $t['enrollment_id'], "<a href=\"admin_edit2.php?wid={$t['workshop_id']}\">{$t['title']}</a>", $t['paid'], true);
+				echo \Wbhkit\texty("payoverride_{$t['enrollment_id']}", $t['pay_override'], 0);
+				
 			} else {
 				echo "<a href=\"workshop.php?wid={$t['workshop_id']}\">{$t['title']}</a>";
 			}
