@@ -40,7 +40,7 @@ if (isset($fb_description)) {
 ?>	
 	
   </head>
-  <body class="<?php if ($_SERVER['SCRIPT_NAME'] == '/index.php') { echo 'home'; } ?>">
+  <body>
 	<header>
 	<nav class="navbar navbar-expand-md navbar-light bg-white container-lg container-fluid">
 		 <a class="navbar-brand" href="index.php"><span>World's Greatest Improv School</span></a>
@@ -71,7 +71,7 @@ if (isset($fb_description)) {
 					}
 				}
 				if ($u->logged_in()) {		
-					echo "			<li class=\"nav-item\"><a class=\"nav-link\" href=\"you.php\" title=\"User Profile\"><span class=\"oi oi-person nav-link\" title=\"person\" aria-hidden=\"true\"></span>{$u->fields['nice_name']}</a></li>\n";
+					echo "			<li class=\"nav-item\"><a class=\"nav-link\" href=\"you.php\" title=\"User Profile\"><span class=\"oi oi-person nav-link p-0\" title=\"person\" aria-hidden=\"true\"></span>{$u->fields['nice_name']}</a></li>\n";
 				} else {
 			    	echo "			<li class=\"nav-item\"><a class=\"btn btn-outline-primary my-2 my-sm-0\" data-bs-toggle=\"modal\" data-bs-target=\"#login-modal\">Login</a></li>\n";
 				}

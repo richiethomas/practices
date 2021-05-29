@@ -30,7 +30,7 @@
 		<h2 class="mb-4">Mix Tape</h2>
 		<p>Mondays noon <?php echo TIMEZONE; ?></p>
 		
-		<p><b>Mix Tape</b> runs every Monday at noon <?php echo TIMEZONE; ?>. Featuring a rotation of hosts, the show lets WGIS students sign up to do some improv in this European-friendly time slot!</p>
+		<p><b>Mix Tape</b> runs every Monday at noon <?php echo TIMEZONE; ?>. Featuring a rotation of hosts, the show lets WGIS students sign up to do some improv in this European-friendly time slot! Starting June 14!</p>
 			
 	</div>
 	<div class="col">

@@ -18,26 +18,27 @@
 
 
 
-
+<!--
 <div class="jumbotron">
 	<div class="container-lg container-fluid">
 	  <div class="row align-items-center justify-content-center">
-		<p class="col-12 col-sm-10 col-md-8">We teach online classes in <span class="color-long-form-improv">long-form improv</span> <!--<span class="color-character">character</span>--> and <span class="color-sketch">sketch</span>.</p>
+		<p class="col-12 col-sm-10 col-md-8">We teach online classes in <span class="color-long-form-improv">long-form improv</span> <span class="color-character">character</span> and <span class="color-sketch">sketch</span>.</p>
 	  </div>
 
-	<!--   <div class="row news-summary pb-4">
+	  <div class="row news-summary pb-4">
 		<div class="col-12 d-flex align-items-start justify-content-start ">
 		  <span class="badge rounded-pill bg-primary h6 mx-2"><a class="text-light" href="shows.php">Shows and Jams</a></span>
 		  <span class="h6 news-item pl-1"> See the <a href="shows.php">shows/jams</a> page for details!</span>
 		</div>
-	  </div>-->
+	  </div>
 	  
 	</div>
   </div>
-  
+-->
+
 <div class="container-fluid classes-header container-header-banner"><h3 class="container-lg container-fluid">Latest News</h3></div>
 	
-	<div class="container-lg container-fluid" id="news">
+	<div class="container-lg container-fluid mt-3" id="news">
 		
 		<div class="row">
 			<div class="col-sm-5">
@@ -49,7 +50,6 @@
 			</div>
 			<div class="col-sm-7">
 
-<h2>Recent News</h2>
   <dl class="row mt-3">
     <dt class="col-sm-3">How Was Your Week?</dt>
     <dd class="col-sm-9">Every Friday 6:30pm <?php echo TIMEZONE; ?>, Will Hines hosts a group of improvisers making up scenes, there isn't much more to it than that! More shows on the <a href="shows.php">shows page</a>.</dd>
@@ -62,16 +62,6 @@
 
     <dt class="col-sm-3">Twitch Channel</dt>
     <dd class="col-sm-9">We also broacast class shows and other performances on our Twitch channel, see that <a href="https://www.twitch.tv/wgimprovschool">here</a>.</dd>
-
-
-
-<!--     <dt class="col-sm-3">Shows on Twitch</dt>
-    <dd class="col-sm-9">
-  We have lots of shows on our twitch channel: <a href="http://www.twitch.tv/wgimprovschool">http://www.twitch.tv/wgimprovschool</a>. Many let students sign up for slots. See the <a href="shows.php">shows page</a> for a list!
-    </dd>
-
-    <dt class="col-sm-3">Jams</dt>
-    <dd class="col-sm-9">We have great jams for new improvisers to get reps! Our newest one is HOT GIRL SHYT -- for female-identifying improvisers (every other Thursday 6pm <?php echo TIMEZONE; ?>) -- also see the <a href="shows.php">shows page</a> for details on those!</dd> -->
   
   </dl>
   
@@ -201,17 +191,6 @@ if (count($unavailable_workshops) > 0) {
 		  </div>
 	  </div>
 	</div>
-
-<div class="container mb-5">
-<h3 class="mb-3">Facebook Group</h2>
-<p>The school has an Facebook group. This is for students to meet each other, plug show, ask questions etc.</p> 
-<p><a href="https://www.facebook.com/groups/wgimprovschool">https://www.facebook.com/groups/wgimprovschool</a></p>
-</div>
-
-<div class="container mb-5">
-<h3 class="mb-3">Discord Server</h2>
-<p>We have a server on the Discord chat service. To join, <a href="https://discord.gg/GXbP3wgbrc">click here</a>.</p> 
-</div>
 
 
   <div id="buy-the-book" class="container mb-5">

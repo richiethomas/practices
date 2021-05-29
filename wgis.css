@@ -6,7 +6,7 @@
 
 /* Nav Bar */
 body:not(.home) header {
-  margin-bottom: 3rem;
+  margin-bottom: 1rem;
 }
 
 header .navbar {
