@@ -49,50 +49,37 @@ if (isset($fb_description)) {
 		  </button>
 		  <div class="collapse navbar-collapse" id="navbarsExampleDefault">
 			<ul class="navbar-nav ml-auto justify-content-end">
-				
-			    <?php if ($u->check_user_level(3)) { ?>
-				 	<li class="nav-item"> <a class="btn btn-outline-primary nav-link" href="admin.php">Admin</a> </li>	  
-			    <?php } // end of check user level 2 ?>
-				
-				<?php foreach( get_nav_items() as $nav_item ){
+			    <?php 
+				if ($u->check_user_level(3)) { 
+						echo "<li class=\"nav-item\"> <a class=\"btn btn-outline-primary nav-link\" href=\"admin.php\">Admin</a> </li>\n";
+			    } // end of check user level 2 
+				foreach( get_nav_items() as $nav_item ) {
 					$i = 01;					
-					
-					if (isset($nav_item['children'])){
-						?>
-						<li class="nav-item dropdown">
-							<a class="nav-link dropdown-toggle" href="#" id="dropdown<?php echo $i; $i++;?>" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><?php echo $nav_item['title']; ?></a>
-							<div class="dropdown-menu" aria-labelledby="dropdown01">
-							<?php
-							foreach( $nav_item['children'] as $nav_item_child){
-								?> <a class="dropdown-item" href="<?php echo $nav_item_child['href'] ?>"><?php echo	 $nav_item_child['title'] ?></a><?php
-							}
-							?>
-										</div>
-								    </li>
-								    <?php
-					} else {
-						// This item has no children
-						?> <li class="nav-item"> <a class="nav-link" href="<?php echo $nav_item['href'] ?>"><?php echo $nav_item['title'] ?></a> </li><?php
-					}
-				}?>
-				
-		  		<?php if ($u->logged_in()) { ?>		
+					if (isset($nav_item['children'])) {
+						echo "				<li class=\"nav-item dropdown\">
+					<a class=\"nav-link dropdown-toggle\" href=\"#\" id=\"dropdown{$i}\" data-bs-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\">{$nav_item['title']}</a>
+					<div class=\"dropdown-menu\" aria-labelledby=\"dropdown01\">\n";
+						$i++;
 							
-				
-				<li class="nav-item"><a class="user-logged-in" href="you.php" title="User Profile"><span class="oi oi-person" title="person" aria-hidden="true"></span>  <?php echo "{$u->fields['nice_name']}"; ?></a></li>
-				
-				<?php } else { ?>
-			    <li class="nav-item"> <a class="btn btn-outline-primary my-2 my-sm-0" data-bs-toggle="modal" data-bs-target="#login-modal">Login</a></li>
-			    <?php } ?>
-			</ul>
+							foreach( $nav_item['children'] as $nav_item_child) { 
+								echo "						<a class=\"dropdown-item\" href=\"{$nav_item_child['href']}\">{$nav_item_child['title']}</a>\n";
+							}
+							echo "					</div></li>\n";
+					
+					} else { // this item has no children
+						echo "				<li class=\"nav-item\"> <a class=\"nav-link\" href=\"{$nav_item['href']}\">{$nav_item['title']}</a></li>\n";
+					}
+				}
+				if ($u->logged_in()) {		
+					echo "			<li class=\"nav-item\"><a class=\"nav-link\" href=\"you.php\" title=\"User Profile\"><span class=\"oi oi-person nav-link\" title=\"person\" aria-hidden=\"true\"></span>{$u->fields['nice_name']}</a></li>\n";
+				} else {
+			    	echo "			<li class=\"nav-item\"><a class=\"btn btn-outline-primary my-2 my-sm-0\" data-bs-toggle=\"modal\" data-bs-target=\"#login-modal\">Login</a></li>\n";
+				}
+			echo "</ul>
 		  </div>
 	</nav>
-  </header>
+  </header>";
   
-  
-  
- <?php  
- 
  if ($page != 'home') {
 	 echo "
 	 <main role=\"main\">
@@ -101,5 +88,3 @@ if (isset($fb_description)) {
 ";
  	
  }
-
- ?>

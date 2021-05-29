@@ -4,13 +4,11 @@
 <div class="m-4 p-4 bg-light">
 <h2>Current Shows</h2>
 <ul>
-	<li><a href="#formtune">Wheel of Formtune</a></li>
-	<li><a href="#threemeup">Three Me Up Scotty!</a> (US and European!)</li>
-	<li><a href="#hotgirlshyt">Hot Girl Shyt</a></li>
+	<li><a href="#mixtape">Mix Tape</a></li>
+	<li><a href="#threemeup">Team Me Up Scotty!</a></li>
 	<li><a href="#jams">Friday Jams</a></li>
 	<li><a href="#presents">Yer Da Presents</a></li>
 	<li><a href="#week">How Was Your Week?</a></li>
-	<li><a href="#thursday">Thursday Teams</a></li>	
 </ul>
 </div>
 
@@ -25,69 +23,48 @@
 </div>
 
 
-<a name="formtune"></a>
+<a name="mixtape"></a>
 
 <div class="showrow row">
 	<div class="col">
-		<h2 class="mb-4">Wheel of Formtune!</h2>
-		<p>Mondays 11am <?php echo TIMEZONE; ?>, every other week</p>
+		<h2 class="mb-4">Mix Tape</h2>
+		<p>Mondays noon <?php echo TIMEZONE; ?></p>
 		
-		<p><b>Wheel of Formtune</b> runs every other week on Mondays 11am <?php echo TIMEZONE; ?>. The trio JMG International (Julia Kelly, Max Bank and Gareth O'Connor) hosts a few improv groups trying out a new form each week!</p>
-		
-		<p><B>NOTE: Shows are at 10am <?php echo TIMEZONE; ?> for May!</b></p>
-		
-			<ul>
-				<li>To apply, fill out this form: <a href='https://forms.gle/uJgAsmYRA8BYokR58'>https://forms.gle/uJgAsmYRA8BYokR58</a></li>
-			</ul>
+		<p><b>Mix Tape</b> runs every Monday at noon <?php echo TIMEZONE; ?>. Featuring a rotation of hosts, the show lets WGIS students sign up to do some improv in this European-friendly time slot!</p>
 			
 	</div>
 	<div class="col">
 		<figure class="figure">
-		  <img src="images/formtune.png" class="figure-img img-fluid rounded" alt="Wheel of Formtune!">
-		  <figcaption class="figure-caption text-end">art by Gareth O'Connor</figcaption>
+		  <img src="images/mix_tape.png" class="figure-img img-fluid rounded" alt="Mix Tape!">
+		  <figcaption class="figure-caption text-end">art by Christine Simpson</figcaption>
 		</figure>
 	</div>
 
 </div>
-
 
 <a name="threemeup"></a>
 
 <div class="showrow row">
 	<div class="col">
-		<h2 class="mb-4">Three Me Up, Scotty!</h2>
-		<p>Mondays 12:30pm and 6pm PST</p>
+		<h2 class="mb-4">Team Me Up, Scotty!</h2>
+		<p>Mondays 6pm PST</p>
 		
-		<p><b>Three Me Up, Scotty</b> is a show for WGIS students to do 3prov. There are TWO Three Me Up Scotty shows each week!</p>
+		<p><b>Team Me Up, Scotty</b> is a show for WGIS students to do some improv. Hosted by Ethan Smith and Elena Martinez. You can sign up with an existing group or just as a single player who wants to be grouped with other people!</p>
 		<ul>
-			<li>Monday 12:30pm <?php echo TIMEZONE; ?> (every other week) -- Three Me Up Scotty, European Edition - hosted by Erick Acuna and Christne Simpson
-	
-			<ul>
-				<li>To apply, fill out this form: <a href='https://forms.gle/978iYx5jzVGQtuZu6'>https://forms.gle/978iYx5jzVGQtuZu6</a></li>
-			</ul>
-			</li>
-			<li>Monday 6pm <?php echo TIMEZONE; ?> - Three Me Up Scotty - hosted by Elena Martinez and Ethan Smith
-			<ul>
-				<li>Too apply for this, fill out this form: <a href='https://threemeup.link/perform'>https://threemeup.link/perform</a></li>
-			</ul>
-	
-			</li>
+			<li>To apply for this, fill out this form: <a href='https://threemeup.link/perform'>https://threemeup.link/perform</a></li>
 		</ul>
+
 	</div>
 	<div class="col">
 		<figure class="figure">
-		  <img src="images/3meup.jpg" class="figure-img img-fluid rounded" alt="3meup Scotty!">
+		  <img src="images/team_me_up.png" class="figure-img img-fluid rounded" alt="Team Me Up, Scotty!">
 		  <figcaption class="figure-caption text-end">art by Ethan Smith</figcaption>
-		</figure>
-		<figure class="figure">
-		  <img src="images/3meupeuro.jpg" class="figure-img img-fluid rounded" alt="3meup Scotty European!">
-		  <figcaption class="figure-caption text-end">art by Ethan Smith and probably Christine Simpson</figcaption>
 		</figure>
 	</div>
 
 </div>
 
-
+<!--
 <a name="hotgirlshyt"></a>
 <div class="showrow row"><div class="col">
 <h2 class="mt-4 mb-2">Hot Girl Shyt!</h2>
@@ -111,7 +88,7 @@ Meeting ID: 88364628827</p>
 
 </div>
 
-
+-->
 
 
 
@@ -161,6 +138,8 @@ Passcode: 129538</p>
 	</div>
 </div>
 
+<!--
+
 <a name="thursday"></a>
 <div class="showrow row"><div class="col">
 	
@@ -206,8 +185,6 @@ Passcode: 129538</p>
 11am: BLENDER SHOW (all 11am invited, lottery picks teams) <br>
 5pm: BLENDER SHOW (all 5pm invited, lottery picks teams)</p>
 
-
-
-
 </div></div>
 
+-->

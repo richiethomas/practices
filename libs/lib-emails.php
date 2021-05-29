@@ -24,9 +24,7 @@ function centralized_email($to, $sub, $body) {
 	  $headers['Content-Type'] = "text/html";
 	  $headers['charset'] = "ISO-8859-1";
 
-
-
-	  $body = wordwrap($body, 80, "<br>\n");
+	  $body = wordwrap($body, 100, "<br>\n");
 
 	  if (LOCAL) {
 	  	// connect to SMTP

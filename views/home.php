@@ -43,7 +43,7 @@
 			<div class="col-sm-5">
 				
 				<figure class="figure">
-				  <a href="shows.php"><img src="images/htgs.jpg" class="figure-img img-fluid rounded" alt="Hot Girl Shyt"></a>
+				  <a href="shows.php"><img src="images/hwyw.png" class="figure-img img-fluid rounded" alt="How Was Your Week?"></a>
 				  <figcaption class="figure-caption text-end">art by Ethan Smith</figcaption>
 				</figure>
 			</div>
@@ -51,8 +51,8 @@
 
 <h2>Recent News</h2>
   <dl class="row mt-3">
-    <dt class="col-sm-3">Hot Girl Shyt</dt>
-    <dd class="col-sm-9">Every other week, Thursday 6pm <?php echo TIMEZONE; ?>, WGIS hosts a jam for female-identifying improvisers. For more details on this and other shows see our <a href="shows.php">shows page</a>.</dd>
+    <dt class="col-sm-3">How Was Your Week?</dt>
+    <dd class="col-sm-9">Every Friday 6:30pm <?php echo TIMEZONE; ?>, Will Hines hosts a group of improvisers making up scenes, there isn't much more to it than that! More shows on the <a href="shows.php">shows page</a>.</dd>
 
     <dt class="col-sm-3">Discord Server</dt>
     <dd class="col-sm-9">We have a server on the Discord chat service. To join, <a href="https://discord.gg/GXbP3wgbrc">click here</a>.</dd>
