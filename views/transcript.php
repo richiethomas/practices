@@ -57,6 +57,8 @@ if ($admin) {
 ?>
 <?php 
 if ($admin) {
+	
+	echo Wbhkit\checkbox('hideconpay', 1, $label = 'no confirm payment', $hideconpay == 1);
 	echo Wbhkit\submit("update paid");
 	echo "</form>\n";
 }

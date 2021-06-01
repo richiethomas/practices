@@ -2,7 +2,8 @@
 $heading = "users";
 include 'lib-master.php';
 
-Wbhkit\set_vars(array('guest_id', 'carrier_id', 'phone', 'send_text', 'newemail', 'display_name', 'needle', 'group_id'));
+Wbhkit\set_vars(array('guest_id', 'carrier_id', 'phone', 'send_text', 'newemail', 'display_name', 'needle', 'group_id', 'hideconpay'));
+
 
 $e = new Enrollment();
 $eh = new EnrollmentsHelper();
@@ -80,9 +81,9 @@ switch ($ac) {
 			}
 			
 			if (in_array($eid, $paids)) {
-				$msg = $e->update_paid_by_enrollment_id($eid, 1, $po);
+				$msg = $e->update_paid_by_enrollment_id($eid, 1, $po, $hideconpay);
 			} else {
-				$msg = $e->update_paid_by_enrollment_id($eid, 0, $po);
+				$msg = $e->update_paid_by_enrollment_id($eid, 0, $po, $hideconpay);
 			}
 			if ($msg) {
 				$message .= $msg."<br>\n";
@@ -98,7 +99,7 @@ if (!$guest->logged_in()) {
 	$view->data['key'] = $guest->get_key(); 
 	$view->data['guest'] = $guest; // user profile of user we are modifying
 	$view->data['needle'] = trim($needle);
-	$view->data['transcripts'] = $eh->get_transcript_tabled($guest, true);
+	$view->data['transcripts'] = $eh->get_transcript_tabled($guest, true, 1, $hideconpay);
 	$view->data['userhelper'] = new UserHelper($sc);
 	$view->data['lookups'] = $lookups;
 	$view->renderPage('admin/users');

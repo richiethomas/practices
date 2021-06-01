@@ -89,8 +89,6 @@ function confirm_email($e, $status_id = ENROLLED) {
 				$body .= "<p>PAYMENT:<br>\n--------<br>This is a PAY WHAT YOU CAN class. Full price is usually $40USD, but pay anything from zero to $40USD, whatever you like. If you are going to pay something, venmo @wgimprovschool (it's a business, not a person) or paypal payments@wgimprovschool.com or https://paypal.me/WGImprovSchool</p>";
 			}
 			
-			
-
 			$body .= 
 "<p>CLASS INFO<br>\n----------<br>\nDescription and times/dates are both in this email and also listed here:<br>\n{$trans}</p>\n
 <p>DROPPING THE CLASS<br>\n------------------<br>\nYou can drop out by going to class's web page (the link is just above this paragraph). If you're dropping within ".LATE_HOURS." of the start, please pay anyway.</p>

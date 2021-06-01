@@ -21,15 +21,18 @@ echo "<div class='row mt-md-3 admin-edit-workshop'>\n";
 		foreach ($statuses as $stid => $status_name) {
 			echo  "<h4>{$status_name} (".$stats[$stid].")</h4>\n";
 			foreach ($lists[$stid] as $s) {
-				echo "<div class='row my-3'><div class='col-md-6'>".
+				echo "<div class='row my-3'><div class='col-md-5'>".
 					Wbhkit\checkbox('users', $s['id'], "<a href='admin_users.php?guest_id={$s['id']}&wid={$wk['id']}'>{$s['nice_name']}</a> <small>".
 					date('M j g:ia', strtotime($s['last_modified']))."</small>", $s['paid'], true)."</div>".
+					"<div class='col-md-2'>".
 					\Wbhkit\texty("payoverride_{$s['id']}_{$wk['id']}", $s['pay_override'], 0).
-				"<div class='col-md-6'>
-				<a class='btn btn-outline-secondary btn-sm' href='admin_change_status.php?wid={$wk['id']}&guest_id={$s['id']}'>change status</a>  <a  class='btn btn-outline-secondary btn-sm' href='admin_edit2.php?ac=conrem&guest_id={$s['id']}&wid={$wk['id']}'>remove</a></div>".
+					"</div>".
+				"<div class='col-md-5'>
+				<a class='btn btn-outline-secondary btn-sm' href='admin_change_status.php?wid={$wk['id']}&guest_id={$s['id']}'>status</a>  <a  class='btn btn-outline-secondary btn-sm' href='admin_edit2.php?ac=conrem&guest_id={$s['id']}&wid={$wk['id']}'>remove</a></div>".
 				"</div>\n";
 			}
 		}
+		echo Wbhkit\checkbox('hideconpay', 1, $label = 'no confirm payment', $hideconpay == 1);
 		echo Wbhkit\submit("update paid");
 		echo "</form>\n";		
 		

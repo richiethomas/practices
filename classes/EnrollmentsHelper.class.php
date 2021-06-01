@@ -103,7 +103,7 @@ class EnrollmentsHelper extends WBHObject {
 		return $stds;
 	}
 
-	function get_transcript_tabled(User $u, bool $admin = false, int $page = 1) {
+	function get_transcript_tabled(User $u, bool $admin = false, int $page = 1, $hideconpay = 0) {
 		global $view;
 		if (!$u->logged_in() || !isset($u->fields['id'])) {
 			return "<p>Not logged in!</p>\n";
@@ -150,6 +150,7 @@ class EnrollmentsHelper extends WBHObject {
 		$view->data['admin'] = $admin;
 		$view->data['links'] = $links;
 		$view->data['rows'] = $past_classes;
+		$view->data['hideconpay'] = $hideconpay;
 		return $view->renderSnippet('transcript');
 	}	
 

@@ -205,17 +205,17 @@ class Enrollment extends WBHObject {
 	}
 	
 	
-	function update_paid_by_enrollment_id(int $eid, int $new_paid, string $pay_override = '0', bool $send_email = true) {
+	function update_paid_by_enrollment_id(int $eid, int $new_paid, string $pay_override = '0', bool $block_email = false) {
 		$this->set_by_id($eid);
-		return $this->update_paid($new_paid, $pay_override, $send_email);
+		return $this->update_paid($new_paid, $pay_override, $block_email);
 	}
 	
-	function update_paid_by_uid_wid(int $uid, int $wid, int $new_paid, string $pay_override = '0', bool $send_email = true) {
+	function update_paid_by_uid_wid(int $uid, int $wid, int $new_paid, string $pay_override = '0', bool $block_email = false) {
 		$this->set_by_uid_wid($uid, $wid);
-		return $this->update_paid($new_paid, $pay_override, $send_email);
+		return $this->update_paid($new_paid, $pay_override, $block_email);
 	}
 	
-	private function update_paid(int $new_paid, string $pay_override = '0', bool $send_email = true) {
+	private function update_paid(int $new_paid, string $pay_override = '0', bool $block_email = false) {
 		
 		
 		if ($pay_override == '') { $pay_override = 0; }
@@ -251,7 +251,7 @@ class Enrollment extends WBHObject {
 				
 				$body .= "<p>Thanks!<br>-Will</p>\n";
 				
-				if ($send_email) {
+				if (!$block_email) {
 					\Emails\centralized_email($this->u->fields['email'], "Payment received for {$this->wk['title']} {$this->wk['showstart']} (PDT)", $body); 
 				}
 			

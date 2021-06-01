@@ -3,7 +3,7 @@ $heading = "edit workshop";
 include 'lib-master.php';
 
 
-$wk_vars = array('wid', 'title', 'notes', 'start', 'end', 'lid', 'online_url', 'cost', 'capacity', 'notes', 'when_public', 'email', 'con', 'cancelled', 'xtraid', 'guest_id', 'reminder_sent', 'sold_out_late', 'teacher_id', 'co_teacher_id', 'start_xtra', 'end_xtra', 'online_url_xtra');
+$wk_vars = array('wid', 'title', 'notes', 'start', 'end', 'lid', 'online_url', 'cost', 'capacity', 'notes', 'when_public', 'email', 'con', 'cancelled', 'xtraid', 'guest_id', 'reminder_sent', 'sold_out_late', 'teacher_id', 'co_teacher_id', 'start_xtra', 'end_xtra', 'online_url_xtra', 'hideconpay');
 Wbhkit\set_vars($wk_vars);
 
 $e = new Enrollment();
@@ -13,7 +13,6 @@ $guest = new User(); // the user we're going to change
 if ($guest_id > 0) {
 	$guest->set_by_id($guest_id); 
 }
-
 
 switch ($ac) {
 
@@ -118,9 +117,9 @@ switch ($ac) {
 					}
 						
 					if (in_array($as['id'], $users)) {
-						$msg = $e->update_paid_by_uid_wid($as['id'], $wid, 1, $po);
+						$msg = $e->update_paid_by_uid_wid($as['id'], $wid, 1, $po, $hideconpay);
 					} else {
-						$msg = $e->update_paid_by_uid_wid($as['id'], $wid,  0, $po);
+						$msg = $e->update_paid_by_uid_wid($as['id'], $wid,  0, $po, $hideconpay);
 					}
 					if ($msg) {
 						$message .= $msg."<br>\n";
@@ -150,7 +149,7 @@ foreach ($lookups->statuses as $stid => $status_name) {
 	$stats[$stid] = count($lists[$stid]);
 }
 
-$view->add_globals(array('stats', 'lists', 'status_log'));	
+$view->add_globals(array('stats', 'lists', 'status_log', 'hideconpay'));	
 $view->data['statuses'] = $lookups->statuses;
 $view->renderPage('admin/edit');
 
