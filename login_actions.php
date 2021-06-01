@@ -85,7 +85,6 @@ switch ($ac) {
 	// update text preferences
 	case 'updateu':
 
-
 		Wbhkit\set_vars(array('carrier_id', 'phone', 'send_text'));
 
 		if (!$u->logged_in()) {

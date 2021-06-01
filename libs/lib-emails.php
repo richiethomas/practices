@@ -64,10 +64,10 @@ function confirm_email($e, $status_id = ENROLLED) {
 	$wk = $e->wk;
 	$u = $e->u;	
 	$trans = URL."workshop.php?wid={$wk['id']}";
-	$textpref = URL."you.php";
+	//$textpref = URL."you.php";
 	
 	$body = '';
-	$textpoint = '';
+	//$textpoint = '';
 	$notifications = '';	
 		
 	$send_faq = false;
@@ -75,7 +75,8 @@ function confirm_email($e, $status_id = ENROLLED) {
 		case 'already':
 		case ENROLLED:
 			$sub = "ENROLLED: {$wk['title']}";
-			$body = $textpoint = "You are ENROLLED in the workshop \"{$wk['title']}\".";
+			$body = "You are ENROLLED in the workshop \"{$wk['title']}\".";
+			//$textpoint = $body;
 			$body = "<p>$body</p>";
 
 			if ($wk['location_id'] == ONLINE_LOCATION_ID) {
@@ -101,7 +102,8 @@ http://www.wgimprovschool.com/shows</p>";
 			break;
 		case WAITING:
 			$sub = "WAIT LIST: {$wk['title']}";
-			$body = $textpoint = "You are on the WAIT LIST for \"{$wk['title']}\", spot {$e->fields['rank']}";
+			$body = "You are on the WAIT LIST for \"{$wk['title']}\", spot {$e->fields['rank']}";
+			//$textpoint = $body;
 			$body = "<p>$body</p>";
 			
 			
@@ -118,7 +120,8 @@ That way if a spot opens up, we won't be waiting for you to tell us you don't wa
 			
 		case INVITED:
 			$sub = "INVITED: {$wk['title']} -- PLEASE RESPOND";
-			$body = $textpoint = "A spot opened in ({$wk['title']}. Want it?";
+			$body = "A spot opened in ({$wk['title']}. Want it?";
+			//$textpoint = $body;
 			$body = "<p>$body</p>";
 			
 			$body .= "<p>DO YOU WANT THE SPOT? - PLEASE CLICK AND ANSWER<br>
@@ -130,7 +133,8 @@ Others might be waiting for the spot if you don't want it.</p>";
 			break;
 		case DROPPED:
 			$sub = "DROPPED: {$wk['title']}";
-			$body = $textpoint = "You have DROPPED out of {$wk['title']}";
+			$body = "You have DROPPED out of {$wk['title']}";
+			//$textpoint = $body;
 			$body = "<p>$body</p>";
 			
 			if ($e->fields['while_soldout'] == 1) {
@@ -147,18 +151,21 @@ Others might be waiting for the spot if you don't want it.</p>";
 		default:
 			$statuses = $lookups->statuses;
 			$sub = "{$statuses[$status_id]}: {$wk['title']}";
-			$body = $textpoint = "You have a status of '{$statuses[$status_id]}' for {$wk['title']}";
+			//$body = $textpoint = "You have a status of '{$statuses[$status_id]}' for {$wk['title']}";
 			$body = "<p>$body</p>";
 			
 			break;
 	}
 
 	$text = '';
+	
+	/*
 	if ($u->fields['send_text']) {
 		$last_bitly = shorten_link($trans);
 		$textmsg = $textpoint.' '.$last_bitly;
 		send_text($u, $textmsg);
 	}
+	*/
 	
 	
 
@@ -173,15 +180,17 @@ Others might be waiting for the spot if you don't want it.</p>";
 <b>Description:</b> {$wk['notes']}</p>
 <p>Web page for this class:<br>\n{$trans}</p>";	
 
-if (!$u->fields['send_text']) {
-	$body .= "<p>Would you want to be notified via text? You can set text preferences:<br>".$textpref."</p>";
-}
+//if (!$u->fields['send_text']) {
+//	$body .= "<p>Would you want to be notified via text? You can set text preferences:<br>".$textpref."</p>";
+//}
 
 	return centralized_email($u->fields['email'], "{$sub}", $body);
 }
 
 
 function send_text($u, $msg) {
+	
+	return false; // no longer sending any texts
 	
 	global $lookups;
 	

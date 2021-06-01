@@ -42,9 +42,11 @@ if (Workshops\is_public($wk)) {
 					$message = "This practice is full. '{$u->fields['nice_name']}' is now on the waiting list.";
 				} 
 			
+				/*
 				if (!$u->fields['send_text']) {
 					$message .= " Want notifications by text? <a  class='btn btn-primary' href='$sc?v=text'>Set your text preferences</a>.";	
 				}
+				*/
 			} else {
 				$error = $e->error;
 			}

@@ -91,7 +91,7 @@ function remind_enrolled($class) {
 	
 	$subject = $reminder['subject'];
 	$note = $reminder['note'];
-	$sms = $reminder['sms'];
+	//$sms = $reminder['sms'];
 	
 	$eh = new \EnrollmentsHelper();
 	$stds = $eh->get_students($class[0], ENROLLED);
@@ -135,7 +135,7 @@ Class info on web site: $trans";
 		if (!LOCAL || REMINDER_TEST) {
 			\Emails\centralized_email($std['email'], $subject, $base_msg);
 			$guest->set_by_id($std['id']);
-			\Emails\send_text($guest, $sms); // routine will check if they want texts and have proper info
+			//\Emails\send_text($guest, $sms); // routine will check if they want texts and have proper info
 		}
 	}
 	//remind teacher
@@ -216,12 +216,13 @@ https://www.twitch.tv/wgimprovschool</p>\n";
 		}
 	}			
 	
-	$sms = "Reminder: {$wk['title']} ".($cs->fields['id'] ? 'class show' : 'class').", {$start}, ".URL;
+	//$sms = "Reminder: {$wk['title']} ".($cs->fields['id'] ? 'class show' : 'class').", {$start}, ".URL;
 	
 	return array(
 	 'subject' => $subject,
-	 'note' => $note,
-	 'sms' => $sms	
+	 'note' => $note
 	);
+ 	//'sms' => $sms	
+
 	
 }

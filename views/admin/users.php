@@ -23,10 +23,14 @@ if ($needle) {
 <?php echo $userhelper->edit_change_email($guest, $sc); ?>
 </div></div> <!-- end of card -->
 
+<?php
+/*	
 <div class='card my-5 bg-light'><div class='card-body'>
 <h3 class="my-3">Text Preferences</h3>
 <?php echo $userhelper->edit_text_preferences($guest, $sc, $lookups); ?>
 </div></div> <!-- end of card -->
+*/
+?>
 
 <div class='card my-5 bg-light'><div class='card-body'>
 <h3 class="my-3">Display Name</h3>
