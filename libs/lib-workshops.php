@@ -199,7 +199,7 @@ function get_workshops_dropdown($start = null, $end = null) {
 	$workshops = array();
 	while ($row = $stmt->fetch()) {
 		$row = format_workshop_startend($row);
-		$workshops[$row['id']] = $row['title'];
+		$workshops[$row['id']] = $row['title'].' ('.date('Y-M-d', strtotime($row['start'])).')';
 	}
 	return $workshops;
 }
@@ -285,14 +285,14 @@ order by w.start");
 
 function get_unpaid_students() {
 	// get IDs of workshops
-	$mysql_lastmonth = date("Y-m-d H:i:s", strtotime("-4 weeks"));
+	$mysql_lastmonth = date("Y-m-d H:i:s", strtotime("-8 weeks"));
 	$mysqlnow = date("Y-m-d H:i:s", strtotime("now"));
 
 	$stmt = \DB\pdo_query("
 select r.workshop_id, w.title, u.email, u.display_name, r.user_id, w.start
 from workshops w, registrations r, users u
-where w.start >= date('$mysql_lastmonth')
-and w.start <= date('$mysqlnow')
+where 
+(w.start >= date('$mysql_lastmonth') and w.start <= date('$mysqlnow'))
 and r.workshop_id = w.id
 and r.user_id = u.id
 and r.status_id = ".ENROLLED."

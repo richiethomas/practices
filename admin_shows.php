@@ -61,6 +61,7 @@ switch ($ac) {
 }
 
 $view->data['shows'] = get_class_shows();
+$view->data['old_shows'] = get_old_class_shows();
 $view->data['cs'] = $cs;
 $view->renderPage('admin/shows');
 
@@ -79,4 +80,18 @@ function get_class_shows(int $limit = 25) {
 	return $all;
 }
 
+
+function get_old_class_shows(int $limit = 10) {
+	
+	$stmt = \DB\pdo_query("select * from shows order by start asc limit $limit");
+	$all = array();
+	while ($row = $stmt->fetch()) {
+		$cs = new ClassShow();
+		$cs->set_by_id($row['id']);
+		$cs->set_workshops();
+		$cs->set_teacher();
+		$all[] = $cs;
+	}
+	return $all;
+}
 

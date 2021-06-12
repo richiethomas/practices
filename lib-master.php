@@ -10,14 +10,15 @@ function get_nav_items(){
 	//$nav_items[] = array('title' => "Classes", "href" => "classes.php");
 	//$nav_items[] = array('title' => "Home", "href" => "index.php");
 	$nav_items[] = array('title' => "Calendar", "href" => "calendar.php");
-	$nav_items[] = array('title' => "Teachers", "href" => "teachers.php");
 	$nav_items[] = array('title' => "About", "href" => "about_school.php", 'children' => array(
 
+		array('title' => "Teachers", "href" => "teachers.php"),
 		array('title' => "School", "href" => "about_school.php"),
 		array('title' => "Catalog", "href" => "about_catalog.php"),
 		array('title' => "How It Works", "href" => "about_works.php")
 	));
-	$nav_items[] = array('title' => "Shows / Jams", "href" => "shows.php");
+	$nav_items[] = array('title' => "Shows", "href" => "shows.php");
+	$nav_items[] = array('title' => "Merch", "href" => "merch.php");
 	return $nav_items;
 }
 

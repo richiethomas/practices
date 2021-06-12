@@ -67,3 +67,30 @@ foreach ($shows as $upcoming_cs) {
 ?>
 </ul>
 </div></div>
+
+<div class="row"><div class="col-md-12">
+<h3>Old Class Shows</h3>
+<ul>
+<?php
+foreach ($old_shows as $upcoming_cs) {
+	echo "<li class='m-2'><a href='admin_shows.php?ac=ed&show_id={$upcoming_cs->fields['id']}'>".$upcoming_cs->fields['friendly_when']."</a> (<a href='admin_shows.php?ac=del&show_id={$upcoming_cs->fields['id']}'>delete</a>)";
+	echo "<ul>\n";
+	if ($upcoming_cs->teacher->fields['id']) {
+		echo "<li>Teacher: {$upcoming_cs->teacher->fields['nice_name']}</li>";
+	}
+	echo "<li>Link: <small>{$upcoming_cs->fields['online_url']}</small></li>\n";
+	if (count($upcoming_cs->wks) > 0) {
+		foreach ($upcoming_cs->wks as $w) {
+			echo "<li><a href='admin_edit2.php?wid={$w['workshop_id']}'>{$w['title']}</a> <small>(".	\Wbhkit\friendly_date($w['start']).' '.\Wbhkit\friendly_time($w['start']).")</small></li>\n";
+		}
+	}
+	echo "</ul>\n";
+	echo "</li>\n";
+}
+?>
+</ul>
+</div></div>
+
+
+
+

@@ -5,10 +5,10 @@
 <h2>Current Shows</h2>
 <ul>
 	<li><a href="#mixtape">Mix Tape</a></li>
-	<li><a href="#threemeup">Team Me Up Scotty!</a></li>
-	<li><a href="#jams">Friday Jams</a></li>
-	<li><a href="#presents">Yer Da Presents</a></li>
+	<li><a href="#matinee">Monday Matinee</a></li>
 	<li><a href="#week">How Was Your Week?</a></li>
+	<li><a href="#teammeup">Team Me Up Scotty!</a></li>
+	<li><a href="#jams">Friday Jams</a></li>
 </ul>
 </div>
 
@@ -30,7 +30,7 @@
 		<h2 class="mb-4">Mix Tape</h2>
 		<p>Mondays noon <?php echo TIMEZONE; ?></p>
 		
-		<p><b>Mix Tape</b> runs every Monday at noon <?php echo TIMEZONE; ?>. Featuring a rotation of hosts, the show lets WGIS students sign up to do some improv in this European-friendly time slot! Starting June 14!</p>
+		<p><b>Mix Tape</b> runs every Monday at noon <?php echo TIMEZONE; ?>. Featuring a rotation of hosts, the show lets WGIS students sign up to do some improv in this European-friendly time slot!</p>
 			
 	</div>
 	<div class="col">
@@ -42,7 +42,43 @@
 
 </div>
 
-<a name="threemeup"></a>
+
+<a name="matinee"></a>
+
+<div class="showrow row">
+	<div class="col">
+		<h2 class="mb-4">Monday Matinee</h2>
+		<p>Mondays noon <?php echo TIMEZONE; ?></p>
+		
+		<p>Every Monday 4pm-6pm <?php echo TIMEZONE; ?>, Will Hines "hosts" 3-4 improv groups from WGIS and elsewhere. Always ends with the HOW WAS YOUR WEEK crew doing a set!</p>
+			
+	</div>
+	<div class="col">
+		<figure class="figure">
+		  <img src="images/matinee.png" class="figure-img img-fluid rounded" alt="Monday Matinee">
+		  <figcaption class="figure-caption text-end">art by Gareth O'Connor</figcaption>
+		</figure>
+	</div>
+
+</div>
+
+<a name="week"></a>
+<div class="showrow row">
+	<div class="col">
+		<h2 class="mt-4 mb-2">How Was Your Week?</h2>
+		<p>Monday 5pm <?php echo TIMEZONE; ?> (California time)</p>
+
+		<p>FWill Hines hosts a cast of improvisers who make up scenes based on whatever happened to them that week! It used to be on Friday, when the title of the show made more sense. This is now the closing set of the Monday Matinee show. </p>
+	</div>
+	<div class="col">
+		<figure class="figure">
+		  <img src="images/hwyw_purple.png" class="figure-img img-fluid rounded" alt="How Was Your Week?">
+		  <figcaption class="figure-caption text-end">art by Ethan Smith</figcaption>
+		</figure>
+	</div>
+</div>
+
+<a name="teammeup"></a>
 
 <div class="showrow row">
 	<div class="col">
@@ -103,88 +139,17 @@ Meeting ID: 88364628827</p>
 <a href="https://zoom.us/j/94363676979?pwd=aGdtTVA5c216N3AycDRxM1NHYzc2UT09">https://zoom.us/j/94363676979?pwd=aGdtTVA5c216N3AycDRxM1NHYzc2UT09</a><br>
 Meeting ID: 943 6367 6979<br>
 Passcode: 129538</p>
-</div></div>
+</div>
 
-<a name="presents"></a>
-<div class="showrow row">
-	<div class="col">
-		<h2 class="mb-4">Yer Da Presents</h2>
-		<p>Friday 12pm <?php echo TIMEZONE; ?></p>
-		<p>In <b>Yer Da Presents</b> a team of improvisers from Scotland does a set. There's also always an opening team.</p>
-	</div>
 	<div class="col">
 		<figure class="figure">
-		  <img src="images/yerdakilts.png" class="figure-img img-fluid rounded" alt="Yer Da Presents!">
+		  <img src="images/jam_insta.png" class="figure-img img-fluid rounded" alt="Friday Jams">
 		  <figcaption class="figure-caption text-end">art by Christine Simpson</figcaption>
 		</figure>
 	</div>
+
+
 </div>
 
 
 
-<a name="week"></a>
-<div class="showrow row">
-	<div class="col">
-		<h2 class="mt-4 mb-2">How Was Your Week?</h2>
-		<p>Fridays 6:30 <?php echo TIMEZONE; ?> (California time)</p>
-
-		<p>Will Hines hosts a cast of improvisers who make up scenes based on whatever happened to them that week!</p>
-	</div>
-	<div class="col">
-		<figure class="figure">
-		  <img src="images/hwyw.png" class="figure-img img-fluid rounded" alt="How Was Your Week?">
-		  <figcaption class="figure-caption text-end">art by Ethan Smith</figcaption>
-		</figure>
-	</div>
-</div>
-
-<!--
-
-<a name="thursday"></a>
-<div class="showrow row"><div class="col">
-	
-<h2 class="my-4">Thursday Teams</h2>
-<p>Thursdays 11am and 5pm, <?php echo TIMEZONE; ?></p>
-
-<p>Current/former students perform together. Here's the schedule for March and April 2021</p>
-
-<p>Mar 4<br>
-11am: MOLECULE / POSTAGE<br>
-5pm: HIGH NOON / HANDSHAKE</p>
-
-<p>Mar 11<br>
-11am: POSTAGE / CANDLE<br>
-5pm: HANDSHAKE / ZENITH</p>
-
-<p>Mar 18<br>
-11am: CANDLE / DINNER BELL<br>
-5pm: ZENITH / MOUNTAIN</p>
-
-<p>Mar 25<br>
-11am: DINNER BELL / MOLECULE<br>
-5pm: MOUNTAIN / HIGH NOON</p>
-
-
-<p>April 1<br>
-11am: MOLECULE / CANDLE<br>
-5pm: HIGH NOON / ZENITH</p>
-
-<p>April 8<br>
-11am: CANDLE / POSTAGE<br>
-5pm: ZENITH /  HANDSHAKE</p>
-
-<p>April 15<br>
-11am: POSTAGE / DINNER BELL<br>
-5pm:  HANDSHAKE / MOUNTAIN</p>
-
-<p>April 22<br>
-11am: DINNER BELL / MOLECULE<br>
-5pm: MOUNTAIN / HIGH NOON</p>
-
-<p>April 29<br>
-11am: BLENDER SHOW (all 11am invited, lottery picks teams) <br>
-5pm: BLENDER SHOW (all 5pm invited, lottery picks teams)</p>
-
-</div></div>
-
--->

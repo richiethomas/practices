@@ -44,15 +44,15 @@
 			<div class="col-sm-5">
 				
 				<figure class="figure">
-				  <a href="shows.php"><img src="images/hwyw.png" class="figure-img img-fluid rounded" alt="How Was Your Week?"></a>
-				  <figcaption class="figure-caption text-end">art by Ethan Smith</figcaption>
+				  <a href="shows.php"><img src="images/matinee.png" class="figure-img img-fluid rounded" alt="Monday Matinee"></a>
+				  <figcaption class="figure-caption text-end">art by Gareth O'Connor</figcaption>
 				</figure>
 			</div>
 			<div class="col-sm-7">
 
   <dl class="row mt-3">
-    <dt class="col-sm-3">How Was Your Week?</dt>
-    <dd class="col-sm-9">Every Friday 6:30pm <?php echo TIMEZONE; ?>, Will Hines hosts a group of improvisers making up scenes, there isn't much more to it than that! More shows on the <a href="shows.php">shows page</a>.</dd>
+    <dt class="col-sm-3">Monday Matinee</dt>
+    <dd class="col-sm-9">Every Monday 4pm-6pm <?php echo TIMEZONE; ?>, Will Hines "hosts" 3-4 improv groups from WGIS and elsewhere. Always ends with the HOW WAS YOUR WEEK crew doing a set! More shows on the <a href="shows.php">shows page</a>.</dd>
 
     <dt class="col-sm-3">Discord Server</dt>
     <dd class="col-sm-9">We have a server on the Discord chat service. To join, <a href="https://discord.gg/GXbP3wgbrc">click here</a>.</dd>

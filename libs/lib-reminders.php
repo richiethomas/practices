@@ -1,7 +1,7 @@
 <?php
 namespace Reminders;
 
-define('REMINDER_TEST', false);
+define('REMINDER_TEST', true);
 
 function get_reminders($how_many = 100) {
 	
@@ -46,6 +46,7 @@ update xtra_sessions set reminder_sent = 0;
 		}
 	}
 	
+	// xtra sessions - session 2 and higher, except shows
 	$stmt = \DB\pdo_query("select id, workshop_id, start from xtra_sessions where start > :now and reminder_sent = 0", array(':now' => $mysqlnow)); // workshops in the future
 	while ($row = $stmt->fetch()) {
 		if ((strtotime($row['start']) - time()) / 3600 < REMINDER_HOURS) {
@@ -53,6 +54,7 @@ update xtra_sessions set reminder_sent = 0;
 		}
 	}
 	
+	// class shows
 	$stmt = \DB\pdo_query("select s.id, ws.workshop_id, s.start from shows s, workshops_shows ws where ws.show_id = s.id and s.start > :now and s.reminder_sent = 0", array(':now' => $mysqlnow)); // workshops in the future
 	while ($row = $stmt->fetch()) {
 		if ((strtotime($row['start']) - time()) / 3600 < REMINDER_HOURS) {
@@ -111,21 +113,31 @@ Questions/concerns: ".WEBMASTER."</p>";
 		if (!$std['paid'] && $wk['cost'] == 1) {
 			$note .= "<p>PAYMENT<br>
 -------<br>
-Our records show you have not yet paid. That's fine! This is just a reminder: payment is due by the start of class. Also, this is a PAY WHAT YOU CAN class, so pay anything from zero to $40USD (the usual full cost). If you're going to pay something, do so via venmo @wgimprovschool (it's a business, not a person) or paypal payments@wgimprovschool.com or https://paypal.me/WGImprovSchool.<br>
+Our records show you have not yet paid. That's fine! This is a PAY WHAT YOU CAN class, so paying is optional. If you want to pay something (anything from zero to $40USD,the usual full cost), do so via venmo @wgimprovschool (it's a business, not a person) or paypal payments@wgimprovschool.com or https://paypal.me/WGImprovSchool.<br>
 Questions/concerns: ".WEBMASTER."</p>";
 		}
 		
 		$trans = URL."workshop.php?wid={$wk['id']}";
 
-		$note .= "<p>DROPPING OUT / OTHER CLASS INFO<br>\n
----------------------------------<br>\n
-If you need to drop the class (and it's before the first week), you can do so on this web site at this link. That way if someone is on the waiting list, we can notify them right away they have a chance to join.<br>
-{$trans}</p>\n
+		if (!$class[1] && !$class[2]) { // if this not an xtra session or a show
+			$note .= "<p>DROPPING OUT<br>\n
+	---------------------------------<br>\n
+	If you need to drop the class (and it's before the first week), you can do so on this web site at this link. That way if someone is on the waiting list, we can notify them right away they have a chance to join.<br>
+	{$trans}</p>\n";
+		}
+
+
+$note .= "<p>BE ON TIME<br>\n-----------<br>\nWe know sometimes lateness can't be helped but please do your best to be on time! Log into zoom five minutes before class starts! These classes are short so being even a few minutes late really disrupts things!</p>\n
 <p>SHOWS AND JAMS<br>\n
 ------------------<br>\n
 There are online shows and jams that you can play in, if you wish! See the shows/jams page on the web site for more info:<br>\n
-http://www.wgimprovschool.com/shows</p>
-";
+http://www.wgimprovschool.com/shows</p>\n
+
+<p>FACEBOOK AND CHAT<br>\n
+---------------------\n
+If you want to meet other students, check out our Facebook group or Discord chat server:
+Facebook: http://www.facebook.com/groups/wgimprovschool<br>\n
+Discord chat server: https://discord.gg/GXbP3wgbrc</p>\n";
 		
 		$base_msg =	$note.\Emails\get_workshop_summary($wk)."<br>
 Class info on web site: $trans";

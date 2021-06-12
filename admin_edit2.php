@@ -17,7 +17,7 @@ if ($guest_id > 0) {
 switch ($ac) {
 
 	case 'sar':
-		Reminders\remind_enrolled(array($wk['id'], 0));
+		Reminders\remind_enrolled(array($wk['id'], 0, 0));
 		$message = "Reminders sent to enrolled.";
 		break;
 

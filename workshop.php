@@ -37,6 +37,10 @@ if (Workshops\is_public($wk)) {
 					}
 					
 					$message .= "<li>Any questions? Ask will@wgimprovschool.com. Thanks!</li></ul>\n";
+
+					$message .= "<br>Also, please be ON TIME for class! Classes are short - being even a few minutes late really disupts things!</li>\n";
+
+
 					
 				} elseif ($e->fields['status_id'] == WAITING) {
 					$message = "This practice is full. '{$u->fields['nice_name']}' is now on the waiting list.";

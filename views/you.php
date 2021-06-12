@@ -2,7 +2,7 @@
 
 
 echo "<h1>Your Profile <small><a href='index.php'>(return to front)</a></small></h1>\n";
-echo "<p>Here you can change your email, display name and see what workshops you've taken.</p>";
+echo "<p>Here you can change your email, display name Xand see what workshops you've taken.</p>";
 
 echo "<div class='row justify-content-center'><div class='col-sm-6'>\n";
 
