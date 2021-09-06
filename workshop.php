@@ -33,7 +33,7 @@ if (Workshops\is_public($wk)) {
 						$message .= "<li>Payment ({$wk['cost']} USD) is due by start of class. Either venmo @wgimprovschool (it's a business, not a person) or paypal https://paypal.me/WGImprovSchool.</li>";
 					}
 					if ($wk['cost'] == 1) {
-						$message .= "<li>This is a PAY WHAT YOU CAN class. Full price is usually $40USD, but pay anything from zero to $40USD, whatever you like. If you are going to pay something, venmo @wgimprovschool (it's a business, not a person) or paypal https://paypal.me/WGImprovSchool</li>";
+						$message .= "<li>This is a PAY WHAT YOU CAN class. Full price is usually $40USD (or a suggested donation in the description), but pay anything you like including nothing. If you are going to pay something, venmo @wgimprovschool (it's a business, not a person) or paypal https://paypal.me/WGImprovSchool</li>";
 					}
 					
 					$message .= "<li>Any questions? Ask will@wgimprovschool.com. Thanks!</li></ul>\n";

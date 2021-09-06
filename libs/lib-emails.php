@@ -87,7 +87,7 @@ function confirm_email($e, $status_id = ENROLLED) {
 				$body .= "<p>PAYMENT:<br>\n--------<br>\nClass costs \${$wk['cost']} (USD). Pay via Venmo @wgimprovschool (business) or PayPal payments@wgimprovschool.com or https://paypal.me/WGImprovSchool. Due by the start of class. Confirmation email for payment can take up to 12 hours to arrive because it's triggered manually by the stubborn human who built this web site.</p>";
 			}
 			if ($wk['cost'] == 1) {
-				$body .= "<p>PAYMENT:<br>\n--------<br>This is a PAY WHAT YOU CAN class. Full price is usually $40USD, but pay anything from zero to $40USD, whatever you like. If you are going to pay something, venmo @wgimprovschool (it's a business, not a person) or paypal payments@wgimprovschool.com or https://paypal.me/WGImprovSchool</p>";
+				$body .= "<p>PAYMENT:<br>\n--------<br>This is a PAY WHAT YOU CAN class. Full price is usually $40USD (or a suggested donation in the description), but pay anything you like including nothing. If you are going to pay something, venmo @wgimprovschool (it's a business, not a person) or paypal payments@wgimprovschool.com or https://paypal.me/WGImprovSchool</p>";
 			}
 			
 			$body .= 

@@ -57,7 +57,7 @@ echo "
 {$wk['costdisplay']}, {$wk['enrolled']} (of {$wk['capacity']}) enrolled, ".($wk['waiting']+$wk['invited'])." waiting</p>\n";
 
 if ($wk['cost'] == 1) {
-	echo "<p class='m-5'><em>This is a PAY WHAT YOU CAN workshop. Pay anything from zero to $40USD (the usual full price).</em></p>";
+	echo "<p class='m-5'><em>This is a PAY WHAT YOU CAN workshop. Pay anything from zero to $40USD (the usual full price). There may be a suggested donation in the description.</em></p>";
 }
 
 if ($show_other_action)  {

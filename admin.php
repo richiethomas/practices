@@ -27,5 +27,5 @@ $view->data['your_teacher_id'] = $your_teacher_id;
 $view->data['unpaid'] = Workshops\get_unpaid_students();
 $view->data['invites'] = Workshops\get_outstanding_invites();
 
-$view->renderPage('admin/upcoming');
+$view->renderPage('admin/dashboard');
 

@@ -31,6 +31,8 @@
 		<p>Mondays noon <?php echo TIMEZONE; ?></p>
 		
 		<p><b>Mix Tape</b> runs every Monday at noon <?php echo TIMEZONE; ?>. Featuring a rotation of hosts, the show lets WGIS students sign up to do some improv in this European-friendly time slot!</p>
+		
+		<p>Sign up to perform at mix tape with a team of any size here: <a href="https://bit.ly/3fAhy3D">https://bit.ly/3fAhy3D</a></p>
 			
 	</div>
 	<div class="col">

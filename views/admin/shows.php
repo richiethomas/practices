@@ -24,7 +24,7 @@ echo
 <ul>
 <?php
 foreach ($cs->wks as $w) {
-	echo "<li><a href='admin_edit2.php?wid={$w['workshop_id']}'>{$w['title']}</a> - <a href='admin_shows.php?ac=rem&show_id={$w['show_id']}&wid={$w['workshop_id']}'>remove</a></li>\n";
+	echo "<li><a href='admin_edit2.php?wid={$w['workshop_id']}'>{$w['title']}</a> <small>(".	\Wbhkit\friendly_date($w['start']).' '.\Wbhkit\friendly_time($w['start']).")</small> - <a href='admin_shows.php?ac=rem&show_id={$w['show_id']}&wid={$w['workshop_id']}'>remove</a></li>\n";
 }
 ?>
 </ul>

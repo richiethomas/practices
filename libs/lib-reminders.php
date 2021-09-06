@@ -113,7 +113,7 @@ Questions/concerns: ".WEBMASTER."</p>";
 		if (!$std['paid'] && $wk['cost'] == 1) {
 			$note .= "<p>PAYMENT<br>
 -------<br>
-Our records show you have not yet paid. That's fine! This is a PAY WHAT YOU CAN class, so paying is optional. If you want to pay something (anything from zero to $40USD,the usual full cost), do so via venmo @wgimprovschool (it's a business, not a person) or paypal payments@wgimprovschool.com or https://paypal.me/WGImprovSchool.<br>
+Our records show you have not yet paid. That's fine! This is a PAY WHAT YOU CAN class, so paying is optional. If you want to pay something (anything from zero to the full cost -- usually $40USD or there might be a suggested donation in the description), do so via venmo @wgimprovschool (it's a business, not a person) or paypal payments@wgimprovschool.com or https://paypal.me/WGImprovSchool.<br>
 Questions/concerns: ".WEBMASTER."</p>";
 		}
 		
