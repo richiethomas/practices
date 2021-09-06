@@ -54,7 +54,9 @@ function fill_out_workshop_row($row, $get_enrollment_stats = true) {
 	} else {
 		$row['costdisplay'] = 'Free';
 	}
-	
+
+	$row['costdisplay'] = figure_costdisplay($row['cost']);
+
 	// xtra session info
 	$row['sessions'] = \XtraSessions\get_xtra_sessions($row['id']);	
 	$row['total_class_sessions'] = 1;
@@ -104,6 +106,17 @@ function fill_out_workshop_row($row, $get_enrollment_stats = true) {
 	return $row;
 	
 }
+
+function figure_costdisplay($cost) {
+	if ($cost == 1) {
+		return 'Pay what you can';
+	} elseif ($cost > 1) {
+		return "\${$cost} USD";
+	} else {
+		return 'Free';
+	}
+}
+
 
 // pass in the workshop row as it comes from the database table
 // add some columns with date / time stuff figured out
@@ -348,6 +361,8 @@ order by start asc");
 			}
 			
 		}
+		
+		$row['costdisplay'] = figure_costdisplay($row['cost']);
 		
 		if ($get_enrollments) {
 			foreach ($enrollments as $e_wid => $e_row) {
