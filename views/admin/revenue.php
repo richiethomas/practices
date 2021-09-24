@@ -61,7 +61,7 @@ $table_open = "<table class='table table-striped my-3'>
 			<td>{$wk['cost']}</td>
 			<td>{$wk['actual_revenue']}</td>
 			<td>".number_format($teacher_pay)."</td>
-			<td>".number_format($wk['cost']*$wk['paid'] - $teacher_pay)."</td>
+			<td>".number_format($wk['actual_revenue'] - $teacher_pay)."</td>
 			</tr>\n";
 						
 			$totals['suggested_paid'] += $wk['actual_revenue'];

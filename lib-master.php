@@ -17,7 +17,7 @@ function get_nav_items(){
 		array('title' => "Catalog", "href" => "about_catalog.php"),
 		array('title' => "How It Works", "href" => "about_works.php")
 	));
-	$nav_items[] = array('title' => "Shows", "href" => "shows.php");
+	$nav_items[] = array('title' => "Community", "href" => "community.php");
 	$nav_items[] = array('title' => "Merch", "href" => "merch.php");
 	return $nav_items;
 }

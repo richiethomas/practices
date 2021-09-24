@@ -27,20 +27,13 @@ if (Workshops\is_public($wk)) {
 			if ($e->change_status(SMARTENROLL)) {
 				// finicky confirmation message
 				if ($e->fields['status_id'] == ENROLLED) {
-					$message = "'{$u->fields['nice_name']}' is now enrolled in '{$wk['title']}'!<ul><li>The zoom link, and other class info, was just emailed to <b>{$u->fields['email']}</b></li>";
+					$message = "'{$u->fields['nice_name']}' is now enrolled in '{$wk['title']}'!<ul><li>The zoom link, and other class info, was just emailed to <b>{$u->fields['email']}</b></li>\n";
 					
-					if ($wk['cost'] > 1) {
-						$message .= "<li>Payment ({$wk['cost']} USD) is due by start of class. Either venmo @wgimprovschool (it's a business, not a person) or paypal https://paypal.me/WGImprovSchool.</li>";
-					}
-					if ($wk['cost'] == 1) {
-						$message .= "<li>This is a PAY WHAT YOU CAN class. Full price is usually $40USD (or a suggested donation in the description), but pay anything you like including nothing. If you are going to pay something, venmo @wgimprovschool (it's a business, not a person) or paypal https://paypal.me/WGImprovSchool</li>";
-					}
+					$message .= "<li>Please be ON TIME for class! Classes are short - being even a few minutes late really disupts things!</li>\n";
 					
-					$message .= "<li>Any questions? Ask will@wgimprovschool.com. Thanks!</li></ul>\n";
-
-					$message .= "<br>Also, please be ON TIME for class! Classes are short - being even a few minutes late really disupts things!</li>\n";
-
-
+					$message .= "<li>".\Emails\payment_text($wk)."</li>\n";
+										
+					$message .= "</ul>\n";
 					
 				} elseif ($e->fields['status_id'] == WAITING) {
 					$message = "This practice is full. '{$u->fields['nice_name']}' is now on the waiting list.";

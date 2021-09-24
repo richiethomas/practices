@@ -26,6 +26,13 @@ function fill_out_workshop_row($row, $get_enrollment_stats = true) {
 	$row['soldout'] = 0; // so many places in the code refer to this
 	$row = format_workshop_startend($row);
 	
+	// create short title if it's more then 2 words
+	$row['short_title'] = $row['title'];
+    if (str_word_count($row['short_title'], 0) > 2) {
+        $words = str_word_count($row['short_title'], 2);
+        $pos   = array_keys($words);
+        $row['short_title']  = substr($row['short_title'], 0, $pos[2]);
+    }
 	
 	//get teacher info
 	/*

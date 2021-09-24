@@ -44,15 +44,15 @@
 			<div class="col-sm-5">
 				
 				<figure class="figure">
-				  <a href="shows.php"><img src="images/matinee.png" class="figure-img img-fluid rounded" alt="Monday Matinee"></a>
+				  <a href="https://forms.gle/ofxD55qeauW3F4U56"><img src="images/harvest_festival_2021.png" class="figure-img img-fluid rounded" alt="2021 Harvest Festival"></a>
 				  <figcaption class="figure-caption text-end">art by Gareth O'Connor</figcaption>
 				</figure>
 			</div>
 			<div class="col-sm-7">
 
   <dl class="row mt-3">
-    <dt class="col-sm-3">Monday Matinee</dt>
-    <dd class="col-sm-9">Every Monday 4pm-6pm <?php echo TIMEZONE; ?>, Will Hines "hosts" 3-4 improv groups from WGIS and elsewhere. Always ends with the HOW WAS YOUR WEEK crew doing a set! More shows on the <a href="shows.php">shows page</a>.</dd>
+    <dt class="col-sm-3">Harvest Festival</dt>
+    <dd class="col-sm-9">We are doing an eight hour online festival on October 23! Apply now to be part of this! We want improv nerdy stuff! And dumb bit shows! <a href="https://forms.gle/ofxD55qeauW3F4U56">Apply here</a>.</dd>
 
     <dt class="col-sm-3">Discord Server</dt>
     <dd class="col-sm-9">We have a server on the Discord chat service. To join, <a href="https://discord.gg/GXbP3wgbrc">click here</a>.</dd>

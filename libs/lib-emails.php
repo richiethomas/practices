@@ -24,12 +24,12 @@ function centralized_email($to, $sub, $body) {
 	  $headers['Content-Type'] = "text/html";
 	  $headers['charset'] = "ISO-8859-1";
 
-	  $body = wordwrap($body, 100, "<br>\n");
+	  $body = wordwrap($body, 110, "<br>\n");
 
-	  if (LOCAL) {
+	  if (LOCAL ) {
 	  	// connect to SMTP
 		$smtp = get_smtp_object();
-		$to = 'whines@gmail.com'; // everything to me on local
+		$headers['To'] = $to = 'whines@gmail.com'; // everything to me on local
  	 	$sent = $smtp->send($to, $headers, $body);  // laptop can use the SMTP server on willhines.net
 		
  	  } else {
@@ -80,24 +80,15 @@ function confirm_email($e, $status_id = ENROLLED) {
 			$body = "<p>$body</p>";
 
 			if ($wk['location_id'] == ONLINE_LOCATION_ID) {
-				$body .= "<p>ZOOM LINK:<br>\n----------<br>\nThe Zoom link to your workshop is: {$wk['online_url']}. Try to show up 5 minutes early if you can so we can get started right away.  If your class is multiple sessions, that link should work for all of them. We'll send you an email if the link changes.</p>";
+				$body .= "<p>ZOOM LINK:<br>\n----------<br>\nThe Zoom link to your workshop is: {$wk['online_url']}.<br><br> \nTry to show up 5 minutes early if you can so we can get started right away.  If your class is multiple sessions, that link should work for all of them. We'll send you an email if the link changes.</p>";
 			}
 			
-			if ($wk['cost'] > 1) {
-				$body .= "<p>PAYMENT:<br>\n--------<br>\nClass costs \${$wk['cost']} (USD). Pay via Venmo @wgimprovschool (business) or PayPal payments@wgimprovschool.com or https://paypal.me/WGImprovSchool. Due by the start of class. Confirmation email for payment can take up to 12 hours to arrive because it's triggered manually by the stubborn human who built this web site.</p>";
-			}
-			if ($wk['cost'] == 1) {
-				$body .= "<p>PAYMENT:<br>\n--------<br>This is a PAY WHAT YOU CAN class. Full price is usually $40USD (or a suggested donation in the description), but pay anything you like including nothing. If you are going to pay something, venmo @wgimprovschool (it's a business, not a person) or paypal payments@wgimprovschool.com or https://paypal.me/WGImprovSchool</p>";
-			}
-			
+			$body .= payment_text($wk);
+						
 			$body .= 
-"<p>CLASS INFO<br>\n----------<br>\nDescription and times/dates are both in this email and also listed here:<br>\n{$trans}</p>\n
-<p>BE ON TIME<br>\n-----------<br>\nWe know sometimes lateness can't be helped but please do your best to be on time! Log into zoom five minutes before class starts! These classes are short so being even a few minutes late really disrupts things!</p>\n
-<p>DROPPING THE CLASS<br>\n------------------<br>\nYou can drop out by going to class's web page (the link is just above this paragraph). If you're dropping within ".LATE_HOURS." of the start, please pay anyway.</p>
-<p>SHOWS AND JAMS<br>\n
-------------------<br>\n
-There are online shows and jams that you can play in, if you wish! See the shows/jams page on the web site for more info:<br>\n
-http://www.wgimprovschool.com/shows</p>";
+"<p>CLASS INFO<br> \n----------<br> \nDescription and times/dates are both in this email and also listed here:<br>\n{$trans}</p>\n";
+			
+			$body .= email_boilerplate();
 
 			$send_faq = false;
 			break;
@@ -314,5 +305,78 @@ function get_smtp_object() {
 	}
 	$smtp = \Mail::factory('smtp', $params); // should now be set globally
 	return $smtp;
+	
+}
+
+
+function payment_text($wk, $reminder = 0) {
+	
+	$pt = "<p>PAYMENT:<br>\n--------<br>\n"; // payment text
+	
+	
+	if ($reminder == 1) {
+		
+		if ($wk['cost'] > 1) {
+			$pt .= "Our records show you have not yet paid. That's fine! This is just a reminder: payment is due by the start of class. ";
+		}
+		if ($wk['cost'] == 1) {
+			$pt .= "Our records show you have not yet paid. That's fine! This is a PAY WHAT YOU CAN class, so paying is optional. ";
+		}
+	}
+	
+	if ($wk['cost'] > 1) {
+		$pt .= "Class costs \${$wk['cost']} (USD). ";
+	}
+	if ($wk['cost'] == 1) {
+		$pt .= "This is a PAY WHAT YOU CAN class. Full price is usually $40USD (or a suggested donation in the description), but pay anything you like including nothing. ";
+	}	
+	if ($wk['cost'] == 0) {
+		$pt .= "This is a free class. ";
+	}	
+	
+	if ($wk['cost'] != 0) {
+		
+		if ($wk['cost'] == 1) {
+			$pt .= "<br><br>\n\nIf you're going to pay something, ";
+		} else {
+			$pt .= "<br><br>\n\nPay via ";
+		}
+		
+		
+		$pt .= "Venmo @wgimprovschool (business),<br>\n or PayPal payments@wgimprovschool.com<br>\n or https://paypal.me/WGImprovSchool.<br><br>\n\n";
+		
+		// get teacher last name
+		$tnames = explode(' ', $wk['teacher_info']['nice_name']);
+		$t_last_name = array_pop($tnames);
+
+		// start date
+		$wdate = date('n/j', (strtotime($wk['start'])));		
+		$wnames = explode(' ', $wk['title']);
+		
+		$pt .= "Put '".strtoupper("{$wdate} {$t_last_name} {$wk['short_title']}")."' in your payment.<br><br>\n\nDue by the start of class.<br><br>\n\nConfirmation email for payment can take up to 12 hours to arrive.<br><br>\n\n";
+
+		$pt .= "If you can't do Venmo or Paypal, contact payments@wgimprovschool.com";
+
+	}
+
+	$pt .= "</p>\n";
+	
+	return $pt;
+	
+}
+
+function email_boilerplate() {
+	
+	return "<p>BE ON TIME<br> \n-----------<br> \nWe know sometimes lateness can't be helped but please do your best to be on time! Log into zoom five minutes before class starts! These classes are short so being even a few minutes late really disrupts things!</p>\n
+<p>DROPPING THE CLASS<br> \n------------------<br> \nYou can drop out by going to class's web page (the link is just above this paragraph). If you're dropping within ".LATE_HOURS." of the start, please pay anyway.</p>\n\n
+<p>SHOWS AND JAMS<br>\n
+------------------<br>\n
+There are online shows and jams that you can play in, if you wish! See the shows/jams page on the web site for more info:<br>\n
+http://www.wgimprovschool.com/community</p>\n\n
+<p>FACEBOOK AND CHAT<br>\n
+---------------------\n
+If you want to meet other students, check out our Facebook group or Discord chat server:
+Facebook: http://www.facebook.com/groups/wgimprovschool<br>\n
+Discord chat server: https://discord.gg/GXbP3wgbrc</p>";
 	
 }

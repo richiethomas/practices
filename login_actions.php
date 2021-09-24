@@ -7,30 +7,34 @@ switch ($ac) {
 
 	case 'link':
 	
-		Wbhkit\set_vars(array('email', 'display_name'));
+		Wbhkit\set_vars(array('email', 'display_name', 'fax_only'));
 	
-		// if a user exists for that email, get it
-		$u->set_by_email($email);
+		if (!$fax_only) {
+			// if a user exists for that email, get it
+			$u->set_by_email($email);
 
-		// if failed, that was a bad email
-		if (!$u->logged_in()) {
-			$error = $u->error;
-			$logger->debug($error);
-			break;
-		}
+			// if failed, that was a bad email
+			if (!$u->logged_in()) {
+				$error = $u->error;
+				$logger->error($error);
+				break;
+			}
 
-		// send log in link to that user
-		if ($u->email_link()) {
-			$message = "Thanks! I've sent a link to your {$u->fields['email']}. If you don't see it <a href='index.php'>click here to refresh the page</a> and try again.";
-			$link_email_sent_flag = true;
-			$u->soft_logout();
-			$logger->debug($message);
-			
-		} else {
-			$error = "I was unable to email a link to {$u->fields['email']}! Sorry.";
-			$logger->debug($error);
-		}
+			// send log in link to that user
+			if ($u->email_link()) {
+				$message = "Thanks! I've sent a link to your {$u->fields['email']}. If you don't see it <a href='index.php'>click here to refresh the page</a> and try again.";
+				$link_email_sent_flag = true;
+				$u->soft_logout();
+				$logger->debug($message);
+			} else {
+				$error = "I was unable to email a link to {$u->fields['email']}! Sorry.";
+				$logger->debug($error);
+			}
 		
+		} else {
+			$message = "Everything went great.";
+			$logger->error("spambot '{$email}' - IP: {$_SERVER['SERVER_ADDR']}");
+		}
 		break;		
 	
 	

@@ -104,17 +104,9 @@ function remind_enrolled($class) {
 		
 		// add note if student has to pay
 		$note = $reminder['note'];
-		if (!$std['paid'] && $wk['cost'] > 1) {
-			$note .= "<p>PAYMENT<br>
--------<br>
-Our records show you have not yet paid. That's fine! This is just a reminder: payment is due by the start of class. Send {$wk['cost']} USD via venmo @wgimprovschool (it's a business, not a person) or paypal payments@wgimprovschool.com.<br>
-Questions/concerns: ".WEBMASTER."</p>";
-		}
-		if (!$std['paid'] && $wk['cost'] == 1) {
-			$note .= "<p>PAYMENT<br>
--------<br>
-Our records show you have not yet paid. That's fine! This is a PAY WHAT YOU CAN class, so paying is optional. If you want to pay something (anything from zero to the full cost -- usually $40USD or there might be a suggested donation in the description), do so via venmo @wgimprovschool (it's a business, not a person) or paypal payments@wgimprovschool.com or https://paypal.me/WGImprovSchool.<br>
-Questions/concerns: ".WEBMASTER."</p>";
+		
+		if (!$std['paid']) {
+			$note .= \Emails\payment_text($wk, 1);
 		}
 		
 		$trans = URL."workshop.php?wid={$wk['id']}";
@@ -126,19 +118,8 @@ Questions/concerns: ".WEBMASTER."</p>";
 	{$trans}</p>\n";
 		}
 
+		$note .= \Emails\email_boilerplate();
 
-$note .= "<p>BE ON TIME<br>\n-----------<br>\nWe know sometimes lateness can't be helped but please do your best to be on time! Log into zoom five minutes before class starts! These classes are short so being even a few minutes late really disrupts things!</p>\n
-<p>SHOWS AND JAMS<br>\n
-------------------<br>\n
-There are online shows and jams that you can play in, if you wish! See the shows/jams page on the web site for more info:<br>\n
-http://www.wgimprovschool.com/shows</p>\n
-
-<p>FACEBOOK AND CHAT<br>\n
----------------------\n
-If you want to meet other students, check out our Facebook group or Discord chat server:
-Facebook: http://www.facebook.com/groups/wgimprovschool<br>\n
-Discord chat server: https://discord.gg/GXbP3wgbrc</p>\n";
-		
 		$base_msg =	$note.\Emails\get_workshop_summary($wk)."<br>
 Class info on web site: $trans";
 				

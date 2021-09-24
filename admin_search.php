@@ -23,28 +23,37 @@ switch ($ac) {
 	
 	case 'zeroconfirm':
 
-		$stds = $userhelper->find_students('everyone');
+		$stds = $userhelper->find_students('everyone');		
 		$message = '';
+		$total_deleted = 0;
 		foreach ($stds as $s) {
+			
 			if ($s['classes'] == 0) {
-				$message .= "deleting {$s['email']} {$s['id']} - ({$s['classes']})<br>\n";
-				$userhelper->delete_user($s['id']);
+				if (\Teachers\is_teacher($s['id'])) {
+					//$message .= "<b>{$s['email']} - TEACHER</b><br>";
+				} else {
+					$message .= "{$s['email']}<br>\n";
+					$userhelper->delete_user($s['id']);
+					$total_deleted++;
+				}
 			}
 		}
 		if (!$message) {
 			$message = "No zero registation students to delete.";
 			$logger->info($message);
 		} else {
-			$message = "Zero registration students removed.";
+			$message .= "'{$total_deleted}' zero registration students removed.";
 			$logger->info($message);
 		}
 		$needle = 'everyone';
+		break;
 		
 	 case 'zero':
 		if ($ac == 'zero') {
 			$message = "Really remove students with zero workshops? <a class='btn btn-danger' href='$sc?ac=zeroconfirm'>yes remove</a> or <a class='btn btn-primary' href='$sc?ac=search&needle=everyone'>cancel</a>";			
 		}
 		
+		break;
 		
 	case 'delstudentconfirm':
 		$message = "student {$guest->fields['nice_name']} deleted!";

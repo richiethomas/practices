@@ -10,7 +10,8 @@ $all_workshops = Workshops\get_workshops_dropdown();
 $eh = new EnrollmentsHelper();
 
 $unpaid = array();
-$students = array();
+$student_emails = array();
+$student_names = array();
 $statuses = $lookups->statuses;
 
 if (is_array($workshops)) {
@@ -23,7 +24,7 @@ if (is_array($workshops)) {
 					
 					// track students by status		
 					$student_emails[] = $as['email'];
-					$student_names[] = $as['nice_name'];
+					$student_names[] = "{$as['nice_name']}, {$as['email']}";
 					
 					// also tally who paid
 					if ($as['status_id'] == ENROLLED and $as['paid'] == 0) {

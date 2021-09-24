@@ -45,7 +45,7 @@
 			</div>
 			
 			
-			<p><i>(paid / enrolled / capacity / waiting)</i></p>
+			<p><i>(enrolled / capacity)</i></p>
 
 <?php		
 $current_date = null;
@@ -74,7 +74,7 @@ foreach ($workshops as $wk) {
 	$end = Wbhkit\friendly_time($wk['end']);
 	
 	echo "<li class='mt-3' data-teacher=\"teacher-{$wk['teacher_id']}\" ".($wk['class_show'] ? ' class="show"' : '')."><a href='admin_edit2.php?wid={$wk['id']}'>{$wk['title']}</a> ({$wk['rank']}".($wk['class_show'] ? ' - show' : '')."), $start-$end (".number_format($wk['enrolled'], 0)." /  ".number_format($wk['capacity'], 0).")";
-	echo " - {$wk['teacher_name']} - {$wk['costdisplay']}";
+	echo " - {$wk['teacher_name']} - {$wk['cost']}";
 	if ($wk['co_teacher_id']) {
 		echo ", {$wk['co_teacher_name']}";
 	}

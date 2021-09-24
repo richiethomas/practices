@@ -11,7 +11,7 @@ echo "<div class='row mt-md-3 admin-edit-workshop'>\n";
 			</small></h2>\n";
 
 		//show enrollment totals at top
-		echo  "<p>totals: (".implode(" / ", array_values($stats)).")<p>\n";
+		echo  "<p>totals: (".implode(" / ", array_values($stats)).") - ({$wk['actual_revenue']})<p>\n";
 		
 		echo "<form action='$sc' method='post'>\n";
 		echo Wbhkit\hidden('wid', $wk['id']);

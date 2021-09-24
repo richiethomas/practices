@@ -25,21 +25,30 @@
 </div></footer>
 
 <!-- Login Modal -->
-<div class="modal fade" id="login-modal" tabindex="-1" role="dialog" aria-labelledby="Login Modal Dialog" aria-hidden="true">
+<div class="modal fade" id="login-modal" tabindex="-1" role="dialog" aria-labelledby="login_title" aria-hidden="true">
+
+<script>
+$( document ).ready(function(){
+		$( "#email" ).on("focus", function() {
+			$("#log_in").attr("action", "index.php");
+		});
+});
+</script>
 	
   <div class="modal-dialog modal-dialog-centered" role="document">
 	<div class="modal-content">
 	  <div class="modal-header">
 		  
-		<h5 class="modal-title">To Log In, We Email You A Link</h5>
+		<h5 id="login_title" class="modal-title">To Log In, We Email You A Link</h5>
 		<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 	  </div>
 	  <div class="modal-body">
 		<?php echo \Wbhkit\form_validation_javascript('log_in'); ?>
 	
-		<form id='log_in' action='index.php' method='post' novalidate>
+		<form id='log_in' action='baloney.php' method='post' novalidate>
 		<?php echo \Wbhkit\hidden('ac', 'link').
 		\Wbhkit\texty('email', '', 'Email', 'something@something.com', 'We will send you an email with a link to click.', 'Must be a valid email you have access to', ' required ', 'email').
+		'<input type="checkbox" name="fax_only" value="1" style="display:none !important" tabindex="-1">'.
 		\Wbhkit\submit('Send Me An Email'); ?>
 		</form>  
 	</div>

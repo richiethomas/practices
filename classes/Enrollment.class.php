@@ -203,7 +203,39 @@ class Enrollment extends WBHObject {
 		}
 		return $this->message = "No invites sent.";
 	}
-	
+
+
+/*
+	function check_waiting(array $wk) {
+		$wk = \Workshops\set_enrollment_stats($wk); // make sure it's up to date
+		$msg = '';
+		if ($wk['upcoming'] == 0) {
+			return 'Workshop is in the past';
+		}
+		while (($wk['enrolled']+$wk['invited']) < $wk['capacity'] && $wk['waiting'] > 0) {
+		
+			$stmt = \DB\pdo_query("select * from registrations where workshop_id = :wid and status_id = '".WAITING."' order by last_modified limit 1", array(':wid' => $wk['id']));
+
+		
+			while ($row = $stmt->fetch()) {
+				$this->u = new User();
+				$this->u->set_by_id($row['user_id']);
+				$this->wk = $wk;
+				$this->set_by_uid_wid($this->u->fields['id'], $wk['id']);
+				$msg .= $this->change_status(INVITED, true);
+				
+				//adjust our totals so we don't get caught infinite loop!
+				$wk['invited']++;
+				$wk['waiting']--;
+			}
+		}
+		if ($msg) { 
+			return $this->message = $msg;
+		}
+		return $this->message = "No invites sent.";
+	}
+	*/
+
 	
 	function update_paid_by_enrollment_id(int $eid, int $new_paid, string $pay_override = '0', bool $block_email = false) {
 		$this->set_by_id($eid);

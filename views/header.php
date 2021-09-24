@@ -58,7 +58,7 @@ if (isset($fb_description)) {
 					if (isset($nav_item['children'])) {
 						echo "				<li class=\"nav-item dropdown\">
 					<a class=\"nav-link dropdown-toggle\" href=\"#\" id=\"dropdown{$i}\" data-bs-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\">{$nav_item['title']}</a>
-					<div class=\"dropdown-menu\" aria-labelledby=\"dropdown01\">\n";
+					<div class=\"dropdown-menu\" aria-label=\"{$nav_item['title']}\">\n";
 						$i++;
 							
 							foreach( $nav_item['children'] as $nav_item_child) { 
@@ -82,7 +82,7 @@ if (isset($fb_description)) {
   
  if ($page != 'home') {
 	 echo "
-	 <main role=\"main\">
+	 <main>
 	 	<div class=\"container-lg container-fluid\">
 	 	<article> <!-- Using the <article> tag to signify this is a straight page or post -->
 ";
