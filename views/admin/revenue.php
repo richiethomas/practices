@@ -2,18 +2,35 @@
 <form action='<?php echo $sc; ?>' method='get'>
 <?php echo \Wbhkit\texty('searchstart', $searchstart, 'Search Start'); ?>
 <?php echo \Wbhkit\texty('searchend', $searchend, 'Search End'); ?>
+<?php echo \Wbhkit\radio('mode', array('0' => 'by teacher', '1' => 'by class'), $mode);  ?>
 <?php echo \Wbhkit\submit('Update'); ?>
 </form>
 
 <?php
-$weeknav = "<p><a href='admin_revenue.php?searchstart=$lastweekstart&searchend=$lastweekend'>last week</a> | <a href='admin_revenue.php'>this week</a> | <a href='admin_revenue.php?searchstart=$nextweekstart&searchend=$nextweekend'>next week</a></p>\n";
+$weeknav = "<p><a href='admin_revenue.php?searchstart=$lastweekstart&searchend=$lastweekend&mode=$mode'>last week</a> | <a href='admin_revenue.php'>this week</a> | <a href='admin_revenue.php?searchstart=$nextweekstart&searchend=$nextweekend&mode=$mode'>next week</a></p>\n";
 echo $weeknav;
 
 if (count($workshops_list) == 0) {
 	echo "<h2>No workshops offered in this time period!</h2>\n";
 } else {
 	
-
+	
+	if ($mode) {
+	
+		echo "<form id='dummy'><textarea rows='100' cols='300'>";
+		echo "start date, workshop id, title, teacher, revenue, teacher pay\n";
+		$total_revenue = 0;
+		$total_pay = 0;
+		foreach ($workshops_list as $wid => $wk) {
+			echo date('Y-m-d',strtotime($wk['start'])).", {$wid}, {$wk['title']},  {$wk['teacher_info']['nice_name']}, {$wk['actual_revenue']}, {$wk['teacher_pay']}\n";
+			$total_revenue += $wk['actual_revenue'];
+			$total_pay += $wk['teacher_pay'];
+		}
+		echo ",,,,{$total_revenue},{$total_pay}\n";
+		echo "</textarea></form>\n";
+	
+	} else {
+	
 $table_open = "<table class='table table-striped my-3'>
 	<thead><tr>
 		<th>workshop</th>
@@ -88,6 +105,8 @@ $table_open = "<table class='table table-striped my-3'>
 		
 		
 		echo "</div></div>\n";
+
+	} // end of "mode" if then
 		
 } // end of "if count of workshops is zero" if/then
 		

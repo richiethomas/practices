@@ -1,6 +1,6 @@
 <h1 class="page-title mb-5">Community</h1>
  
-<p>This page is for members of the WGIS community. First of all, thanks for being here! We have a lot of ways to be a part of the community.<p>
+<p>This page is for members of the WGIS community. First of all, thanks for being here! We have a lot of ways to be a part of the community.</p>
 	
 <p>Read on to learn about our <a href="#twitch">twitch channel</a>, <a href="#shows">shows</a>, <a href="#jams">jams</a> and <a href="#discussions">discussion groups</a>!</p>
 

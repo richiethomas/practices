@@ -35,18 +35,6 @@ function fill_out_workshop_row($row, $get_enrollment_stats = true) {
     }
 	
 	//get teacher info
-	/*
-	if (!isset($row['teacher_user_id'])) {
-		$trow = \Teachers\get_teacher_by_id($row['teacher_id']);
-		$row['teacher_email'] = $trow['email'];
-		$row['teacher_name'] = $trow['nice_name'];
-		$row['teacher_user_id'] = $trow['user_id'];
-		$row['teacher_id'] = $trow['id'];
-		$row['teacher_key'] = $trow['ukey'];
-		$row['teacher_default_rate'] = $trow['default_rate'];
-	}
-	*/
-
 	if ($row['teacher_id']) {
 		$row['teacher_info'] = \Teachers\get_teacher_by_id($row['teacher_id']);
 	}
@@ -101,6 +89,13 @@ function fill_out_workshop_row($row, $get_enrollment_stats = true) {
 	$row = check_last_minuteness($row);
 	
 	if ($get_enrollment_stats) {
+
+		// set teacher pay
+	
+		$row['teacher_pay'] = $row['total_class_sessions']*$row['teacher_info']['default_rate'] + $row['total_show_sessions']*($row['teacher_info']['default_rate']/2);
+		
+		
+		
 		$row = set_actual_revenue($row);
 		$row = set_enrollment_stats($row);
 		if ($row['enrolled'] + $row['waiting'] + $row['invited'] >= $row['capacity']) { 
@@ -164,6 +159,8 @@ function set_actual_revenue($row) {
 	$row['actual_revenue'] = $total;
 	return $row;
 }
+
+
 
 
 function check_last_minuteness($wk) {
@@ -397,11 +394,11 @@ function how_many_paid($wk) {
 }
 
 // for "revenues" page
-function get_workshops_list_bydate($start = null, $end = null) {
+function get_workshops_list_bydate($start = null, $end = null, $byclass = true) {
 	if (!$start) { $start = "Jan 1 1000"; }
 	if (!$end) { $end = "Dec 31 3000"; }
 	
-	$stmt = \DB\pdo_query("select w.* from workshops w WHERE w.start >= :start and w.start <= :end order by teacher_id, start desc", array(':start' => date('Y-m-d H:i:s', strtotime($start)), ':end' => date('Y-m-d H:i:s', strtotime($end))));
+	$stmt = \DB\pdo_query("select w.* from workshops w WHERE w.start >= :start and w.start <= :end order by ".($byclass ? '' : ' teacher_id, ')." start desc", array(':start' => date('Y-m-d H:i:s', strtotime($start)), ':end' => date('Y-m-d H:i:s', strtotime($end))));
 	
 	$workshops = array();
 	while ($row = $stmt->fetch()) {

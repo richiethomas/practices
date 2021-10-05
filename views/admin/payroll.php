@@ -155,6 +155,11 @@ foreach ($claims as $c) {
 		}
 	}
 	
+	// ONLY SHOW FIRST SESSIONS 
+	if ($c['rank'] != 1) {
+		continue(1); 
+	}
+	
 	$t = \Teachers\find_teacher_in_teacher_array($c['teacher_id'], $faculty);
 	if ($c['task'] == 'show') { $t['default_rate'] = $t['default_rate'] / 2; }
 		

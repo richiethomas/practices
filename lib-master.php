@@ -1,7 +1,7 @@
 <?php
 /*
-using Bootstrap 4.5
-tested on PHP 7.4.2
+using Bootstrap 5.1.1
+tested on PHP 7.4.9
 */
 
 
@@ -15,10 +15,11 @@ function get_nav_items(){
 		array('title' => "Teachers", "href" => "teachers.php"),
 		array('title' => "School", "href" => "about_school.php"),
 		array('title' => "Catalog", "href" => "about_catalog.php"),
-		array('title' => "How It Works", "href" => "about_works.php")
+		array('title' => "How It Works", "href" => "about_works.php"),
+		array('title' => "Merch", "href" => "merch.php")
 	));
 	$nav_items[] = array('title' => "Community", "href" => "community.php");
-	$nav_items[] = array('title' => "Merch", "href" => "merch.php");
+	$nav_items[] = array('title' => "Teams", "href" => "teams.php");
 	return $nav_items;
 }
 

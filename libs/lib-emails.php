@@ -26,11 +26,11 @@ function centralized_email($to, $sub, $body) {
 
 	  $body = wordwrap($body, 110, "<br>\n");
 
-	  if (LOCAL ) {
+	  if (LOCAL) {
 	  	// connect to SMTP
 		$smtp = get_smtp_object();
 		$headers['To'] = $to = 'whines@gmail.com'; // everything to me on local
- 	 	$sent = $smtp->send($to, $headers, $body);  // laptop can use the SMTP server on willhines.net
+ 		//$sent = $smtp->send($to, $headers, $body);  // laptop can use the SMTP server on willhines.net
 		
  	  } else {
 		  unset($headers['Subject']);

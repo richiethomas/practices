@@ -4,13 +4,13 @@ include 'lib-master.php';
 
 $u->reject_user_below(3); // group 3 or higher
 
-$vars = array('searchstart', 'searchend', 'lastweekstart', 'lastweekend', 'nextweekstart', 'nextweekend');
+$vars = array('searchstart', 'searchend', 'lastweekstart', 'lastweekend', 'nextweekstart', 'nextweekend', 'mode');
 Wbhkit\set_vars($vars);
 
 // search defaults to current week
 if (!$searchstart && !$searchend) {
-	$searchstart = (date("l") == 'Sunday' ? 'today' : 'last Sunday');
-	$searchend = (date("l") == 'Saturday' ? 'today' : 'next Saturday');
+	$searchstart = (date("l") == 'Saturday' ? 'today' : 'last Saturday');
+	$searchend = (date("l") == 'Friday' ? 'today' : 'next Friday');
 }
 
 if ($searchstart) { $searchstart = date('Y-m-d 00:00:00', strtotime($searchstart)); }
@@ -23,8 +23,7 @@ $nextweekend = change_date_string($searchend, '+7 days');
 
 
 $view->add_globals($vars);	
-
-$view->data['workshops_list'] = Workshops\get_workshops_list_bydate($searchstart, $searchend);
+$view->data['workshops_list'] = Workshops\get_workshops_list_bydate($searchstart, $searchend, $mode);
 
 $view->renderPage('admin/revenue');
 
