@@ -2,7 +2,7 @@
 			
 <div class='row py-3 border-top'>
 <div class='col-md-6'>Title</div>
-<div class='col-md-6'>paid / enrolled / capacity / waiting</div>
+<div class='col-md-6'>paid / enrolled / capacity</div>
 
 </div>
 				
@@ -39,7 +39,7 @@
 					}
 					echo "<br>\n";	
 					echo number_format($row['paid'])." / "
-						.number_format($row['enrolled'], 0)." / ".number_format($row['capacity'], 0)." / ".number_format($row['waiting']+$row['invited'])."\n"; // enrollments
+					.number_format($row['enrolled'], 0)." /  ".number_format($row['capacity'], 0)."\n"; // enrollments
 				
 				echo "</div>\n"; // end of big info cell wrapper
 			echo "</div>\n"; // end of row

@@ -50,8 +50,8 @@ switch ($ac) {
 		}
 		break;
 		
-	case 'cw':
-		$message = $e->check_waiting($wk);
+	case 'nw':
+		$message = $e->notify_waiting($wk);
 		break;
 
 	case 'conrem':

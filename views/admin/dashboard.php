@@ -6,29 +6,7 @@
 		<div class="admin-box-content">
 			
 			
-			<div class="issues float-end border border-4 p-2 m-2">
-				<h4>Outstanding Invites</h4>
-				<ul>
-				<?php
-				$last_wk = null;
-				foreach ($invites as $in) {
-					if ($last_wk != $in['title']) {
-						echo "<p class='m-0'><b><a href='admin_edit2.php?wid={$in['workshop_id']}'>{$in['title']}</a> - ".date('D M j', strtotime($in['start']))."</b></p>\n";
-						$last_wk = $in['title'];
-					}
-					$then = new DateTime($in['last_modified']);
-					$now = new DateTime("now");
-					$interval = $then->diff($now);
-					$fmt = null;
-					if ($interval->d > 0) { $fmt .= "%d days "; }
-					if ($interval->h > 0) { $fmt .= "%h hrs "; }
-					if ($interval->i > 0) { $fmt .= "%i mins"; }
-					
-					echo "<p class='m-0 ps-4'>{$in['nice_name']} <small>(".$then->format('M j g:ia').") - ".$interval->format($fmt)."</small></p>\n";
-				}
-				?>
-				</ul>
-				
+			<div class="issues float-end border border-4 p-2 m-2">				
 				<h4>Unpaid</h4>
 				<ul>
 				<?php

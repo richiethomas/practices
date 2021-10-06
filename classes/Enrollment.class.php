@@ -57,29 +57,9 @@ class Enrollment extends WBHObject {
 	function finish_fields($row) {
 		$this->replace_fields($row);
 		$this->fields['status_name'] = $this->lookups->statuses[$row['status_id']];
-		$this->figure_rank();
 		return $this->fields['id'];
 	}
 	
-	function figure_rank() {
-								
-		// check rank
-		if ($this->fields['status_id'] == WAITING) {
-			$stmt2 = \DB\pdo_query("select r.* from registrations r where r.workshop_id = :wid and r.status_id = :sid order by last_modified", array(':wid' => $this->fields['workshop_id'], ':sid' => WAITING));
-			$i = 1;
-			while ($row2 = $stmt2->fetch()) {
-				if ($row2['id'] == $this->fields['id']) {
-					break;
-				}
-				$i++;
-			}
-			$this->fields['rank'] = $i;
-		} else {
-			$this->fields['rank'] = null;
-		}
-		return $this->fields['rank'];
-	}
-
 	function reset_user_and_workshop() {
 		if (isset($this->fields['user_id']) && $this->fields['user_id']) {
 			$this->u->set_by_id($this->fields['user_id']);
@@ -110,8 +90,7 @@ class Enrollment extends WBHObject {
 				return $this->message = "user {$u->fields['email']} ({$u->fields['id']}) was already status $target_status for {$wk['title']} ({$wk['id']})";
 				
 			} else {
-				$target_status = ($wk['enrolled'] + $wk['invited'] + $wk['waiting'] < $wk['capacity']) ? ENROLLED : WAITING;
-				//echo "({$wk['enrolled']} + {$wk['invited']} + {$wk['waiting']} < {$wk['capacity']}) = status $target_status, also eid = {$this->fields['id']}<br>";
+				$target_status = ($wk['enrolled'] < $wk['capacity']) ? ENROLLED : WAITING;
 			}
 		
 		}
@@ -119,17 +98,20 @@ class Enrollment extends WBHObject {
 		// update or insert?
 		if ($this->fields['id']) {
 			
+			
 			if ($this->fields['status_id'] != $target_status) {
 				$stmt = $db->prepare("update registrations set status_id = :status_id,  last_modified = '{$datestring_now}' where id = :eid");
 				$stmt->execute(array(':status_id' => $target_status, ':eid' => $this->fields['id']));
+								
 			} else {
-				$this->message = "user {$u->fields['email']} ({$u->fields['id']}) was already status $target_status for {$wk['title']} ({$wk['id']})";
+				return $this->message = "user {$u->fields['email']} ({$u->fields['id']}) was already status $target_status for {$wk['title']} ({$wk['id']})";
 			}
 					
 		} else {
 			$stmt = $db->prepare("INSERT INTO registrations (workshop_id, user_id, status_id, registered, last_modified) VALUES (:wid, :uid, :status_id, '{$datestring_now}', '{$datestring_now}')");
 			$stmt->execute(array(':wid' => $wk['id'], ':uid' => $u->fields['id'], ':status_id' => $target_status));
 			$last_insert_id = $db->lastInsertId();
+			
 		}
 
 		$this->set_into_fields(
@@ -146,11 +128,7 @@ class Enrollment extends WBHObject {
 			$this->update_change_log($target_status);	
 			if ($confirm) { 
 				\Emails\confirm_email($this, $target_status); 
-			}
-			if ($target_status == WAITING) {
-				$this->figure_rank();
-			}
-			
+			}			
 		}
 
 
@@ -173,69 +151,38 @@ class Enrollment extends WBHObject {
 	}
 
 
-	// this checks for open spots, and makes sure invites have gone out to anyone on waiting list
-	// i call this in places just to make sure i haven't neglected the waiting list
-	function check_waiting(array $wk) {
-		$wk = \Workshops\set_enrollment_stats($wk); // make sure it's up to date
-		$msg = '';
-		if ($wk['upcoming'] == 0) {
-			return 'Workshop is in the past';
+	function notify_waiting(array $wk) {
+		
+		
+		if ($wk['enrolled'] >= $wk['capacity']) {
+			return "No open spot available.";
 		}
-		while (($wk['enrolled']+$wk['invited']) < $wk['capacity'] && $wk['waiting'] > 0) {
 		
-			$stmt = \DB\pdo_query("select * from registrations where workshop_id = :wid and status_id = '".WAITING."' order by last_modified limit 1", array(':wid' => $wk['id']));
+		// retrieve waiting list
+		$eh = new EnrollmentsHelper();
+		$stds = $eh->get_students($wk['id'], WAITING);
+		
+		$total_notified = 0;
+		// send them an email that says there's a spot open
+		foreach ($stds as $s) {
+			
+				$body = "A spot has opened up in '{$wk['title']}', starting on {$wk['showstart']}.<br><br>
+		
+				Go here to enroll.<br>
+				".URL."workshop.php?wid={$wk['id']}
+				<br><br>
+			
+				Please note: everyone on the waiting list gets this email at the same time. If you want this spot, go there ASAP.";	
 
-		
-			while ($row = $stmt->fetch()) {
-				$this->u = new User();
-				$this->u->set_by_id($row['user_id']);
-				$this->wk = $wk;
-				$this->set_by_uid_wid($this->u->fields['id'], $wk['id']);
-				$msg .= $this->change_status(INVITED, true);
+
+				\Emails\centralized_email($s['email'], "WGIS: Spot open in '{$wk['title']}'", $body);
 				
-				//adjust our totals so we don't get caught infinite loop!
-				$wk['invited']++;
-				$wk['waiting']--;
-			}
-		}
-		if ($msg) { 
-			return $this->message = $msg;
-		}
-		return $this->message = "No invites sent.";
-	}
+				$total_notified++;
 
-
-/*
-	function check_waiting(array $wk) {
-		$wk = \Workshops\set_enrollment_stats($wk); // make sure it's up to date
-		$msg = '';
-		if ($wk['upcoming'] == 0) {
-			return 'Workshop is in the past';
 		}
-		while (($wk['enrolled']+$wk['invited']) < $wk['capacity'] && $wk['waiting'] > 0) {
+		return "$total_notified students notified of open spot.";
 		
-			$stmt = \DB\pdo_query("select * from registrations where workshop_id = :wid and status_id = '".WAITING."' order by last_modified limit 1", array(':wid' => $wk['id']));
-
-		
-			while ($row = $stmt->fetch()) {
-				$this->u = new User();
-				$this->u->set_by_id($row['user_id']);
-				$this->wk = $wk;
-				$this->set_by_uid_wid($this->u->fields['id'], $wk['id']);
-				$msg .= $this->change_status(INVITED, true);
-				
-				//adjust our totals so we don't get caught infinite loop!
-				$wk['invited']++;
-				$wk['waiting']--;
-			}
-		}
-		if ($msg) { 
-			return $this->message = $msg;
-		}
-		return $this->message = "No invites sent.";
 	}
-	*/
-
 	
 	function update_paid_by_enrollment_id(int $eid, int $new_paid, string $pay_override = '0', bool $block_email = false) {
 		$this->set_by_id($eid);
@@ -304,7 +251,6 @@ class Enrollment extends WBHObject {
 		}
 		$this->update_change_log(DROPPED); // really should be a new status like "REMOVED" 
 		$stmt = \DB\pdo_query('delete from registrations where id = :eid', array(':eid' => $this->fields['id']));	
-		$this->check_waiting($this->wk);
 		return true;
 	}	
 

@@ -45,10 +45,7 @@ if ($admin) {
 			echo "</small></div>\n"; // when col	
 			if ($admin) { echo "<div class='col-sm my-2'>{$t['place']}</div>\n"; } // where col
 			echo "	<div class='col-sm'>{$statuses[$t['status_id']]}";
-			if ($t['status_id'] == WAITING) {
-				echo " (spot {$t['rank']})";
-			}
-			echo "</div>\n"; // status and rank col
+			echo "</div>\n"; // status col
 			echo "	<div class='col-sm'><a href='workshop.php?wid={$t['workshop_id']}'><span class=\"oi oi-info\" title=\"info\" aria-hidden=\"true\"></span> info</a></div>\n";			
 			echo "</div>\n\n"; // end of row
 		

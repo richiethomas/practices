@@ -5,42 +5,44 @@ $sessions = '';
 
 	
 if (!\Workshops\is_public($wk)) {
-	$point = "This workshop is not available for signups yet. It will be available at <b>".date("l M j, g:ia", strtotime($wk['when_public']))."</b> California time (PDT)";
+	$point = "This workshop is not available for signups yet. It will be available at <b>".date("l M j, g:ia", strtotime($wk['when_public']))."</b> (".TIMEZONE.")";
 } elseif ($wk['upcoming'] == 0) {
 	$point = "This workshop had started or is in the past.";
 } elseif ($wk['cancelled'] == true) {
 	$point = "This workshop is CANCELLED.";
 } else {
-	if ($u->logged_in()) {
-		$enroll_link = "$sc?ac=enroll&wid={$wk['id']}";
+	
+	$enroll_link = "$sc?ac=enroll&wid={$wk['id']}";
+	$drop_link = "$sc?ac=drop&wid={$wk['id']}";
 
-		switch ($e->fields['status_id']) {
-			case ENROLLED:
-				$point = "You are ENROLLED in the practice listed below. Would you like to <a class='btn btn-primary' href='$sc?ac=drop&wid={$wk['id']}&v=winfo'>drop</a> it?";
-				break;
-			case WAITING:
-				$point = "You are spot number {$e->fields['rank']} on the WAIT LIST for the practice listed below. Would you like to <a class='btn btn-primary' href='$sc?ac=drop&wid={$wk['id']}&v=winfo'>drop</a> it?";
-				break;
-			case INVITED:
-				$point = "A spot opened up in the practice listed below. Would you like to <a class='btn btn-primary' href='$sc?ac=accept&wid={$wk['id']}&v=winfo'>accept</a> it, or <a class='btn btn-primary' href='$sc?ac=decline&wid={$wk['id']}&v=winfo'>decline</a> it?";
-				break;
-			case DROPPED:
-				$point = "You have dropped out of the practice listed below. ".
-					($wk['soldout'] == 1 ? "The class is full! Do you want to be on the <a class='btn btn-primary'  href='$enroll_link'>wait list</a>?" : "Would you like to <a class='btn btn-primary'  href='$enroll_link'>re-enroll</a>?").
-						" Info will be sent to <b>{$u->fields['email']}</b>.";
-				break;
-			default:
-	
-				$point = 
-					($wk['soldout'] == 1
-					? "The class is full. Want to be on the <a class='btn btn-primary' href='$enroll_link'>wait list</a>?"
-					: "Click here to <a class='btn btn-primary' href='$enroll_link'>enroll</a> in this class.  Info will be sent to <b>{$u->fields['email']}</b>.");
-	
-				break;
+	if ($e->fields['status_id'] == ENROLLED) {
+		
+		$point = "You are enrolled in this class!";
+		if ($wk['location_id'] == ONLINE_LOCATION_ID) {
+			$point .= "<br><br><b>Zoom link</b>: <a href='{$wk['online_url']}'>{$wk['online_url']}</a>";
 		}
+		
+		$point .= "<br><br>Need to drop this class? <a class='btn btn-primary' href='$drop_link'>click here to drop</a>.";
+		
 	} else {
-		$point = "You are not logged in. You must be logged in to enroll.<br><br>To log in, click the 'Login' button at the top-right corner of this page.<br><br>If you're on a phone, you'll see a square with three lines at the top of the page. Click that, then click 'Login'.";	
+		if ($wk['soldout']) {
+			$point = "The class is full.<br><br>";
+
+			if ($u->logged_in()) {
+				$point .= "If you want an email when a spot opens, you can <a class='btn btn-primary' href='$enroll_link'>join the wait list</a>";
+			} else {
+				$point .= "You must be logged in to join the wait list. Click 'Login' in the menu at the top of the page.";	
+			}
+
+		} else {
+			if ($u->logged_in()) {
+				$point = "Click here to <a class='btn btn-primary' href='$enroll_link'>enroll</a> in this class.  Info will be sent to <b>{$u->fields['email']}</b>.";
+			} else {
+				$point .= "You must be logged in to join the class. Click 'Login' in the menu at the top of the page.";	
+			}
+		}		
 	}
+
 }
 ?>
 <div class='row'><div class='col'>
@@ -53,8 +55,8 @@ echo "
 <div class='row my-3 py-3'><div class='col-sm-6'>
 <h2>{$wk['title']}</h2>
 <p>{$wk['notes']}</p>
-<p>{$wk['full_when']} (".TIMEZONE.")<br><br>
-{$wk['costdisplay']}, {$wk['enrolled']} (of {$wk['capacity']}) enrolled, ".($wk['waiting']+$wk['invited'])." waiting</p>\n";
+<p>{$wk['full_when']}<br><br>
+{$wk['costdisplay']}, {$wk['enrolled']} (of {$wk['capacity']}) enrolled</p>\n";
 
 if ($wk['cost'] == 1) {
 	echo "<p class='m-5'><em>This is a PAY WHAT YOU CAN workshop. Pay anything from zero to $40USD (the usual full price). There may be a suggested donation in the description.</em></p>";
@@ -87,13 +89,6 @@ if ($u->check_user_level(2)) {
 	echo "</div>\n";
 }
 
-
-
-if ($e->fields['status_id'] == ENROLLED && $wk['location_id'] == ONLINE_LOCATION_ID) {
-	
-	echo "<p class='alert alert-success'><b>Zoom link</b>:<br>{$wk['online_url']}</p>\n";
-	
-}
 echo "</div>\n";
 
 

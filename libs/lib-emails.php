@@ -24,13 +24,14 @@ function centralized_email($to, $sub, $body) {
 	  $headers['Content-Type'] = "text/html";
 	  $headers['charset'] = "ISO-8859-1";
 
-	  $body = wordwrap($body, 110, "<br>\n");
+	  $body = wordwrap($body, 100, "\n");
 
 	  if (LOCAL) {
 	  	// connect to SMTP
 		$smtp = get_smtp_object();
 		$headers['To'] = $to = 'whines@gmail.com'; // everything to me on local
- 		//$sent = $smtp->send($to, $headers, $body);  // laptop can use the SMTP server on willhines.net
+		$sent = true;
+ 		$sent = $smtp->send($to, $headers, $body);  // laptop can use the SMTP server on willhines.net
 		
  	  } else {
 		  unset($headers['Subject']);
@@ -46,7 +47,7 @@ function centralized_email($to, $sub, $body) {
 	$mail_activity = "emailed '$to', '$sub'\n";
 	if ($sent) {
 		$return = true;
-		if (DEBUG_MODE) {
+		if (DEBUG_MODE && !LOCAL) {
 			$logger->error($mail_activity);
 		} else {
 			$logger->info($mail_activity);
@@ -64,10 +65,7 @@ function confirm_email($e, $status_id = ENROLLED) {
 	$wk = $e->wk;
 	$u = $e->u;	
 	$trans = URL."workshop.php?wid={$wk['id']}";
-	//$textpref = URL."you.php";
-	
 	$body = '';
-	//$textpoint = '';
 	$notifications = '';	
 		
 	$send_faq = false;
@@ -76,7 +74,6 @@ function confirm_email($e, $status_id = ENROLLED) {
 		case ENROLLED:
 			$sub = "ENROLLED: {$wk['title']}";
 			$body = "You are ENROLLED in the workshop \"{$wk['title']}\".";
-			//$textpoint = $body;
 			$body = "<p>$body</p>";
 
 			if ($wk['location_id'] == ONLINE_LOCATION_ID) {
@@ -94,39 +91,22 @@ function confirm_email($e, $status_id = ENROLLED) {
 			break;
 		case WAITING:
 			$sub = "WAIT LIST: {$wk['title']}";
-			$body = "You are on the WAIT LIST for \"{$wk['title']}\", spot {$e->fields['rank']}";
-			//$textpoint = $body;
+			$body = "You are on the WAITING LIST for \"{$wk['title']}.\" which starts {$wk['showstart']}";
 			$body = "<p>$body</p>";
 			
 			
 			$body .= "<p>WHAT DOES 'WAIT LIST' MEAN?<br>
 ---------------------------<br>
-It means if someone drops the class, you'll get an email inviting you to join. At that point, you can accept or decline the spot.</p>
+It means if someone drops the class, you'll get an email notifying you that there is an open spot.</p>
 
 DROPPING OUT:<br>
 ------------------<br>
-If you know you're not going to want a spot, you can drop the class on the web site here: <br>
-{$trans}<br><br>
-That way if a spot opens up, we won't be waiting for you to tell us you don't want the spot.</p>";
-			break;
-			
-		case INVITED:
-			$sub = "INVITED: {$wk['title']} -- PLEASE RESPOND";
-			$body = "A spot opened in ({$wk['title']}. Want it?";
-			//$textpoint = $body;
-			$body = "<p>$body</p>";
-			
-			$body .= "<p>DO YOU WANT THE SPOT? - PLEASE CLICK AND ANSWER<br>
-----------------------<br>
-Please GO TO THIS LINK where you can click ACCEPT OR DECLINE the spot.<br>
-{$trans}<br
-Others might be waiting for the spot if you don't want it.</p>";
-
+If you no longer want to be notified of open spots, you can drop out here: <br>
+{$trans}</p>";			
 			break;
 		case DROPPED:
 			$sub = "DROPPED: {$wk['title']}";
 			$body = "You have DROPPED out of {$wk['title']}";
-			//$textpoint = $body;
 			$body = "<p>$body</p>";
 			
 			if ($e->fields['while_soldout'] == 1) {
@@ -143,90 +123,31 @@ Others might be waiting for the spot if you don't want it.</p>";
 		default:
 			$statuses = $lookups->statuses;
 			$sub = "{$statuses[$status_id]}: {$wk['title']}";
-			//$body = $textpoint = "You have a status of '{$statuses[$status_id]}' for {$wk['title']}";
 			$body = "<p>$body</p>";
 			
 			break;
 	}
 
-	$text = '';
-	
-	/*
-	if ($u->fields['send_text']) {
-		$last_bitly = shorten_link($trans);
-		$textmsg = $textpoint.' '.$last_bitly;
-		send_text($u, $textmsg);
+	if ($status_id == ENROLLED) {
+		$body .= "<p>CLASS INFORMATION<br>
+		--------------------------------<br>
+		<b>Title:</b> {$wk['title']}<br>
+		<b>Teacher:</b> {$wk['teacher_info']['nice_name']}".($wk['co_teacher_id'] ?  ", {$wk['co_teacher_info']['nice_name']}" : '')."<br>
+		<b>When:</b> {$wk['full_when']} (".TIMEZONE." - California time)<br>
+		<b>Cost:</b> {$wk['costdisplay']}<br>".
+		($status_id == ENROLLED ? "<b>Zoom link:</b> {$wk['online_url']}" : "<b>Zoom link</b>: We'll email you the zoom link if/once you are enrolled.")."<br>
+		<b>Description:</b> {$wk['notes']}</p>
+		<p>Web page for this class:<br>\n{$trans}</p>";	
 	}
-	*/
-	
-	
-
-
-	$body .= "<p>CLASS INFORMATION<br>
---------------------------------<br>
-<b>Title:</b> {$wk['title']}<br>
-<b>Teacher:</b> {$wk['teacher_info']['nice_name']}".($wk['co_teacher_id'] ?  ", {$wk['co_teacher_info']['nice_name']}" : '')."<br>
-<b>When:</b> {$wk['full_when']} (".TIMEZONE." - California time)<br>
-<b>Cost:</b> {$wk['costdisplay']}<br>".
-($status_id == ENROLLED ? "<b>Zoom link:</b> {$wk['online_url']}" : "<b>Zoom link</b>: We'll email you the zoom link if/once you are enrolled.")."<br>
-<b>Description:</b> {$wk['notes']}</p>
-<p>Web page for this class:<br>\n{$trans}</p>";	
-
-//if (!$u->fields['send_text']) {
-//	$body .= "<p>Would you want to be notified via text? You can set text preferences:<br>".$textpref."</p>";
-//}
 
 	return centralized_email($u->fields['email'], "{$sub}", $body);
 }
-
-
-function send_text($u, $msg) {
-	
-	return false; // no longer sending any texts
-	
-	global $lookups;
-	
-	if (!$u->fields['send_text'] || !$u->fields['carrier_id'] || !$u->fields['phone'] || strlen($u->fields['phone']) != 10 || (!trim($msg))) {
-		return false;
-	}
-	
-	$carriers = $lookups->carriers;
-	$to = $u->fields['phone'].'@'.$carriers[$u->fields['carrier_id']]['email'];	
-	$mail_status = centralized_email($to, '', $msg);
-	//echo "<pre>".print_r($u, true)."<br>to: $to<br>mail status: $mail_status<br>msg: $msg</pre>\n";
-	return $mail_status;
-}
-
-
-function shorten_link($link) {
-	
-	// bit.ly registered token is: 5d58679014e86b8b31cd124ed31185fa799980e7
-	// under whines@gmail.com / meet1962
-	
-	$link = preg_replace('/localhost:8888/', 'www.willhinesimprov.com', $link);
-	$link = urlencode($link);
-	$to_bitly = "https://api-ssl.bitly.com/v3/shorten?access_token=5d58679014e86b8b31cd124ed31185fa799980e7&longUrl={$link}&format=txt";
-
-	//$response = file_get_contents($to_bitly); // would rather do this than curl but i can't get it to work
-
-	$ch = curl_init();
-	curl_setopt($ch, CURLOPT_URL, $to_bitly);
-	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-	curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false); // bad, hard to fix
-   	$response = curl_exec($ch);
-	curl_close($ch);	
-	
-	return $response;
-	
-}
-
 
 
 function get_dropping_late_warning() {
 	return "NOTE: You are dropping within ".LATE_HOURS." hours of the start. Please still pay for it! If someone takes your spot and pays, you'll be refunded. Questions to payments@wgimprovschool.com";
 	
 }
-
 
 
 
@@ -353,7 +274,7 @@ function payment_text($wk, $reminder = 0) {
 		$wdate = date('n/j', (strtotime($wk['start'])));		
 		$wnames = explode(' ', $wk['title']);
 		
-		$pt .= "Put '".strtoupper("{$wdate} {$t_last_name} {$wk['short_title']}")."' in your payment.<br><br>\n\nDue by the start of class.<br><br>\n\nConfirmation email for payment can take up to 12 hours to arrive.<br><br>\n\n";
+		$pt .= "Put '".strtoupper("{$wdate} {$t_last_name} {$wk['short_title']}")."' in your payment.<br><br>\n\nDue by the start of class. You'll get a confirmation email within 12 hours of paying.<br><br>\n\n";
 
 		$pt .= "If you can't do Venmo or Paypal, contact payments@wgimprovschool.com";
 
@@ -380,3 +301,4 @@ Facebook: http://www.facebook.com/groups/wgimprovschool<br>\n
 Discord chat server: https://discord.gg/GXbP3wgbrc</p>";
 	
 }
+

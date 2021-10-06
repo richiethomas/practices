@@ -4,7 +4,7 @@
 		<p>Display Name: {$guest->fields['display_name']}</p>
 		<p>Status: {$e->fields['status_name']}</p>";
 
-		echo  "<form action ='$sc' method='post'>".
+		echo  "<form class='my-4' action ='$sc' method='post'>".
 		Wbhkit\hidden('wid', $wk['id']).
 		Wbhkit\hidden('guest_id', $guest->fields['id']).
 		Wbhkit\hidden('ac', 'cs').
@@ -14,12 +14,25 @@
 		"<a class='btn btn-warning' href='admin_edit2.php?wid={$wk['id']}'>cancel</a>".
 		"</form>\n";
 
-		echo  "<form action ='$sc' method='post'>".
+		echo  "<form class='my-4' action ='$sc' method='post'>".
 		Wbhkit\hidden('wid', $wk['id']).
 		Wbhkit\hidden('guest_id', $guest->fields['id']).
 		Wbhkit\hidden('ac', 'cr').
 		Wbhkit\texty('lmod', $e->fields['last_modified'], 'Last modified').
 		Wbhkit\submit('update').
 		"<a class='btn btn-warning' href='admin_edit2.php?wid={$wk['id']}'>cancel</a>".
-		"</form></div></div>\n";
+		"</form>\n";
+		
+		
+		echo "<form class='my-4' action='$sc' method='post'>".
+		\Wbhkit\drop('wid_new', \Workshops\get_recent_workshops_dropdown(), null, 'Xfer To Workshop').
+		\Wbhkit\hidden('wid', $wk['id']).
+		\Wbhkit\hidden('guest_id', $guest->fields['id']).
+		\Wbhkit\hidden('ac', 'xfer').
+		\Wbhkit\submit('transfer to').
+		"</form></div></div>\n";		
+		
+		print_r($e->fields);
+		
+		
 ?>

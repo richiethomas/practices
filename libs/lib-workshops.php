@@ -92,17 +92,11 @@ function fill_out_workshop_row($row, $get_enrollment_stats = true) {
 
 		// set teacher pay
 	
-		$row['teacher_pay'] = $row['total_class_sessions']*$row['teacher_info']['default_rate'] + $row['total_show_sessions']*($row['teacher_info']['default_rate']/2);
-		
-		
+		$row['teacher_pay'] = 		$row['total_class_sessions']*$row['teacher_info']['default_rate'] + 		$row['total_show_sessions']*($row['teacher_info']['default_rate']/2);
 		
 		$row = set_actual_revenue($row);
 		$row = set_enrollment_stats($row);
-		if ($row['enrolled'] + $row['waiting'] + $row['invited'] >= $row['capacity']) { 
-			$row['soldout'] = 1;
-		} else {
-			$row['soldout'] = 0;
-		}	
+
 	}
 	
 	return $row;
@@ -123,9 +117,14 @@ function figure_costdisplay($cost) {
 // pass in the workshop row as it comes from the database table
 // add some columns with date / time stuff figured out
 function format_workshop_startend($row) {
+	
+	$tzadd = ' ('.TIMEZONE.')';
+	
 	$row['showstart'] = \Wbhkit\friendly_date($row['start']).' '.\Wbhkit\friendly_time($row['start']);
 	$row['showend'] = \Wbhkit\friendly_time($row['end']);
-	$row['when'] = "{$row['showstart']}-{$row['showend']}";
+	$row['when'] = "{$row['showstart']}-{$row['showend']}".$tzadd;
+	$row['showstart'] .= $tzadd;
+	$row['showend'] .= $tzadd;
 	return $row;
 }
 
@@ -141,8 +140,16 @@ function set_enrollment_stats($row) {
 		$row[$sname] = $svalue;
 	}	
 	
-	$row['open'] = $row['capacity'] - ($row['enrolled'] + $row['invited'] + $row['waiting']);
+	$row['open'] = $row['capacity'] - $row['enrolled'];
 	if ($row['open'] < 0) { $row['open'] = 0; }
+	
+	if ($row['enrolled'] >= $row['capacity']) { 
+		$row['soldout'] = 1;
+	} else {
+		$row['soldout'] = 0;
+	}	
+	
+	
 	return $row;
 }
 
@@ -236,7 +243,7 @@ function get_search_results($page = 1, $needle = null) {
 	$rows = $paginator->getData($page);
 	$links = $paginator->createLinks(7, 'search results', "&needle=".urlencode($needle));
 
-	// calculate enrollments, ranks, etc
+	// calculate enrollments, etc
 	if ($rows->total > 0) {
 		$workshops = array();
 		foreach ($rows->data as $row ) {
@@ -277,27 +284,6 @@ function get_workshops_list_no_html() {
 	}
 
 	return $workshops;
-}
-
-function get_outstanding_invites() {
-	// get IDs of workshops
-	$mysqlnow = date("Y-m-d H:i:s", strtotime("now"));
-
-	$stmt = \DB\pdo_query("
-select r.workshop_id, w.title, u.email, u.display_name, r.user_id, w.start, r.last_modified
-from workshops w, registrations r, users u
-where w.start >= date('$mysqlnow')
-and r.workshop_id = w.id
-and r.user_id = u.id
-and r.status_id = ".INVITED."
-order by w.start");
-	
-	$invites = array();	
-	while ($row = $stmt->fetch()) {
-		$row['nice_name'] = ($row['display_name'] ? $row['display_name'] : $row['email']);
-		$invites[] = $row;
-	}
-	return $invites;
 }
 
 function get_unpaid_students() {

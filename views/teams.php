@@ -1,9 +1,14 @@
 <h1 class="page-title mb-5">Teams</h1>
  
+<img class="float-end mx-3" src='images/teams.png' alt='WGIS teams'>
+
+<p>First of all, we have online shows that are broadcast on our Twitch channel.<br><a href="https://www.twitch.tv/wgimprovschool">https://www.twitch.tv/wgimprovschool</a></p>
 
 <p>WGIS has six house teams. Here's how they work. Every three months, we pick a batch of students, assemble them into teams, assign them a coach and schedule them for some shows. The goal is to educate and develop: help improv nerds meet like minded people and get some practice with a coach.</p>
 
 <p>Thank you for consulting this bare bones, all-business web page. :)</p>
+
+
 
 <h2>Shows</h2>
 

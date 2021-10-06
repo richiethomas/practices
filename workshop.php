@@ -39,11 +39,6 @@ if (Workshops\is_public($wk)) {
 					$message = "This practice is full. '{$u->fields['nice_name']}' is now on the waiting list.";
 				} 
 			
-				/*
-				if (!$u->fields['send_text']) {
-					$message .= " Want notifications by text? <a  class='btn btn-primary' href='$sc?v=text'>Set your text preferences</a>.";	
-				}
-				*/
 			} else {
 				$error = $e->error;
 			}
@@ -86,62 +81,10 @@ if (Workshops\is_public($wk)) {
 			}
 				
 			$message = $e->change_status(DROPPED, 1);
-			$e->check_waiting($wk);
 			$wk = Workshops\set_enrollment_stats($wk);
-			$message = "Dropped user ({$u->fields['email']}) from practice '{$wk['title']}.'";
+			$e->notify_waiting($wk);
+			$message = "Dropped user ({$u->fields['email']}) from '{$wk['title']}.'";
 			break;	
-
-
-		// accept an invite to a workshop
-		case 'accept':
-			if (!$u->logged_in()) {
-				$error = 'You are not logged in! You have to be logged in to accept an invite.';
-				$logger->debug($error);
-		
-				break;
-			}
-			if ($wk['cancelled']) {
-				$error = 'Cannot accept invite. This workshop has been cancelled.';
-				$logger->debug("Rejected invite for {$u->fields['nice_name']} since {$wk['title']} is cancelled.");
-		
-				break;
-			}
-			
-			
-			if ($e->fields['status_id'] == INVITED) {
-				$e->change_status(ENROLLED, 1);
-				$message = "You are now enrolled in '{$wk['title']}'! Info emailed to <b>{$u->fields['email']}</b>.";
-				$wk = Workshops\set_enrollment_stats($wk);
-		
-			} else {
-				$error = "You tried to accept an invitation to '{$wk['title']}', but I don't see that there is an open spot.";
-				$logger->debug("Rejected invite for {$u->fields['nice_name']} since {$wk['title']} is full.");
-			}
-			break;
-
-		case 'decline':
-			if (!$u->logged_in()) {
-				$error = 'You are not logged in! You have to be logged in to decline an invite.';
-				$logger->debug($error);
-				break;
-			}
-			if ($wk['upcoming'] == 0) {
-				$error = 'This workshop has past or already started.';
-				$logger->debug("Rejected decline for {$u->fields['nice_name']} since {$wk['title']} is past/started.");
-				break;
-			}
-
-			if ($e->fields['status_id'] == INVITED) {
-				$e->change_status(DROPPED, 1);
-				$e->check_waiting($wk);
-				$wk = Workshops\set_enrollment_stats($wk);
-				$message = "You have dropped out of the waiting list for '{$wk['title']}'.";			
-			} else {
-				$error = "You tried to decline an invitation to '{$wk['title']}', but I don't see that there was an open spot.";
-				$logger->debug("Rejected decline for {$u->fields['nice_name']} since {$wk['title']} is full.");
-		
-			}
-			break;
 
 	}
 }

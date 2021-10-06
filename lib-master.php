@@ -7,8 +7,6 @@ tested on PHP 7.4.9
 
 function get_nav_items(){
 	$nav_items = array();
-	//$nav_items[] = array('title' => "Classes", "href" => "classes.php");
-	//$nav_items[] = array('title' => "Home", "href" => "index.php");
 	$nav_items[] = array('title' => "Calendar", "href" => "calendar.php");
 	$nav_items[] = array('title' => "About", "href" => "about_school.php", 'children' => array(
 
@@ -64,7 +62,11 @@ define('LOCAL', ($_SERVER['SERVER_NAME'] == 'localhost') ? true : false);
 define('DEBUG_MODE', true);
 define('DEBUG_LOG', 'info.txt');
 define('ERROR_LOG', 'error_log.txt');
-define('URL', "https://{$_SERVER['HTTP_HOST']}/");
+if (LOCAL) {
+	define('URL', "http://{$_SERVER['HTTP_HOST']}/");
+} else {
+	define('URL', "https://{$_SERVER['HTTP_HOST']}/");
+}
 define('ONLINE_LOCATION_ID', 8);
 define('TIMEZONE', 'PDT');
 define('LATE_HOURS', 24);
@@ -91,16 +93,10 @@ include 'libs/lib-xtra-sessions.php';
 include 'libs/lib-teachers.php';
 include 'libs/lib-reminders.php';
 	
-//include 'libs/lib-enrollments.php';
-//include 'libs/lib-lookups.php';
-//include 'libs/lib-users.php';
-
-	
 $lookups = new Lookups;	
 define('ENROLLED', $lookups->find_status_by_value('enrolled'));
 define('WAITING', $lookups->find_status_by_value('waiting'));
 define('DROPPED', $lookups->find_status_by_value('dropped'));
-define('INVITED', $lookups->find_status_by_value('invited'));
 define('SMARTENROLL', 100); // special status ENROLL or WAIT pending capacity -- see Enrollment.class.php
 
 $error = '';

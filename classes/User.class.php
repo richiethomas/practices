@@ -173,6 +173,8 @@ class User extends WBHObject {
 	<p>{$trans}</p>".\Emails\email_footer();
 
 			return \Emails\centralized_email($this->fields['email'], "Log in to WGIS", $body);
+			
+			
 	}
 
 	function logged_in() {

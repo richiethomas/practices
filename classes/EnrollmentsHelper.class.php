@@ -138,7 +138,7 @@ class EnrollmentsHelper extends WBHObject {
 			if ($d['status_id'] == WAITING) {
 				$e->fields['id'] = $d['enrollment_id'];
 				$e->fields['workshops_id'] = $d['id']; 
-				$d['rank'] = $e->figure_rank();
+				$d['rank'] = null;
 			} else {
 				$d['rank'] = null;
 			}

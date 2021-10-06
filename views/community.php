@@ -28,30 +28,16 @@
 <p>Most of our shows (besides class shows) are on Mondays. These are streamed to our Twitch channel. You can register to perform in two of these shows!</p>
 
 		<figure class="figure float-end">
-		  <img src="images/mix_tape.png" class="figure-img img-fluid rounded" alt="Mix Tape!">
-		  <figcaption class="figure-caption text-end">art by Christine Simpson</figcaption>
-		</figure>
-		
-		<p><b>Mix Tape</b> is a show that runs every Monday at noon <?php echo TIMEZONE; ?>. Featuring a rotation of hosts, the show lets WGIS students sign up to do some improv in this European-friendly time slot!</p>
-		
-		<p>You can sign up to perform at mix tape with a team of any size here: <a href="https://forms.gle/vHTacsFXn53upNqUA">https://forms.gle/vHTacsFXn53upNqUA</a></p>
-			
-	</div>
-
-</div>
-
-
-<div class="showrow row">
-	<div class="col">		
-		<figure class="figure float-end">
-		  <img src="images/matinee.png" class="figure-img img-fluid rounded" alt="Monday Matinee">
+		  <a href="teams.php"><img src="images/teams.png" class="figure-img img-fluid rounded" alt="WGIS Teams"></a>
 		  <figcaption class="figure-caption text-end">art by Gareth O'Connor</figcaption>
 		</figure>
-				
-		<p><b>Monday Matinee</b> runs every Monday 4pm-6pm <?php echo TIMEZONE; ?>. In this show, Will Hines "hosts" 3-4 improv groups from WGIS and elsewhere. Always ends with a set from the HOW WAS YOUR WEEK crew, which is a bunch of veteran performers from WGIS.</p>
-			
+		
+		<p><b>WGIS Teams:</b> We have house teams that do online shows at 11am and 5pm <?php echo TIMEZONE; ?> (two teams at teach time). For a list of teams and who performs on them and the schedule, see the <a href="teams.php">teams page</a>.</p>
+					
 	</div>
+
 </div>
+
 
 <div class="showrow row">
 	<div class="col">

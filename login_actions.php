@@ -23,6 +23,15 @@ switch ($ac) {
 			// send log in link to that user
 			if ($u->email_link()) {
 				$message = "Thanks! I've sent a link to your {$u->fields['email']}. If you don't see it <a href='index.php'>click here to refresh the page</a> and try again.";
+				
+				if (LOCAL) {
+					
+					$trans = URL."index.php?key=".$u->get_key();
+					$message .= "<br><br>This is the link: <a href='$trans'>{$trans}</a>";
+						
+						
+				}
+				
 				$link_email_sent_flag = true;
 				$u->soft_logout();
 				$logger->debug($message);

@@ -5,7 +5,7 @@ echo "<div class='row mt-md-3 admin-edit-workshop'>\n";
 		// enrollment column
 		echo "<div class='col-md-7'><h2>Enrollment Info <small><br>
 			<a class='btn btn-primary' href='admin_messages.php?wid={$wk['id']}'><span class='oi oi-envelope-closed' title='envelope-closed' aria-hidden='true'></span> message</a> 
-			<a class='btn btn-primary'  href='$sc?ac=cw&wid={$wk['id']}'><span class='oi oi-clock' title='clock' aria-hidden='true'></span> check waiting</a>
+			<a class='btn btn-primary'  href='$sc?ac=nw&wid={$wk['id']}'><span class='oi oi-clock' title='clock' aria-hidden='true'></span> notify waiting</a>
 
 			<a class='btn btn-primary'  href='$sc?ac=sar&wid={$wk['id']}'><span class='oi oi-clock' title='clock' aria-hidden='true'></span> send all reminders</a>
 			</small></h2>\n";
