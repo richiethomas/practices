@@ -1,4 +1,4 @@
-<?php $heading = isset($heading) ? "wgis: $heading": "wgis"; ?>
+<?php $heading = isset($heading) ? "wgis: $heading": "World's Greatest Improv School"; ?>
 <!doctype html>
 <html lang="en">
   <head>

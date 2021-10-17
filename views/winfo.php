@@ -8,8 +8,6 @@ if (!\Workshops\is_public($wk)) {
 	$point = "This workshop is not available for signups yet. It will be available at <b>".date("l M j, g:ia", strtotime($wk['when_public']))."</b> (".TIMEZONE.")";
 } elseif ($wk['upcoming'] == 0) {
 	$point = "This workshop had started or is in the past.";
-} elseif ($wk['cancelled'] == true) {
-	$point = "This workshop is CANCELLED.";
 } else {
 	
 	$enroll_link = "$sc?ac=enroll&wid={$wk['id']}";
@@ -24,19 +22,36 @@ if (!\Workshops\is_public($wk)) {
 		
 		$point .= "<br><br>Need to drop this class? <a class='btn btn-primary' href='$drop_link'>click here to drop</a>.";
 		
+		
+	} elseif ($e->fields['status_id'] == APPLIED) {
+		$point = "You have applied for this class. You'll be notified soon if you got in. If you change your mind, <a class='btn btn-primary' href='$drop_link'>click here to drop</a>.";
+		
 	} else {
 		if ($wk['soldout']) {
 			$point = "The class is full.<br><br>";
 
 			if ($u->logged_in()) {
-				$point .= "If you want an email when a spot opens, you can <a class='btn btn-primary' href='$enroll_link'>join the wait list</a>";
+				
+				if ($e->fields['status_id'] == WAITING) {
+					$point .= "You are on the waiting list. You'll get an email if a spot opens up, so you can come here an enroll. If you no longer want to be notified of open spots, <a class='btn btn-primary' href='$drop_link'>click here to drop</a>.";
+				} else {
+					$point .= "If you want an email when a spot opens, you can <a class='btn btn-primary' href='$enroll_link'>join the wait list</a>";
+				}
+				
 			} else {
 				$point .= "You must be logged in to join the wait list. Click 'Login' in the menu at the top of the page.";	
 			}
 
 		} else {
 			if ($u->logged_in()) {
-				$point = "Click here to <a class='btn btn-primary' href='$enroll_link'>enroll</a> in this class.  Info will be sent to <b>{$u->fields['email']}</b>.";
+				
+				if ($wk['application']) {
+					$point = "This class is taking applications. To request a spot in this class, click here: <a class='btn btn-primary' href='$enroll_link'>apply</a>. Your email will be added to the list and you'll be notified soon if you got in or not. Generally preference is given to new students unless it says otherwise in the class description.";
+				} else {
+					$point = "Click here to <a class='btn btn-primary' href='$enroll_link'>enroll</a> in this class.  Info will be sent to <b>{$u->fields['email']}</b>.";
+				}
+				
+				
 			} else {
 				$point .= "You must be logged in to join the class. Click 'Login' in the menu at the top of the page.";	
 			}

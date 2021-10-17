@@ -31,7 +31,7 @@ function centralized_email($to, $sub, $body) {
 		$smtp = get_smtp_object();
 		$headers['To'] = $to = 'whines@gmail.com'; // everything to me on local
 		$sent = true;
- 		$sent = $smtp->send($to, $headers, $body);  // laptop can use the SMTP server on willhines.net
+ 		//$sent = $smtp->send($to, $headers, $body);  // laptop can use the SMTP server on willhines.net
 		
  	  } else {
 		  unset($headers['Subject']);
@@ -73,8 +73,7 @@ function confirm_email($e, $status_id = ENROLLED) {
 		case 'already':
 		case ENROLLED:
 			$sub = "ENROLLED: {$wk['title']}";
-			$body = "You are ENROLLED in the workshop \"{$wk['title']}\".";
-			$body = "<p>$body</p>";
+			$body = "<p>You are ENROLLED in the workshop \"{$wk['title']}\".</p>";
 
 			if ($wk['location_id'] == ONLINE_LOCATION_ID) {
 				$body .= "<p>ZOOM LINK:<br>\n----------<br>\nThe Zoom link to your workshop is: {$wk['online_url']}.<br><br> \nTry to show up 5 minutes early if you can so we can get started right away.  If your class is multiple sessions, that link should work for all of them. We'll send you an email if the link changes.</p>";
@@ -91,8 +90,7 @@ function confirm_email($e, $status_id = ENROLLED) {
 			break;
 		case WAITING:
 			$sub = "WAIT LIST: {$wk['title']}";
-			$body = "You are on the WAITING LIST for \"{$wk['title']}.\" which starts {$wk['showstart']}";
-			$body = "<p>$body</p>";
+			$body = "<p>You are on the WAITING LIST for \"{$wk['title']}.\" which starts {$wk['showstart']}</p>";
 			
 			
 			$body .= "<p>WHAT DOES 'WAIT LIST' MEAN?<br>
@@ -106,8 +104,7 @@ If you no longer want to be notified of open spots, you can drop out here: <br>
 			break;
 		case DROPPED:
 			$sub = "DROPPED: {$wk['title']}";
-			$body = "You have DROPPED out of {$wk['title']}";
-			$body = "<p>$body</p>";
+			$body = "<p>You have DROPPED out of {$wk['title']}</p>";
 			
 			if ($e->fields['while_soldout'] == 1) {
 				$body .= "<br><i>".get_dropping_late_warning()."</i>";
@@ -120,6 +117,14 @@ If you no longer want to be notified of open spots, you can drop out here: <br>
 			}
 			
 			break;
+			
+		case APPLIED:
+			$sub = "APPLIED: {$wk['title']}";
+			$body = "<p>You have APPLIED for {$wk['title']}</p>";
+			
+			$body .= "<p>Your email has be added to the list and you'll be notified soon if you got in or not. Generally preference is given to new students unless it says otherwise in the class description.";
+			break;
+			
 		default:
 			$statuses = $lookups->statuses;
 			$sub = "{$statuses[$status_id]}: {$wk['title']}";

@@ -467,10 +467,10 @@ function get_empty_workshop() {
 		'notes' => null,
 		'when_public' => null,
 		'sold_out_late' => null,
-		'cancelled' => null,
 		'teacher_id' => 1,
 		'co_teacher_id' => null,
-		'reminder_sent' => 0
+		'reminder_sent' => 0,
+		'application' => 0
 	);
 }
 
@@ -497,10 +497,10 @@ function workshop_fields($wk) {
 	\Wbhkit\texty('end', $wk['end'], null, null, null, 'Required', ' required ').
 	\Wbhkit\texty('cost', $wk['cost']).
 	\Wbhkit\texty('capacity', $wk['capacity']).
+	\Wbhkit\checkbox('application', 1, 'Taking applications', $wk['application']).
 	\Wbhkit\textarea('notes', $wk['notes']).
 	\Wbhkit\drop('teacher_id', \Teachers\teachers_dropdown_array(), $wk['teacher_id'], 'Teacher', null, 'Required', ' required ').
 	\Wbhkit\drop('co_teacher_id', \Teachers\teachers_dropdown_array(), $wk['co_teacher_id'], 'Co-teacher', null).
-	\Wbhkit\checkbox('cancelled', 1, null, $wk['cancelled']).	
 	\Wbhkit\texty('when_public', $wk['when_public'], 'When Public').
 	\Wbhkit\checkbox('reminder_sent', 1, 'Reminder sent?', $wk['reminder_sent']);
 	
@@ -512,7 +512,6 @@ function add_update_workshop($wk, $ac = 'up') {
 	global $last_insert_id;
 	
 	// fussy MySQL 5.7
-	if (!$wk['cancelled']) { $wk['cancelled'] = 0; }
 	if (!$wk['cost']) { $wk['cost'] = 0; }
 	if (!$wk['capacity']) { $wk['capacity'] = 0; }
 	if (!$wk['when_public']) { $wk['when_public'] = NULL; }
@@ -521,6 +520,7 @@ function add_update_workshop($wk, $ac = 'up') {
 	if (!$wk['teacher_id']) { $wk['teacher_id'] = 1; }
 	if (!$wk['co_teacher_id']) { $wk['co_teacher_id'] = NULL; }
 	if (!$wk['reminder_sent']) { $wk['reminder_sent'] = 0; }
+	if (!$wk['application']) { $wk['application'] = 0; }
 	
 		
 	$params = array(':title' => $wk['title'],
@@ -532,19 +532,19 @@ function add_update_workshop($wk, $ac = 'up') {
 		':online_url' => $wk['online_url'],
 		':notes' => $wk['notes'],
 		':public' => date('Y-m-d H:i:s', strtotime($wk['when_public'])),
-		':cancelled' => $wk['cancelled'],
 		':tid' => $wk['teacher_id'],
 		':ctid' => $wk['co_teacher_id'],
-		':reminder_sent' => $wk['reminder_sent']);
+		':reminder_sent' => $wk['reminder_sent'],
+		':application' => $wk['application']);
 		
 		if ($ac == 'up') {
 			$params[':wid'] = $wk['id'];
-			$sql = "update workshops set title = :title, start = :start, end = :end, cost = :cost, capacity = :capacity, location_id = :lid, online_url = :online_url, notes = :notes, when_public = :public, cancelled = :cancelled, reminder_sent = :reminder_sent, teacher_id = :tid, co_teacher_id = :ctid where id = :wid";			
+			$sql = "update workshops set title = :title, start = :start, end = :end, cost = :cost, capacity = :capacity, location_id = :lid, online_url = :online_url, notes = :notes, when_public = :public, reminder_sent = :reminder_sent, teacher_id = :tid, co_teacher_id = :ctid, application = :application where id = :wid";			
 			$stmt = \DB\pdo_query($sql, $params);
 			return $wk['id'];
 		} elseif ($ac = 'ad') {
-			$stmt = \DB\pdo_query("insert into workshops (title, start, end, cost, capacity, location_id, online_url, notes, when_public, cancelled, reminder_sent, teacher_id, co_teacher_id)
-			VALUES (:title, :start, :end, :cost, :capacity, :lid, :online_url, :notes,  :public, :cancelled, :reminder_sent, :tid, :ctid)",
+			$stmt = \DB\pdo_query("insert into workshops (title, start, end, cost, capacity, location_id, online_url, notes, when_public, reminder_sent, teacher_id, co_teacher_id, application)
+			VALUES (:title, :start, :end, :cost, :capacity, :lid, :online_url, :notes,  :public, :reminder_sent, :tid, :ctid, :application)",
 			$params);
 			return $last_insert_id; // set as a global by my dbo routines
 		}

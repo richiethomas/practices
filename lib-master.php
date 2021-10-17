@@ -5,36 +5,12 @@ tested on PHP 7.4.9
 */
 
 
-function get_nav_items(){
-	$nav_items = array();
-	$nav_items[] = array('title' => "Calendar", "href" => "calendar.php");
-	$nav_items[] = array('title' => "About", "href" => "about_school.php", 'children' => array(
-
-		array('title' => "Teachers", "href" => "teachers.php"),
-		array('title' => "School", "href" => "about_school.php"),
-		array('title' => "Catalog", "href" => "about_catalog.php"),
-		array('title' => "How It Works", "href" => "about_works.php"),
-		array('title' => "Merch", "href" => "merch.php")
-	));
-	$nav_items[] = array('title' => "Community", "href" => "community.php");
-	$nav_items[] = array('title' => "Teams", "href" => "teams.php");
-	return $nav_items;
-}
-
 define('TIMER', false);
 $start_hrtime = 0;
 if (TIMER) {
 	$start_hrtime=hrtime(true);
 }
 
-function show_hrtime() {
-	global $start_hrtime;
-	echo figure_hrtime($start_hrtime);
-}
-
-function figure_hrtime($start) {
-	return ((hrtime(true)-$start) / 1e+6);
-}
 
 if (!isset($sc)) { $sc = $_SERVER['SCRIPT_NAME']; }
 
@@ -47,7 +23,6 @@ session_start();
 ini_set("include_path", '/home/willfahg/php:' . ini_get("include_path") ); // willhinesimprov.com
 ini_set("include_path", '/Applications/MAMP/bin/php/php7.4.2/lib/php:' . ini_get("include_path") ); // local laptop
 ini_set("include_path", '/home/wgimrenl/php:' . ini_get("include_path") ); // wgimprovschool.com
-
 
 
 // set function for autoloading classes
@@ -97,6 +72,7 @@ $lookups = new Lookups;
 define('ENROLLED', $lookups->find_status_by_value('enrolled'));
 define('WAITING', $lookups->find_status_by_value('waiting'));
 define('DROPPED', $lookups->find_status_by_value('dropped'));
+define('APPLIED', $lookups->find_status_by_value('applied'));
 define('SMARTENROLL', 100); // special status ENROLL or WAIT pending capacity -- see Enrollment.class.php
 
 $error = '';
@@ -138,3 +114,30 @@ if (strpos($sc, 'admin') !== false) {
 
 // check to see if we should send reminders every time anyone loads a page
 Reminders\check_reminders(); 
+
+
+function get_nav_items(){
+	$nav_items = array();
+	$nav_items[] = array('title' => "Calendar", "href" => "calendar.php");
+	$nav_items[] = array('title' => "About", "href" => "about_school.php", 'children' => array(
+
+		array('title' => "Teachers", "href" => "teachers.php"),
+		array('title' => "School", "href" => "about_school.php"),
+		array('title' => "Catalog", "href" => "about_catalog.php"),
+		array('title' => "How It Works", "href" => "about_works.php"),
+		array('title' => "Merch", "href" => "merch.php")
+	));
+	$nav_items[] = array('title' => "Community", "href" => "community.php");
+	$nav_items[] = array('title' => "Teams", "href" => "teams.php");
+	return $nav_items;
+}
+
+function show_hrtime() {
+	global $start_hrtime;
+	echo figure_hrtime($start_hrtime);
+}
+
+function figure_hrtime($start) {
+	return ((hrtime(true)-$start) / 1e+6);
+}
+

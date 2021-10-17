@@ -31,8 +31,6 @@
 		\Wbhkit\hidden('ac', 'xfer').
 		\Wbhkit\submit('transfer to').
 		"</form></div></div>\n";		
-		
-		print_r($e->fields);
-		
+				
 		
 ?>

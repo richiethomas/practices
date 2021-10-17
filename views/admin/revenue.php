@@ -18,15 +18,23 @@ if (count($workshops_list) == 0) {
 	if ($mode) {
 	
 		echo "<form id='dummy'><textarea rows='100' cols='300'>";
-		echo "start date, workshop id, title, teacher, revenue, teacher pay\n";
+		echo "start date, workshop id, title, teacher, students, revenue, teacher pay,classes,class shows\n";
 		$total_revenue = 0;
 		$total_pay = 0;
+		$total_students = 0;
+		$total_classes = 0;
+		$total_shows = 0;
 		foreach ($workshops_list as $wid => $wk) {
-			echo date('Y-m-d',strtotime($wk['start'])).", {$wid}, {$wk['title']},  {$wk['teacher_info']['nice_name']}, {$wk['actual_revenue']}, {$wk['teacher_pay']}\n";
+			
+			$wk['title'] = preg_replace('/,/', ' - ', $wk['title']);
+			
+			echo date('Y-m-d',strtotime($wk['start'])).", {$wid}, {$wk['title']},  {$wk['teacher_info']['nice_name']}, {$wk['enrolled']}, {$wk['actual_revenue']}, {$wk['teacher_pay']}, {$wk['total_class_sessions']}, {$wk['total_show_sessions']}\n";
 			$total_revenue += $wk['actual_revenue'];
 			$total_pay += $wk['teacher_pay'];
+			$total_classes += $wk['total_class_sessions'];
+			$total_shows += $wk['total_show_sessions'];
 		}
-		echo ",,,,{$total_revenue},{$total_pay}\n";
+		echo ",,,,,$total_revenue,$total_pay,$total_classes,$total_shows\n";
 		echo "</textarea></form>\n";
 	
 	} else {

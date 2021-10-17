@@ -90,14 +90,17 @@ class Enrollment extends WBHObject {
 				return $this->message = "user {$u->fields['email']} ({$u->fields['id']}) was already status $target_status for {$wk['title']} ({$wk['id']})";
 				
 			} else {
-				$target_status = ($wk['enrolled'] < $wk['capacity']) ? ENROLLED : WAITING;
+				if ($wk['application']) {
+					$target_status = APPLIED;
+				} else {
+					$target_status = ($wk['enrolled'] < $wk['capacity']) ? ENROLLED : WAITING;
+				}
 			}
 		
 		}
 		
 		// update or insert?
 		if ($this->fields['id']) {
-			
 			
 			if ($this->fields['status_id'] != $target_status) {
 				$stmt = $db->prepare("update registrations set status_id = :status_id,  last_modified = '{$datestring_now}' where id = :eid");
@@ -118,9 +121,11 @@ class Enrollment extends WBHObject {
 			array('user_id' => $u->fields['id'],	
 			'workshop_id' => $wk['id'],
 			'status_id' => $target_status,
+			'status_name' => $this->lookups->statuses[$target_status],
 			'last_modified' => $datestring_now,
 			'paid' => false,
 			'while_soldout' => false));	
+			
 			
 		if ($last_insert_id) { $this->fields['id'] = $last_insert_id; }
 

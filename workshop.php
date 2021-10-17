@@ -34,7 +34,9 @@ if (Workshops\is_public($wk)) {
 					$message .= "<li>".\Emails\payment_text($wk)."</li>\n";
 										
 					$message .= "</ul>\n";
-					
+				} elseif ($e->fields['status_id'] == APPLIED) {
+					$message = "'{$u->fields['nice_name']}' has applied for  '{$wk['title']}'! You'll be notified soon if you got in or not.\n";
+
 				} elseif ($e->fields['status_id'] == WAITING) {
 					$message = "This practice is full. '{$u->fields['nice_name']}' is now on the waiting list.";
 				} 
@@ -54,12 +56,6 @@ if (Workshops\is_public($wk)) {
 			
 				break;
 			}
-			if ($wk['cancelled']) {
-				$error = 'This workshop has been cancelled.';
-				$logger->debug("{$u->fields['nice_name']} tried to drop from {$wk['title']} but it's cancelled.");
-			
-				break;
-			}
 									
 			$message = "Do you really want to drop '{$wk['title']}'? Then click <a class='btn btn-warning' href=\"$sc?ac=condrop&wid={$wid}\">confirm drop</a>";
 			$show_other_action = false;
@@ -73,10 +69,6 @@ if (Workshops\is_public($wk)) {
 		case 'condrop':
 			if (!$u->logged_in()) {
 				$error = 'You are not logged in! You have to be logged in to drop a workshop.';
-				break;
-			}
-			if ($wk['cancelled']) {
-				$error = 'This workshop has been cancelled.';
 				break;
 			}
 				
