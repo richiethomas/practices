@@ -66,6 +66,12 @@ function fill_out_workshop_row($row, $get_enrollment_stats = true) {
 	}
 	$row['total_sessions'] = $row['total_class_sessions'] + $row['total_show_sessions'];
 
+	$row['time_summary'] = $row['total_class_sessions'].' class'.\Wbhkit\plural($row['total_class_sessions'], '', 'es');
+	
+	if ($row['total_show_sessions'] > 0) {
+		$row['time_summary'] .= ', '.$row['total_show_sessions'].' show'.\Wbhkit\plural($row['total_show_sessions']);
+	}
+
 	// set full when
 	$row['full_when'] = $row['when'];
 	if (!empty($row['sessions'])) {
@@ -208,6 +214,23 @@ function get_unavailable_workshops() {
 	
 	$stmt = \DB\pdo_query("
 select * from workshops where date(start) >= :when1 and when_public >= :when2 order by when_public asc, start asc", array(":when1" => $mysqlnow, ":when2" => $mysqlnow)); 
+		
+	$sessions = array();
+	while ($row = $stmt->fetch()) {
+		$sessions[] = fill_out_workshop_row($row);
+	}
+	return $sessions;
+	
+}
+
+
+
+function get_application_workshops() {
+	
+	$mysqlnow = date("Y-m-d H:i:s");
+	
+	$stmt = \DB\pdo_query("
+select * from workshops where date(start) >= :when1 and when_public < :when2 and application = 1 order by start asc", array(":when1" => $mysqlnow, ":when2" => $mysqlnow)); 
 		
 	$sessions = array();
 	while ($row = $stmt->fetch()) {

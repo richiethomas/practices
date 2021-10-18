@@ -52,7 +52,7 @@
 
   <dl class="row mt-3">
     <dt class="col-sm-3">Harvest Festival</dt>
-    <dd class="col-sm-9">We are doing an eight hour online festival on October 23! Apply now to be part of this! We want improv nerdy stuff! And dumb bit shows! <a href="https://forms.gle/ofxD55qeauW3F4U56">Apply here</a>.</dd>
+    <dd class="col-sm-9">We are doing an eight hour online festival on October 23! Apply now to be part of this! We want improv nerdy stuff! And dumb bit shows!</dd>
 
     <dt class="col-sm-3">Discord Server</dt>
     <dd class="col-sm-9">We have a server on the Discord chat service. To join, <a href="https://discord.gg/GXbP3wgbrc">click here</a>.</dd>
@@ -78,9 +78,7 @@
 	
 	
 <?php
-if (count($unavailable_workshops) > 0) {
 	include 'unavailable_workshops.php';	
-} 
 ?>
 	
 	

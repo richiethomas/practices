@@ -46,7 +46,7 @@ if (!\Workshops\is_public($wk)) {
 			if ($u->logged_in()) {
 				
 				if ($wk['application']) {
-					$point = "This class is taking applications. To request a spot in this class, click here: <a class='btn btn-primary' href='$enroll_link'>apply</a>. Your email will be added to the list and you'll be notified soon if you got in or not. Generally preference is given to new students unless it says otherwise in the class description.";
+					$point = "This class is taking applications. To request a spot in this class, click here: <a class='btn btn-primary' href='$enroll_link'>apply</a>. Your email will be added to the list and you'll be notified soon if you got in or not. We give preference to new students unless it says differently in the class description.";
 				} else {
 					$point = "Click here to <a class='btn btn-primary' href='$enroll_link'>enroll</a> in this class.  Info will be sent to <b>{$u->fields['email']}</b>.";
 				}

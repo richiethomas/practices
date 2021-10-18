@@ -31,7 +31,7 @@ function centralized_email($to, $sub, $body) {
 		$smtp = get_smtp_object();
 		$headers['To'] = $to = 'whines@gmail.com'; // everything to me on local
 		$sent = true;
- 		//$sent = $smtp->send($to, $headers, $body);  // laptop can use the SMTP server on willhines.net
+ 		$sent = $smtp->send($to, $headers, $body);  // laptop can use the SMTP server on willhines.net
 		
  	  } else {
 		  unset($headers['Subject']);
@@ -120,9 +120,12 @@ If you no longer want to be notified of open spots, you can drop out here: <br>
 			
 		case APPLIED:
 			$sub = "APPLIED: {$wk['title']}";
-			$body = "<p>You have APPLIED for {$wk['title']}</p>";
+			$body = "<p>You have APPLIED for '{$wk['title']}' starting on {$wk['showstart']}.</p>\n";
 			
-			$body .= "<p>Your email has be added to the list and you'll be notified soon if you got in or not. Generally preference is given to new students unless it says otherwise in the class description.";
+			$body .= "<p>Your email has be added to the list and you'll be notified soon if you got in or not. Generally preference is given to new students unless it says otherwise in the class description.</p>\n";
+			
+			$body .= "<p>Full info on the class is here: {$trans}</p>\n";
+			
 			break;
 			
 		default:
