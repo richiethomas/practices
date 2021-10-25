@@ -40,32 +40,29 @@
 	
 	<div class="container-lg container-fluid mt-3" id="news">
 		
-		<div class="row">
+		<div class="row align-items-center">
 			<div class="col-sm-5">
 				
 				<figure class="figure">
-				  <a href="https://forms.gle/ofxD55qeauW3F4U56"><img src="images/harvest_festival_2021.png" class="figure-img img-fluid rounded" alt="2021 Harvest Festival"></a>
+				  <a href="teams.php"><img src="images/teams.png" class="figure-img img-fluid rounded" alt="2021 Winter Teams"></a>
 				  <figcaption class="figure-caption text-end">art by Gareth O'Connor</figcaption>
 				</figure>
 			</div>
 			<div class="col-sm-7">
 
-  <dl class="row mt-3">
-    <dt class="col-sm-3">Harvest Festival</dt>
-    <dd class="col-sm-9">We are doing an eight hour online festival on October 23! Apply now to be part of this! We want improv nerdy stuff! And dumb bit shows!</dd>
+			  <dl class="row my-5">
+			    <dt class="col-sm-3">WGIS Teams</dt>
+			    <dd class="col-sm-9">We have online house teams! Every Monday 11am and 5pm (California time, <?php echo TIMEZONE; ?>) <a href="teams.php">See more info here</a>.</dd>
+			  </dl>
 
-    <dt class="col-sm-3">Discord Server</dt>
-    <dd class="col-sm-9">We have a server on the Discord chat service. To join, <a href="https://discord.gg/GXbP3wgbrc">click here</a>.</dd>
-
-    <dt class="col-sm-3">Facebook Group</dt>
-    <dd class="col-sm-9">We also have a Facebook group, you can see that <a href="https://www.facebook.com/groups/wgimprovschool">here</a>.</dd>
-
-    <dt class="col-sm-3">Twitch Channel</dt>
-    <dd class="col-sm-9">We also broacast class shows and other performances on our Twitch channel, see that <a href="https://www.twitch.tv/wgimprovschool">here</a>.</dd>
+			  <dl class="row my-5">
+			    <dt class="col-sm-3">Commnuity</dt>
+			    <dd class="col-sm-9">We have a great community that surrounds our classes! Facebook groups, chat servers, Twitch channels -- <a href="community.php">learn about all these things here</a>.</dd>
+			  </dl>
   
-  </dl>
   
-	</div></div>
+		  </div>
+	  </div>
   
   	  
 </div>
@@ -136,6 +133,10 @@
 					
 					<?php if ($wk['soldout']) { ?>
 						<span class="text-danger">Sold Out!</span> <a class="btn btn-primary" href="workshop.php?wid=<?php echo $wk['id']; ?>" role="button">join wait list</a>
+					<?php } elseif ($wk['application']) { ?>
+						
+						<a class="btn btn-primary" href="workshop.php?wid=<?php echo $wk['id']; ?>" role="button">Request A Spot</a>
+						
 					<?php } else { ?>
 						<a class="btn btn-primary" href="workshop.php?wid=<?php echo $wk['id']; ?>" role="button">Enroll</a>
 					<?php } ?>

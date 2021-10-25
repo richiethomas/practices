@@ -47,6 +47,7 @@ $( document ).ready(function(){
 	
 		<form id='log_in' action='baloney.php' method='post' novalidate>
 		<?php echo \Wbhkit\hidden('ac', 'link').
+		\Wbhkit\hidden('when_login', date('c')).
 		\Wbhkit\texty('email', '', 'Email', 'something@something.com', 'We will send you an email with a link to click.', 'Must be a valid email you have access to', ' required ', 'email').
 		'<input type="checkbox" name="fax_only" value="1" style="display:none !important" tabindex="-1">'.
 		\Wbhkit\submit('Send Me An Email'); ?>

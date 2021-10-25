@@ -31,7 +31,7 @@ function centralized_email($to, $sub, $body) {
 		$smtp = get_smtp_object();
 		$headers['To'] = $to = 'whines@gmail.com'; // everything to me on local
 		$sent = true;
- 		$sent = $smtp->send($to, $headers, $body);  // laptop can use the SMTP server on willhines.net
+ 		//$sent = $smtp->send($to, $headers, $body);  // laptop can use the SMTP server on willhines.net
 		
  	  } else {
 		  unset($headers['Subject']);
@@ -303,7 +303,7 @@ function email_boilerplate() {
 There are online shows and jams that you can play in, if you wish! See the shows/jams page on the web site for more info:<br>\n
 http://www.wgimprovschool.com/community</p>\n\n
 <p>FACEBOOK AND CHAT<br>\n
----------------------\n
+---------------------<br>\n
 If you want to meet other students, check out our Facebook group or Discord chat server:
 Facebook: http://www.facebook.com/groups/wgimprovschool<br>\n
 Discord chat server: https://discord.gg/GXbP3wgbrc</p>";

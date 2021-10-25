@@ -39,21 +39,21 @@ if (!\Workshops\is_public($wk)) {
 				}
 				
 			} else {
-				$point .= "You must be logged in to join the wait list. Click 'Login' in the menu at the top of the page.";	
+				$point = "You must be logged in to join the wait list. Click 'Login' in the menu at the top of the page.";	
 			}
 
 		} else {
 			if ($u->logged_in()) {
 				
 				if ($wk['application']) {
-					$point = "This class is taking applications. To request a spot in this class, click here: <a class='btn btn-primary' href='$enroll_link'>apply</a>. Your email will be added to the list and you'll be notified soon if you got in or not. We give preference to new students unless it says differently in the class description.";
+					$point = "To request a spot in this class, click here: <a class='btn btn-primary' href='$enroll_link'>request a spot</a>. Your email will be added to the list and you'll be notified soon if you got in or not. We give preference to new students unless it says differently in the class description.";
 				} else {
 					$point = "Click here to <a class='btn btn-primary' href='$enroll_link'>enroll</a> in this class.  Info will be sent to <b>{$u->fields['email']}</b>.";
 				}
 				
 				
 			} else {
-				$point .= "You must be logged in to join the class. Click 'Login' in the menu at the top of the page.";	
+				$point = "You must be logged in to join the class. Click 'Login' in the menu at the top of the page.";	
 			}
 		}		
 	}
@@ -84,27 +84,52 @@ if ($show_other_action)  {
 
 if ($u->check_user_level(2)) { 
 	$eh = new EnrollmentsHelper();
+	
 	$lists = $eh->get_students($wk['id'], ENROLLED);
+	$alists = $eh->get_students($wk['id'], APPLIED);
+	
 	echo "<div class='m-3 p-3 bg-info'>\n";
 	echo "<h3>Teacher/Admin Info</h3>\n";
 	
 	echo "<h4>Zoom link</h4>\n";
 	echo "<p><a href='{$wk['online_url']}'>{$wk['online_url']}</a></p>\n";
 	
-	echo "<h4>Enrolled Students</h4><ul>";
-	foreach ($lists as $l) {
-		echo "<li>".$l['nice_name']."</li>\n";
+	echo "<h4 class='mt-2'>Enrolled</h4>";
+	if (count($lists) > 0) {
+		list_names($lists);
+	} else {
+		echo "<p>No enrolled!</p>\n";
 	}
-	echo "</ul>\n";
+
+	if ($wk['application']) {
+		echo "<h4 class='mt-4'>Requested A Spot</h4>";
+		
+		if (count($alists) > 0) {
+			list_names($alists);
+		} else {
+			echo "<p>No requests!</p>\n";
+		}
+	}
 	
-	echo "<h4>Just emails</h4>\n";
-	foreach ($lists as $l) {
-		echo $l['email']."<br>\n";
-	}
 	echo "</div>\n";
 }
 
 echo "</div>\n";
+
+function list_names($lists) {
+	echo "<div class='mx-4'>\n";
+	echo "<h5>Names</h5>\n";
+	foreach ($lists as $l) {
+		echo "{$l['nice_name']}<br>\n";
+	}
+	echo "<h5>Emails</h5>\n";
+	foreach ($lists as $l) {
+		echo "{$l['email']}<br>\n";
+	}
+	echo "</div>\n";
+}
+
+
 
 
 echo "<div class='col-sm-6'>

@@ -1,6 +1,6 @@
 <?php
 
-if (count($unavailable_workshops) > 0 || count($application_workshops > 0)) {
+if (count($unavailable_workshops) > 0 || count($application_workshops) > 0) {
 
 echo "<div class=\"row justify-content-center my-3\">\n";
 echo "<div class=\"col-md-6 border border-info\">\n";

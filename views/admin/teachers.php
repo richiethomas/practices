@@ -48,7 +48,11 @@
 					echo "<tr>
 								<td><a href=\"admin_edit2.php?wid={$tc['id']}\">{$tc['title']}</a></td>
 						 		<td>{$tc['showstart']}</td>
-								<td>{$tc['total_class_sessions']} sessions</td>
+								<td>{$tc['total_class_sessions']} session".\Wbhkit\plural($tc['total_class_sessions']);
+						if ($tc['total_show_sessions']) {
+							echo ",<br>{$tc['total_show_sessions']} show".\Wbhkit\plural($tc['total_show_sessions']);	
+						}
+						echo "</td>
 							</tr>\n";
 				}
 				?>

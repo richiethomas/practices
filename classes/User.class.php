@@ -170,7 +170,7 @@ class User extends WBHObject {
 			}
 			$trans = URL."index.php?key=".$this->get_key();
 			$body = "<p>Use this link to log in:</p>
-	<p>{$trans}</p>".\Emails\email_footer();
+	<p>{$trans}</p><p>(Sent: ".date('D M n, Y g:ia').")</p>".\Emails\email_footer();
 
 			return \Emails\centralized_email($this->fields['email'], "Log in to WGIS", $body);
 			
