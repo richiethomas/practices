@@ -58,7 +58,7 @@ if (isset($fb_description)) {
 					if (isset($nav_item['children'])) {
 						echo "				<li class=\"nav-item dropdown\">
 					<a class=\"nav-link dropdown-toggle\" href=\"#\" id=\"dropdown{$i}\" data-bs-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\">{$nav_item['title']}</a>
-					<div class=\"dropdown-menu\" aria-label=\"{$nav_item['title']}\">\n";
+					<div class=\"dropdown-menu\">\n";
 						$i++;
 							
 							foreach( $nav_item['children'] as $nav_item_child) { 

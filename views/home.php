@@ -56,8 +56,8 @@
 			  </dl>
 
 			  <dl class="row my-5">
-			    <dt class="col-sm-3">Commnuity</dt>
-			    <dd class="col-sm-9">We have a great community that surrounds our classes! Facebook groups, chat servers, Twitch channels -- <a href="community.php">learn about all these things here</a>.</dd>
+			    <dt class="col-sm-3">Community</dt>
+			    <dd class="col-sm-9">We have a great community around our classes! Facebook groups, chat servers, Twitch channels -- <a href="community.php">learn about all these things here</a>.</dd>
 			  </dl>
   
   

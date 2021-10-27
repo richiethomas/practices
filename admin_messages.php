@@ -2,7 +2,7 @@
 $heading = "send messages";
 include 'lib-master.php';
 
-$mess_vars = array('st', 'note', 'subject', 'sms', 'cancellation');
+$mess_vars = array('st', 'note', 'subject');
 Wbhkit\set_vars($mess_vars);
 if (!$st) { $st = ENROLLED; }
 
@@ -45,7 +45,6 @@ switch ($ac) {
 			$sent .= "{$std['email']}, ";
 		
 			$guest->set_by_id($std['id']);
-			Emails\send_text($guest, $sms); // routine will check if they want texts and have proper info
 		
 		}
 		$message = "Email '$subject' sent to $sent";

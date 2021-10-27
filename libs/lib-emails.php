@@ -48,9 +48,7 @@ function centralized_email($to, $sub, $body) {
 	if ($sent) {
 		$return = true;
 		if (DEBUG_MODE && !LOCAL) {
-			$logger->error($mail_activity);
-		} else {
-			$logger->info($mail_activity);
+			$logger->debug($mail_activity);
 		}
 	} else {
 		$error = error_get_last();

@@ -13,14 +13,14 @@ switch ($ac) {
 			
 			// already logged in with this email? do nothing
 			if ($u->logged_in() && $u->fields['email'] == $email) {
-				$logger->debug("{$u->fields['email']} already logged in!");
+				$logger->debug("LOGIN PROTECT: {$u->fields['email']} already logged in!");
 				break;
 			}
 			
 			// if it's 30 minutes after the login form was generated, do nothing
 			$passed = strtotime('now') - strtotime($when_login);
 			if ($passed / 60 > 30) {
-				$logger->debug("{$email} requested a login $passed mins later");
+				$logger->debug("LOGIN PROTECT: {$email} requested a login $passed mins later");
 				break;
 			}
 			

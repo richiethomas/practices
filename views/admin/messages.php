@@ -11,10 +11,8 @@
 		Wbhkit\hidden('ac', 'sendmsg').
 		Wbhkit\texty('subject', $subject).
 		Wbhkit\textarea('note', $note).
-		Wbhkit\textarea('sms', $sms, 'SMS version (text)').
 		Wbhkit\drop('st', $statuses, $st, 'To').
 		Wbhkit\submit('send').
-		Wbhkit\checkbox('cancellation', 1, null, $cancellation).
 		"</form></div>\n";
 		
 		echo  "<div id='emaillists'>\n";

@@ -51,7 +51,11 @@ switch ($ac) {
 		break;
 		
 	case 'nw':
-		$message = $e->notify_waiting($wk);
+		if (!$wk['application']) {
+			$message = $e->notify_waiting($wk);
+		} else {
+			$message = "Cannot notify waiting list - this class takes applications.";
+		}
 		break;
 
 	case 'conrem':

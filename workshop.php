@@ -74,7 +74,9 @@ if (Workshops\is_public($wk)) {
 				
 			$message = $e->change_status(DROPPED, 1);
 			$wk = Workshops\set_enrollment_stats($wk);
-			$e->notify_waiting($wk);
+			if (!$wk['application']) {
+				$e->notify_waiting($wk);
+			}
 			$message = "Dropped user ({$u->fields['email']}) from '{$wk['title']}.'";
 			break;	
 
