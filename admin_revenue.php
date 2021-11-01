@@ -9,8 +9,8 @@ Wbhkit\set_vars($vars);
 
 // search defaults to current week
 if (!$searchstart && !$searchend) {
-	$searchstart = (date("l") == 'Saturday' ? 'today' : 'last Saturday');
-	$searchend = (date("l") == 'Friday' ? 'today' : 'next Friday');
+	$searchend = 'last Friday';
+	$searchstart = '-6 days '.date('Y-m-d', strtotime($searchend));
 }
 
 if ($searchstart) { $searchstart = date('Y-m-d 00:00:00', strtotime($searchstart)); }

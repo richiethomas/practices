@@ -41,10 +41,10 @@ switch ($ac) {
 }
 
 
-// search defaults to current week
+// search defaults to last week
 if (!$searchstart && !$searchend) {
-	$searchstart = (date("l") == 'Sunday' ? 'today' : 'last Sunday');
-	$searchend = (date("l") == 'Saturday' ? 'today' : 'next Saturday');
+	$searchend = 'last Friday';
+	$searchstart = '-6 days '.date('Y-m-d', strtotime($searchend));
 }
 
 if ($searchstart) { $searchstart = date('Y-m-d 00:00:00', strtotime($searchstart)); }

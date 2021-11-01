@@ -101,7 +101,7 @@ if ($key) {
 
 // is this the first page this visitor has visited
 if (isset($u->fields['ukey']) && $u->fields['ukey'] != $already_here_key) {
-	$logger->info("{$u->fields['fullest_name']} logged in.");
+	//$logger->info("{$u->fields['fullest_name']} logged in.");
 }
 
 

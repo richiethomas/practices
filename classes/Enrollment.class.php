@@ -150,7 +150,7 @@ class Enrollment extends WBHObject {
 		':uid' => $this->fields['user_id'],
 		':status_id' => $status_id));
 	
-		$this->logger->info("{$this->u->fields['fullest_name']} is now '{$statuses[$status_id]}' for '{$this->wk['title']}'");
+		//$this->logger->info("{$this->u->fields['fullest_name']} is now '{$statuses[$status_id]}' for '{$this->wk['title']}'");
 	
 		return true;
 	}
