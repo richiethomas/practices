@@ -4,21 +4,26 @@ include 'lib-master.php';
 //
 // routing stuff
 //
-if (false) {
-	echo "<pre>\n";
-	print_r($_SERVER['REQUEST_URI']);
-	//print_r($_GET);
-	//print_r($_POST);
-	//print_r($params);
-	echo "</pre>";
-}
 
 //
 // params
 //
 $request  = substr($_SERVER['REQUEST_URI'],1); // strip leading slash
+$sc = $request;
+$params = array();
 $params = explode("/", $request);
-$ac = (isset($params[1]) ? $params[1] : null);
+$ac = (isset($params[1]) ? $params[1] : 'view'); // action defaults to 'view'
+
+// debug messages
+if (false) {
+	echo "<pre>\n";
+	print_r($_SERVER['REQUEST_URI'])."<br>\n";
+	print_r($_GET);
+	print_r($_POST);
+	print_r($params);
+	echo "</pre>";
+}
+
 
 
 //
@@ -49,8 +54,12 @@ $pages = array(
 	"teams" => array(
 		'teams',
 		'teams',
-		'WGIS house teams'
-	)			
+		'WGIS house teams'),
+		
+	"privacy" => array(
+		'about/privacy',
+		'privacy policy',
+		'WGIS Privacy Policy')
 );
 foreach ($pages as $p => $pinfo) {
 	if ($params[0] == $p) {
@@ -82,15 +91,31 @@ foreach ($synonyms as $sk => $sv) {
 $controllers = array(
 	'home',
 	'workshop',
-	'you');
+	'you',
+	'calendar',
+	'teachers',
+	'workshop');
 
-$controller = 'home';
+$controller = 'home'; // default
 foreach ($controllers as $c) {
 	if ($params[0] == $c) {
 		$controller = $c;
 	}
 }
 
+// check admin controllers (if user is above level 3)
+if ($u->check_user_level(3)) {
+	$admin_controllers = array (
+		'admin' => 'admin/dashboard',
+		'admin-workshop' => 'admin/workshop'
+	);
+
+	foreach ($admin_controllers as $ci => $cv) {
+		if ($params[0] == $ci) {
+			$controller = $cv;
+		}
+	}
+}
 
 include "controllers/{$controller}.php";
 

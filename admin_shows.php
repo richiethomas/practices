@@ -70,7 +70,7 @@ function get_class_shows(int $limit = 25) {
 	
 	$stmt = \DB\pdo_query("select * from shows order by start desc limit $limit");
 	$all = array();
-	while ($row = $stmt->fetch()) {
+	while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
 		$cs = new ClassShow();
 		$cs->set_by_id($row['id']);
 		$cs->set_workshops();
@@ -85,7 +85,7 @@ function get_old_class_shows(int $limit = 10) {
 	
 	$stmt = \DB\pdo_query("select * from shows order by start asc limit $limit");
 	$all = array();
-	while ($row = $stmt->fetch()) {
+	while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
 		$cs = new ClassShow();
 		$cs->set_by_id($row['id']);
 		$cs->set_workshops();

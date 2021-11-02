@@ -60,7 +60,7 @@ class WBHObject
 	
 		$stmt = \DB\pdo_query("select * from {$this->tablename} where id = :id", array(':id' => $id));
 
-		while ($row = $stmt->fetch()) {
+		while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
 			$this->set_into_fields($row);
 			$this->format_row();
 			return true;

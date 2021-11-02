@@ -43,7 +43,7 @@ class ClassShow extends WBHObject {
 		
 		$stmt = \DB\pdo_query("select ws.*, wk.title, wk.start from workshops_shows ws, workshops wk where ws.workshop_id = wk.id and ws.show_id = :id order by id", array(':id' => $this->fields['id']));
 		$this->wks = array();
-		while ($row = $stmt->fetch()) {
+		while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
 			$this->wks[] = $row;
 		}	
 		return true;
@@ -55,7 +55,7 @@ class ClassShow extends WBHObject {
 			return false;
 		}
 		$stmt = \DB\pdo_query("select user_id from teachers where id = :id", array(':id' => $this->fields['teacher_id']));
-		while ($row = $stmt->fetch()) {
+		while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
 			$this->teacher = new User();
 			$this->teacher->set_by_id($row['user_id']);
 			return true;
@@ -71,7 +71,7 @@ class ClassShow extends WBHObject {
 		}
 		$params = array(':show_id' => $this->fields['id'], ':workshop_id' => $wid);
 		$stmt = \DB\pdo_query("select * from workshops_shows where show_id = :show_id and workshop_id = :workshop_id", $params);
-		while ($row = $stmt->fetch()) {
+		while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
 			$this->message = "workshop $wid is already associated with show {$this->fields['id']}";
 			return true;
 		}	

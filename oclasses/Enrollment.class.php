@@ -28,7 +28,7 @@ class Enrollment extends WBHObject {
 	
 		$stmt = \DB\pdo_query("select r.* from registrations r where r.id = :eid", array(':eid' => $enrollment_id));
 
-		while ($row = $stmt->fetch()) {
+		while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
 			return $this->finish_fields($row);
 		}
 		$this->error = "No enrollment found for enrollment id '{$enrollment_id}'";
@@ -39,7 +39,7 @@ class Enrollment extends WBHObject {
 	function set_by_uid_wid(int $uid, int $wid) {
 		$stmt = \DB\pdo_query("select r.* from registrations r where r.workshop_id = :wid and r.user_id = :uid", array(':wid' => $wid, ':uid' => $uid));
 
-		while ($row = $stmt->fetch()) {
+		while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
 			return $this->finish_fields($row);
 		}
 		$this->error = "No enrollment found for uid/wid '$uid' / '$wid'";
@@ -174,7 +174,7 @@ class Enrollment extends WBHObject {
 				$body = "A spot has opened up in '{$wk['title']}', starting on {$wk['showstart']}.<br><br>
 		
 				Go here to enroll.<br>
-				".URL."workshop.php?wid={$wk['id']}
+				".URL."/workshop/view/{$wk['id']}
 				<br><br>
 			
 				Please note: everyone on the waiting list gets this email at the same time. If you want this spot, go there ASAP.";	
@@ -230,7 +230,7 @@ class Enrollment extends WBHObject {
 				}
 				
 				$body .= "<p>To see all other info on the class go here:<br>";
-				$body .= URL."workshop.php?wid={$this->wk['id']}</p>\n";
+				$body .= URL."/workshop/view/{$this->wk['id']}</p>\n";
 
 				
 				$body .= "<p>Thanks!<br>-Will</p>\n";

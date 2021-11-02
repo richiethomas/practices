@@ -62,7 +62,7 @@ function confirm_email($e, $status_id = ENROLLED) {
 
 	$wk = $e->wk;
 	$u = $e->u;	
-	$trans = URL."workshop.php?wid={$wk['id']}";
+	$trans = URL."/workshop/view/{$wk['id']}";
 	$body = '';
 	$notifications = '';	
 		

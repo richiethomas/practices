@@ -43,7 +43,7 @@ class Paginator {
 			$query      = $this->_query . " LIMIT " . ( ( $this->_page - 1 ) * $this->_limit ) . ", {$this->_limit}";
 		}
 		$stmt = \DB\pdo_query($query, $this->_params);
-		while ( $row = $stmt->fetch() ) {
+		while ( $row = $stmt->fetch(\PDO::FETCH_ASSOC) ) {
 			$results[]  = $row;
 		}
 

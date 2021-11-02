@@ -85,7 +85,9 @@ $wk = \Workshops\get_empty_workshop();
 $u = new User(); // set empty user
 $view = new View();
 
-// checks for key in SESSION and COOKIE, not logged in otherwise
+//
+// login stuff
+//
 $key = $u->check_for_stored_key(); 
 if ($key) {
 	$u->set_by_key($key);
@@ -105,7 +107,7 @@ Reminders\check_reminders();
 //
 function get_nav_items(){
 	$nav_items = array();
-	$nav_items[] = array('title' => "Calendar", "href" => "/calendar.php");
+	$nav_items[] = array('title' => "Calendar", "href" => "/calendar");
 	$nav_items[] = array('title' => "About", "href" => "/about-school", 'children' => array(
 
 		array('title' => "Teachers", "href" => "/teachers"),

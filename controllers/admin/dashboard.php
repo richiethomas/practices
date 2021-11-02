@@ -1,6 +1,5 @@
 <?php
-$heading = "upcoming";
-include 'lib-master.php';
+$heading = "upcoming classes";
 
 Wbhkit\set_vars(array('filter_by'));
 

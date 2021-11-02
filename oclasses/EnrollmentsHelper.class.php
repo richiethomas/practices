@@ -20,7 +20,7 @@ class EnrollmentsHelper extends WBHObject {
 		$this->enrollments['paid'] = 0;
 	
 		$stmt = \DB\pdo_query("select r.status_id, r.paid from registrations r where r.workshop_id = :wid", array(':wid' => $workshop_id));
-		while ($row = $stmt->fetch()) {
+		while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
 			$this->enrollments[$this->lookups->statuses[$row['status_id']]]++;
 			if ($row['paid']) { $this->enrollments['paid']++; }
 		}
@@ -30,7 +30,7 @@ class EnrollmentsHelper extends WBHObject {
 	function get_enrollment_ids_for_user(int $uid) {
 		$stmt = \DB\pdo_query("select * from registrations where user_id = :uid", array(':uid' => $uid));
 		$es = array();
-		while ($row = $stmt->fetch()) {
+		while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
 			$es[] = $row['id'];
 		}
 		return $es;	
@@ -54,7 +54,7 @@ class EnrollmentsHelper extends WBHObject {
 
 		$u = new \User(); // need its methods
 		$e = new \Enrollment();
-		while ($row = $stmt->fetch()) {
+		while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
 			$row = \Workshops\format_workshop_startend($row);
 			$row = $u->set_nice_name_in_row($row);
 			$log[] = $row;
@@ -97,7 +97,7 @@ class EnrollmentsHelper extends WBHObject {
 		}
 		$stds = array();
 		$u = new \User(); // need its methods!
-		while ($row = $stmt->fetch()) {
+		while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
 			$stds[$row['id']] = $u->set_nice_name_in_row($row);
 		}
 		return $stds;

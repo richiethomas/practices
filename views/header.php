@@ -1,4 +1,5 @@
-<?php $heading = isset($heading) ? "wgis: $heading": "World's Greatest Improv School"; ?>
+<?php 
+$heading = "wgis: $heading" ?? "World's Greatest Improv School"; ?>
 <!doctype html>
 <html lang="en">
   <head>
@@ -51,7 +52,7 @@ if (isset($fb_description)) {
 			<ul class="navbar-nav ml-auto justify-content-end">
 			    <?php 
 				if ($u->check_user_level(3)) { 
-						echo "<li class=\"nav-item\"> <a class=\"btn btn-outline-primary nav-link\" href=\"admin.php\">Admin</a> </li>\n";
+						echo "<li class=\"nav-item\"> <a class=\"btn btn-outline-primary nav-link\" href=\"/admin\">Admin</a> </li>\n";
 			    } // end of check user level 2 
 				foreach( get_nav_items() as $nav_item ) {
 					$i = 01;					

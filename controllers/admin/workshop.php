@@ -1,9 +1,16 @@
 <?php
 $heading = "edit workshop";
-include 'lib-master.php';
+
+$wid =  (int) ($params[2] ?? 0);
+if (!$wid) {
+	$view->data['error_message'] = "<h1>Whoops!</h1><p>You are asking to look at info about a workshop, but I (the computer) cannot tell which workshop you mean. Sorry!</p>\n";
+	$view->renderPage('error');
+	exit();
+}
+$wk = \Workshops\get_workshop_info($wid);
 
 
-$wk_vars = array('wid', 'title', 'notes', 'start', 'end', 'lid', 'online_url', 'cost', 'capacity', 'notes', 'when_public', 'email', 'con', 'xtraid', 'guest_id', 'reminder_sent', 'sold_out_late', 'teacher_id', 'co_teacher_id', 'application',  'start_xtra', 'end_xtra', 'online_url_xtra', 'hideconpay');
+$wk_vars = array('title', 'notes', 'start', 'end', 'lid', 'online_url', 'cost', 'capacity', 'notes', 'when_public', 'email', 'con', 'xtraid', 'guest_id', 'reminder_sent', 'sold_out_late', 'teacher_id', 'co_teacher_id', 'application',  'start_xtra', 'end_xtra', 'online_url_xtra', 'hideconpay');
 Wbhkit\set_vars($wk_vars);
 
 $e = new Enrollment();
@@ -155,7 +162,7 @@ foreach ($lookups->statuses as $stid => $status_name) {
 
 $view->add_globals(array('stats', 'lists', 'status_log', 'hideconpay'));	
 $view->data['statuses'] = $lookups->statuses;
-$view->renderPage('admin/edit');
+$view->renderPage('admin/workshop');
 
 
 

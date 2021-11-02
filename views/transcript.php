@@ -30,23 +30,23 @@ if ($admin) {
 				echo \Wbhkit\texty("payoverride_{$t['enrollment_id']}", $t['pay_override'], 0);
 				
 			} else {
-				echo "<a href=\"workshop.php?wid={$t['workshop_id']}\">{$t['title']}</a>";
+				echo "<a href=\"/workshop/view/{$t['workshop_id']}\">{$t['title']}</a>";
 			}
 			echo "</div>\n";  // title cell
 			
 		
 			echo "	<div class='col-sm'>{$t['full_when']} (".TIMEZONE.")<br>
-				<small>Instructor: <a href=\"teachers.php?tid={$t['teacher_id']}\">{$t['teacher_info']['nice_name']}</a>";
+				<small>Instructor: <a href=\"/teachers/view/{$t['teacher_id']}\">{$t['teacher_info']['nice_name']}</a>";
 			
 			if ($t['co_teacher_id']) {
-				echo ", <a href=\"teachers.php?tid={$t['co_teacher_id']}\">{$t['co_teacher_info']['nice_name']}</a>";
+				echo ", <a href=\"/teachers/view/{$t['co_teacher_id']}\">{$t['co_teacher_info']['nice_name']}</a>";
 			}
 			
 			echo "</small></div>\n"; // when col	
 			if ($admin) { echo "<div class='col-sm my-2'>{$t['place']}</div>\n"; } // where col
 			echo "	<div class='col-sm'>{$statuses[$t['status_id']]}";
 			echo "</div>\n"; // status col
-			echo "	<div class='col-sm'><a href='workshop.php?wid={$t['workshop_id']}'><span class=\"oi oi-info\" title=\"info\" aria-hidden=\"true\"></span> info</a></div>\n";			
+			echo "	<div class='col-sm'><a href='/workshop/view/{$t['workshop_id']}'><span class=\"oi oi-info\" title=\"info\" aria-hidden=\"true\"></span> info</a></div>\n";			
 			echo "</div>\n\n"; // end of row
 		
 	}

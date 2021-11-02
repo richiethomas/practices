@@ -14,7 +14,7 @@ if (!$u->logged_in()) {
 	$eh = new EnrollmentsHelper();
 	$view->data['transcript'] = $eh->get_transcript_tabled($u, 0); 
 	$view->data['admin'] = false;
-	$view->data['userhelper'] = new UserHelper($sc);
+	$view->data['userhelper'] = new UserHelper('/you'); // used to set up forms
 	$view->data['lookups'] = $lookups;
 	$view->renderPage('you');
 	

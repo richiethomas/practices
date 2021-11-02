@@ -177,6 +177,7 @@ function set_vars($vars) {
 	}
 }
 
+
 function query_to_array($rows) {
 	$numfields = mysql_num_fields($rows);
 

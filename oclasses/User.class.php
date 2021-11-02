@@ -34,7 +34,7 @@ class User extends WBHObject {
 		$this->fields = array();
 		
 		$stmt = \DB\pdo_query("select u.* from users u where email = :email", array(':email' => $email));
-		while ($row = $stmt->fetch()) {
+		while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
 			$this->set_into_fields($row);
 			$this->set_nice_name();
 			return true;
@@ -64,7 +64,7 @@ class User extends WBHObject {
 		$this->fields = array();
 		
 		$stmt = \DB\pdo_query("select u.* from users u where u.id = :id", array(":id" => $id));
-		while ($row = $stmt->fetch()) {
+		while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
 			$this->set_into_fields($row);
 		}
 		$this->set_nice_name(); // nice name, confirm key
@@ -74,9 +74,10 @@ class User extends WBHObject {
 	function set_by_key($key) {
 		$this->fields = array();
 		$stmt = \DB\pdo_query("select * from users where ukey = :key", array(':key' => $key));
-		while ($row = $stmt->fetch()) {
+		while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
 			$this->set_into_fields($row);
 			$this->set_nice_name();
+			$this->remember_key($key);
 			return $this->fields['id'];
 		}
 		return false;
@@ -327,7 +328,7 @@ class User extends WBHObject {
 			
 			// new student exists, so merge old info into new
 			$stmt = \DB\pdo_query("select workshop_id from registrations where user_id = :uid", array(':uid' => $newu->fields['id']));
-			while ($row = $stmt->fetch()) {
+			while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
 			
 				//does current (old) email already have this registation?
 				$stmt2 = \DB\pdo_query("select * from registrations where user_id = :uid and workshop_id = :wid", array(':uid' => $oldu->fields['id'], ':wid' => $row['workshop_id']));
@@ -357,7 +358,7 @@ class User extends WBHObject {
 
 	private function is_email_available($email) {
 		$stmt = \DB\pdo_query("select * from users where email = :email", array(':email' => $email));
-		while ($row = $stmt->fetch()) {
+		while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
 			return false; // not available
 		}	
 		return true; // available

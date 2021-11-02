@@ -22,15 +22,15 @@ foreach ($faculty as $f) {
 ?>	
 	<div class="col-sm-<?php echo ($show_all ? '6' : '12'); ?> teachers_listings-teacher align-self-stretch">
 	    <div class="teacher-info mb-4">
-				 <img class="teacher-image align-self-center" src="<?php echo \Teachers\get_teacher_photo_src($f['user_id']);?>" alt="Teacher Name">
-				   <h5 class="mt-0 mb-0 teacher-name"><a href="teachers.php?tid=<?php echo $f['id'];?>"><?php echo $f['nice_name'];?></a></h5>
+				 <a href="\teachers\view\<?php echo $f['id'];?>"><img class="teacher-image align-self-center" src="<?php echo \Teachers\get_teacher_photo_src($f['user_id']);?>" alt="Teacher Name"></a>
+				   <h5 class="mt-0 mb-0 teacher-name"><a href="\teachers\view\<?php echo $f['id'];?>"><?php echo $f['nice_name'];?></a></h5>
 				   <p class="p-3 teacher-bio pt-0"><?php echo preg_replace('/\R/', "<br>", $f['bio']);?></p>
 					   
 <?php
 	if (count($f['classes']) > 0) {
 		echo "<p class='teacher-bio px-3'>Upcoming classes for {$f['nice_name']}:<ul>\n";
 		foreach ($f['classes'] as $c) {
-			echo "	<li class='teacher-bio'><a href=\"workshop.php?wid={$c['id']}\">{$c['title']}</a>, {$c['capacity']} people max, {$c['costdisplay']}<br><div class='mx-4'>{$c['full_when']}</div></li>\n";
+			echo "	<li class='teacher-bio'><a href=\"/workshop/view/{$c['id']}\">{$c['title']}</a>, {$c['capacity']} people max, {$c['costdisplay']}<br><div class='mx-4'>{$c['full_when']}</div></li>\n";
 		}
 		echo "</ul></p>\n";
 	}					   

@@ -13,7 +13,7 @@
 				$last_wk = null;
 				foreach ($unpaid as $up) {
 					if ($last_wk != $up['title']) {
-						echo "<p class='m-0'><b><a href='admin_edit2.php?wid={$up['workshop_id']}'>{$up['title']}</a> - ".date('D M j', strtotime($up['start']))."</b></p>\n";
+						echo "<p class='m-0'><b><a href='/admin-workshop/view/{$up['workshop_id']}'>{$up['title']}</a> - ".date('D M j', strtotime($up['start']))."</b></p>\n";
 						$last_wk = $up['title'];
 					}
 					echo "<p class='m-0 ps-4'>{$up['nice_name']}</p>\n";
@@ -53,7 +53,7 @@ foreach ($workshops as $wk) {
 	
 	$xtra = $wk['class_show'] ? ' show' : '';
 		
-	echo "<li class='mt-3 $xtra' data-teacher=\"teacher-{$wk['teacher_id']}\"><a   href='admin_edit2.php?wid={$wk['id']}'>{$wk['title']}</a> ({$wk['rank']}".($wk['class_show'] ? ' - show' : '')."), $start-$end (".number_format($wk['enrolled'], 0)." / ".number_format($wk['capacity'], 0).")";
+	echo "<li class='mt-3 $xtra' data-teacher=\"teacher-{$wk['teacher_id']}\"><a   href='/admin-workshop/view/{$wk['id']}'>{$wk['title']}</a> ({$wk['rank']}".($wk['class_show'] ? ' - show' : '')."), $start-$end (".number_format($wk['enrolled'], 0)." / ".number_format($wk['capacity'], 0).")";
 	
 	echo " - {$wk['teacher_name']}";
 	if ($wk['co_teacher_id']) {

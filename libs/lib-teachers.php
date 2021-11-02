@@ -6,7 +6,7 @@ $teacher_attic = array();
 
 function is_teacher($uid) {
 	$stmt = \DB\pdo_query("select t.*, u.email, u.display_name, u.ukey from teachers t, users u where u.id = t.user_id and t.user_id = :id", array(':id' => $uid));
-	while ($row = $stmt->fetch()) {
+	while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
 		$row = fill_out_teacher_row($row); 
 		return $row;
 	}
@@ -22,7 +22,7 @@ function get_teacher_by_id($tid) {
 	}
 	
 	$stmt = \DB\pdo_query("select t.*, u.email, u.display_name, u.ukey from teachers t, users u where u.id = t.user_id and t.id = :id", array(':id' => $tid));
-	while ($row = $stmt->fetch()) {
+	while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
 		$row = fill_out_teacher_row($row); 
 		$teacher_attic[$row['id']] = $row; // save teacher data in global variable
 		return $row;
@@ -45,7 +45,7 @@ function make_teacher($uid) {
 	global $last_insert_id;
 
 	$stmt = \DB\pdo_query("select * from teachers where user_id = :id", array(':id' => $uid));
-	while ($row = $stmt->fetch()) {
+	while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
 		return $row['id']; // if exists, return the teacher id
 	}
 
@@ -74,7 +74,7 @@ function get_teacher_form($t) {
 function get_all_teachers($only_active = false) {
 	$stmt = \DB\pdo_query("select t.*, u.email, u.display_name, u.ukey from teachers t, users u where t.user_id = u.id".($only_active ? ' and t.active = 1' : ''));
 	$teachers = array();
-	while ($row = $stmt->fetch()) {
+	while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
 		$row = fill_out_teacher_row($row); 
 		$teachers[$row['id']] = $row;
 	}
@@ -113,7 +113,7 @@ function get_teacher_upcoming_classes($tid) {
 	$workshops = array();
 	// get all active teachers, and also upcoming courses they are teaching	
 	$stmt = \DB\pdo_query("select wk.* from workshops wk where (teacher_id = :tid or co_teacher_id = :ctid) and start > :now order by start", array(':now' => date("Y-m-d H:i:s"), ':tid' => $tid, ':ctid' => $tid));
-	while ($row = $stmt->fetch()) {
+	while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
 		$workshops[] = \Workshops\fill_out_workshop_row($row, false); // don't need enrollment stats 
 	}
 	return $workshops;
@@ -124,7 +124,7 @@ function get_teacher_all_classes($tid) {
 	$workshops = array();
 	// get all active teachers, and also upcoming courses they are teaching	
 	$stmt = \DB\pdo_query("select wk.* from workshops wk where teacher_id = :tid order by start desc", array(':tid' => $tid));
-	while ($row = $stmt->fetch()) {
+	while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
 		$workshops[] = \Workshops\fill_out_workshop_row($row, false); // don't need enrollment stats 
 	}
 	return $workshops;
@@ -227,7 +227,7 @@ function get_teacher_pay(int $wid) {
 		from workshops w, teachers t
 		where w.teacher_id = t.id
 		and w.id = :id", array(':id' => $wid));
-	while ($row = $stmt->fetch()) {
+	while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
 		$default_pay = $row['default_rate'];
 		$pay += $row['actual_pay'] ? $row['actual_pay'] : $default_pay;
 	}
@@ -235,7 +235,7 @@ function get_teacher_pay(int $wid) {
 	$stmt = \DB\pdo_query("select x.actual_pay
 		from xtra_sessions x
 		where x.workshop_id = :id", array(':id' => $wid));
-	while ($row = $stmt->fetch()) {
+	while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
 		$pay += $row['override_pay'] ? $row['override_pay'] : $default_pay;
 	}
 

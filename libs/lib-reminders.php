@@ -3,19 +3,19 @@ namespace Reminders;
 
 define('REMINDER_TEST', true);
 
-function get_reminders($how_many = 100) {
+function get_reminders(int $how_many = 100) {
 	
 	// check reminder database -- has it been 6 hours?
 	$stmt = \DB\pdo_query("select * from reminder_checks order by id desc limit :howmany", array(':howmany' => $how_many)); 
 	$reminders = array();
-	while ($row = $stmt->fetch()) {
+	while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
 		$reminders[] = $row;
 	}
 	return $reminders;
 	
 }
 
-function check_reminders($force = false) {
+function check_reminders(bool $force = false) {
 	
 	/*
 delete from reminder_checks;
@@ -25,7 +25,7 @@ update xtra_sessions set reminder_sent = 0;
 
 	// check reminder database -- has it been 6 hours?
 	$stmt = \DB\pdo_query("select * from reminder_checks order by id desc limit 1"); // most recent check
-	while ($row = $stmt->fetch()) {
+	while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
 		if ((time() - strtotime($row['time_checked'])) / 3600 <= 4 && ($force !== true)) { return false; } // checked less than four hours ago
 		 
 	}
@@ -40,7 +40,7 @@ update xtra_sessions set reminder_sent = 0;
 	
 	// first do workshops table - these are session 1s
 	$stmt = \DB\pdo_query("select id as workshop_id, start from workshops w where start > :now and reminder_sent = 0", array(':now' => $mysqlnow)); // workshops in the future
-	while ($row = $stmt->fetch()) {
+	while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
 		if ((strtotime($row['start']) - time()) / 3600 < REMINDER_HOURS) {
 			$classes_to_remind[] = array($row['workshop_id'], 0, 0);
 		}
@@ -48,7 +48,7 @@ update xtra_sessions set reminder_sent = 0;
 	
 	// xtra sessions - session 2 and higher, except shows
 	$stmt = \DB\pdo_query("select id, workshop_id, start from xtra_sessions where start > :now and reminder_sent = 0", array(':now' => $mysqlnow)); // workshops in the future
-	while ($row = $stmt->fetch()) {
+	while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
 		if ((strtotime($row['start']) - time()) / 3600 < REMINDER_HOURS) {
 			$classes_to_remind[] = array($row['workshop_id'], $row['id'], 0); 
 		}
@@ -56,7 +56,7 @@ update xtra_sessions set reminder_sent = 0;
 	
 	// class shows
 	$stmt = \DB\pdo_query("select s.id, ws.workshop_id, s.start from shows s, workshops_shows ws where ws.show_id = s.id and s.start > :now and s.reminder_sent = 0", array(':now' => $mysqlnow)); // workshops in the future
-	while ($row = $stmt->fetch()) {
+	while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
 		if ((strtotime($row['start']) - time()) / 3600 < REMINDER_HOURS) {
 			$classes_to_remind[] = array($row['workshop_id'], 0, $row['id']); 
 		}
@@ -80,7 +80,7 @@ update xtra_sessions set reminder_sent = 0;
 
 }
 
-function remind_enrolled($class) {
+function remind_enrolled(array $class) {
 	
 	$guest = new \User();
 	$cs = new \ClassShow();
@@ -109,7 +109,7 @@ function remind_enrolled($class) {
 			$note .= \Emails\payment_text($wk, 1);
 		}
 		
-		$trans = URL."workshop.php?wid={$wk['id']}";
+		$trans = URL."/workshop/view/{$wk['id']}";
 
 		if (!$class[1] && !$class[2]) { // if this not an xtra session or a show
 			$note .= "<p>DROPPING OUT<br>\n
@@ -134,7 +134,7 @@ Class info on web site: $trans";
 	//remind teacher
 	if (!LOCAL || REMINDER_TEST) {
 				
-		$trans = URL."workshop.php?wid={$wk['id']}";
+		$trans = URL."/workshop/view/{$wk['id']}";
 		$teacher_reminder = get_reminder_message_data($wk, $xtra, $cs, true);
 		$msg = $teacher_reminder['note']."<p>Class info online:<br>$trans</p>\n";
 		
@@ -161,7 +161,7 @@ Class info on web site: $trans";
 	
 }
 
-function get_reminder_message_data($wk, $xtra, $cs, $teacher = false) {
+function get_reminder_message_data(array $wk, array $xtra, array $cs, bool $teacher = false) {
 	
 	if ($cs->fields['id']) {
 		$start = $cs->fields['friendly_when'];

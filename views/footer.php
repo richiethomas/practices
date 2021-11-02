@@ -16,7 +16,7 @@
 	</ul>
 	<div class="footer-colophon row justify-content-between mb-3">
 		<div class="col-lg-7 col-sm-12">
-		Send questions to Will Hines - <a href="mailto:will@wgimprovschool.com">will@wgimprovschool.com</a> | <a href="privacy.php">Privacy Policy</a>
+		Send questions to Will Hines - <a href="mailto:will@wgimprovschool.com">will@wgimprovschool.com</a> | <a href="/privacy">Privacy Policy</a>
 		</div>
 		<div class="col-lg-5 col-sm-12">
 		Site uses: <a href="http://www.php.net/">PHP</a> / <a href="http://www.mysql.com/">MySQL</a> / <a href="http://www.getbootstrap.com/">Bootstrap</a> / <a href="http://useiconic.com/open">Open Iconic</a>
@@ -30,7 +30,7 @@
 <script>
 $( document ).ready(function(){
 		$( "#email" ).on("focus", function() {
-			$("#log_in").attr("action", "/");
+			$("#log_in").attr("action", "/home/link");
 		});
 });
 </script>
@@ -46,8 +46,7 @@ $( document ).ready(function(){
 		<?php echo \Wbhkit\form_validation_javascript('log_in'); ?>
 	
 		<form id='log_in' action='baloney.php' method='post' novalidate>
-		<?php echo \Wbhkit\hidden('ac', 'link').
-		\Wbhkit\hidden('when_login', date('c')).
+		<?php echo \Wbhkit\hidden('when_login', date('c')).
 		\Wbhkit\texty('email', '', 'Email', 'something@something.com', 'We will send you an email with a link to click.', 'Must be a valid email you have access to', ' required ', 'email').
 		'<input type="checkbox" name="fax_only" value="1" style="display:none !important" tabindex="-1">'.
 		\Wbhkit\submit('Send Me An Email'); ?>

@@ -1,5 +1,5 @@
 <?php
-echo "<h2><a href='$sc?wid={$wk['id']}'>{$wk['title']}</a></h2><p class='small'><a href='admin_listall.php?wid={$wk['id']}#addworkshop'>(Clone this workshop)</a></p>\n";
+echo "<h2><a href='/admin-workshop/view/{$wk['id']}'>{$wk['title']}</a></h2><p class='small'><a href='admin_listall.php?wid={$wk['id']}#addworkshop'>(Clone this workshop)</a></p>\n";
 echo "<div class='row mt-md-3 admin-edit-workshop'>\n";
 
 		// enrollment column
@@ -50,13 +50,11 @@ echo "<div class='row mt-md-3 admin-edit-workshop'>\n";
 		echo  \Wbhkit\form_validation_javascript('wk_edit');
 		echo  "<div class='col-md-5'>
 		<h2>Session Info</h2>
-		<form id='wk_edit' action='$sc' method='post' novalidate>
+		<form id='wk_edit' action='/admin-workshop/up/{$wk['id']}' method='post' novalidate>
 		<fieldset name=\"workshop_edit\">".
 		Workshops\workshop_fields($wk).
-		Wbhkit\hidden('ac', 'up').
-		Wbhkit\hidden('wid', $wk['id']).
 		Wbhkit\submit('Update').
-		"<a class='btn btn-outline-primary' href=\"admin_edit2.php?wid={$wk['id']}&ac=cdel\">Delete This Practice</a>".
+		"<a class='btn btn-outline-primary' href=\"/admin-workshop/cdel/{$wk['id']}\">Delete This Practice</a>".
 		"</fieldset></form>\n";
 	
 

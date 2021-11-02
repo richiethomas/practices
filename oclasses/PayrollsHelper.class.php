@@ -27,7 +27,7 @@ class PayrollsHelper extends WBHObject {
 		array(':start' => $mysqlstart, ':end' => $mysqlend, ':start2' => $mysqlstart, ':end2' => $mysqlend));
 
 		$this->payrolls = array();
-		while ($row = $stmt->fetch()) {
+		while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
 			$p = new Payroll();
 			$p->set_into_fields($row);
 			$p->format_row();
@@ -67,7 +67,7 @@ class PayrollsHelper extends WBHObject {
 	//	$stmt = \DB\pdo_query("select w.* from workshops w WHERE w.start >= :start and w.end <= :end order by teacher_id, start desc", array(':start' => date('Y-m-d H:i:s', strtotime($start)), ':end' => date('Y-m-d H:i:s', strtotime($end))));
 	
 		$this->claims = array();
-		while ($row = $stmt->fetch()) {
+		while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
 			$this->claims[] = $row;
 		}
 		return $this->claims;
@@ -86,7 +86,7 @@ class PayrollsHelper extends WBHObject {
 		
 		$exists = false;
 		$stmt = \DB\pdo_query("select * from payrolls where task = :task and table_id = :table_id", array(':task' => $task, ':table_id' => $table_id));
-		while ($row = $stmt->fetch()) {
+		while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
 			$exists = true;
 		}
 		

@@ -18,12 +18,12 @@ foreach ($workshops as $wk) {
 	$start = Wbhkit\friendly_time($wk['start']);
 	$end = Wbhkit\friendly_time($wk['end']);
 	
-	echo "<div class='row mt-2'><div class='col-md-6'><a href='workshop.php?wid={$wk['id']}'>{$wk['title']}</a> (".($wk['class_show'] ? 'show' : $wk['rank']).")</div>
+	echo "<div class='row mt-2'><div class='col-md-6'><a href='/workshop/view/{$wk['id']}'>{$wk['title']}</a> (".($wk['class_show'] ? 'show' : $wk['rank']).")</div>
 	<div class='col-md-2'>$start-$end</div>
-	<div class='col-md-4'><a href='teachers.php?tid={$wk['teacher_id']}'>{$wk['teacher_name']}</a>";
+	<div class='col-md-4'><a href='/teachers/view/{$wk['teacher_id']}'>{$wk['teacher_name']}</a>";
 	
 	if ($wk['co_teacher_id']) {
-		echo ", <a href='faculty.php?tid={$wk['co_teacher_id']}'>{$wk['co_teacher_name']}</a>";
+		echo ", <a href='/teachers/view/{$wk['co_teacher_id']}'>{$wk['co_teacher_name']}</a>";
 	}
 	
 	echo "</div>

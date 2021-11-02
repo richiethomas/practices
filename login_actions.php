@@ -4,6 +4,14 @@ $link_email_sent_flag = false;
 
 switch ($ac) {
 
+	case 'k':
+	
+		if ($u->set_by_key($params[2])) {
+			$message = "Welcome, {$u->fields['nice_name']}!";
+		} else {
+			$error = "Tried to log someone in, but the key was, as we say in the computer business, malformed.";
+		}
+		break;
 
 	case 'link':
 	

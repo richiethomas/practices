@@ -38,7 +38,7 @@ class Payroll extends WBHObject {
 					from workshops w
 				where w.id = :id",
 				 array(':id' => $this->fields['table_id']));
-				while ($row = $stmt->fetch()) {
+				while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
 					$this->set_into_fields($row);
 				}
 			}
@@ -49,7 +49,7 @@ class Payroll extends WBHObject {
 				where x.id = :id
 				and w.id = x.workshop_id ",
 				array(':id' => $this->fields['table_id']));
-				while ($row = $stmt->fetch()) {
+				while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
 					$this->set_into_fields($row);
 				}
 			}
@@ -63,7 +63,7 @@ class Payroll extends WBHObject {
  
 				array(':id' => $this->fields['table_id']));
 				$titles = null;
-				while ($row = $stmt->fetch()) {
+				while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
 					if ($titles) { $titles .= ",<br> "; }
 					$titles .= $row['title'];					
 					$this->set_into_fields($row);

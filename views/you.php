@@ -8,24 +8,17 @@ echo "<div class='row justify-content-center'><div class='col-sm-6'>\n";
 
 echo "<div class='card my-5 bg-light'><div class='card-body'>\n";
 echo "<h3>Change Your Email</h3>\n";
-echo $userhelper->edit_change_email($u, $sc);
+echo $userhelper->edit_change_email($u);
 echo "</div></div> <!-- end of card -->\n";
 
 echo "<div class='card my-5 bg-light'><div class='card-body'>\n";
 echo "<h3>Change Your Display Name</h3>\n";
-echo $userhelper->edit_display_name($u, $sc);
+echo $userhelper->edit_display_name($u);
 echo "</div></div> <!-- end of card -->\n";
-
-/*
-echo "<div class='card my-5 bg-light'><div class='card-body'>\n";	
-echo "<h3>Change Your Text Preferences</h3>\n";
-echo $userhelper->edit_text_preferences($u, $sc, $lookups);	
-echo "</div></div> <!-- end of card -->\n";
-*/
 
 echo "<div class='card my-5 bg-light'><div class='card-body'>\n";
 echo "<h3>Log Out</h3>\n";
-echo "<a class='btn btn-outline-primary' href=\"/lo\"><span class=\"oi oi-account-logout\" title=\"account-logout\" aria-hidden=\"true\"></span> log out of willhinesimprov.com</a>";
+echo "<a class='btn btn-outline-primary' href=\"/home/lo\"><span class=\"oi oi-account-logout\" title=\"account-logout\" aria-hidden=\"true\"></span> log out of willhinesimprov.com</a>";
 echo "</div></div> <!-- end of card -->\n";
 
 echo "</div></div> <!-- end of 6 col row -->\n";

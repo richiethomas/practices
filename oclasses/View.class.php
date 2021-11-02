@@ -23,12 +23,10 @@ class View extends WBHObject
 			$is_admin = true;
 		}
 	
-		include $this->getPageStr($this->header
-			.($is_admin ? '-admin' : ''));
+		include $this->getPageStr($this->header.($is_admin ? '-admin' : ''));
 		include $this->getPageStr('messagealert'); // every page: show $message and $error
 		include $this->getPageStr($page);
-		include $this->getPageStr($this->footer
-			.($is_admin ? '-admin' : ''));
+		include $this->getPageStr($this->footer.($is_admin ? '-admin' : ''));
 	}
 			
 	public function renderSnippet($bargle, $data=null) {

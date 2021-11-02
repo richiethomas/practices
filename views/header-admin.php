@@ -33,11 +33,11 @@ function svg_code($svg_name){
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
 
 	<!-- Custom styles for this template -->
-	<link href="admin.css" rel="stylesheet">
+	<link href="/admin.css" rel="stylesheet">
     <!-- iconic (open source version) -->
     <link href="open-iconic/font/css/open-iconic-bootstrap.css" rel="stylesheet">
 
-	<script src="admin.js"></script>
+	<script src="/admin.js"></script>
 
 
 <style>	
@@ -74,9 +74,9 @@ function svg_code($svg_name){
 	  
   <header>
 	<nav class="navbar p-0">
-		<a class="navbar-brand" href="admin.php"><span>World's Greatest Improv School</span></a>
+		<a class="navbar-brand" href="/admin"><span>World's Greatest Improv School</span></a>
 		<ul class="nav">
-			<li class="nav-item"><a class="nav-link active" href="admin.php">Dashboard</a></li>
+			<li class="nav-item"><a class="nav-link active" href="/admin">Dashboard</a></li>
 			<li class="nav-item"><hr/></li>
 			<li class="nav-item"><a class="nav-link" href="admin_listall.php">Classes</a></li>
 			<li class="nav-item"><a class="nav-link" href="admin_shows.php">Shows</a></li>

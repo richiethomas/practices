@@ -28,8 +28,8 @@ if (count($unavailable_workshops) > 0) {
 		$wkdate = date("l F j", strtotime($wk['start']));
 		$start = Wbhkit\friendly_time($wk['start']);
 		$end = Wbhkit\friendly_time($wk['end']);	
-		echo "<li class='mb-2'>$wkdate: <a href='workshop.php?wid={$wk['id']}'>{$wk['title']}</a><br>
-			<small>$start {$wk['costdisplay']} (USD), Instructor: <a href='teachers.php?tid={$wk['teacher_id']}'>{$wk['teacher_info']['nice_name']}</a><br>
+		echo "<li class='mb-2'>$wkdate: <a href='/workshop/view/{$wk['id']}'>{$wk['title']}</a><br>
+			<small>$start {$wk['costdisplay']} (USD), Instructor: <a href='/teachers/view/{$wk['teacher_id']}'>{$wk['teacher_info']['nice_name']}</a><br>
 		{$wk['time_summary']}<br></small></li>\n";	
 			
 	}
@@ -50,8 +50,8 @@ if (count($unavailable_workshops) > 0) {
 			$wkdate = date("l F j", strtotime($wk['start']));
 			$start = Wbhkit\friendly_time($wk['start']);
 			$end = Wbhkit\friendly_time($wk['end']);	
-			echo "<li class='mb-2'>$wkdate: <a href='workshop.php?wid={$wk['id']}'>{$wk['title']}</a><br>
-				<small>$start {$wk['costdisplay']} (USD), Instructor: <a href='teachers.php?tid={$wk['teacher_id']}'>{$wk['teacher_info']['nice_name']}</a><br>
+			echo "<li class='mb-2'>$wkdate: <a href='/workshop/view/{$wk['id']}'>{$wk['title']}</a><br>
+				<small>$start {$wk['costdisplay']} (USD), Instructor: <a href='/teachers/view/{$wk['teacher_id']}'>{$wk['teacher_info']['nice_name']}</a><br>
 			{$wk['time_summary']}<br></small></li>\n";	
 		}	
 		echo "</ul>\n";

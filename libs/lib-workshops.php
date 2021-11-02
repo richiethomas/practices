@@ -2,10 +2,14 @@
 namespace Workshops;
 	
 // workshops
-function get_workshop_info($id) {
+function get_workshop_info(int $id = 0) {
+
+	if ($id == 0) {
+		return get_empty_workshop();
+	}
 
 	$stmt = \DB\pdo_query("select w.* from workshops w where w.id = :id", array(':id' => $id));
-	while ($row = $stmt->fetch()) {
+	while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
 		$row = fill_out_workshop_row($row);
 		return $row;
 
@@ -13,7 +17,7 @@ function get_workshop_info($id) {
 	return array();
 }
 
-function fill_out_workshop_row($row, $get_enrollment_stats = true) {
+function fill_out_workshop_row(array $row, bool $get_enrollment_stats = true) {
 	global $lookups;
 		
 	foreach (array('address', 'city', 'state', 'zip', 'place', 'lwhere') as $loc_field) {
@@ -109,7 +113,7 @@ function fill_out_workshop_row($row, $get_enrollment_stats = true) {
 	
 }
 
-function figure_costdisplay($cost) {
+function figure_costdisplay(int $cost) {
 	if ($cost == 1) {
 		return 'Pay what you can';
 	} elseif ($cost > 1) {
@@ -122,7 +126,7 @@ function figure_costdisplay($cost) {
 
 // pass in the workshop row as it comes from the database table
 // add some columns with date / time stuff figured out
-function format_workshop_startend($row) {
+function format_workshop_startend(array $row) {
 	
 	$tzadd = ' ('.TIMEZONE.')';
 	
@@ -136,7 +140,7 @@ function format_workshop_startend($row) {
 
 // used in fill_out_workshop_row and also get_sessions_to_come
 // expects 'id' and 'capacity' to be set
-function set_enrollment_stats($row) {
+function set_enrollment_stats(array $row) {
 	
 	global $lookups;
 	$eh = new \EnrollmentsHelper();
@@ -160,11 +164,11 @@ function set_enrollment_stats($row) {
 }
 
 
-function set_actual_revenue($row) {
+function set_actual_revenue(array $row) {
 	
 	$stmt = \DB\pdo_query("select paid, pay_override from registrations r where r.workshop_id = :wid", array(':wid' => $row['id']));
 	$total = 0;
-	while ($reg = $stmt->fetch()) {
+	while ($reg = $stmt->fetch(\PDO::FETCH_ASSOC)) {
 		if ($reg['paid']) {
 			$total += ($reg['pay_override'] ? $reg['pay_override'] : $row['cost']);
 		}
@@ -176,7 +180,7 @@ function set_actual_revenue($row) {
 
 
 
-function check_last_minuteness($wk) {
+function check_last_minuteness(array $wk) {
 	
 	/* 
 		there's two flags:
@@ -216,7 +220,7 @@ function get_unavailable_workshops() {
 select * from workshops where date(start) >= :when1 and when_public >= :when2 order by when_public asc, start asc", array(":when1" => $mysqlnow, ":when2" => $mysqlnow)); 
 		
 	$sessions = array();
-	while ($row = $stmt->fetch()) {
+	while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
 		$sessions[] = fill_out_workshop_row($row);
 	}
 	return $sessions;
@@ -233,18 +237,18 @@ function get_application_workshops() {
 select * from workshops where date(start) >= :when1 and when_public < :when2 and application = 1 order by start asc", array(":when1" => $mysqlnow, ":when2" => $mysqlnow)); 
 		
 	$sessions = array();
-	while ($row = $stmt->fetch()) {
+	while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
 		$sessions[] = fill_out_workshop_row($row);
 	}
 	return $sessions;
 	
 }
 
-function get_workshops_dropdown($start = null, $end = null) {
+function get_workshops_dropdown(?string $start = null, ?string $end = null) {
 	
 	$stmt = \DB\pdo_query("select w.* from workshops w order by start desc");
 	$workshops = array();
-	while ($row = $stmt->fetch()) {
+	while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
 		$row = format_workshop_startend($row);
 		$workshops[$row['id']] = $row['title'].' ('.date('Y-M-d', strtotime($row['start'])).')';
 	}
@@ -253,7 +257,7 @@ function get_workshops_dropdown($start = null, $end = null) {
 
 
 // for admins eyes only
-function get_search_results($page = 1, $needle = null) {
+function get_search_results(int $page = 1, ?string $needle = null) {
 	global $view;
 	
 	// get IDs of workshops
@@ -302,7 +306,7 @@ function get_workshops_list_no_html() {
 	
 	$stmt = \DB\pdo_query($sql);
 	$workshops = array();
-	while ($row = $stmt->fetch()) {
+	while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
 		$workshops[] = fill_out_workshop_row($row);
 	}
 
@@ -327,7 +331,7 @@ and w.cost > 0
 order by w.start");
 	
 	$unpaid = array();	
-	while ($row = $stmt->fetch()) {
+	while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
 		$row['nice_name'] = ($row['display_name'] ? $row['display_name'] : $row['email']);
 		$unpaid[] = $row;
 	}
@@ -359,7 +363,7 @@ order by start asc");
 	$sessions = array();
 	$enrollments = array();
 	
-	while ($row = $stmt->fetch()) {
+	while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
 		$teach = \Teachers\find_teacher_in_teacher_array($row['teacher_id'], $teachers);
 		if ($teach) {
 			$row['teacher_name'] = $teach['nice_name'];
@@ -394,23 +398,23 @@ order by start asc");
 }
 
 
-function how_many_paid($wk) {
+function how_many_paid(array $wk) {
 	$stmt = \DB\pdo_query("select count(*) as total_paid from registrations where workshop_id = :wid and paid = 1", array(':wid' => $wk['id']));
-	while ($row = $stmt->fetch()) {
+	while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
 		return $row['total_paid'];
 	}
 	return 0;
 }
 
 // for "revenues" page
-function get_workshops_list_bydate($start = null, $end = null, $byclass = true) {
+function get_workshops_list_bydate(?string $start = null, ?string $end = null, bool $byclass = true) {
 	if (!$start) { $start = "Jan 1 1000"; }
 	if (!$end) { $end = "Dec 31 3000"; }
 	
 	$stmt = \DB\pdo_query("select w.* from workshops w WHERE w.start >= :start and w.start <= :end order by ".($byclass ? '' : ' teacher_id, ')." start desc", array(':start' => date('Y-m-d H:i:s', strtotime($start)), ':end' => date('Y-m-d H:i:s', strtotime($end))));
 	
 	$workshops = array();
-	while ($row = $stmt->fetch()) {
+	while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
 		$workshops[$row['id']] = fill_out_workshop_row($row);
 	}
 	return $workshops;
@@ -431,7 +435,7 @@ function get_teacher_pay(array $wk) {
 
 
 // for "payroll" page
-function get_sessions_bydate($start = null, $end = null) {
+function get_sessions_bydate(?string $start = null, ?string $end = null) {
 	if (!$start) { $start = "Jan 1 1000"; }
 	if (!$end) { $end = "Dec 31 3000"; }
 	
@@ -466,7 +470,7 @@ array(':start1' => $mysqlstart,
 //	$stmt = \DB\pdo_query("select w.* from workshops w WHERE w.start >= :start and w.end <= :end order by teacher_id, start desc", array(':start' => date('Y-m-d H:i:s', strtotime($start)), ':end' => date('Y-m-d H:i:s', strtotime($end))));
 	
 	$sessions = array();
-	while ($row = $stmt->fetch()) {
+	while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
 		$t = \Teachers\get_teacher_by_id($row['teacher_id']);
 		$row['teacher_name'] = $t['nice_name']; 
 		$row['teacher_default_rate'] = $t['default_rate'];
@@ -497,7 +501,7 @@ function get_empty_workshop() {
 	);
 }
 
-function add_workshop_form($wk) {
+function add_workshop_form(array $wk) {
 	global $sc;
 	return "<form id='add_wk' action='admin_edit2.php' method='post' novalidate>".
 	\Wbhkit\form_validation_javascript('add_wk').
@@ -509,7 +513,7 @@ function add_workshop_form($wk) {
 	
 }
 
-function workshop_fields($wk) {
+function workshop_fields(array $wk) {
 	
 	global $lookups;
 	
@@ -530,7 +534,7 @@ function workshop_fields($wk) {
 }
 
 // $ac can be 'up' or 'ad'
-function add_update_workshop($wk, $ac = 'up') {
+function add_update_workshop(array $wk, string $ac = 'up') {
 	
 	global $last_insert_id;
 	
@@ -574,7 +578,7 @@ function add_update_workshop($wk, $ac = 'up') {
 	
 }
 
-function delete_workshop($workshop_id) {
+function delete_workshop(int $workshop_id) {
 	$stmt = \DB\pdo_query("delete from workshops_shows where workshop_id = :wid", array(':wid' => $workshop_id));
 	$stmt = \DB\pdo_query("delete from registrations where workshop_id = :wid", array(':wid' => $workshop_id));
 	$stmt = \DB\pdo_query("delete from xtra_sessions where workshop_id = :wid", array(':wid' => $workshop_id));
@@ -582,21 +586,21 @@ function delete_workshop($workshop_id) {
 
 }
 
-function is_public($wk) {
+function is_public(array $wk) {
 	if (isset($wk['when_public']) && $wk['when_public'] && strtotime($wk['when_public']) > time()) {
 		return false;
 	}
 	return true;
 }
 
-function is_complete_workshop($wk) {
+function is_complete_workshop(array $wk) {
 	if (is_array($wk) && isset($wk['id']) && $wk['id']) {
 		return true;
 	}
 	return false;
 }
 
-function get_class_shows($wk) {
+function get_class_shows(array $wk) {
 	$class_shows = array();
 
 	$stmt = \DB\pdo_query("select s.*
@@ -605,7 +609,7 @@ function get_class_shows($wk) {
 		
 	//echo \DB\interpolateQuery("select show_idvfrom workshops_shows wsvxwhere ws.workshop_id = :id", array(':id' => $wk['id']));
 	
-	while ($row = $stmt->fetch()) {
+	while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
 		$cs = new \ClassShow();
 		$cs->set_into_fields($row);
 		$cs->format_row();
@@ -614,7 +618,7 @@ function get_class_shows($wk) {
 	return $class_shows;
 }
 
-function get_cut_and_paste_roster($wk, $enrolled = null) {
+function get_cut_and_paste_roster(array $wk, ?array $enrolled = null) {
 	$names = array();
 	$just_emails = array();
 	$eh = new \EnrollmentsHelper();
@@ -665,10 +669,10 @@ function get_cut_and_paste_roster($wk, $enrolled = null) {
 	
 }
 
-function get_recent_workshops_dropdown($limit = 40) {
+function get_recent_workshops_dropdown(int $limit = 40) {
 	$stmt = \DB\pdo_query("select * from workshops order by id desc limit $limit");
 	$all = array();
-	while ($row = $stmt->fetch()) {
+	while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
 		$all[$row['id']] = $row['title']. ' ('.	\Wbhkit\friendly_date($row['start']).' '.\Wbhkit\friendly_time($row['start']).')';
 	}
 	return $all;

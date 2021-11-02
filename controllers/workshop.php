@@ -1,12 +1,22 @@
 <?php
 $heading = 'workshop';
-include 'lib-master.php';
+
+
+$wid =  (int) ($params[2] ?? 0);
+if (!$wid) {
+	$view->data['error_message'] = "<h1>Whoops!</h1><p>You are asking to look at info about a workshop, but I (the computer) cannot tell which workshop you mean. Sorry!</p>\n";
+	$view->renderPage('error');
+	exit();
+}
+$wk = \Workshops\get_workshop_info($wid);
+
 
 $show_other_action = true;
 $e = new Enrollment();
 if ($u->logged_in() && isset($wk['id']) && $wk['id'] > 0) {
 	$e->set_by_u_wk($u, $wk);
 }
+
 
 if (Workshops\is_public($wk)) {
 
@@ -18,9 +28,11 @@ if (Workshops\is_public($wk)) {
 				$logger->debug("attempted enroll with no one logged in.");
 				break;
 			}
-			if ($wk['upcoming'] == 0) {
+			if (isset($wk['upcoming']) && $wk['upcoming'] == 0) {
 				$error = 'This workshop is past';
-				$logger->debug("{$u->fields['nice_name']} cannot enroll since {$wk['title']} is past.");
+				if (isset($wk['title'])) {
+					$logger->debug("{$u->fields['nice_name']} cannot enroll since {$wk['title']} is past.");
+				}
 				break;
 			}	
 			
@@ -29,7 +41,7 @@ if (Workshops\is_public($wk)) {
 				if ($e->fields['status_id'] == ENROLLED) {
 					$message = "'{$u->fields['nice_name']}' is now enrolled in '{$wk['title']}'!<ul><li>The zoom link, and other class info, was just emailed to <b>{$u->fields['email']}</b></li>\n";
 					
-					$message .= "<li>Please be ON TIME for class! Classes are short - being even a few minutes late really disupts things!</li>\n";
+					$message .= "<li>Please be ON TIME for class! Classes are short - being even a few minutes late really disrupts things!</li>\n";
 					
 					$message .= "<li>".\Emails\payment_text($wk)."</li>\n";
 										
@@ -56,8 +68,12 @@ if (Workshops\is_public($wk)) {
 			
 				break;
 			}
-									
-			$message = "Do you really want to drop '{$wk['title']}'? Then click <a class='btn btn-warning' href=\"$sc?ac=condrop&wid={$wid}\">confirm drop</a>";
+
+			if (isset($wk['title'])) {
+				$message = "Do you really want to drop '".$wk['title']."'? Then click <a class='btn btn-warning' href='/workshop/condrop/{$wid}'>confirm drop</a>";
+			}
+			
+			
 			$show_other_action = false;
 		
 			if ($e->fields['while_soldout']) { 
@@ -79,6 +95,10 @@ if (Workshops\is_public($wk)) {
 			}
 			$message = "Dropped user ({$u->fields['email']}) from '{$wk['title']}.'";
 			break;	
+			
+			
+			case 'view':
+				break;
 
 	}
 }
@@ -97,3 +117,4 @@ if (isset($wk) && isset($wk['id']) && $wk['id']) {
 	$view->data['error_message'] = "<h1>Whoops!</h1><p>You are asking to look at info about a workshop, but I (the computer) cannot tell which workshop you mean. Sorry!</p>\n";
 	$view->renderPage('error');
 }
+

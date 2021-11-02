@@ -1,3 +1,14 @@
+<?php
+function teacher_link($tinfo) {
+  echo "
+	  <a href='/teachers/view/{$tinfo['id']}'><img class='mx-2 teacher-image align-self-center' src='".\Teachers\get_teacher_photo_src($tinfo['user_id'])."' alt='Teacher Name'></a>
+	<div class=''>
+		<h6 class='mt-0 mb-0 teacher-label'>Teacher</h6>
+		<h5 class='mt-0 mb-0 teacher-name'><a href='/teachers/view/{$tinfo['id']}'> {$tinfo['nice_name']}</a></h5>
+	</div>";	
+}	
+	
+?>	
 
 <main role="main">
 
@@ -44,7 +55,7 @@
 			<div class="col-sm-5">
 				
 				<figure class="figure">
-				  <a href="teams.php"><img src="/images/teams.png" class="figure-img img-fluid rounded" alt="2021 Winter Teams"></a>
+				  <a href="/teams"><img src="/images/teams.png" class="figure-img img-fluid rounded" alt="2021 Winter Teams"></a>
 				  <figcaption class="figure-caption text-end">art by Gareth O'Connor</figcaption>
 				</figure>
 			</div>
@@ -52,12 +63,12 @@
 
 			  <dl class="row my-5">
 			    <dt class="col-sm-3">WGIS Teams</dt>
-			    <dd class="col-sm-9">We have online house teams! Every Monday 11am and 5pm (California time, <?php echo TIMEZONE; ?>) <a href="teams.php">See more info here</a>.</dd>
+			    <dd class="col-sm-9">We have online house teams! Every Monday 11am and 5pm (California time, <?php echo TIMEZONE; ?>) <a href="/teams">See more info here</a>.</dd>
 			  </dl>
 
 			  <dl class="row my-5">
 			    <dt class="col-sm-3">Community</dt>
-			    <dd class="col-sm-9">We have a great community around our classes! Facebook groups, chat servers, Twitch channels -- <a href="community.php">learn about all these things here</a>.</dd>
+			    <dd class="col-sm-9">We have a great community around our classes! Facebook groups, chat servers, Twitch channels -- <a href="/community">learn about all these things here</a>.</dd>
 			  </dl>
   
   
@@ -100,7 +111,7 @@
   	  <div class="row justify-content-between mt-3">
 		
 			<div class="col-md-11 classes-listings-class mb-5">
-			  <h3 class="my-3 py-3 border-top"><a href="workshop.php?wid=<?php echo $wk['id']; ?>"><?php echo $wk['title'];?></a></h3>
+			  <h3 class="my-3 py-3 border-top"><a href="/workshop/view/<?php echo $wk['id']; ?>"><?php echo $wk['title'];?></a></h3>
 			  <p><?php
 				  if ($wk['soldout']) { echo "<span class=\"text-danger\">Sold Out!</span> - ";  } 
 				  echo $wk['notes']; 
@@ -109,22 +120,11 @@
 				  <p><?php echo $wk['enrolled']; ?> of <?php echo $wk['capacity']; ?> signed up</p>
 			  <div class="class-meta d-flex justify-content-between align-items-center mt-4">
 				<div class="d-flex class-teacher col-7 mr-0 px-0 align-items-center">
-				  <a href="teachers.php?tid=<?php echo $wk['teacher_id']; ?>"><img class="me-2 teacher-image align-self-center" src="<?php echo \Teachers\get_teacher_photo_src($wk['teacher_info']['user_id']);?>" alt="Teacher Name"></a>
-				  <div class="">
-					<h6 class="mt-0 mb-0 teacher-label">Teacher</h6>
-					<h5 class="mt-0 mb-0 teacher-name"><a href="teachers.php?tid=<?php echo $wk['teacher_id']; ?>"><?php echo $wk['teacher_info']['nice_name'];?></a></h5>
-				  </div>
-				<?php if ($wk['co_teacher_id']) { ?>
-					  <a href="teachers.php?tid=<?php echo $wk['co_teacher_id']; ?>"><img class="mx-2 teacher-image align-self-center" src="<?php echo \Teachers\get_teacher_photo_src($wk['co_teacher_info']['user_id']);?>" alt="Co Teacher Name"></a>
-					  <div class="">
-						<h6 class="mt-0 mb-0 teacher-label">Teacher</h6>
-						<h5 class="mt-0 mb-0 teacher-name"><a href="teachers.php?tid=<?php echo $wk['co_teacher_id']; ?>"><?php echo $wk['co_teacher_info']['nice_name'];?></a></h5>
-					  </div>
-				<?php } ?>  
-				  
-				</div>
-				
-				
+					<?php echo teacher_link($wk['teacher_info']); ?>
+					<?php if ($wk['co_teacher_id']) { ?>
+						<?php echo teacher_link($wk['co_teacher_info']); ?>
+					<?php } ?>  
+				</div>			
 				
 				<span class="class-price">
 				  <?php echo $wk['costdisplay']; ?> 
@@ -132,13 +132,13 @@
 				<span class="class-enroll">
 					
 					<?php if ($wk['soldout']) { ?>
-						<span class="text-danger">Sold Out!</span> <a class="btn btn-primary" href="workshop.php?wid=<?php echo $wk['id']; ?>" role="button">join wait list</a>
+						<span class="text-danger">Sold Out!</span> <a class="btn btn-primary" href="w/workshop/view/<?php echo $wk['id']; ?>" role="button">join wait list</a>
 					<?php } elseif ($wk['application']) { ?>
 						
-						<a class="btn btn-primary" href="workshop.php?wid=<?php echo $wk['id']; ?>" role="button">Request A Spot</a>
+						<a class="btn btn-primary" href="/workshop/view/<?php echo $wk['id']; ?>" role="button">Request A Spot</a>
 						
 					<?php } else { ?>
-						<a class="btn btn-primary" href="workshop.php?wid=<?php echo $wk['id']; ?>" role="button">Enroll</a>
+						<a class="btn btn-primary" href="/workshop/view/<?php echo $wk['id']; ?>" role="button">Enroll</a>
 					<?php } ?>
 				</span>
 			  </div>

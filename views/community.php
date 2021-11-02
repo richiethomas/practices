@@ -22,7 +22,7 @@
 
 	</div>
 	<div class="col-md-6">
-		<a class="float-end mx-3" href="https://www.twitch.tv/wgimprovschool"><img src='images/twitch_screen.png' alt='twitch screenshot'></a>
+		<a class="float-end mx-3" href="https://www.twitch.tv/wgimprovschool"><img src='/images/twitch_screen.png' alt='twitch screenshot'></a>
 		
 	</div>
 </div>
@@ -50,7 +50,7 @@
 		</div>
 		<div class="col-md-6">
 			<figure class="figure float-end">
-			  <img src="images/discord_screen.png" class="figure-img img-fluid rounded" alt="Discord Screenshot">
+			  <img src="/images/discord_screen.png" class="figure-img img-fluid rounded" alt="Discord Screenshot">
 			  <figcaption class="figure-caption text-end">WGIS Discord</figcaption>
 			</figure>
 		</div>
@@ -73,12 +73,12 @@
 		
 		<h2 class="my-4">WGIS Teams</h2>
 		
-		<p>We have house teams that do online shows at 11am and 5pm <?php echo TIMEZONE; ?> (two teams at teach time). For a list of teams and who performs on them and the schedule, see the <a href="teams.php">teams page</a>.</p>
+		<p>We have house teams that do online shows at 11am and 5pm <?php echo TIMEZONE; ?> (two teams at teach time). For a list of teams and who performs on them and the schedule, see the <a href="/teams">teams page</a>.</p>
 		
 	</div>
 	<div class="col-md-6">
 		<figure class="figure float-end">
-		  <a href="teams.php"><img src="images/teams.png" class="figure-img img-fluid rounded" alt="WGIS Teams"></a>
+		  <a href="/teams"><img src="/images/teams.png" class="figure-img img-fluid rounded" alt="WGIS Teams"></a>
 		  <figcaption class="figure-caption text-end">art by Gareth O'Connor</figcaption>
 		</figure>
 		
@@ -100,7 +100,7 @@
 	</div>
 	<div class="col-md-6">	
 		<figure class="figure float-end">
-		  <img src="images/team_me_up.png" class="figure-img img-fluid rounded" alt="Team Me Up, Scotty!">
+		  <img src="/images/team_me_up.png" class="figure-img img-fluid rounded" alt="Team Me Up, Scotty!">
 		  <figcaption class="figure-caption text-end">art by Ethan Smith</figcaption>
 		</figure>
 				
@@ -122,7 +122,7 @@
 	</div>
 	<div class="col-md-6">
 		<figure>
-		  <img src="images/jam_insta.png" class="figure-img img-fluid rounded" alt="Friday Jams">
+		  <img src="/images/jam_insta.png" class="figure-img img-fluid rounded" alt="Friday Jams">
 		  <figcaption class="figure-caption text-end">art by Christine Simpson</figcaption>
 		</figure>
 	</div>
@@ -146,7 +146,7 @@ Ruha Taslimi</p>
 	</div>
 	<div class="col-md-6">
 		<figure>
-		  <img src="images/leads.png" class="figure-img img-fluid rounded" alt="The Good Leads">
+		  <img src="/images/leads.png" class="figure-img img-fluid rounded" alt="The Good Leads">
 		  <figcaption class="figure-caption text-end">art by Jonny Mowat</figcaption>
 		</figure>
 	</div>
@@ -174,7 +174,7 @@ Ruha Taslimi</p>
 	</div>
 	<div class="col-md-6">
 		<figure class="figure">
-		  <img src="images/sticker.png" class="figure-img img-fluid rounded" alt="WGIS Sticker">
+		  <img src="/images/sticker.png" class="figure-img img-fluid rounded" alt="WGIS Sticker">
 		  <figcaption class="figure-caption text-end">art by Caitlin Sacks</figcaption>
 		</figure>
 	</div>

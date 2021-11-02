@@ -2,7 +2,6 @@
 
 
 $sessions = '';
-
 	
 if (!\Workshops\is_public($wk)) {
 	$point = "This workshop is not available for signups yet. It will be available at <b>".date("l M j, g:ia", strtotime($wk['when_public']))."</b> (".TIMEZONE.")";
@@ -10,8 +9,8 @@ if (!\Workshops\is_public($wk)) {
 	$point = "This workshop had started or is in the past.";
 } else {
 	
-	$enroll_link = "$sc?ac=enroll&wid={$wk['id']}";
-	$drop_link = "$sc?ac=drop&wid={$wk['id']}";
+	$enroll_link = "/workshop/enroll/{$wk['id']}";
+	$drop_link = "/workshop/drop/{$wk['id']}";
 
 	if ($e->fields['status_id'] == ENROLLED) {
 		
@@ -59,16 +58,11 @@ if (!\Workshops\is_public($wk)) {
 	}
 
 }
-?>
-<div class='row'><div class='col'>
-
-
-<?php
 	
-	
-echo "	
-<div class='row my-3 py-3'><div class='col-sm-6'>
-<h2>{$wk['title']}</h2>
+echo "<div class='row my-3 py-3'><div class='col-sm-6'>\n";
+
+// start of main row, and class info col
+echo "<h2>{$wk['title']}</h2>
 <p>{$wk['notes']}</p>
 <p>{$wk['full_when']}<br><br>
 {$wk['costdisplay']}, {$wk['enrolled']} (of {$wk['capacity']}) enrolled</p>\n";
@@ -81,7 +75,56 @@ if ($show_other_action)  {
 	echo "<p class='alert alert-info'>{$point}</p>\n";
 }
 
+echo "</div>\n";
 
+
+
+function teacher_section($tinfo) {
+	echo "<figure class=\"figure\">
+	<a href='/teachers/view/{$tinfo['id']}'><img class='img-fluid border figure-img rounded' src='".\Teachers\get_teacher_photo_src($tinfo['user_id'])."'></a>
+	  <figcaption class=\"figure-caption\"><b>Teacher: <a href='/teachers/view/{$tinfo['id']}'>{$tinfo['nice_name']}</a></b></figcaption>
+	</figure>\n";
+
+	echo "<p><small><b>About {$tinfo['nice_name']}:</b> {$tinfo['bio']}</small></p>\n";
+	
+}
+
+// teacher col
+echo "<div class='col-sm-6 p-5 border bg-light'>";
+echo teacher_section($wk['teacher_info']);
+if ($wk['co_teacher_id']) {
+	echo teacher_section($wk['co_teacher_info']);
+}
+echo "</div></div>\n"; // end of main row
+
+
+
+// how it works row
+echo "<div class=\"row m-3 p-3 justify-content-center\"><div class=\"col-md-8 border border-info\">
+<h2>How This Works</h2>
+<ul>
+	<li>All times are California local time (PDT).</li>
+	<li>Pay via Venmo (@wgimprovschool - a business) or Paypal (payments@wgimprovschool.com)</li>
+	<li>Classes are held over <a href=\"http://www.zoom.us/\">Zoom</a></li>
+	<li><b>LATE DROP POLICY: If drop less than ".LATE_HOURS." hours before, you still must pay! Unless we sell your spot in which case, it's cool.</b></li>
+</ul>
+</div></div>\n";
+
+
+function list_names($lists) {
+	echo "<div class='mx-4'>\n";
+	echo "<h5>Names</h5>\n";
+	foreach ($lists as $l) {
+		echo "{$l['nice_name']}<br>\n";
+	}
+	echo "<h5>Emails</h5>\n";
+	foreach ($lists as $l) {
+		echo "{$l['email']}<br>\n";
+	}
+	echo "</div>\n";
+}
+
+// teacher / admin info
 if ($u->check_user_level(2)) { 
 	$eh = new EnrollmentsHelper();
 	
@@ -114,55 +157,3 @@ if ($u->check_user_level(2)) {
 	echo "</div>\n";
 }
 
-echo "</div>\n";
-
-function list_names($lists) {
-	echo "<div class='mx-4'>\n";
-	echo "<h5>Names</h5>\n";
-	foreach ($lists as $l) {
-		echo "{$l['nice_name']}<br>\n";
-	}
-	echo "<h5>Emails</h5>\n";
-	foreach ($lists as $l) {
-		echo "{$l['email']}<br>\n";
-	}
-	echo "</div>\n";
-}
-
-
-
-
-echo "<div class='col-sm-6'>
-<figure class=\"figure\">
-<a href='teachers.php?tid={$wk['teacher_id']}'><img class='img-fluid border figure-img rounded' src='".\Teachers\get_teacher_photo_src($wk['teacher_info']['user_id'])."'></a>
-  <figcaption class=\"figure-caption\"><b>Teacher: <a href='teachers.php?tid={$wk['teacher_id']}'>{$wk['teacher_info']['nice_name']}</a></b></figcaption>
-</figure>\n";
-
-
-if ($wk['co_teacher_id']) {
-	
-echo "<figure class=\"figure\">
-<a href='teachers.php?tid={$wk['co_teacher_id']}'><img class='img-fluid border figure-img rounded' src='".\Teachers\get_teacher_photo_src($wk['co_teacher_info']['user_id'])."'></a>
-  <figcaption class=\"figure-caption\"><b>Teacher: <a href='teachers.php?tid={$wk['co_teacher_id']}'>{$wk['co_teacher_info']['nice_name']}</a></b></figcaption>
-</figure>\n";
-
-
-}
-
-
-echo "</div></div>
-</div>
-
-<div class=\"row m-3 p-3 justify-content-center\"><div class=\"col-md-8 border border-info\">
-<h2>How This Works</h2>
-<ul>
-	<li>All times are California local time (PDT).</li>
-	<li>Pay via Venmo (@wgimprovschool - a business) or Paypal (payments@wgimprovschool.com)</li>
-	<li>Classes are held over <a href=\"http://www.zoom.us/\">Zoom</a></li>
-	<li><b>LATE DROP POLICY: If drop less than ".LATE_HOURS." hours before, you still must pay! Unless we sell your spot in which case, it's cool.</b></li>
-</ul>
-</div>
-
-
-</div></div> <!-- end of col and row -->
-";	

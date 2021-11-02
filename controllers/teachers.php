@@ -1,8 +1,8 @@
 <?php
 $heading = 'teachers';
-include 'lib-master.php';
 
-Wbhkit\set_vars(array('tid'));
+
+$tid = $params[2] ?? null;
 
 $view->data['tid'] = $tid;
 $view->data['faculty'] = Teachers\get_faculty();

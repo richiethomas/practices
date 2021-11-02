@@ -3,6 +3,7 @@
 $email = null;
 $link_email_sent_flag = false;
 
+
 include 'login_actions.php'; // for logging out and updating display name
 
 // if nothing else happens, we'll render 'home'
