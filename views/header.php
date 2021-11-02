@@ -16,7 +16,7 @@
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
 	
 	<!-- Custom styles for this template -->
-	<link href="wgis.css" rel="stylesheet">
+	<link href="/wgis.css" rel="stylesheet">
 	
     <!-- iconic (open source version) -->
     <link href="open-iconic/font/css/open-iconic-bootstrap.css" rel="stylesheet">
@@ -43,7 +43,7 @@ if (isset($fb_description)) {
   <body>
 	<header>
 	<nav class="navbar navbar-expand-md navbar-light bg-white container-lg container-fluid">
-		 <a class="navbar-brand" href="index.php"><span>World's Greatest Improv School</span></a>
+		 <a class="navbar-brand" href="/"><span>World's Greatest Improv School</span></a>
 		  <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
 			<span class="navbar-toggler-icon"></span>
 		  </button>
@@ -71,7 +71,7 @@ if (isset($fb_description)) {
 					}
 				}
 				if ($u->logged_in()) {		
-					echo "			<li class=\"nav-item\"><a class=\"nav-link\" href=\"you.php\" title=\"User Profile\"><span class=\"oi oi-person nav-link p-0\" title=\"person\" aria-hidden=\"true\"></span>{$u->fields['nice_name']}</a></li>\n";
+					echo "			<li class=\"nav-item\"><a class=\"nav-link\" href=\"/you\" title=\"User Profile\"><span class=\"oi oi-person nav-link p-0\" title=\"person\" aria-hidden=\"true\"></span>{$u->fields['nice_name']}</a></li>\n";
 				} else {
 			    	echo "			<li class=\"nav-item\"><a class=\"btn btn-outline-primary my-2 my-sm-0\" data-bs-toggle=\"modal\" data-bs-target=\"#login-modal\">Login</a></li>\n";
 				}

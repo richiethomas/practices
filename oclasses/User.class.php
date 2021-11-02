@@ -117,23 +117,21 @@ class User extends WBHObject {
 		return $this->fields['ukey'];
 	}
 
-	function check_for_stored_or_passed_key() {
+	function check_for_stored_key() {
 		$key = null;
-		if (isset($_REQUEST['key']) && $_REQUEST['key']) {
-			$key = $_REQUEST['key'];
-		} elseif (isset($_SESSION['s_key']) && $_SESSION['s_key']) {
+		if (isset($_SESSION['s_key']) && $_SESSION['s_key']) {
 			$key = $_SESSION['s_key'];
 		} elseif (isset($_COOKIE['c_key']) && $_COOKIE['c_key']) {
 			$key = $_COOKIE['c_key'];
 		}
-		$_SESSION['s_key'] = $key;
-		$this->remember_key($key); // sets the cookie
+		$this->remember_key($key); // sets session variable and cookie
 
 		// remember it, return it
 		return $key;
 	}
 
 	function remember_key($key) {
+		$_SESSION['s_key'] = $key;
 		setcookie('c_key', $key, time() + 31449600); // a year!
 	}
 
@@ -168,7 +166,7 @@ class User extends WBHObject {
 			if (!$this->logged_in()) {
 				return false;
 			}
-			$trans = URL."index.php?key=".$this->get_key();
+			$trans = URL."home/k/".$this->get_key();
 			$body = "<p>Use this link to log in:</p>
 	<p>{$trans}</p><p>(Sent: ".date('D M n, Y g:ia').")</p>".\Emails\email_footer();
 

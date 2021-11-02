@@ -30,7 +30,7 @@
 <script>
 $( document ).ready(function(){
 		$( "#email" ).on("focus", function() {
-			$("#log_in").attr("action", "index.php");
+			$("#log_in").attr("action", "/");
 		});
 });
 </script>

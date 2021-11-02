@@ -1,7 +1,5 @@
 <?php
 $heading = 'you';
-include 'lib-master.php';
-
 
 include 'login_actions.php';
 

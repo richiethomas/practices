@@ -40,7 +40,7 @@ switch ($ac) {
 				
 				if (LOCAL) {
 					
-					$trans = URL."index.php?key=".$u->get_key();
+					$trans = URL."home/k/".$u->get_key();
 					$message .= "<br><br>This is the link: <a href='$trans'>{$trans}</a>";
 						
 						

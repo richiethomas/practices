@@ -66,7 +66,9 @@ class View extends WBHObject
 		$this->data['wk'] = $wk;
 		$this->data['error'] = $error;
 		$this->data['message'] = $message;
-		$this->data['heading'] = $heading;
+		if (!isset($this->data['heading'])) {
+			$this->data['heading'] = $heading;
+		}
 		$this->data['sc'] = $sc ? $sc : $_SERVER['SCRIPT_NAME'];
 		$this->data['path'] = $this->snippetDir.'/';
 		

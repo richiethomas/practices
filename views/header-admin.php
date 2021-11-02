@@ -102,7 +102,7 @@ function svg_code($svg_name){
 
 			<li class="nav-item user-item"><a class="nav-link d-flex align-items-center" href="you.php"><span class="oi oi-person" title="person" aria-hidden="true"></span> Will Hines</a></li>
 			<li><hr/></li>
-			<li class="nav-item back-to-website"><a class="nav-link" href="index.php" ><?php svg_code('chevron_lightgray_left'); ?>To Website</a>
+			<li class="nav-item back-to-website"><a class="nav-link" href="/" ><?php svg_code('chevron_lightgray_left'); ?>To Website</a>
 		  </li>
 		</ul>
 	</nav>

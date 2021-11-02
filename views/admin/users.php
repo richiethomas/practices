@@ -4,7 +4,7 @@
 
 <?php 
 if ($u->check_user_level(3)) {
-	echo "<p><a href='".URL."index.php?key=$key'>Log in as {$guest->fields['email']}</a></p>\n";
+	echo "<p><a href='".URL."home/k/$key'>Log in as {$guest->fields['email']}</a></p>\n";
 } 
 
 

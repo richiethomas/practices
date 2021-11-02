@@ -4,35 +4,38 @@ using Bootstrap 5.1.1
 tested on PHP 7.4.9
 */
 
-
+// debug timer
 define('TIMER', false);
 $start_hrtime = 0;
 if (TIMER) {
 	$start_hrtime=hrtime(true);
 }
 
-
-if (!isset($sc)) { $sc = $_SERVER['SCRIPT_NAME']; }
-
-require "vendor/autoload.php"; // i barely understand this; might not have enough classes to justify it
-
-date_default_timezone_set ( 'America/Los_Angeles' );
 session_start();
 
-// maybe i don't need these next three anymore? i dnuno :(
-ini_set("include_path", '/home/willfahg/php:' . ini_get("include_path") ); // willhinesimprov.com
+//
+// autoloading classes and paths
+//
+require "vendor/autoload.php"; // i barely understand this; might not have enough classes to justify it
+
 ini_set("include_path", '/Applications/MAMP/bin/php/php7.4.2/lib/php:' . ini_get("include_path") ); // local laptop
 ini_set("include_path", '/home/wgimrenl/php:' . ini_get("include_path") ); // wgimprovschool.com
 
-
-// set function for autoloading classes
 spl_autoload_register(function ($className) {
-        $className = str_replace('\\', DIRECTORY_SEPARATOR, $className); // for subdirectories in 'classes'
-        $file = __DIR__.DIRECTORY_SEPARATOR."classes".DIRECTORY_SEPARATOR."{$className}.class.php";
+        $className = str_replace('\\', DIRECTORY_SEPARATOR, $className); // for subdirectories in 'oclasses'
+        $file = __DIR__.DIRECTORY_SEPARATOR."oclasses".DIRECTORY_SEPARATOR."{$className}.class.php";
         if (is_readable($file)) require_once $file;
 });
 
-// some constants
+//
+// constants and variables
+//
+$error = '';
+$message = '';
+$body = '';
+$last_insert_id = null;
+if (!isset($sc)) { $sc = $_SERVER['SCRIPT_NAME']; }
+date_default_timezone_set ( 'America/Los_Angeles' );
 define('LOCAL', ($_SERVER['SERVER_NAME'] == 'localhost') ? true : false);
 define('DEBUG_MODE', true);
 define('DEBUG_LOG', 'info.txt');
@@ -56,8 +59,9 @@ if (LOCAL) {
 	define('WEBMASTER', "will@willhinesimprov.com");
 }
 
-// set objects, code, etc
-$last_insert_id = null;
+//
+// objects
+//
 include 'libs/lib-logger.php';
 include 'libs/db_pdo.php';
 include 'libs/wbh_webkit.php';
@@ -75,37 +79,17 @@ define('DROPPED', $lookups->find_status_by_value('dropped'));
 define('APPLIED', $lookups->find_status_by_value('applied'));
 define('SMARTENROLL', 100); // special status ENROLL or WAIT pending capacity -- see Enrollment.class.php
 
-$error = '';
-$message = '';
-$body = '';
 $smtp = null; // global smtp object for sending mail, keeping connection open
 
-Wbhkit\set_vars(array('ac', 'wid', 'uid', 'key', 'page'));
-
-// set workshop info into memory
-if ($wid) {
-	$wk = \Workshops\get_workshop_info($wid);
-} else {
-	$wk = \Workshops\get_empty_workshop();
-}
-
+$wk = \Workshops\get_empty_workshop();
 $u = new User(); // set empty user
+$view = new View();
 
-// set user info into memory
-$already_here_key = (isset($_SESSION['s_key']) ? $_SESSION['s_key'] : null);
-
-$key = $u->check_for_stored_or_passed_key(); // checks for key in REQUEST and SESSION and COOKIE, not logged in otherwise
+// checks for key in SESSION and COOKIE, not logged in otherwise
+$key = $u->check_for_stored_key(); 
 if ($key) {
 	$u->set_by_key($key);
 } 
-
-// is this the first page this visitor has visited
-if (isset($u->fields['ukey']) && $u->fields['ukey'] != $already_here_key) {
-	//$logger->info("{$u->fields['fullest_name']} logged in.");
-}
-
-
-$view = new View();
 
 // group 2 or higher for admin pasges
 if (strpos($sc, 'admin') !== false) {
@@ -116,18 +100,21 @@ if (strpos($sc, 'admin') !== false) {
 Reminders\check_reminders(); 
 
 
+//
+// nav bar stuff for header and footer
+//
 function get_nav_items(){
 	$nav_items = array();
-	$nav_items[] = array('title' => "Calendar", "href" => "calendar.php");
-	$nav_items[] = array('title' => "About", "href" => "about_school.php", 'children' => array(
+	$nav_items[] = array('title' => "Calendar", "href" => "/calendar.php");
+	$nav_items[] = array('title' => "About", "href" => "/about-school", 'children' => array(
 
-		array('title' => "Teachers", "href" => "teachers.php"),
-		array('title' => "School", "href" => "about_school.php"),
-		array('title' => "Catalog", "href" => "about_catalog.php"),
-		array('title' => "How It Works", "href" => "about_works.php")
+		array('title' => "Teachers", "href" => "/teachers"),
+		array('title' => "School", "href" => "/about-school"),
+		array('title' => "Catalog", "href" => "/about-catalog"),
+		array('title' => "How It Works", "href" => "/about-works")
 	));
-	$nav_items[] = array('title' => "Community", "href" => "community.php");
-	$nav_items[] = array('title' => "Teams", "href" => "teams.php");
+	$nav_items[] = array('title' => "Community", "href" => "/community");
+	$nav_items[] = array('title' => "Teams", "href" => "/teams");
 	return $nav_items;
 }
 
