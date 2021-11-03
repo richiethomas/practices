@@ -6,7 +6,7 @@ $(document).ready(function(){
 	$("#search-box").keyup(function(){
 		$.ajax({
 		type: "POST",
-		url: "ajax_get_users.php",
+		url: "/ajax_get_users.php",
 		data:'keyword='+$(this).val()+"&search=<?php echo (isset($search)) ? 1 : 0 ?>",
 		beforeSend: function(){
 			$("#search-box").css("background","#FFF");

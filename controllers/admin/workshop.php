@@ -10,7 +10,7 @@ if (!$wid) {
 $wk = \Workshops\get_workshop_info($wid);
 
 
-$wk_vars = array('title', 'notes', 'start', 'end', 'lid', 'online_url', 'cost', 'capacity', 'notes', 'when_public', 'email', 'con', 'xtraid', 'guest_id', 'reminder_sent', 'sold_out_late', 'teacher_id', 'co_teacher_id', 'application',  'start_xtra', 'end_xtra', 'online_url_xtra', 'hideconpay');
+$wk_vars = array('title', 'notes', 'start', 'end', 'lid', 'online_url', 'cost', 'capacity', 'notes', 'when_public', 'email', 'con', 'guest_id', 'reminder_sent', 'sold_out_late', 'teacher_id', 'co_teacher_id', 'application',  'start_xtra', 'end_xtra', 'online_url_xtra', 'hideconpay');
 Wbhkit\set_vars($wk_vars);
 
 $e = new Enrollment();
@@ -66,14 +66,22 @@ switch ($ac) {
 		break;
 
 	case 'conrem':
-		$e = new Enrollment();
-		$e->set_by_u_wk($guest, $wk);
-		if ($e->drop_session()) {
-			$message = "Removed user ({$guest->fields['email']}) from practice '{$wk['title']}'";
-			$logger->info($message);
+	
+		$guest = new User(); // the user we're going to change
+		$guest_id = (int) ($params[3] ?? 0);
+		if ($guest_id > 0) {
+			$guest->set_by_id($guest_id); 
+			$e = new Enrollment();
+			$e->set_by_u_wk($guest, $wk);
+			if ($e->drop_session()) {
+				$message = "Removed user ({$guest->fields['email']}) from practice '{$wk['title']}'";
+				$logger->info($message);
+			} else {
+				$error = $e->error;
+				$logger->error($error);
+			}
 		} else {
-			$error = $e->error;
-			$logger->error($error);
+			$error = "Could not remove student because I could not tell which student.";
 		}
 		break;
 
@@ -97,12 +105,19 @@ switch ($ac) {
 	case 'adxtra':	
 		XtraSessions\add_xtra_session($wid, $start_xtra, $end_xtra, $online_url_xtra);
 		$wk = Workshops\fill_out_workshop_row($wk);
+		$message = "Added xtra session.";
 		break;
 		
 	case 'delxtra':
-		XtraSessions\delete_xtra_session($xtraid);
-		XtraSessions\update_ranks($wk['id']);
-		$wk = Workshops\fill_out_workshop_row($wk);
+		$xtraid = (int) ($params[3] ?? 0);
+		if ($xtraid) {
+			XtraSessions\delete_xtra_session($xtraid);
+			XtraSessions\update_ranks($wk['id']);
+			$wk = Workshops\fill_out_workshop_row($wk);
+			$message = "Deleted xtra session";
+		} else {
+			$error = "You wanted to delete an extra session but I could not determine which one.";
+		}
 		break;
 		
 		
@@ -143,15 +158,11 @@ switch ($ac) {
 		
 	case 'week':
 		$wk = \XtraSessions\add_a_week($wk);
+		$message = "Added xtra session a week after the most recent one.";
 		break;
 							
 }
 
-if (!$wid) {
-	$view->data['error_message'] = "<h1>Whoops!</h1><p>You are asking to look at info about a workshop, but I (the computer) cannot tell which workshop you mean. Sorry!</p>\n";
-	$view->renderPage('admin/error');
-	exit();
-}
 
 $stats = array();
 $lists = array();

@@ -161,7 +161,7 @@ Class info on web site: $trans";
 	
 }
 
-function get_reminder_message_data(array $wk, array $xtra, array $cs, bool $teacher = false) {
+function get_reminder_message_data(array $wk, array $xtra, \ClassShow $cs, bool $teacher = false) {
 	
 	if ($cs->fields['id']) {
 		$start = $cs->fields['friendly_when'];
