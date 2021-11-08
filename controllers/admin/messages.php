@@ -1,6 +1,18 @@
 <?php
 $heading = "send messages";
-include 'lib-master.php';
+
+
+$wid =  (int) ($params[2] ?? 0);
+if (!$wid) {
+	$view->data['error_message'] = "<h1>Whoops!</h1><p>You are asking to look at info about a workshop, but I (the computer) cannot tell which workshop you mean. Sorry!</p>\n";
+	$view->renderPage('error');
+	exit();
+}
+$wk = \Workshops\get_workshop_info($wid);
+
+
+
+
 
 $mess_vars = array('st', 'note', 'subject');
 Wbhkit\set_vars($mess_vars);
@@ -27,9 +39,6 @@ switch ($ac) {
 		$sent = '';
 		$subject = preg_replace('/TITLE/', $wk['title'], $subject);
 		$note = preg_replace('/TITLE/', $wk['title'], $note);
-		$sms = preg_replace('/TITLE/', $wk['title'], $sms);
-
-
 		$note = preg_replace('/\R/', "<br>", $note);
 		
 

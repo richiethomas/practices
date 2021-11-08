@@ -20,7 +20,7 @@ if(!empty($result)) {
 <?php
 foreach($result as $user) {
 	if (!empty($_POST['search']) && $_POST['search'] == 1) {
-		echo "<li class='border-top p-2'><a href='admin_users.php?needle={$_POST['keyword']}&guest_id={$user['id']}'>{$user["email"]}</a></li>";
+		echo "<li class='border-top p-2'><a href='/admin-users/view/{$user['id']}/{$_POST['keyword']}'>{$user["email"]}</a></li>";
 	} else {
 		echo "<li class='border-top p-2' onClick=\"selectUser('{$user['email']}')\">{$user["email"]}</li>";		
 	}

@@ -1,11 +1,8 @@
 <?php 
 echo $links; 
 
-
 if ($admin) {
-	echo "<form action='$sc' method='post'>\n";
-	echo Wbhkit\hidden('ac', 'at'); 	
-	echo Wbhkit\hidden('guest_id', "$guest_id"); 	
+	echo "<form action='/admin-users/at/$guest_id' method='post'>\n";
 }
 
 ?>
@@ -26,7 +23,7 @@ if ($admin) {
 				
 			echo "	<div class='col-sm'>";
 			if ($admin) {
-				echo Wbhkit\checkbox('paids', $t['enrollment_id'], "<a href=\"admin_edit2.php?wid={$t['workshop_id']}\">{$t['title']}</a>", $t['paid'], true);
+				echo Wbhkit\checkbox('paids', $t['enrollment_id'], "<a href=\"/admin-workshop/view/{$t['workshop_id']}\">{$t['title']}</a>", $t['paid'], true);
 				echo \Wbhkit\texty("payoverride_{$t['enrollment_id']}", $t['pay_override'], 0);
 				
 			} else {

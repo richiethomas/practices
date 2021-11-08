@@ -123,7 +123,7 @@ class EnrollmentsHelper extends WBHObject {
 		$paginator  = new \Paginator( $sql, $params );
 		$rows = $paginator->getData($page);	
 		if (count($rows->data) == 0) {
-			return "<p>You have not taken any practices! Which is fine, but that's why this list is empty.</p>\n";
+			return "<p>".($admin ? 'This student has '  : 'You have')." not taken any classes! Which is fine, but that's why this list is empty.</p>\n";
 		}
 	
 		// prep data

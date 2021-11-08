@@ -1,17 +1,27 @@
 <?php
 $heading = "users";
-include 'lib-master.php';
 
-Wbhkit\set_vars(array('guest_id', 'carrier_id', 'phone', 'send_text', 'newemail', 'display_name', 'needle', 'group_id', 'hideconpay'));
+Wbhkit\set_vars(array('carrier_id', 'phone', 'send_text', 'newemail', 'display_name', 'group_id', 'hideconpay'));
+
+$guest_id =  (int) ($params[2] ?? 0);
+if (!$guest_id) {
+	$view->data['error_message'] = "<h1>Whoops!</h1><p>You are asking to look at info about a user, but I (the computer) cannot tell which user you mean. Sorry!</p>\n";
+	$view->renderPage('admin/error');
+	exit();
+}
+$guest = new User();
+$guest->set_by_id($guest_id);
+
+
+// to link back to search page
+$needle = (string) ($params[3] ?? null); // URL $needle takes precedence over $_POST $needle
+$needle = trim($needle);
+
 
 
 $e = new Enrollment();
 $eh = new EnrollmentsHelper();
-$guest = new User();
 
-if ($guest_id > 0) {
-	$guest->set_by_id($guest_id); // second parameter means "don't save this in the cookie"
-}
 
 switch ($ac) {
 
@@ -22,22 +32,23 @@ switch ($ac) {
 		break;
 	
 
-	case 'adduser':
-		if ($u->validate_email($needle)) {
-			$guest->set_by_email($needle);
+ 	case 'delstudent':
+		$message = "Really delete '{$guest->fields['email']}'? <a class='btn btn-danger' href='/admin-users/delstudentconfirm/{$guest->fields['id']}'>yes delete</a> or <a class='btn btn-primary' href='/admin-users/view/{$guest->fields['id']}'>cancel</a>";
+		break;
+
+	case 'delstudentconfirm':
+		$guest = new User();
+		if ($guest->set_by_id($guest_id)) {
+			$guest->delete_user();
+			$view->data['error_message'] = "<h1>Deleted</h1><p>Student '{$guest->fields['nice_name']}' deleted! Go to the <a href='/admin-search'>search page</a> to find other students</p>\n";
+			$view->renderPage('admin/error');
+			exit();
+		} else {
+			$error = $guest->error;
 		}
 		break;
-	
- 	case 'delstudent':
-		$message = "Really delete '{$guest->fields['email']}'? <a class='btn btn-danger' href='admin_search.php?ac=delstudentconfirm&guest_id={$guest->fields['id']}'>yes delete</a> or <a class='btn btn-primary' href='$sc?guest_id={$guest->fields['id']}'>cancel</a>";
-		break;
-		
-			
-	case 'updateu':
-		$guest->update_text_preferences($phone, $send_text, $carrier_id); 
-		$error = $guest->error ? $guest->error : null; // if there was an error, show it
-		break;		
-		
+
+
 		// update display name
 	case 'updatedn':	
 		$guest->update_display_name($display_name);
@@ -93,14 +104,14 @@ switch ($ac) {
 		
 }
 if (!$guest->logged_in()) {
-	$view->data['error_message'] = "<p>perhaps try going to the <a href='admin_search.php'>page where you can search for students</a></p>";
+	$view->data['error_message'] = "<p>I don't know what user we are trying to examine. Perhaps try going to the <a href='/admin-search'>page where you can search for students</a></p>";
 	$view->renderPage('admin/error');	
 } else {
 	$view->data['key'] = $guest->get_key(); 
 	$view->data['guest'] = $guest; // user profile of user we are modifying
 	$view->data['needle'] = trim($needle);
 	$view->data['transcripts'] = $eh->get_transcript_tabled($guest, true, 1, $hideconpay);
-	$view->data['userhelper'] = new UserHelper($sc);
+	$view->data['userhelper'] = new UserHelper('/admin-users');
 	$view->data['lookups'] = $lookups;
 	$view->renderPage('admin/users');
 }

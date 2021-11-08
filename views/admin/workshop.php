@@ -4,7 +4,7 @@ echo "<div class='row mt-md-3 admin-edit-workshop'>\n";
 
 		// enrollment column
 		echo "<div class='col-md-7'><h2>Enrollment Info <small><br>
-			<a class='btn btn-primary' href='admin_messages.php?wid={$wk['id']}'><span class='oi oi-envelope-closed' title='envelope-closed' aria-hidden='true'></span> message</a> 
+			<a class='btn btn-primary' href='/admin-messages/view/{$wk['id']}'><span class='oi oi-envelope-closed' title='envelope-closed' aria-hidden='true'></span> message</a> 
 			<a class='btn btn-primary'  href='/admin-workshop/nw/{$wk['id']}'><span class='oi oi-clock' title='clock' aria-hidden='true'></span> notify waiting</a>
 
 			<a class='btn btn-primary'  href='/admin-workshop/sar/{$wk['id']}'><span class='oi oi-clock' title='clock' aria-hidden='true'></span> send all reminders</a>
@@ -20,13 +20,13 @@ echo "<div class='row mt-md-3 admin-edit-workshop'>\n";
 			echo  "<h4>{$status_name} (".$stats[$stid].")</h4>\n";
 			foreach ($lists[$stid] as $s) {
 				echo "<div class='row my-3'><div class='col-md-5'>".
-					Wbhkit\checkbox('users', $s['id'], "<a href='admin_users.php?guest_id={$s['id']}&wid={$wk['id']}'>{$s['nice_name']}</a> <small>".
+					Wbhkit\checkbox('users', $s['id'], "<a href='/admin-users/view/{$s['id']}'>{$s['nice_name']}</a> <small>".
 					date('M j g:ia', strtotime($s['last_modified']))."</small>", $s['paid'], true)."</div>".
 					"<div class='col-md-2'>".
 					\Wbhkit\texty("payoverride_{$s['id']}_{$wk['id']}", $s['pay_override'], 0).
 					"</div>".
 				"<div class='col-md-5'>
-				<a class='btn btn-outline-secondary btn-sm' href='admin_change_status.php?wid={$wk['id']}&guest_id={$s['id']}'>status</a>  <a  class='btn btn-outline-secondary btn-sm' href='/admin-workshop/conrem/{$wk['id']}/{$s['id']}'>remove</a></div>".
+				<a class='btn btn-outline-secondary btn-sm' href='/admin-change-status/view/{$wk['id']}/{$s['id']}'>status</a>  <a  class='btn btn-outline-secondary btn-sm' href='/admin-workshop/conrem/{$wk['id']}/{$s['id']}'>remove</a></div>".
 				"</div>\n";
 			}
 		}

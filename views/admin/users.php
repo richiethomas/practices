@@ -1,15 +1,15 @@
-<div class='row'><div class='col-md-12'><h2>Transcript for <a href='<?php echo "$sc?guest_id={$guest->fields['id']}&needle=".$needle; ?>'><?php echo $guest->fields['nice_name']; ?></a></h2>
+<div class='row'><div class='col-md-12'><h2>Transcript for <a href='<?php echo "/admin-users/view/{$guest->fields['id']}/$needle"; ?>'><?php echo $guest->fields['nice_name']; ?></a></h2>
 	<?php echo "<p>Cut and pastable: {$guest->fields['display_name']} {$guest->fields['email']}</p>"; ?>
 
 
 <?php 
 if ($u->check_user_level(3)) {
-	echo "<p><a href='".URL."home/k/$key'>Log in as {$guest->fields['email']}</a></p>\n";
+	echo "<p>Log in as {$guest->fields['email']}: <a href='".URL."home/k/$key'>".URL."home/k/$key</a></p>\n";
 } 
 
 
 if ($needle) {
-	echo "<p>Return to <a href='admin_search.php?needle=$needle'>search results</a></p>\n";
+	echo "<p>Return to <a href='/admin-search/search/$needle'>search results</a></p>\n";
 }
 ?>
 
@@ -20,21 +20,12 @@ if ($needle) {
 
 <div class='card my-5 bg-light'><div class='card-body'>
 <h3 class="my-3">Change Email</h3>
-<?php echo $userhelper->edit_change_email($guest, $sc); ?>
+<?php echo $userhelper->edit_change_email($guest, "/admin-users/cemail/{$guest->fields['id']}"); ?>
 </div></div> <!-- end of card -->
-
-<?php
-/*	
-<div class='card my-5 bg-light'><div class='card-body'>
-<h3 class="my-3">Text Preferences</h3>
-<?php echo $userhelper->edit_text_preferences($guest, $sc, $lookups); ?>
-</div></div> <!-- end of card -->
-*/
-?>
 
 <div class='card my-5 bg-light'><div class='card-body'>
 <h3 class="my-3">Display Name</h3>
-<?php echo $userhelper->edit_display_name($guest, $sc); ?>
+<?php echo $userhelper->edit_display_name($guest, "/admin-users/updatedn/{$guest->fields['id']}"); ?>
 </div></div> <!-- end of card -->
 
 <?php if ($u->check_user_level(3)) { ?>
@@ -60,6 +51,6 @@ if ($t) {
 
 <p>or</p>
 
-<p><a class='btn btn-danger text-light' href='<?php echo "$sc?ac=delstudent&guest_id={$guest->fields['id']}" ?>'>remove this student</a></p>
+<p><a class='btn btn-danger text-light' href='<?php echo "/admin-users/delstudent/{$guest->fields['id']}" ?>'>remove this student</a></p>
 
 </div></div>

@@ -103,11 +103,15 @@ foreach ($controllers as $c) {
 	}
 }
 
-// check admin controllers (if user is above level 3)
+// then check admin controllers (if user is above level 3)
 if ($u->check_user_level(3)) {
 	$admin_controllers = array (
 		'admin' => 'admin/dashboard',
-		'admin-workshop' => 'admin/workshop'
+		'admin-workshop' => 'admin/workshop',
+		'admin-messages' => 'admin/messages',
+		'admin-change-status' => 'admin/change-status',
+		'admin-users' => 'admin/users',
+		'admin-search' => 'admin/search'
 	);
 
 	foreach ($admin_controllers as $ci => $cv) {

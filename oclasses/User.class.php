@@ -66,9 +66,10 @@ class User extends WBHObject {
 		$stmt = \DB\pdo_query("select u.* from users u where u.id = :id", array(":id" => $id));
 		while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
 			$this->set_into_fields($row);
+			$this->set_nice_name(); // nice name, confirm key
+			return true;
 		}
-		$this->set_nice_name(); // nice name, confirm key
-		return true;
+		$this->error = "Could not find a user for '{$id}'";
 	}
 
 	function set_by_key($key) {
@@ -145,7 +146,7 @@ class User extends WBHObject {
 		$stmt = \DB\pdo_query("delete from registrations where user_id = :uid", array(':uid' => $this->fields['id']));
 		$stmt = \DB\pdo_query("delete from users where id = :uid", array(':uid' => $this->fields['id']));
 		
-		$this->fields = array();
+		//$this->fields = array();
 		
 		return true;
 	

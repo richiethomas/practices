@@ -51,8 +51,7 @@ class UserHelper extends WBHObject {
 
 	function edit_display_name(User $u) {
 		$body = '';
-		$body .= "<form action='{$this->sc}/updatedn' method='post'>\n";
-		$body .= \Wbhkit\hidden('guest_id', $u->fields['id']);
+		$body .= "<form action='{$this->sc}/updatedn/{$u->fields['id']}' method='post'>\n";
 		$body .= \Wbhkit\texty('display_name', $u->fields['display_name'], 'Real name', 'Jane Doe', 'Can be a nickname.');
 		$body .= \Wbhkit\submit('Update Real Name');
 		$body .= "</form>\n";
@@ -69,8 +68,7 @@ class UserHelper extends WBHObject {
 
 		$body = '';
 		$body .= \Wbhkit\form_validation_javascript('changeEmail');
-		$body .= "<form id='changeEmail' action='{$this->sc}/cemail' method='post' novalidate>\n";
-		$body .= \Wbhkit\hidden('guest_id', $u->fields['id']);
+		$body .= "<form id='changeEmail' action='{$this->sc}/cemail/{$u->fields['id']}' method='post' novalidate>\n";
 		$body .= \Wbhkit\texty('newemail', $u->fields['email'], 'New email', null, 'We will email a login link to this address', 'Must be a valid email', ' required ', 'email');
 		$body .= \Wbhkit\submit('Change Email');
 		$body .= "</form>";
@@ -78,30 +76,8 @@ class UserHelper extends WBHObject {
 	}
 
 
-
-
-	function edit_text_preferences(User $u) {
-		$body = '';
-		$body .= "";
-				
-		$body .= \Wbhkit\form_validation_javascript('edit_text_preferences');
-		$body .= "<div class='row'><div class='col'>\n";
-		$body .= "<form id='edit_text_preferences' action='{$this->sc}/updateu' method='post' novalidate>\n";
-		$body .= \Wbhkit\hidden('guest_id', $u->fields['id']);
-		$body .= \Wbhkit\checkbox('send_text', 1, 'Send text updates?', $u->fields['send_text']);
-		$body .= \Wbhkit\drop('carrier_id', $this->lookups->carriers_drop, $u->fields['carrier_id'], 'phone network', null, "You must pick a carrier if you want text updates.", ' required ');
-		$body .= \Wbhkit\texty('phone', $u->fields['phone'], 'phone number', null, '10 digit phone number', 'Phone must be 10 digits, no letters or spaces or dashes', ' required minlength="10" maxlength="11" pattern="\d+" ');
-		$body .= \Wbhkit\submit('Update Text Preferences');
-		$body .= "</form>\n";
-		$body .= "</div></div> <!-- end of col and row -->\n";
-	
-		return $body;
-	}
-
-
 	function edit_group_level(User $u) {
-		return "<form action='{$this->sc}/updategroup' method='post'>\n".
-		\Wbhkit\hidden('guest_id', $u->fields['id']).
+		return "<form action='{$this->sc}/updategroup/{$u->fields['id']}' method='post'>\n".
 		\Wbhkit\drop('group_id', $this->lookups->groups, $u->fields['group_id'], 'Group', 'Clearance level').
 		\Wbhkit\submit('Update Group Level').
 		"</form>\n";	

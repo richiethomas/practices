@@ -111,7 +111,7 @@ switch ($ac) {
 			$logger->debug($error);
 			break;
 		}
-		$message = "Changing display name to '$display_name' from '{$u->fields['display_name']}' for user {$u->fields['id']}";
+		$message = "Changing display name to '$display_name' from '{$u->fields['display_name']}'";
 		$logger->info($message);
 		$u->update_display_name($display_name);
 		break;		
