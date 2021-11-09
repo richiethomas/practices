@@ -119,7 +119,9 @@ if ($u->check_user_level(3)) {
 		'admin-reminders' => 'admin/reminders',
 		'admin-status' => 'admin/status-log',
 		'admin-error' => 'admin/error-log',
-		'admin-debug' => 'admin/debug-log'
+		'admin-debug' => 'admin/debug-log',
+		'admin-revenue' => 'admin/revenue',
+		'admin-payroll' => 'admin/payroll'
 	);
 
 	foreach ($admin_controllers as $ci => $cv) {

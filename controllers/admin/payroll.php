@@ -1,6 +1,5 @@
 <?php
 $heading = "payroll";
-include 'lib-master.php';
 
 $u->reject_user_below(3); // group 3 or higher
 
@@ -17,6 +16,9 @@ switch ($ac) {
 		$p->delete_row();
 		break;
 	case 'singleadd':
+		$table_id = (int) $table_id;
+		$teacher_id = (int) $teacher_id;
+		$amount = (int) $amount;
 		$ph->add_claim($task, $table_id, $teacher_id, $amount, $when_paid, $when_happened);
 		break;
 	case 'add':

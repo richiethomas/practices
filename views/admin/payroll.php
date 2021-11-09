@@ -1,8 +1,3 @@
-<?php
-// jquery code in footer
-
-
-?>
 <script>
 $( document ).ready(function() {
 	// payroll code
@@ -29,7 +24,7 @@ function single_claim(task, tableid) {
 	var tid = document.getElementById(id+'teacherid').value;
 	var ss = document.getElementById('searchstart').value;
 	var se = document.getElementById('searchend').value;
-	var link =encodeURI( '?ac=singleadd&task='+task+'&table_id='+tableid+'&amount='+amt+'&teacher_id='+tid+'&when_paid='+wp+'&when_happened='+wh+'&searchstart='+ss+'&searchend='+se);
+	var link =encodeURI( '/admin-payroll/singleadd/?task='+task+'&table_id='+tableid+'&amount='+amt+'&teacher_id='+tid+'&when_paid='+wp+'&when_happened='+wh+'&searchstart='+ss+'&searchend='+se);
 	//console.log(link);
 	window.location.href = link;
 	return false;
@@ -39,7 +34,7 @@ function single_claim(task, tableid) {
 <div class='row'><div class='col-md-10'>
 	
 <h2>Payroll</h2>
-<form action='admin_payroll.php' method='post'>
+<form action='/admin-payroll/view/' method='post'>
 <?php echo \Wbhkit\texty('searchstart', $searchstart, 'Search Start'); ?>
 <?php echo \Wbhkit\texty('searchend', $searchend, 'Search End'); ?>
 <?php echo \Wbhkit\submit('Search'); ?>
@@ -47,7 +42,7 @@ function single_claim(task, tableid) {
 
 <?php
 
-$weeknav = "<p><a href='admin_payroll.php?searchstart=$lastweekstart&searchend=$lastweekend'>last week</a> | <a href='admin_payroll.php'>this week</a> | <a href='admin_payroll.php?searchstart=$nextweekstart&searchend=$nextweekend'>next week</a></p>\n";
+$weeknav = "<p><a href='/admin-payroll/view/?searchstart=$lastweekstart&searchend=$lastweekend'>last week</a> | <a href='/admin-payroll/view/'>this week</a> | <a href='/admin-payroll/view/?searchstart=$nextweekstart&searchend=$nextweekend'>next week</a></p>\n";
 echo $weeknav;
 
 // list payroll items with delete button
@@ -109,7 +104,7 @@ foreach ($payrolls as $p) {
 	$guts .= "{$p->fields['title']} (".date('D M j ga', strtotime($p->fields['start'])).' #'.($p->fields['rank'] ? $p->fields['rank'] : 'show').") {$p->fields['amount']}\n";
 	
 	echo "<div class='col-6'>{$p->fields['title']} <small>({$p->fields['workshop_id']}) (".date('D M j ga', strtotime($p->fields['start'])).' #'.($p->fields['rank'] ? $p->fields['rank'] : 'show').")</small></div>";
-	echo "<div class='col'>{$p->fields['amount']} <span class='ml-3'><small>(<a href='admin_payroll.php?ac=del&pid={$p->fields['id']}&searchstart=$searchstart&searchend=$searchend'>delete</a>)</small></span></div>";
+	echo "<div class='col'>{$p->fields['amount']} <span class='ml-3'><small>(<a href='/admin-payroll/del/?pid={$p->fields['id']}&searchstart=$searchstart&searchend=$searchend'>delete</a>)</small></span></div>";
 	echo "</div>\n";
 
 	$pay_teacher_total += $p->fields['amount'];
@@ -132,8 +127,7 @@ $faculty  = \Teachers\get_all_teachers();
 $teacher_opts = \Teachers\teachers_dropdown_array(false, $faculty);
 
 
-echo "<form action='admin_payroll.php' method='post'>\n";
-echo \Wbhkit\hidden('ac', 'add');
+echo "<form action='/admin-payroll/add' method='post'>\n";
 echo \Wbhkit\hidden('searchstart', $searchstart);
 echo \Wbhkit\hidden('searchend', $searchend);
 

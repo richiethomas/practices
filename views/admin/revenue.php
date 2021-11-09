@@ -1,5 +1,5 @@
 <div class='row'><div class='col-md-10'><h2>Revenues</h2>
-<form action='<?php echo $sc; ?>' method='get'>
+<form action='/admin-revenue/view/' method='get'>
 <?php echo \Wbhkit\texty('searchstart', $searchstart, 'Search Start'); ?>
 <?php echo \Wbhkit\texty('searchend', $searchend, 'Search End'); ?>
 <?php echo \Wbhkit\radio('mode', array('0' => 'by teacher', '1' => 'by class'), $mode);  ?>
@@ -7,7 +7,7 @@
 </form>
 
 <?php
-$weeknav = "<p><a href='admin_revenue.php?searchstart=$lastweekstart&searchend=$lastweekend&mode=$mode'>last week</a> | <a href='admin_revenue.php'>this week</a> | <a href='admin_revenue.php?searchstart=$nextweekstart&searchend=$nextweekend&mode=$mode'>next week</a></p>\n";
+$weeknav = "<p><a href='/admin-revenue/view/?searchstart=$lastweekstart&searchend=$lastweekend&mode=$mode'>last week</a> | <a href='/admin-revenue/view/'>this week</a> | <a href='/admin-revenue/view/?searchstart=$nextweekstart&searchend=$nextweekend&mode=$mode'>next week</a></p>\n";
 echo $weeknav;
 
 if (count($workshops_list) == 0) {
@@ -84,7 +84,7 @@ $table_open = "<table class='table table-striped my-3'>
 			
 			$teacher_pay = \Workshops\get_teacher_pay($wk);
 			
-			echo "<tr><td width='300'>({$wk['id']}-{$wk['teacher_id']}) <a href='admin_edit2.php?wid={$wk['id']}'>{$wk['title']}</a> <small>({$wk['showstart']})</small></td>
+			echo "<tr><td width='300'>({$wk['id']}-{$wk['teacher_id']}) <a href='/admin-workshop/view/{$wk['id']}'>{$wk['title']}</a> <small>({$wk['showstart']})</small></td>
 			<td>{$wk['paid']} / {$wk['enrolled']} / {$wk['capacity']}</td>
 			<td>{$wk['cost']}</td>
 			<td>{$wk['actual_revenue']}</td>

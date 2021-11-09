@@ -1,7 +1,9 @@
 <?php
 $heading = "status changes";
-include 'lib-master.php';
 
+
+$wid =  (int) ($params[2] ?? 0);
+if ($wid) { $wk = \Workshops\get_workshop_info($wid); }
 
 $eh = new EnrollmentsHelper();
 
