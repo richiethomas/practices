@@ -1,7 +1,5 @@
 <?php
 $heading = "get emails";
-include 'lib-master.php';
-
 
 Wbhkit\set_vars(array('workshops'));
 $results = null;

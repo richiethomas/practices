@@ -111,7 +111,15 @@ if ($u->check_user_level(3)) {
 		'admin-messages' => 'admin/messages',
 		'admin-change-status' => 'admin/change-status',
 		'admin-users' => 'admin/users',
-		'admin-search' => 'admin/search'
+		'admin-search' => 'admin/search',
+		'admin-archives' => 'admin/archives',
+		'admin-shows' => 'admin/shows',
+		'admin-teachers' => 'admin/teachers',
+		'admin-emails' => 'admin/emails',
+		'admin-reminders' => 'admin/reminders',
+		'admin-status' => 'admin/status-log',
+		'admin-error' => 'admin/error-log',
+		'admin-debug' => 'admin/debug-log'
 	);
 
 	foreach ($admin_controllers as $ci => $cv) {

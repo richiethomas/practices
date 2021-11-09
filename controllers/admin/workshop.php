@@ -1,25 +1,21 @@
 <?php
 $heading = "edit workshop";
 
-$wid =  (int) ($params[2] ?? 0);
-if (!$wid) {
-	$view->data['error_message'] = "<h1>Whoops!</h1><p>You are asking to look at info about a workshop, but I (the computer) cannot tell which workshop you mean. Sorry!</p>\n";
-	$view->renderPage('error');
-	exit();
+if ($ac != 'ad') {
+	$wid =  (int) ($params[2] ?? 0);
+	if (!$wid) {
+		$view->data['error_message'] = "<h1>Whoops!</h1><p>You are asking to look at info about a workshop, but I (the computer) cannot tell which workshop you mean. Sorry!</p>\n";
+		$view->renderPage('error');
+		exit();
+	}
+	$wk = \Workshops\get_workshop_info($wid);
 }
-$wk = \Workshops\get_workshop_info($wid);
-
 
 $wk_vars = array('title', 'notes', 'start', 'end', 'lid', 'online_url', 'cost', 'capacity', 'notes', 'when_public', 'email', 'con', 'guest_id', 'reminder_sent', 'sold_out_late', 'teacher_id', 'co_teacher_id', 'application',  'start_xtra', 'end_xtra', 'online_url_xtra', 'hideconpay');
 Wbhkit\set_vars($wk_vars);
 
 $e = new Enrollment();
 $eh = new EnrollmentsHelper();
-
-$guest = new User(); // the user we're going to change
-if ($guest_id > 0) {
-	$guest->set_by_id($guest_id); 
-}
 
 switch ($ac) {
 
@@ -38,7 +34,7 @@ switch ($ac) {
 		}
 
 		// build a workshop array from data we have
-		$id = $wid ? $wid : null; // so the next bit can find the id
+		$id = $wid ?? null; // so the next bit can find the id
 		$location_id = $lid;
 		$wk_fields = \Workshops\get_empty_workshop();
 		foreach ($wk_fields as $field => $fieldvalue) {
@@ -52,7 +48,7 @@ switch ($ac) {
 			$message = "Updated practice ({$wid}) - {$wk['title']}";
 			$logger->info($message);
 		} elseif ($ac == 'ad') {
-			$message = "Added practice ({$title})";
+			$message = "Added practice ({$wk['id']}) - ({$title}) ";
 			$logger->info($message);
 		}
 		break;

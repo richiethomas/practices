@@ -1,8 +1,7 @@
 <?php
 $heading = "class shows";
-include 'lib-master.php';
 
-Wbhkit\set_vars(array('ac', 'show_id', 'start', 'end', 'online_url', 'teacher_id', 'wid', 'reminder_sent'));
+Wbhkit\set_vars(array('show_id', 'start', 'end', 'online_url', 'teacher_id', 'wid', 'reminder_sent'));
 
 $cs = new ClassShow();
 
@@ -20,7 +19,6 @@ if ($ac == 'ad' || $ac == 'up') {
 			'teacher_id' => $teacher_id,
 			'reminder_sent' => $reminder_sent));
 }
-
 
 switch ($ac) {
 	case 'ad':

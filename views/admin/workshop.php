@@ -1,5 +1,5 @@
 <?php
-echo "<h2><a href='/admin-workshop/view/{$wk['id']}'>{$wk['title']}</a></h2><p class='small'><a href='admin_listall.php?wid={$wk['id']}#addworkshop'>(Clone this workshop)</a></p>\n";
+echo "<h2><a href='/admin-workshop/view/{$wk['id']}'>{$wk['title']}</a></h2><p class='small'><a href='/admin-archives/clone/{$wk['id']}#addworkshop'>(Clone this workshop)</a></p>\n";
 echo "<div class='row mt-md-3 admin-edit-workshop'>\n";
 
 		// enrollment column
@@ -81,7 +81,7 @@ echo "<div class='row mt-md-3 admin-edit-workshop'>\n";
 			echo "<h3>Class Shows</h3>\n";
 			echo "<ul>\n";
 			foreach ($wk['class_shows'] as $cs) {
-				echo "<li><a href='admin_shows.php?ac=ed&show_id={$cs->fields['id']}'>{$cs->fields['friendly_when']}</a></li>\n";
+				echo "<li><a href='/admin-shows/view/?show_id={$cs->fields['id']}'>{$cs->fields['friendly_when']}</a></li>\n";
 			}
 			echo "</ul>\n";
 		}

@@ -1,11 +1,12 @@
 <?php
 $heading = "teachers";
-include 'lib-master.php';
 
-$vars_to_set = array('guest_id', 'tid');
+$vars_to_set = array();
 $vars_to_set = \Wbhkit\add_empty_fields($vars_to_set, Teachers\empty_teacher());
 Wbhkit\set_vars($vars_to_set);
 
+$tid =  (int) ($params[2] ?? 0);
+//$vars_to_set = array('guest_id');
 $t = array(); // array for teacher info
 $t_classes = array();
 if ($tid) {
@@ -16,6 +17,7 @@ if ($tid) {
 switch ($ac) {
 	
 	case 'make':
+		$guest_id = (int) ($params[2] ?? 0);
 		if (!$t = Teachers\is_teacher($guest_id)) {
 			$tid = Teachers\make_teacher($guest_id);
 			$t = Teachers\get_teacher_by_id($tid);

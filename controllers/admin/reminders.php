@@ -1,8 +1,6 @@
 <?php
 $heading = "reminders";
-include 'lib-master.php';
 
-Wbhkit\set_vars(array('ac'));
 
 if ($ac == 'force') {
 	Reminders\check_reminders(true); // force a new reminder check

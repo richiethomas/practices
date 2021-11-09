@@ -76,26 +76,26 @@ class Paginator {
 
 		$class      = ( $this->_page == 1  || $this->_page == 'all') ? "disabled" : "";
 		$previous_page = ($this->_page == 'all') ? $start : $this->_page - 1;
-		$html       .= '<li class="page-item '.$class.'"><a class="page-link" href="?limit=' . $this->_limit . '&page=' . ( $previous_page ) . '">&laquo;</a></li>'."\n";
+		$html       .= '<li class="page-item '.$class.'"><a class="page-link" href="?page=' . ( $previous_page ) . '">&laquo;</a></li>'."\n";
 
 		if ( $start > 1 ) {
-			$html   .= '<li class="page-item"><a class="page-link" href="?limit=' . $this->_limit . '&page=1'.$xtra_query_string.'">1</a></li>'."\n";
+			$html   .= '<li class="page-item"><a class="page-link" href="?page=1'.$xtra_query_string.'">1</a></li>'."\n";
 			$html   .= '<li class="page-item disabled"><span>...</span></li>'."\n";
 		}
 
 		for ( $i = $start ; $i <= $end; $i++ ) {
 			$class  = ( $this->_page == $i ) ? "active" : "";
-			$html   .= '<li class="page-item '.$class.'"><a class="page-link" href="?limit=' . $this->_limit . '&page=' . $i . $xtra_query_string.'">' . $i . '</a></li>'."\n";
+			$html   .= '<li class="page-item '.$class.'"><a class="page-link" href="?page=' . $i . $xtra_query_string.'">' . $i . '</a></li>'."\n";
 		}
 
 		if ( $end < $last ) {
 			$html   .= '<li class="disabled"><span>...</span></li>'."\n";
-			$html   .= '<li class="page-item"><a class="page-link" href="?limit=' . $this->_limit . '&page=' . $last . $xtra_query_string.'">' . $last . '</a></li>'."\n";
+			$html   .= '<li class="page-item"><a class="page-link" href="?page=' . $last . $xtra_query_string.'">' . $last . '</a></li>'."\n";
 		}
 
 		$class      = ( $this->_page == $last || $this->_page == 'all') ? "disabled" : "";
 		$next_page = ($this->_page == 'all') ? $end : $this->_page + 1;
-		$html       .= '<li class="page-item '.$class.'"><a class="page-link" href="?limit=' . $this->_limit . '&page=' . ( $next_page ) . $xtra_query_string.'">&raquo;</a></li>'."\n";
+		$html       .= '<li class="page-item '.$class.'"><a class="page-link" href="?page=' . ( $next_page ) . $xtra_query_string.'">&raquo;</a></li>'."\n";
 		
 		$class      = ( $this->_page == 'all') ? "active" : "";
 		$html .= '<li class="page-item '.$class.'"><a class="page-link" href="?page=all'.$xtra_query_string.'">all</a></li>';

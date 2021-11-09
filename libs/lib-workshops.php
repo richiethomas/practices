@@ -257,7 +257,7 @@ function get_workshops_dropdown(?string $start = null, ?string $end = null) {
 
 
 // for admins eyes only
-function get_search_results(int $page = 1, ?string $needle = null) {
+function get_search_results(string $page = "1", ?string $needle = null) {
 	global $view;
 	
 	// get IDs of workshops
@@ -268,7 +268,7 @@ function get_search_results(int $page = 1, ?string $needle = null) {
 	// prep paginator
 	$paginator  = new \Paginator( $sql );
 	$rows = $paginator->getData($page);
-	$links = $paginator->createLinks(7, 'search results', "&needle=".urlencode($needle));
+	$links = $paginator->createLinks(7, 'search results', $needle ? "&needle=".urlencode($needle) : null);
 
 	// calculate enrollments, etc
 	if ($rows->total > 0) {
@@ -502,11 +502,9 @@ function get_empty_workshop() {
 }
 
 function add_workshop_form(array $wk) {
-	global $sc;
-	return "<form id='add_wk' action='admin_edit2.php' method='post' novalidate>".
+	return "<form id='add_wk' action='/admin-workshop/ad' method='post' novalidate>".
 	\Wbhkit\form_validation_javascript('add_wk').
 	"<fieldset name='session_add'><legend>Add Workshop</legend>".
-	\Wbhkit\hidden('ac', 'ad').
 	workshop_fields($wk).
 	\Wbhkit\submit('Add').
 	"</fieldset></form>";

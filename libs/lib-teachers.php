@@ -54,20 +54,17 @@ function make_teacher($uid) {
 	return $last_insert_id;
 }
 
-function get_teacher_form($t) {
+function get_teacher_fields($t) {
 	global $sc;
 	if (!$t || !isset($t['id'])) {
 		$t = empty_teacher();
 	}
 	return 
-		"<form id='update_teacher' action='$sc' method='post'>".
 		\Wbhkit\hidden('tid', $t['id']).
-		\Wbhkit\hidden('ac', 'up').			
 		\Wbhkit\textarea('bio', $t['bio']).
 		\Wbhkit\checkbox('active', 1, null, $t['active']).
 		\Wbhkit\texty('default_rate', $t['default_rate']).
-		\Wbhkit\submit('Update').
-		"</form>";		
+		\Wbhkit\submit('Update');
 }
 
 
@@ -150,23 +147,14 @@ function get_teacher_photo_src($uid) {
 	}
 }
 
-function upload_teacher_photo_form($t) {
-	global $sc;
-	return
-		"<form action=\"$sc\" method=\"post\" enctype=\"multipart/form-data\">\n".
-		\Wbhkit\hidden ('tid', $t['id']).
-	\Wbhkit\hidden ('ac', 'photo').
-	\Wbhkit\hidden ('MAX_FILE_SIZE', USER_PHOTO_MAX_BYTES).
-	\Wbhkit\fileupload('teacher_photo', 'Upload/Replace Teacher Photo (JPG file type only)').
-	\Wbhkit\submit ('Upload Photo').
-			"</form>\n";
-	
-}
+
 function upload_teacher_photo($t, &$message, &$error) {
-	$file_field_name = "teacher_photo";
+	$file_field_name = (string) "teacher_photo";
+	
+	//var_dump($_FILES);
 	
 	// Check file size
-	if ($_FILES[$file_field_name]["size"] > USER_PHOTO_MAX_BYTES) {
+	if ($_FILES["teacher_photo"]["size"] > USER_PHOTO_MAX_BYTES) {
 	  $error = "File rejected: greater than 5MB";
 	  return false;
 	}
