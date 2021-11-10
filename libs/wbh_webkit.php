@@ -324,13 +324,6 @@ function binary_yesno($field) {
 }
 
 
-function admin_log($st) {
-	global $sc;
-	if (isset($sc) && strpos($sc,'admin') !== false) {
-		echo "$st<br>\n";
-	}
-}
-
 // take array $part
 // add missing keys with their default values
 // based on the keys/values in $default

@@ -1,5 +1,5 @@
 <?php
-$heading = "class shows";
+$view->data['heading'] = "class shows";
 
 Wbhkit\set_vars(array('show_id', 'start', 'end', 'online_url', 'teacher_id', 'wid', 'reminder_sent'));
 

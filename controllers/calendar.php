@@ -1,5 +1,5 @@
 <?php
-$heading = "calendar";
+$view->data['heading'] = "calendar";
 
 
 $view->data['faculty'] = Teachers\get_all_teachers(true); // active teachers

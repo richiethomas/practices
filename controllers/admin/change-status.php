@@ -1,5 +1,5 @@
 <?php
-$heading = "change status";
+$view->data['heading'] = "change status";
 
 
 $wk_vars = array('st', 'con', 'lmod', 'wid_new');

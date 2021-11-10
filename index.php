@@ -1,30 +1,16 @@
 <?php
-include 'lib-master.php';
-
 //
 // routing stuff
 //
+include 'lib-master.php'; // variables, objects, includes, defaults
 
 //
-// params
+// parse params out of URL
 //
 $request  = substr($_SERVER['REQUEST_URI'],1); // strip leading slash
 $sc = $request;
-$params = array();
 $params = explode("/", $request);
 $ac = (isset($params[1]) ? $params[1] : 'view'); // action defaults to 'view'
-
-// debug messages
-if (false) {
-	echo "<pre>\n";
-	print_r($_SERVER['REQUEST_URI'])."<br>\n";
-	print_r($_GET);
-	print_r($_POST);
-	print_r($params);
-	echo "</pre>";
-}
-
-
 
 //
 // check "pages" first
@@ -130,6 +116,7 @@ if ($u->check_user_level(3)) {
 		}
 	}
 }
+
 
 include "controllers/{$controller}.php";
 

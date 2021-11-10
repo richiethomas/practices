@@ -1,5 +1,5 @@
 <?php
-$heading = "edit workshop";
+$view->data['heading'] = "edit workshop";
 
 if ($ac != 'ad') {
 	$wid =  (int) ($params[2] ?? 0);

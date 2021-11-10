@@ -34,7 +34,6 @@ $error = '';
 $message = '';
 $body = '';
 $last_insert_id = null;
-if (!isset($sc)) { $sc = $_SERVER['SCRIPT_NAME']; }
 date_default_timezone_set ( 'America/Los_Angeles' );
 define('LOCAL', ($_SERVER['SERVER_NAME'] == 'localhost') ? true : false);
 define('DEBUG_MODE', true);
@@ -92,11 +91,6 @@ $key = $u->check_for_stored_key();
 if ($key) {
 	$u->set_by_key($key);
 } 
-
-// group 2 or higher for admin pasges
-if (strpos($sc, 'admin') !== false) {
-	$u->reject_user_below(3); // group 3 or higher for admin
-}
 
 // check to see if we should send reminders every time anyone loads a page
 Reminders\check_reminders(); 

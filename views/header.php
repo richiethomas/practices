@@ -1,11 +1,11 @@
 <?php 
-$heading = "wgis: $heading" ?? "World's Greatest Improv School"; ?>
+$heading = isset($heading) ? "wgis: $heading" : "World's Greatest Improv School"; ?>
 <!doctype html>
 <html lang="en">
   <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-	<title><?=$heading?></title>
+	<title><?php echo $heading; ?></title>
 	
 <script
   src="https://code.jquery.com/jquery-3.5.1.min.js"

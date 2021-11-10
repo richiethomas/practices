@@ -1,5 +1,5 @@
 <?php
-$heading = "reminders";
+$view->data['heading'] = "reminders";
 
 
 if ($ac == 'force') {

@@ -1,5 +1,5 @@
 <?php
-$heading = "upcoming classes";
+$view->data['heading'] = "upcoming classes";
 
 Wbhkit\set_vars(array('filter_by'));
 

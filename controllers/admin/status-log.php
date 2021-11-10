@@ -1,5 +1,5 @@
 <?php
-$heading = "status changes";
+$view->data['heading'] = "status changes";
 
 
 $wid =  (int) ($params[2] ?? 0);

@@ -59,15 +59,11 @@ class View extends WBHObject
 		
 		// need to add in user and workshop at last possible minute
 		// and this is it
-		global $u, $wk, $message, $error, $sc, $heading;
+		global $u, $wk, $message, $error;
 		$this->data['u'] = $u;
 		$this->data['wk'] = $wk;
 		$this->data['error'] = $error;
 		$this->data['message'] = $message;
-		if (!isset($this->data['heading'])) {
-			$this->data['heading'] = $heading;
-		}
-		$this->data['sc'] = $sc ? $sc : $_SERVER['SCRIPT_NAME'];
 		$this->data['path'] = $this->snippetDir.'/';
 		
 		if ($data) {

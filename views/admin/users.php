@@ -31,7 +31,7 @@ if ($needle) {
 <?php if ($u->check_user_level(3)) { ?>
 <div class='card my-5 bg-light'><div class='card-body'>
 <h3 class="my-3">Group Level</h3>
-<?php echo $userhelper->edit_group_level($guest, $sc, $lookups); ?>
+<?php echo $userhelper->edit_group_level($guest); ?>
 </div></div> <!-- end of card -->
 <?php } ?>
 

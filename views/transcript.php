@@ -43,7 +43,6 @@ if ($admin) {
 			if ($admin) { echo "<div class='col-sm my-2'>{$t['place']}</div>\n"; } // where col
 			echo "	<div class='col-sm'>{$statuses[$t['status_id']]}";
 			echo "</div>\n"; // status col
-			echo "	<div class='col-sm'><a href='/workshop/view/{$t['workshop_id']}'><span class=\"oi oi-info\" title=\"info\" aria-hidden=\"true\"></span> info</a></div>\n";			
 			echo "</div>\n\n"; // end of row
 		
 	}

@@ -1,5 +1,5 @@
 <?php
-$heading = "users";
+$view->data['heading'] = "users";
 
 Wbhkit\set_vars(array('carrier_id', 'phone', 'send_text', 'newemail', 'display_name', 'group_id', 'hideconpay'));
 

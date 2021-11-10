@@ -1,5 +1,5 @@
 <?php
-$heading = "get emails";
+$view->data['heading'] = "get emails";
 
 Wbhkit\set_vars(array('workshops'));
 $results = null;

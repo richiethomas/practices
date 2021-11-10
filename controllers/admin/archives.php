@@ -1,5 +1,5 @@
 <?php
-$heading = "list all";
+$view->data['heading'] = "list all";
 
 $vars = array('needle', 'page');
 Wbhkit\set_vars($vars);

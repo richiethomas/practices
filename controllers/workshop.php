@@ -1,5 +1,5 @@
 <?php
-$heading = 'workshop';
+$view->data['heading'] = 'workshop';
 
 
 $wid =  (int) ($params[2] ?? 0);
@@ -109,7 +109,7 @@ if (isset($wk) && isset($wk['id']) && $wk['id']) {
 	$view->data['show_other_action'] = $show_other_action;
 	$view->data['admin'] = 0;
 	
-	$heading = $view->data['fb_title'] = $wk['title'];
+	$view->data['heading'] = $view->data['fb_title'] = $wk['title'];
 	$view->data['fb_image'] = "http://{$_SERVER['HTTP_HOST']}".Teachers\get_teacher_photo_src($wk['teacher_info']['user_id']);
 	$view->data['fb_description'] = $wk['notes'];
 	$view->renderPage('winfo');

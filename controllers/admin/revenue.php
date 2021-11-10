@@ -1,5 +1,5 @@
 <?php
-$heading = "revenue";
+$view->data['heading'] = "revenue";
 
 $u->reject_user_below(3); // group 3 or higher
 

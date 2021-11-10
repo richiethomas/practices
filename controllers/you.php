@@ -1,5 +1,5 @@
 <?php
-$heading = 'you';
+$view->data['heading'] = 'you';
 
 include 'login_actions.php';
 

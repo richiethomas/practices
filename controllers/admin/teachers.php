@@ -1,5 +1,5 @@
 <?php
-$heading = "teachers";
+$view->data['heading'] = "teachers";
 
 $vars_to_set = array();
 $vars_to_set = \Wbhkit\add_empty_fields($vars_to_set, Teachers\empty_teacher());

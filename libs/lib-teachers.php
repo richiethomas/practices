@@ -55,7 +55,6 @@ function make_teacher($uid) {
 }
 
 function get_teacher_fields($t) {
-	global $sc;
 	if (!$t || !isset($t['id'])) {
 		$t = empty_teacher();
 	}

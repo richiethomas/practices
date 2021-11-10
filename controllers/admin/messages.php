@@ -1,5 +1,5 @@
 <?php
-$heading = "send messages";
+$view->data['heading'] = "send messages";
 
 
 $wid =  (int) ($params[2] ?? 0);

@@ -1,5 +1,5 @@
 <?php
-$heading = "debug";
+$view->data['heading'] = "debug";
 
 Wbhkit\set_vars(array('deldate'));
 

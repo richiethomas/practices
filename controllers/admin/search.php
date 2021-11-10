@@ -1,5 +1,5 @@
 <?php
-$heading = "search";
+$view->data['heading'] = "search";
 
 $userhelper = new UserHelper("/admin-search");
 
