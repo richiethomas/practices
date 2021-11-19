@@ -319,7 +319,7 @@ function get_unpaid_students() {
 	$mysqlnow = date("Y-m-d H:i:s", strtotime("now"));
 
 	$stmt = \DB\pdo_query("
-select r.workshop_id, w.title, u.email, u.display_name, r.user_id, w.start
+select r.workshop_id, w.title, u.email, u.display_name, r.user_id, w.start, w.cost
 from workshops w, registrations r, users u
 where 
 (w.start >= date('$mysql_lastmonth') and w.start <= date('$mysqlnow'))
@@ -564,12 +564,12 @@ function add_update_workshop(array $wk, string $ac = 'up') {
 		
 		if ($ac == 'up') {
 			$params[':wid'] = $wk['id'];
-			$sql = "update workshops set title = :title, start = :start, end = :end, cost = :cost, capacity = :capacity, location_id = :lid, online_url = :online_url, notes = :notes, when_public = :public, reminder_sent = :reminder_sent, teacher_id = :tid, co_teacher_id = :ctid, application = :application where id = :wid";			
+			$sql = "update workshops set title = :title, start = :start, end = :end, cost = :cost, capacity = :capacity, location_id = :lid, online_url = :online_url,  notes = :notes, when_public = :public, reminder_sent = :reminder_sent, teacher_id = :tid, co_teacher_id = :ctid, application = :application where id = :wid";			
 			$stmt = \DB\pdo_query($sql, $params);
 			return $wk['id'];
 		} elseif ($ac = 'ad') {
 			$stmt = \DB\pdo_query("insert into workshops (title, start, end, cost, capacity, location_id, online_url, notes, when_public, reminder_sent, teacher_id, co_teacher_id, application)
-			VALUES (:title, :start, :end, :cost, :capacity, :lid, :online_url, :notes,  :public, :reminder_sent, :tid, :ctid, :application)",
+			VALUES (:title, :start, :end, :cost, :capacity, :lid, :online_url,  :notes,  :public, :reminder_sent, :tid, :ctid, :application)",
 			$params);
 			return $last_insert_id; // set as a global by my dbo routines
 		}

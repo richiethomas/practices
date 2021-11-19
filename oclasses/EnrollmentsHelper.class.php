@@ -114,10 +114,13 @@ class EnrollmentsHelper extends WBHObject {
 		from registrations r, workshops w, locations l
 		where r.workshop_id = w.id 
 		and w.location_id = l.id 
-		and r.user_id = :uid 
-		and ( (w.start >= :now) || (r.status_id = ".ENROLLED.") ) 
-		order by w.start desc";
-		$params = array(':uid' => $u->fields['id'], ':now' => $mysqlnow);
+		and r.user_id = :uid ";
+		if (!$admin) { 
+			$sql .= "		and ( (w.start >= :now) || (r.status_id = ".ENROLLED."))";
+		} 
+		$sql .= " order by w.start desc";
+		$params = array(':uid' => $u->fields['id']);
+		if (!$admin) { $params[':now'] = $mysqlnow;  }
 	
 		// rank
 		$paginator  = new \Paginator( $sql, $params );

@@ -53,7 +53,7 @@ define('USER_PHOTO_MAX_BYTES', 5000000);
 if (LOCAL) {
 	define('WEBMASTER', "will@willhines.net");	
 } elseif (strpos($_SERVER['SERVER_NAME'], 'wgimprovschool.com') !== false) {
-	define('WEBMASTER', "will@wgimprovschool.com");
+	define('WEBMASTER', "classes@wgimprovschool.com");
 } else {
 	define('WEBMASTER', "will@willhinesimprov.com");
 }

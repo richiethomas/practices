@@ -62,7 +62,7 @@ function confirm_email($e, $status_id = ENROLLED) {
 
 	$wk = $e->wk;
 	$u = $e->u;	
-	$trans = URL."/workshop/view/{$wk['id']}";
+	$trans = URL."workshop/view/{$wk['id']}";
 	$body = '';
 	$notifications = '';	
 		
@@ -74,7 +74,8 @@ function confirm_email($e, $status_id = ENROLLED) {
 			$body = "<p>You are ENROLLED in the workshop \"{$wk['title']}\".</p>";
 
 			if ($wk['location_id'] == ONLINE_LOCATION_ID) {
-				$body .= "<p>ZOOM LINK:<br>\n----------<br>\nThe Zoom link to your workshop is: {$wk['online_url']}.<br><br> \nTry to show up 5 minutes early if you can so we can get started right away.  If your class is multiple sessions, that link should work for all of them. We'll send you an email if the link changes.</p>";
+				$body .= "<p>ZOOM LINK:<br>\n----------<br>\nThe Zoom link to your workshop is: {$wk['online_url']}<br>\n";
+				$body .= "<br><br>\nTry to show up 5 minutes early if you can so we can get started right away.  If your class is multiple sessions, that link should work for all of them. We'll send you an email if the link changes.</p>";
 			}
 			
 			$body .= payment_text($wk);
@@ -111,7 +112,7 @@ If you no longer want to be notified of open spots, you can drop out here: <br>
 			
 			// tell webmaster if this person needs a refund
 			if ($e->fields['paid'] == 1) {
-				centralized_email(WEBMASTER, "refund requested", "<p>{$u->fields['nice_name']} just dropped from the class '{$wk['title']}', and had already paid</p><p>See workshop info: ".URL."admin_edit2.php?wid={$wk['id']}</p>");
+				centralized_email(WEBMASTER, "refund requested", "<p>{$u->fields['nice_name']} just dropped from the class '{$wk['title']}', and had already paid</p><p>See workshop info: ".URL."admin-workshop/view/{$wk['id']}</p>");
 			}
 			
 			break;
@@ -140,9 +141,17 @@ If you no longer want to be notified of open spots, you can drop out here: <br>
 		<b>Title:</b> {$wk['title']}<br>
 		<b>Teacher:</b> {$wk['teacher_info']['nice_name']}".($wk['co_teacher_id'] ?  ", {$wk['co_teacher_info']['nice_name']}" : '')."<br>
 		<b>When:</b> {$wk['full_when']} (".TIMEZONE." - California time)<br>
-		<b>Cost:</b> {$wk['costdisplay']}<br>".
-		($status_id == ENROLLED ? "<b>Zoom link:</b> {$wk['online_url']}" : "<b>Zoom link</b>: We'll email you the zoom link if/once you are enrolled.")."<br>
-		<b>Description:</b> {$wk['notes']}</p>
+		<b>Cost:</b> {$wk['costdisplay']}<br>";
+		
+		
+		if ($wk['location_id'] == ONLINE_LOCATION_ID) {
+			if ($status_id == ENROLLED) {
+					$body .= "<b>Zoom link:</b> {$wk['online_url']}<br>";
+			} else {
+				$body .= "<b>Zoom link</b>: We'll email you the zoom link if/once you are enrolled.<br>";
+			}
+		}
+		$body .= "<b>Description:</b> {$wk['notes']}</p>
 		<p>Web page for this class:<br>\n{$trans}</p>";	
 	}
 
@@ -302,8 +311,8 @@ There are online shows and jams that you can play in, if you wish! See the shows
 http://www.wgimprovschool.com/community</p>\n\n
 <p>FACEBOOK AND CHAT<br>\n
 ---------------------<br>\n
-If you want to meet other students, check out our Facebook group or Discord chat server:
-Facebook: http://www.facebook.com/groups/wgimprovschool<br>\n
+If you want to meet other students, check out:\n
+Facebook group: http://www.facebook.com/groups/wgimprovschool<br>\n
 Discord chat server: https://discord.gg/GXbP3wgbrc</p>";
 	
 }

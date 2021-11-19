@@ -286,7 +286,7 @@ class User extends WBHObject {
 			$stmt = \DB\pdo_query("update users set new_email = :email where id = :uid", array(':email' => $new_email, ':uid' => $this->fields['id']));
 		
 			$sub = 'email update at WGIS';
-			$link = URL."you.php?ac=concemail";
+			$link = URL."you/concemail";
 			$ebody = "<p>You requested to change what email you use at the WGIS web site. Use the link below to do that:</p><p>$link</p>";
 			\Emails\centralized_email($new_email, $sub, $ebody);
 			return true;

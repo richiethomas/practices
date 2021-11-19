@@ -82,6 +82,7 @@ switch ($ac) {
 		break;
 
 	case 'enroll':
+		$guest = new User();
 		Wbhkit\set_vars(array('email', 'con'));
 		$guest->set_by_email($email);
 		if ($guest->error) {
@@ -99,6 +100,7 @@ switch ($ac) {
 
 		
 	case 'adxtra':	
+	
 		XtraSessions\add_xtra_session($wid, $start_xtra, $end_xtra, $online_url_xtra);
 		$wk = Workshops\fill_out_workshop_row($wk);
 		$message = "Added xtra session.";

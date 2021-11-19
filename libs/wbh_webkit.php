@@ -31,6 +31,9 @@ function figure_help_id($key) {
 }
 
 function figure_aria_attribute($key, $help = null, $error = null) {
+	
+	//return ">"; // no aria-attribute for now!
+	
 	if ($help || $error) {
 		return " aria-describedby='".figure_help_id($key)."'>";
 	} else {

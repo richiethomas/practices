@@ -174,7 +174,7 @@ class Enrollment extends WBHObject {
 				$body = "A spot has opened up in '{$wk['title']}', starting on {$wk['showstart']}.<br><br>
 		
 				Go here to enroll.<br>
-				".URL."/workshop/view/{$wk['id']}
+				".URL."workshop/view/{$wk['id']}
 				<br><br>
 			
 				Please note: everyone on the waiting list gets this email at the same time. If you want this spot, go there ASAP.";	
@@ -230,7 +230,7 @@ class Enrollment extends WBHObject {
 				}
 				
 				$body .= "<p>To see all other info on the class go here:<br>";
-				$body .= URL."/workshop/view/{$this->wk['id']}</p>\n";
+				$body .= URL."workshop/view/{$this->wk['id']}</p>\n";
 
 				
 				$body .= "<p>Thanks!<br>-Will</p>\n";

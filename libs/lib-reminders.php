@@ -109,7 +109,7 @@ function remind_enrolled(array $class) {
 			$note .= \Emails\payment_text($wk, 1);
 		}
 		
-		$trans = URL."/workshop/view/{$wk['id']}";
+		$trans = URL."workshop/view/{$wk['id']}";
 
 		if (!$class[1] && !$class[2]) { // if this not an xtra session or a show
 			$note .= "<p>DROPPING OUT<br>\n
@@ -134,7 +134,7 @@ Class info on web site: $trans";
 	//remind teacher
 	if (!LOCAL || REMINDER_TEST) {
 				
-		$trans = URL."/workshop/view/{$wk['id']}";
+		$trans = URL."workshop/view/{$wk['id']}";
 		$teacher_reminder = get_reminder_message_data($wk, $xtra, $cs, true);
 		$msg = $teacher_reminder['note']."<p>Class info online:<br>$trans</p>\n";
 		
@@ -150,7 +150,7 @@ Class info on web site: $trans";
 	if ($wk['enrolled'] < $wk['capacity'] && (!LOCAL || REMINDER_TEST)) {
 		
 		$alert_msg = "'{$wk['title']}' is not full. {$wk['enrolled']} of {$wk['capacity']} signed up<br>\n".
-			URL."admin_edit2.php?wid={$wk['id']}<br>\n".
+			URL."admin-workshop/view/{$wk['id']}<br>\n".
 				\Emails\get_workshop_summary($wk);
 		
 		\Emails\centralized_email(WEBMASTER, "'{$wk['title']}' is not full.", $alert_msg);
@@ -170,7 +170,11 @@ function get_reminder_message_data(array $wk, array $xtra, \ClassShow $cs, bool 
 		
 	} elseif ($xtra['id']) {
 		$start = $xtra['friendly_when'];
-		$link = $xtra['online_url'] ? $xtra['online_url'] : $wk['online_url'];
+		if ($xtra['online_url']) {
+			$link = $xtra['online_url'];
+		} else {
+			$link = $wk['online_url'];
+		}
 		$subject = "WGIS class reminder: {$wk['title']} {$start}";
 	} else {
 		$start = $wk['when'];
@@ -197,7 +201,8 @@ function get_reminder_message_data(array $wk, array $xtra, \ClassShow $cs, bool 
 		
 		$note .= "<p>ZOOM LINK:<br>
 Here's the zoom link. Try to sign in a few minutes early if you can.<br>
-$link</p>\n";  
+$link</p>\n"; 
+
 		// should be workshop url or xtra_session url, set in lib_workshops.php fill_out_workshop_row
 		if ($link != $wk['online_url']) {
 			$note .= "<p>Please note: this is a DIFFERENT LINK than you usually use for this class!</p>\n";
@@ -208,8 +213,7 @@ $link</p>\n";
 https://www.twitch.tv/wgimprovschool</p>\n";
 		}
 	}			
-	
-	//$sms = "Reminder: {$wk['title']} ".($cs->fields['id'] ? 'class show' : 'class').", {$start}, ".URL;
+
 	
 	return array(
 	 'subject' => $subject,

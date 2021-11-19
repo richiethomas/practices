@@ -1,16 +1,5 @@
-<?php
-function teacher_link($tinfo) {
-  echo "
-	  <a href='/teachers/view/{$tinfo['id']}'><img class='mx-2 teacher-image align-self-center' src='".\Teachers\get_teacher_photo_src($tinfo['user_id'])."' alt='Teacher Name'></a>
-	<div class=''>
-		<h6 class='mt-0 mb-0 teacher-label'>Teacher</h6>
-		<h5 class='mt-0 mb-0 teacher-name'><a href='/teachers/view/{$tinfo['id']}'> {$tinfo['nice_name']}</a></h5>
-	</div>";	
-}	
-	
-?>	
 
-<main>
+<main role="main">
 
 <?php if ($link_email_sent_flag) { ?>	
 <script type="text/javascript">
@@ -28,6 +17,25 @@ function teacher_link($tinfo) {
 <?php 		}  ?>	
 
 
+
+<!--
+<div class="jumbotron">
+	<div class="container-lg container-fluid">
+	  <div class="row align-items-center justify-content-center">
+		<p class="col-12 col-sm-10 col-md-8">We teach online classes in <span class="color-long-form-improv">long-form improv</span> <span class="color-character">character</span> and <span class="color-sketch">sketch</span>.</p>
+	  </div>
+
+	  <div class="row news-summary pb-4">
+		<div class="col-12 d-flex align-items-start justify-content-start ">
+		  <span class="badge rounded-pill bg-primary h6 mx-2"><a class="text-light" href="shows.php">Shows and Jams</a></span>
+		  <span class="h6 news-item pl-1"> See the <a href="shows.php">shows/jams</a> page for details!</span>
+		</div>
+	  </div>
+	  
+	</div>
+  </div>
+-->
+
 <div class="container-fluid classes-header container-header-banner"><h3 class="container-lg container-fluid">Latest News</h3></div>
 	
 	<div class="container-lg container-fluid mt-3" id="news">
@@ -36,7 +44,7 @@ function teacher_link($tinfo) {
 			<div class="col-sm-5">
 				
 				<figure class="figure">
-				  <a href="/teams"><img src="/images/teams.png" class="figure-img img-fluid rounded" alt="2021 Winter Teams"></a>
+				  <a href="teams.php"><img src="images/teams.png" class="figure-img img-fluid rounded" alt="2021 Winter Teams"></a>
 				  <figcaption class="figure-caption text-end">art by Gareth O'Connor</figcaption>
 				</figure>
 			</div>
@@ -44,12 +52,12 @@ function teacher_link($tinfo) {
 
 			  <dl class="row my-5">
 			    <dt class="col-sm-3">WGIS Teams</dt>
-			    <dd class="col-sm-9">We have online house teams! Every Monday 11am and 5pm (California time, <?php echo TIMEZONE; ?>) <a href="/teams">See more info here</a>.</dd>
+			    <dd class="col-sm-9">We have online house teams! Every Monday 11am and 5pm (California time, <?php echo TIMEZONE; ?>) <a href="teams.php">See more info here</a>.</dd>
 			  </dl>
 
 			  <dl class="row my-5">
 			    <dt class="col-sm-3">Community</dt>
-			    <dd class="col-sm-9">We have a great community around our classes! Facebook groups, chat servers, Twitch channels -- <a href="/community">learn about all these things here</a>.</dd>
+			    <dd class="col-sm-9">We have a great community around our classes! Facebook groups, chat servers, Twitch channels -- <a href="community.php">learn about all these things here</a>.</dd>
 			  </dl>
   
   
@@ -65,59 +73,77 @@ function teacher_link($tinfo) {
 	<div class="container-fluid classes-header container-header-banner"><h3 class="container-lg container-fluid">Current & Upcoming Classes</h3></div>
 	<h4 class="text-center class-time-announcement mt-5 mb-5 col-12">All Class Dates and Times are California Time (<?php echo TIMEZONE; ?>)</h4>
 	
+	
 <?php
 	include 'unavailable_workshops.php';	
 ?>
 	
 	
 	<div class="container-lg container-fluid" id="classes-listings">
+		  
+		  
 		<?php
-		$classes_shown = 0;
-		foreach ($upcoming_workshops as $wk) {
-			
-			if (!Wbhkit\is_future($wk['start'])) {
-				continue; // skip ones that already started
-			}
-			//if ($wk['soldout']) {
-			//	continue; // skip sold out classes
-			//}
-			
-			
-			$classes_shown++; // count how many classes we actually list
-		?>
-  	  <div class="row justify-content-between my-3 py-3 border-top">
-			<div class="col-md-11 classes-listings-class">
-				<h3 class=""><a href="/workshop/view/<?php echo $wk['id']; ?>"><?php echo $wk['title'];?></a></h3>
-				<?php 
-				echo "<p class='text-start'>Starting <b>{$wk['showstart']}</b> for {$wk['total_sessions']} ".
-				(($wk['total_sessions'] == 1) ? 'week ': 'weeks').
-				'<br>'. 
-				"{$wk['enrolled']} of {$wk['capacity']} enrolled, <b>{$wk['costdisplay']}</b></p>";
+			$classes_shown = 0;
+			foreach ($upcoming_workshops as $wk) {
 				
-				?>
-
-
-				<div class="class-meta d-flex justify-content-between align-items-center">
+				if (!Wbhkit\is_future($wk['start'])) {
+					continue; // skip ones that already started
+				}
+				//if ($wk['soldout']) {
+				//	continue; // skip sold out classes
+				//}
+				
+				
+				$classes_shown++; // count how many classes we actually list
+				
+		?>
+  	  <div class="row justify-content-between mt-3">
+		
+			<div class="col-md-11 classes-listings-class mb-5">
+			  <h3 class="my-3 py-3 border-top"><a href="workshop.php?wid=<?php echo $wk['id']; ?>"><?php echo $wk['title'];?></a></h3>
+			  <p><?php
+				  if ($wk['soldout']) { echo "<span class=\"text-danger\">Sold Out!</span> - ";  } 
+				  echo $wk['notes']; 
+				  ?></p>
+			  <p class="class-time-info">Starting <?php echo $wk['showstart']; ?> for <?php echo $wk['total_sessions'];?> <?php echo ($wk['total_sessions'] == 1) ? 'week': 'weeks'; ?></p>
+				  <p><?php echo $wk['enrolled']; ?> of <?php echo $wk['capacity']; ?> signed up</p>
+			  <div class="class-meta d-flex justify-content-between align-items-center mt-4">
 				<div class="d-flex class-teacher col-7 mr-0 px-0 align-items-center">
-					<?php echo teacher_link($wk['teacher_info']); ?>
-					<?php if ($wk['co_teacher_id']) { ?>
-						<?php echo teacher_link($wk['co_teacher_info']); ?>
-					<?php } ?>  
+				  <a href="teachers.php?tid=<?php echo $wk['teacher_id']; ?>"><img class="me-2 teacher-image align-self-center" src="<?php echo \Teachers\get_teacher_photo_src($wk['teacher_info']['user_id']);?>" alt="Teacher Name"></a>
+				  <div class="">
+					<h6 class="mt-0 mb-0 teacher-label">Teacher</h6>
+					<h5 class="mt-0 mb-0 teacher-name"><a href="teachers.php?tid=<?php echo $wk['teacher_id']; ?>"><?php echo $wk['teacher_info']['nice_name'];?></a></h5>
+				  </div>
+				<?php if ($wk['co_teacher_id']) { ?>
+					  <a href="teachers.php?tid=<?php echo $wk['co_teacher_id']; ?>"><img class="mx-2 teacher-image align-self-center" src="<?php echo \Teachers\get_teacher_photo_src($wk['co_teacher_info']['user_id']);?>" alt="Co Teacher Name"></a>
+					  <div class="">
+						<h6 class="mt-0 mb-0 teacher-label">Teacher</h6>
+						<h5 class="mt-0 mb-0 teacher-name"><a href="teachers.php?tid=<?php echo $wk['co_teacher_id']; ?>"><?php echo $wk['co_teacher_info']['nice_name'];?></a></h5>
+					  </div>
+				<?php } ?>  
+				  
 				</div>
+				
+				
+				
+				<span class="class-price">
+				  <?php echo $wk['costdisplay']; ?> 
+				</span>
 				<span class="class-enroll">
+					
 					<?php if ($wk['soldout']) { ?>
-						<span class="text-danger">Sold Out!</span> <a class="btn btn-primary" href="w/workshop/view/<?php echo $wk['id']; ?>" role="button">join wait list</a>
+						<span class="text-danger">Sold Out!</span> <a class="btn btn-primary" href="workshop.php?wid=<?php echo $wk['id']; ?>" role="button">join wait list</a>
 					<?php } elseif ($wk['application']) { ?>
 						
-						<a class="btn btn-primary" href="/workshop/view/<?php echo $wk['id']; ?>" role="button">Request A Spot</a>
+						<a class="btn btn-primary" href="workshop.php?wid=<?php echo $wk['id']; ?>" role="button">Request A Spot</a>
 						
 					<?php } else { ?>
-						<a class="btn btn-primary" href="/workshop/view/<?php echo $wk['id']; ?>" role="button">Enroll</a>
+						<a class="btn btn-primary" href="workshop.php?wid=<?php echo $wk['id']; ?>" role="button">Enroll</a>
 					<?php } ?>
 				</span>
 			  </div>
 			</div>
- 	  </div>
+  </div>
 			<?php
 		}
 		
@@ -127,8 +153,6 @@ function teacher_link($tinfo) {
 		
 		?>
   
-	</div> <!-- end of 'classes listings' div-->
-</div> <!-- end of 'classes' div -->
   
   <div id="newsletter-signup" class="pt-4 pb-4 mb-5">
 	<div class="container">
@@ -143,7 +167,7 @@ function teacher_link($tinfo) {
 				  
 			  <div class="form-group">
 				  
-				<input type="email" class="form-control" id="mce-EMAIL" name="EMAIL" placeholder="Email">
+				<input type="email" class="form-control" id="mce-EMAIL" name="EMAIL" aria-describedby="Email Address" placeholder="Email">
 								
 			  </div>
 			  
@@ -170,7 +194,7 @@ function teacher_link($tinfo) {
 
   <div id="buy-the-book" class="container mb-5">
 	<h3 class="mb-3">Buy the Book</h3>
-<div class="row"><img src="/images/htbtgioe_cover.jpg" class="col-sm-12 col-md-3 align-self-start mb-2" alt="How To Be The Greatest Improviser On Earth" />
+<div class="row"><img src="images/htbtgioe_cover.jpg" class="col-sm-12 col-md-3 align-self-start mb-2" />
 	<p class="col-sm-12 col-md-9">If the workshops are sold out, you could buy "How to Be the Greatest Improviser on Earth" written by Will Hines, the founder of this school. Print and digital versions <a href="https://www.amazon.com/dp/0982625723">on Amazon</a>.</p></div>
   </div>
   

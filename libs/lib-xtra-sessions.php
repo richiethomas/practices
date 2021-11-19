@@ -54,6 +54,8 @@ function xtra_session_fields(array $wk) {
 }
 
 function add_xtra_session(int $workshop_id, string $start, string $end, ?string $online_url = null) {
+	
+	
 	$stmt = \DB\pdo_query("insert into xtra_sessions (workshop_id, start, end, online_url)
 	VALUES (:wid, :start, :end, :url)",
 	array(':wid' => $workshop_id, 

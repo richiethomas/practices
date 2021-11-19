@@ -12,11 +12,11 @@
 				<?php
 				$last_wk = null;
 				foreach ($unpaid as $up) {
-					if ($last_wk != $up['title']) {
-						echo "<p class='m-0'><b><a href='/admin-workshop/view/{$up['workshop_id']}'>{$up['title']}</a> - ".date('D M j', strtotime($up['start']))."</b></p>\n";
-						$last_wk = $up['title'];
+					if ($last_wk != $up['workshop_id']) {
+						echo "<p class='m-0'><b><a href='/admin-workshop/view/{$up['workshop_id']}'>{$up['title']}</a> - ".date('D M j', strtotime($up['start']))." - {$up['cost']}</b></p>\n";
+						$last_wk = $up['workshop_id'];
 					}
-					echo "<p class='m-0 ps-4'>{$up['nice_name']}</p>\n";
+					echo "<p class='m-0 ps-4'>{$up['nice_name']} - {$up['email']}</p>\n";
 				}
 				?>
 				</ul>
