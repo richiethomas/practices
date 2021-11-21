@@ -50,7 +50,7 @@ switch ($ac) {
 
 
 		// update display name
-	case 'updatedn':	
+	case 'updatedn':
 		$guest->update_display_name($display_name);
 		break;	
 		

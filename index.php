@@ -135,6 +135,7 @@ if ($u->check_user_level(3)) {
 include "controllers/{$controller}.php";
 
 
+
 function set_page($pinfo) {
 	global $view;
 	$view->data['heading'] = $pinfo[1];

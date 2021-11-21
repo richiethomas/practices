@@ -9,7 +9,7 @@
 echo 
 	\Wbhkit\texty('start', \Wbhkit\business_when($cs->fields['start'], true), null, null, null, 'Required', ' required ').
 	\Wbhkit\texty('end', \Wbhkit\business_when($cs->fields['end'], true), null, null, null, 'Required', ' required ').
-	\wbhkit\texty('online_url', $cs->fields['online_url'], null, null, null, 'Required', ' required ').
+	\wbhkit\textarea('online_url', $cs->fields['online_url']).
 	\Wbhkit\drop('teacher_id', \Teachers\teachers_dropdown_array(true), $cs->fields['teacher_id'], 'Teacher', null, 'Required', ' required ').
 	\Wbhkit\checkbox('reminder_sent', 1, 'Reminder sent?', $cs->fields['reminder_sent']).
 	($cs->fields['id'] ? \Wbhkit\hidden('show_id', $cs->fields['id']) : '').

@@ -33,6 +33,7 @@ class WBHObject
 
 	function set_into_fields(array $row) {
 		foreach ($row as $n => $v) {
+			if ($n == 'id') { $v = (int)$v; }
 			$this->fields[$n] = $v;
 		}
 		return true;

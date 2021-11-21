@@ -74,7 +74,7 @@ function confirm_email($e, $status_id = ENROLLED) {
 			$body = "<p>You are ENROLLED in the workshop \"{$wk['title']}\".</p>";
 
 			if ($wk['location_id'] == ONLINE_LOCATION_ID) {
-				$body .= "<p>ZOOM LINK:<br>\n----------<br>\nThe Zoom link to your workshop is: {$wk['online_url']}<br>\n";
+				$body .= "<p>ZOOM LINK:<br>\n----------<br>\nThe Zoom link to your workshop is: {$wk['online_url_display']}<br>\n";
 				$body .= "<br><br>\nTry to show up 5 minutes early if you can so we can get started right away.  If your class is multiple sessions, that link should work for all of them. We'll send you an email if the link changes.</p>";
 			}
 			
@@ -146,7 +146,7 @@ If you no longer want to be notified of open spots, you can drop out here: <br>
 		
 		if ($wk['location_id'] == ONLINE_LOCATION_ID) {
 			if ($status_id == ENROLLED) {
-					$body .= "<b>Zoom link:</b> {$wk['online_url']}<br>";
+					$body .= "<b>Zoom link:</b> {$wk['online_url_display']}<br>";
 			} else {
 				$body .= "<b>Zoom link</b>: We'll email you the zoom link if/once you are enrolled.<br>";
 			}

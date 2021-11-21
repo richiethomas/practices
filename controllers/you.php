@@ -10,7 +10,6 @@ if (!$u->logged_in()) {
 	exit();
 } else {
 
-
 	$eh = new EnrollmentsHelper();
 	$view->data['transcript'] = $eh->get_transcript_tabled($u, 0); 
 	$view->data['admin'] = false;

@@ -56,6 +56,9 @@ function fill_out_workshop_row(array $row, bool $get_enrollment_stats = true) {
 
 	$row['costdisplay'] = figure_costdisplay($row['cost']);
 
+	// url stuff
+	$row = parse_online_url($row);
+
 	// xtra session info
 	$row['sessions'] = \XtraSessions\get_xtra_sessions($row['id']);	
 	$row['total_class_sessions'] = 1;
@@ -517,7 +520,7 @@ function workshop_fields(array $wk) {
 	
 	return \Wbhkit\texty('title', $wk['title'], null, null, null, 'Required', ' required ').
 	\Wbhkit\drop('lid', $lookups->locations_drop(), $wk['location_id'], 'Location', null, 'Required', ' required ').
-	\Wbhkit\texty('online_url', $wk['online_url'], 'Online URL').	
+	\Wbhkit\textarea('online_url', $wk['online_url'], 'Online URL').	
 	\Wbhkit\texty('start', $wk['start'], null, null, null, 'Required', ' required ').
 	\Wbhkit\texty('end', $wk['end'], null, null, null, 'Required', ' required ').
 	\Wbhkit\texty('cost', $wk['cost']).
@@ -675,3 +678,16 @@ function get_recent_workshops_dropdown(int $limit = 40) {
 	}
 	return $all;
 }
+
+function parse_online_url($row) {
+	
+	preg_match('/^(\S+)\s*([\S\s]*)/', $row['online_url'], $url_parts);
+
+	$row['online_url_just_url'] = ($url_parts[1] ?? '');
+	$row['online_url_the_rest'] = preg_replace('/\n/', '<br>', $url_parts[2] ?? '');
+	$row['online_url_display'] = preg_replace('/\n/', '<br>', $row['online_url']);
+	
+	return $row;
+	
+}
+

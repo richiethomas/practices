@@ -72,7 +72,7 @@ class User extends WBHObject {
 		$this->error = "Could not find a user for '{$id}'";
 	}
 
-	function set_by_key($key) {
+	function set_by_key(string $key) {
 		$this->fields = array();
 		$stmt = \DB\pdo_query("select * from users where ukey = :key", array(':key' => $key));
 		while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
@@ -81,6 +81,7 @@ class User extends WBHObject {
 			$this->remember_key($key);
 			return $this->fields['id'];
 		}
+
 		return false;
 	}
 
@@ -223,52 +224,19 @@ class User extends WBHObject {
 	
 	
 
-	function update_display_name($display_name) {
-
-		$this->fields['display_name'] = $display_name;
+	function update_display_name(string $display_name) {
 		
 		// update user info
-		$stmt = \DB\pdo_query("update users set display_name = :name where id = :uid", array(':name' => $this->fields['display_name'], ':uid' => $this->fields['id']));
+		$stmt = \DB\pdo_query("update users set display_name = :display_name where id = :uid", 
+			array(
+				':display_name' => $display_name, 
+				':uid' => $this->fields['id'])
+		);
+		$this->fields['display_name'] = $display_name;
+		$this->set_nice_name();
 		return true;
 
 	}
-
-	function update_text_preferences(string $phone, string $send_text, string $carrier_id) {
-		
-		$this->fields['phone'] = $phone;
-		$this->fields['send_text'] = $send_text;
-		$this->fields['carrier_id'] = $carrier_id;
-
-		// $u must include $carrier_id, $phone, $send_text
-		$this->fields['phone'] = preg_replace('/\D/', '', $this->fields['phone']); // just numbers for phone
-		$this->fields['send_text'] = 
-			$this->fields['send_text'] ? $this->fields['send_text'] : 0;
-
-		// only validate data if they want texts, else who cares?
-		if ($this->fields['send_text'] == 1) {
-			if (strlen($this->fields['phone']) != 10) {
-				$this->error = 'Phone number must be ten digits.';
-			} 
-			if ($this->fields['carrier_id'] == 0) {
-				$this->error = 'You must pick a carrier if you want text updates.';
-			}
-		}
-
-		// update user info
-		if ($this->error) {
-			return false;
-		} else {
-		
-			$stmt = \DB\pdo_query("update users set send_text = :send_text, phone = :phone, carrier_id = :carrier_id where id = :uid",
-			array(':send_text' => $this->fields['send_text'],
-			':phone' => $this->fields['phone'],
-			':carrier_id' => $this->fields['carrier_id'],
-			':uid' => $this->fields['id']));
-			return true;
-		}
-
-	}
-
 
 	function update_group_level(int $glevel) {
 

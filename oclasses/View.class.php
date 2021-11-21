@@ -10,8 +10,6 @@ class View extends WBHObject
 
 	public function renderPage($page = null, $data = null, $mode = 'single') {
 		
-		global $u;
-		
 		$data = $this->updateData($data); // add some things to it
 	    $data['page'] = $page;
 		if (is_array($data) && !empty($data)) {
@@ -19,10 +17,10 @@ class View extends WBHObject
 	    }
 	
 		$is_admin = false;
-		if (strpos($page, 'admin') !== false && $u->check_user_level(2)) { 
+		if (strpos($page, 'admin') !== false) { 
 			$is_admin = true;
 		}
-	
+		
 		include $this->getPageStr($this->header.($is_admin ? '-admin' : ''));
 		include $this->getPageStr('messagealert'); // every page: show $message and $error
 		include $this->getPageStr($page);

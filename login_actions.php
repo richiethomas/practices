@@ -113,7 +113,7 @@ switch ($ac) {
 		}
 		$message = "Changing display name to '$display_name' from '{$u->fields['display_name']}'";
 		$logger->info($message);
-		$u->update_display_name($display_name);
+		$u->update_display_name($display_name);		
 		break;		
 
 

@@ -31,6 +31,12 @@ class ClassShow extends WBHObject {
 		$this->set_mysql_datetime_field('end', $this->fields['end']);
 		if (!$this->fields['reminder_sent']) { $this->fields['reminder_sent'] = 0; }
 		$this->fields['friendly_when'] = \Wbhkit\friendly_when($this->fields['start']).'-'.\Wbhkit\friendly_time($this->fields['end']);
+		
+		
+		$row = array('online_url' => $this->fields['online_url']);
+		$row = \Workshops\parse_online_url($row);
+		$this->set_into_fields($row);
+			
 	}	
 
 	

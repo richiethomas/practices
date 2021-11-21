@@ -63,9 +63,15 @@ echo "<div class='row mt-md-3 admin-edit-workshop'>\n";
 		echo "<ul>\n";
 		if (!empty($wk['sessions'])) {
 			foreach ($wk['sessions'] as $s) {
-				echo "<li>({$s['rank']}) {$s['friendly_when']} <a href='/admin-workshop/delxtra/{$wk['id']}/{$s['id']}'>delete</a>".($s['reminder_sent'] ? ' <em>- reminder sent</em>' : '').
-					($s['online_url'] ? "<ul><li><a href='{$s['online_url']}'>{$s['online_url']}</a></li></ul>" : '').
-					"</li>\n";
+				echo "<li>({$s['rank']}) {$s['friendly_when']} <a href='/admin-workshop/delxtra/{$wk['id']}/{$s['id']}'>delete</a>".($s['reminder_sent'] ? ' <em>- reminder sent</em>' : '');
+				if ($s['online_url']) {
+					echo "<ul><li><a href='{$s['online_url_just_url']}'>{$s['online_url_just_url']}</a>";
+					if ($s['online_url_the_rest']) {
+						echo "<br>{$s['online_url_the_rest']}";
+					}
+					echo "</li></ul>\n";
+				}
+				echo "</li>\n";
 			}
 		}
 		echo "<li><a href='/admin-workshop/week/{$wk['id']}'>Add a week</a></li>\n";

@@ -106,7 +106,7 @@ function teacher_link($tinfo) {
 				</div>
 				<span class="class-enroll">
 					<?php if ($wk['soldout']) { ?>
-						<span class="text-danger">Sold Out!</span> <a class="btn btn-primary" href="w/workshop/view/<?php echo $wk['id']; ?>" role="button">join wait list</a>
+						<span class="text-danger">Sold Out!</span> <a class="btn btn-primary" href="/workshop/view/<?php echo $wk['id']; ?>" role="button">join wait list</a>
 					<?php } elseif ($wk['application']) { ?>
 						
 						<a class="btn btn-primary" href="/workshop/view/<?php echo $wk['id']; ?>" role="button">Request A Spot</a>

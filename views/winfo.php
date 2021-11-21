@@ -16,7 +16,12 @@ if (!\Workshops\is_public($wk)) {
 		
 		$point = "You are enrolled in this class!";
 		if ($wk['location_id'] == ONLINE_LOCATION_ID) {
-			$point .= "<br><br><b>Zoom link</b>: <a href='{$wk['online_url']}'>{$wk['online_url']}</a>";
+			$point .= "<br><br><b>Zoom link</b>: <a href='{$wk['online_url_just_url']}'>{$wk['online_url_just_url']}</a>";
+			
+			if ($wk['online_url_the_rest']) {
+				$point .= "<br>{$wk['online_url_the_rest']}";
+			}
+			
 		}
 		
 		$point .= "<br><br>Need to drop this class? <a class='btn btn-primary' href='$drop_link'>click here to drop</a>.";
@@ -134,8 +139,14 @@ if ($u->check_user_level(2)) {
 	echo "<div class='m-3 p-3 bg-info'>\n";
 	echo "<h3>Teacher/Admin Info</h3>\n";
 	
-	echo "<h4>Zoom link</h4>\n";
-	echo "<p><a href='{$wk['online_url']}'>{$wk['online_url']}</a></p>\n";
+	if ($wk['location_id'] == ONLINE_LOCATION_ID) {
+		echo "<h4>Zoom link</h4>\n";
+		echo "<p><a href='{$wk['online_url_just_url']}'>{$wk['online_url_just_url']}</a>\n";
+		if ($wk['online_url_the_rest']) {
+			echo "<br>{$wk['online_url_the_rest']}";
+		}
+		echo "</p>";
+	}
 	
 	echo "<h4 class='mt-2'>Enrolled</h4>";
 	if (count($lists) > 0) {

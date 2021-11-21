@@ -128,7 +128,6 @@ Class info on web site: $trans";
 		if (!LOCAL || REMINDER_TEST) {
 			\Emails\centralized_email($std['email'], $subject, $base_msg);
 			$guest->set_by_id($std['id']);
-			//\Emails\send_text($guest, $sms); // routine will check if they want texts and have proper info
 		}
 	}
 	//remind teacher
@@ -165,20 +164,20 @@ function get_reminder_message_data(array $wk, array $xtra, \ClassShow $cs, bool 
 	
 	if ($cs->fields['id']) {
 		$start = $cs->fields['friendly_when'];
-		$link = $cs->fields['online_url'];
+		$link = $cs->fields['online_url_display'];
 		$subject = "WGIS class reminder: {$wk['title']} CLASS SHOW - {$start}";
 		
 	} elseif ($xtra['id']) {
 		$start = $xtra['friendly_when'];
-		if ($xtra['online_url']) {
-			$link = $xtra['online_url'];
+		if ($xtra['online_url_display']) {
+			$link = $xtra['online_url_display'];
 		} else {
-			$link = $wk['online_url'];
+			$link = $wk['online_url_display'];
 		}
 		$subject = "WGIS class reminder: {$wk['title']} {$start}";
 	} else {
 		$start = $wk['when'];
-		$link = $wk['online_url'];
+		$link = $wk['online_url_display'];
 		$subject = "WGIS class reminder: {$wk['title']} {$start}";
 	}
 	
@@ -204,7 +203,7 @@ Here's the zoom link. Try to sign in a few minutes early if you can.<br>
 $link</p>\n"; 
 
 		// should be workshop url or xtra_session url, set in lib_workshops.php fill_out_workshop_row
-		if ($link != $wk['online_url']) {
+		if ($link != $wk['online_url_display']) {
 			$note .= "<p>Please note: this is a DIFFERENT LINK than you usually use for this class!</p>\n";
 		}		
 		
@@ -219,7 +218,6 @@ https://www.twitch.tv/wgimprovschool</p>\n";
 	 'subject' => $subject,
 	 'note' => $note
 	);
- 	//'sms' => $sms	
 
 	
 }

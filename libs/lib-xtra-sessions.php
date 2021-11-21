@@ -13,6 +13,9 @@ order by start", array(':id' => $workshop_id));
 	$sessions = array();
 	while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
 		$row['friendly_when'] = \Wbhkit\friendly_when($row['start']).'-'.\Wbhkit\friendly_time($row['end']);
+		
+		$row = \Workshops\parse_online_url($row);
+		
 		$sessions[] = $row;
 	}
 	return $sessions;
@@ -27,6 +30,9 @@ function get_xtra_session(int $xtra_id = 0) {
 	$sessions = array();
 	while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
 		$row['friendly_when'] = \Wbhkit\friendly_when($row['start']).'-'.\Wbhkit\friendly_time($row['end']);
+		
+		$row = \Workshops\parse_online_url($row);
+		
 		return $row;
 	}
 	return empty_xtra_session();
@@ -49,7 +55,7 @@ function xtra_session_fields(array $wk) {
 	return
 	\Wbhkit\texty('start_xtra', null, null, null, null, 'Required', ' required ').
 	\Wbhkit\texty('end_xtra', null, null, null, null, 'Required', ' required ').
-	\Wbhkit\texty('online_url_xtra');
+	\Wbhkit\textarea('online_url_xtra');
 	
 }
 
