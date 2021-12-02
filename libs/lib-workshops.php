@@ -384,6 +384,8 @@ order by start asc");
 		
 		$row['costdisplay'] = figure_costdisplay($row['cost']);
 		
+		$row = parse_online_url($row);
+		
 		if ($get_enrollments) {
 			foreach ($enrollments as $e_wid => $e_row) {
 				if ($row['id'] == $e_wid) {

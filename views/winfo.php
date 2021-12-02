@@ -110,8 +110,8 @@ echo "<div class=\"row m-3 p-3 justify-content-center\"><div class=\"col-md-8 bo
 <ul>
 	<li>All times are California local time (PDT).</li>
 	<li>Pay via Venmo (@wgimprovschool - a business) or Paypal (payments@wgimprovschool.com)</li>
-	<li>Classes are held over <a href=\"http://www.zoom.us/\">Zoom</a></li>
-	<li><b>LATE DROP POLICY: If drop less than ".LATE_HOURS." hours before, you still must pay! Unless we sell your spot in which case, it's cool.</b></li>
+	<li>Classes are held over <a href=\"http://www.zoom.us/\">Zoom</a> unless the title includes IN PERSON</li>
+	<li><b>LATE DROP POLICY: If drop less than ".LATE_HOURS." hours before and it was sold out, we will ask you to still pay!</b></li>
 </ul>
 </div></div>\n";
 

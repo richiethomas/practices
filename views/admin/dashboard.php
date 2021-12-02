@@ -65,9 +65,9 @@ foreach ($workshops as $wk) {
 	
 	echo "<small>";
 	if ($wk['override_url']) {
-		echo "<a class='zoomlink' href='{$wk['override_url']}'>{$wk['override_url']}</a>";
+		echo "<div class='zoomlink'>{$wk['override_url']}</div>";
 	} else {
-		echo "<a class='zoomlink' href='{$wk['online_url']}'>{$wk['online_url']}</a>";
+		echo "<div class='zoomlink'>{$wk['online_url']}</div>";
 	}
 	echo "</small>\n";
 	echo "</li>\n";

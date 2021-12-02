@@ -161,7 +161,7 @@ body.admin main a {
   max-height: 0;
 }
 
-.admin-box#admin-box-upcoming-workshops ul li a.zoomlink {
+.admin-box#admin-box-upcoming-workshops ul li div.zoomlink {
   display: block;
   text-indent: 1rem;
 }
