@@ -12,11 +12,15 @@ if (!$filter_by) {
 	$filter_by = 'all';
 }
 
-if ($ac && $ac=='del' && isset($wk) && isset($wk['id'])) {
+if ($ac=='del') {
+	$wid = 	(int) ($params[2] ?? 0);
+	if ($wid) {
+		$wk = \Workshops\get_workshop_info($wid);
 	
-	Workshops\delete_workshop($wk['id']);
-	$message = "Deleted '{$wk['title']}'";
-	$logger->info($message);
+		Workshops\delete_workshop($wk['id']);
+		$message = "Deleted '{$wk['title']}'";
+		$logger->info($message);
+	}
 }
 
 $view->data['faculty'] = Teachers\get_all_teachers(true); // active teachers

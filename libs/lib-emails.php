@@ -31,16 +31,24 @@ function centralized_email($to, $sub, $body) {
 		$smtp = get_smtp_object();
 		$headers['To'] = $to = 'whines@gmail.com'; // everything to me on local
 		$sent = true;
+		
+		// comment out below line to stop email locally
  		//$sent = $smtp->send($to, $headers, $body);  // laptop can use the SMTP server on willhines.net
 		
  	  } else {
+  		$smtp = get_smtp_object();
+   		$sent = $smtp->send($to, $headers, $body);  
+		  
+		  // this is the code to use "mail" instead of SMTP connection. Faster, but more spammy.
+		  /*
 		  unset($headers['Subject']);
 		  unset($headers['To']);
 		  $stringheaders = '';
 		  foreach ($headers as $key => $value) {
 			  $stringheaders .= "$key: $value\r\n";
 		  }
-	  	 $sent = mail($to, $sub, $body, $stringheaders); // willhinesimprov.com uses local server
+	  	 $sent = mail($to, $sub, $body, $stringheaders); // wgimprovschool.com uses local server
+		  */
  	  }
 	
 	$ts = date("Y-m-d H:i:s").' ';
@@ -233,10 +241,10 @@ function get_smtp_object() {
 		$params["username"] = 'will@willhines.net';
 		$params["password"] = EMAIL_PASSWORD_LOCAL;
 	} else { // out of date
-		$params["host"] = "ssl://premium44.web-hosting.com";
+		$params["host"] = "ssl://premium130.web-hosting.com";
 		$params["port"] = '465';
 		$params["auth"] = "PLAIN";
-		$params["username"] = 'will@willhinesimprov.com';
+		$params["username"] = 'classes@wgimprovschool.com';
 		$params["password"] = EMAIL_PASSWORD_PRODUCTION;
 	}
 	$smtp = \Mail::factory('smtp', $params); // should now be set globally

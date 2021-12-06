@@ -1,6 +1,6 @@
 <?php
 echo "<h2><a href='/admin-workshop/view/{$wk['id']}'>{$wk['title']}</a></h2>\n
-<p class='small'><a href='/admin-archives/clone/{$wk['id']}#addworkshop'>clone this workshop</a> - <a href='/workshop/view/{$wk['id']}'>student view</a></p>";
+<p class='small'><a href='/admin-archives/clone/{$wk['id']}#addworkshop'>clone this workshop</a> - <a href='/workshop/view/{$wk['id']}'>student view</a> - <a href='/admin-bulk/view/{$wk['id']}'>bulk edit</a></p>";
 echo "<div class='row mt-md-3 admin-edit-workshop'>\n";
 
 		// enrollment column
@@ -12,7 +12,7 @@ echo "<div class='row mt-md-3 admin-edit-workshop'>\n";
 			</small></h2>\n";
 
 		//show enrollment totals at top
-		echo  "<p>totals: (".implode(" / ", array_values($stats)).") - ({$wk['actual_revenue']})<p>\n";
+		echo  "<p>totals: (".implode(" / ", array_values($stats)).") - ({$wk['actual_revenue']})</p>\n";
 		
 		echo "<form action='/admin-workshop/at/{$wk['id']}' method='post'>\n";
 		

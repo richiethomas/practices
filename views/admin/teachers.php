@@ -16,6 +16,9 @@
 		
 		<?php if (isset($t['id']) && $t['id']) { ?>
 			<h2><?php echo $t['nice_name']; ?> Teacher Info</h2>
+			
+			<p>See <a href="/admin-users/view/<?php echo $t['user_id']; ?>">user info</a> for <?php echo $t['nice_name']; ?></p>
+			
 			<div class="card"><div class="card-body">
 			<h3>Basic Info</h3>
 			<form id='update_teacher' action='/admin-teachers/up/<?php echo $t['id'] ?>' method='post'>

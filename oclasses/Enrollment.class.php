@@ -131,13 +131,13 @@ class Enrollment extends WBHObject {
 
 		if ($before_status != $target_status) {
 			$this->update_change_log($target_status);	
-			if ($confirm) { 
+			if ($confirm) {
 				\Emails\confirm_email($this, $target_status); 
 			}			
 		}
 
 
-		return $this->message = "Updated user ({$this->u->fields['email']}) to '{$statuses[$target_status]}' for {$this->wk['title']}.";
+		return $this->message = "Updated user ({$this->u->fields['email']}) to '{$statuses[$target_status]}' for workshop {$this->wk['title']}.";
 
 	}
 	

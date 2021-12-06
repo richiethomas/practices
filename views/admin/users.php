@@ -40,9 +40,9 @@ if ($needle) {
 <?php 
 $t = \Teachers\is_teacher($guest->fields['id']);
 if ($t) {
-	echo "<p>{$guest->fields['nice_name']} is a teacher. <a class=\"btn btn-primary text-light\" href='admin_teachers.php?ac=view&tid={$t['id']}'>Edit teacher info</a></p>";
+	echo "<p>{$guest->fields['nice_name']} is a teacher. <a class=\"btn btn-primary text-light\" href='/admin-teachers/view/{$t['id']}'>Edit teacher info</a></p>";
 } else {
-	echo "<p>{$guest->fields['nice_name']} is NOT a teacher. <a class=\"btn btn-primary text-light\" href='admin_teachers.php?ac=make&guest_id={$guest->fields['id']}'>Make teacher</a></p>";	
+	echo "<p>{$guest->fields['nice_name']} is NOT a teacher. <a class=\"btn btn-primary text-light\" href='/admin-teachers/make/{$guest->fields['id']}'>Make teacher</a></p>";	
 }
 ?>
 </div></div> <!-- end of card -->

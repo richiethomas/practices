@@ -95,7 +95,7 @@ switch ($ac) {
 		break;
 	
 	case 'cdel':
-		$error = "Are you sure you want to delete '{$wk['title']}'? <a class='btn btn-danger' href='/admin-workshop/del/{$wk['id']}'>delete</a>";
+		$error = "Are you sure you want to delete '{$wk['title']}'? <a class='btn btn-danger' href='/admin/del/{$wk['id']}'>delete</a>";
 		break;
 
 		
