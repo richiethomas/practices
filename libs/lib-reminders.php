@@ -211,7 +211,10 @@ $link</p>\n";
 			$note .= "<p>Invite your friends and family to watch the show at the Twitch channel:<br>
 https://www.twitch.tv/wgimprovschool</p>\n";
 		}
-	}			
+	} else {
+		$note .= "<p>LOCATION:<br>\n---------<br>\n{$wk['place']}<br>\n{$wk['address']}<br>\n{$wk['city']}, {$wk['state']} {$wk['zip']}</p>\n";
+		
+	}
 
 	
 	return array(

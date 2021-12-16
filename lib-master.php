@@ -18,9 +18,7 @@ session_start();
 //
 require "vendor/autoload.php"; // i barely understand this; might not have enough classes to justify it
 
-ini_set("include_path", '/Applications/MAMP/bin/php/php7.4.2/lib/php:' . ini_get("include_path") ); // local laptop
 ini_set("include_path", '/home/wgimrenl/php:' . ini_get("include_path") ); // wgimprovschool.com
-
 spl_autoload_register(function ($className) {
         $className = str_replace('\\', DIRECTORY_SEPARATOR, $className); // for subdirectories in 'oclasses'
         $file = __DIR__.DIRECTORY_SEPARATOR."oclasses".DIRECTORY_SEPARATOR."{$className}.class.php";

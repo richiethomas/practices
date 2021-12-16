@@ -165,7 +165,10 @@ class Enrollment extends WBHObject {
 		
 		// retrieve waiting list
 		$eh = new EnrollmentsHelper();
-		$stds = $eh->get_students($wk['id'], WAITING);
+		$stds1 = $eh->get_students($wk['id'], WAITING);
+		$stds2 = $eh->get_students($wk['id'], APPLIED);
+		
+		$stds = $stds1 + $stds2;
 		
 		$total_notified = 0;
 		// send them an email that says there's a spot open

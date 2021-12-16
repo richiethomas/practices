@@ -344,19 +344,21 @@ order by w.start");
 // data only, for admin_calendar
 function get_sessions_to_come(bool $get_enrollments = true) {
 	
+	global $lookups;
+	
 	// get IDs of workshops
 	$mysqlnow = date("Y-m-d H:i:s", strtotime("-3 hours"));
 	
 	$stmt = \DB\pdo_query("
-(select w.id, title, start, end, capacity, cost, 0 as xtra, 0 as class_show, notes, teacher_id, co_teacher_id, 1 as rank, '' as override_url, online_url, application
+(select w.id, title, start, end, capacity, cost, 0 as xtra, 0 as class_show, notes, teacher_id, co_teacher_id, 1 as rank, '' as override_url, online_url, application, w.location_id
 from workshops w
 where start >= date('$mysqlnow'))
 union
-(select x.workshop_id, w.title, x.start, x.end, w.capacity, w.cost, 1 as xtra,  0 as class_show, w.notes, w.teacher_id, w.co_teacher_id, x.rank, x.online_url as override_url, w.online_url, w.application
+(select x.workshop_id, w.title, x.start, x.end, w.capacity, w.cost, 1 as xtra,  0 as class_show, w.notes, w.teacher_id, w.co_teacher_id, x.rank, x.online_url as override_url, w.online_url, w.application, w.location_id
 from xtra_sessions x, workshops w 
 where w.id = x.workshop_id and x.start >= date('$mysqlnow'))
 union
-(select ws.workshop_id, w.title, s.start, s.end, w.capacity, w.cost, 1 as xtra, 1 as class_show, w.notes, s.teacher_id, 0 as co_teacher_id, 0 as rank, null as override_url, s.online_url, w.application
+(select ws.workshop_id, w.title, s.start, s.end, w.capacity, w.cost, 1 as xtra, 1 as class_show, w.notes, s.teacher_id, 0 as co_teacher_id, 0 as rank, null as override_url, s.online_url, w.application, w.location_id
 	from shows s, workshops w, workshops_shows ws
 	where ws.show_id = s.id and ws.workshop_id = w.id
 	and s.start >= date('$mysqlnow'))
@@ -367,6 +369,10 @@ order by start asc");
 	$enrollments = array();
 	
 	while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
+		
+		
+		$row['lwhere'] = $lookups->locations[$row['location_id']]['lwhere'];
+		
 		$teach = \Teachers\find_teacher_in_teacher_array($row['teacher_id'], $teachers);
 		if ($teach) {
 			$row['teacher_name'] = $teach['nice_name'];

@@ -24,7 +24,6 @@ switch ($ac) {
 			foreach ($users as $uid) {
 				$e->set_by_uid_wid($uid, $wid);
 				$e->reset_user_and_workshop();
-				echo "status is '$st'<br>";
 				if ($st) {
 					$message .= $e->change_status($st, $confirm);
 					if ($confirm) { $message .= " - emailed"; }

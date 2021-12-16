@@ -1,69 +1,44 @@
 <?php
 namespace Emails;	
 
-require_once 'Mail.php';
-//require_once 'Mail/mime.php';	
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\SMTP;
+
+//require_once 'Mail.php';
+//require_once 'Mail/mime.php';	 // Mail_mime did weird things to encoding of mail
 
 
-// Mail_mime did weird things to encoding of mail
-// turned '=' into '=3D' and other things
-function centralized_email($to, $sub, $body) {
+function centralized_email($to, $sub, $body, $realname = null) {
 		
 	global $logger, $lookups;	
-		
 	
-	$crlf = "\n";
-	$headers = array(
-                    'From'       => WEBMASTER,
-                    'Reply-To'   => WEBMASTER,
-					'Return-Path' => WEBMASTER,
-                    'Subject'       => $sub,
-					'To'			=> $to);
-
-	  $headers['MIME-Version'] = "1.0";
-	  $headers['Content-Type'] = "text/html";
-	  $headers['charset'] = "ISO-8859-1";
-
-	  $body = wordwrap($body, 100, "\n");
-
-	  if (LOCAL) {
-	  	// connect to SMTP
-		$smtp = get_smtp_object();
-		$headers['To'] = $to = 'whines@gmail.com'; // everything to me on local
-		$sent = true;
-		
-		// comment out below line to stop email locally
- 		//$sent = $smtp->send($to, $headers, $body);  // laptop can use the SMTP server on willhines.net
-		
- 	  } else {
-  		$smtp = get_smtp_object();
-   		$sent = $smtp->send($to, $headers, $body);  
-		  
-		  // this is the code to use "mail" instead of SMTP connection. Faster, but more spammy.
-		  /*
-		  unset($headers['Subject']);
-		  unset($headers['To']);
-		  $stringheaders = '';
-		  foreach ($headers as $key => $value) {
-			  $stringheaders .= "$key: $value\r\n";
-		  }
-	  	 $sent = mail($to, $sub, $body, $stringheaders); // wgimprovschool.com uses local server
-		  */
- 	  }
-	
-	$ts = date("Y-m-d H:i:s").' ';
-	$mail_activity = "emailed '$to', '$sub'\n";
-	if ($sent) {
-		$return = true;
-		if (DEBUG_MODE && !LOCAL) {
-			$logger->debug($mail_activity);
-		}
+	$mail = get_phpmailer_object();
+	$mail->setFrom(WEBMASTER);
+	if (LOCAL) {
+		$mail->addAddress('whines@gmail.com', 'Will Hines'); // all local mail to me!
 	} else {
-		$error = error_get_last();
-		$return = "Error type '{$error['type']}': '{$error['message']}' in file '{$error['file']}', line '{$error['line']}'. Attempted: $mail_activity\n";
-		$logger->error($return);
+		$mail->addAddress($to, $realname);
 	}
-	return $return;
+		
+	$mail->Subject = $sub;
+	$mail->msgHTML($body);
+
+	//send the message, check for errors
+	if (LOCAL) {
+		$sent = true;
+		//$sent = $mail->send();
+	} else {
+		$sent = $mail->send();
+	}
+	
+	if ($sent) {
+		$logger->debug("emailed '$to', '$sub'");
+		return true;
+	} else {
+		$logger->error($mail->ErrorInfo);
+		return $mail->ErrorInfo;
+	}
+	
 }
 
 function confirm_email($e, $status_id = ENROLLED) {
@@ -83,7 +58,9 @@ function confirm_email($e, $status_id = ENROLLED) {
 
 			if ($wk['location_id'] == ONLINE_LOCATION_ID) {
 				$body .= "<p>ZOOM LINK:<br>\n----------<br>\nThe Zoom link to your workshop is: {$wk['online_url_display']}<br>\n";
-				$body .= "<br><br>\nTry to show up 5 minutes early if you can so we can get started right away.  If your class is multiple sessions, that link should work for all of them. We'll send you an email if the link changes.</p>";
+				$body .= "<br><br>\nTry to show up 5 minutes early if you can so we can get started right away.  If your class is multiple sessions, that link should work for all of them. We'll send you an email if the link changes.</p>\n";
+			} else {
+				$body .= "<p>LOCATION:<br>\n---------<br>\n{$wk['place']}<br>\n{$wk['address']}<br>\n{$wk['city']}, {$wk['state']} {$wk['zip']}</p>\n";
 			}
 			
 			$body .= payment_text($wk);
@@ -158,6 +135,8 @@ If you no longer want to be notified of open spots, you can drop out here: <br>
 			} else {
 				$body .= "<b>Zoom link</b>: We'll email you the zoom link if/once you are enrolled.<br>";
 			}
+		} else {
+			$body .= "<b>Where:</b> {$wk['lwhere']}<br>";
 		}
 		$body .= "<b>Description:</b> {$wk['notes']}</p>
 		<p>Web page for this class:<br>\n{$trans}</p>";	
@@ -214,42 +193,60 @@ Zoom available at: http://www.zoom.us/</dd>
 
 function get_workshop_summary($wk) {
 	
-		return "<br>
+		$summary = "<br>
 <p>-----------------------------<br>
 <b>Class information:</b><br>
 <b>Title:</b> {$wk['title']}<br>
 <b>Teacher:</b> {$wk['teacher_info']['nice_name']}".($wk['co_teacher_id'] ?  ", {$wk['co_teacher_info']['nice_name']}" : '')."<br>
 <b>When:</b> {$wk['full_when']} (".TIMEZONE." - California time)";
 
+	if ($wk['location_id'] != ONLINE_LOCATION_ID) {
+		$summary .= "<br>
+<b>Where:</b> {$wk['lwhere']}";
+	}
+
+	return $summary;
 }
 
 
+function get_phpmailer_object() {
+	
+	global $mail;
+	
+	if (isset($mail) && is_object($mail)) {
+		$mail->clearAddresses();
+		return $mail;
+	} else {
+		$mail = new PHPMailer(true);
+		$mail->isSMTP();
+		$mail->SMTPKeepAlive = true; 
+		
+		//Enable SMTP debugging
+		//SMTP::DEBUG_OFF = off (for production use)
+		//SMTP::DEBUG_CLIENT = client messages
+		//SMTP::DEBUG_SERVER = client and server messages
+		if (LOCAL) {
+			$mail->SMTPDebug = SMTP::DEBUG_OFF;
+		} else {
+			$mail->SMTPDebug = SMTP::DEBUG_OFF;
+		}
+		$mail->SMTPAuth = true;
 
+		if (LOCAL) {
+			$mail->Port = 26;
+			$mail->Host = 'mail.willhines.net';
+			$mail->Username = 'will@willhines.net';
+			$mail->Password = EMAIL_PASSWORD_LOCAL;
+		} else {
+			$mail->Port = 465;
+			$mail->Host = 'ssl://premium130.web-hosting.com';
+			$mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;  
+			$mail->Username = 'classes@wgimprovschool.com';
+			$mail->Password = EMAIL_PASSWORD_PRODUCTION;
+		}
+		return $mail;
+	}
 
-function get_smtp_object() {
-	global $smtp;
-	
-	if (isset($smtp) && is_object($smtp)) {
-		return $smtp;
-	}
-	
-	$params = array();
-	if (LOCAL) {
-		$params["host"] = "mail.willhines.net";
-		$params["port"] = '26';
-		$params["auth"] = "PLAIN";
-		$params["username"] = 'will@willhines.net';
-		$params["password"] = EMAIL_PASSWORD_LOCAL;
-	} else { // out of date
-		$params["host"] = "ssl://premium130.web-hosting.com";
-		$params["port"] = '465';
-		$params["auth"] = "PLAIN";
-		$params["username"] = 'classes@wgimprovschool.com';
-		$params["password"] = EMAIL_PASSWORD_PRODUCTION;
-	}
-	$smtp = \Mail::factory('smtp', $params); // should now be set globally
-	return $smtp;
-	
 }
 
 
@@ -325,3 +322,72 @@ Discord chat server: https://discord.gg/GXbP3wgbrc</p>";
 	
 }
 
+/* 
+OLD CODE FROM MAIL SENDING FUNCTION
+
+
+	$crlf = "\n";
+	$headers = array(
+                    'From'       => WEBMASTER,
+                    'Reply-To'   => WEBMASTER,
+					'Return-Path' => WEBMASTER,
+                    'Subject'       => $sub,
+					'To'			=> $to);
+
+	$headers['MIME-Version'] = "1.0";
+	$headers['Content-Type'] = "text/html";
+	$headers['charset'] = "ISO-8859-1";
+	$body = wordwrap($body, 100, "\n");
+
+
+	  if (LOCAL) {
+	  	// connect to SMTP
+		$smtp = get_smtp_object();
+		$headers['To'] = $to = 'whines@gmail.com'; // everything to me on local
+		$sent = true;
+		
+		// comment out below line to stop email locally
+ 		//$sent = $smtp->send($to, $headers, $body);  // laptop can use the SMTP server on willhines.net
+		
+ 	  } else {
+  		$smtp = get_smtp_object();
+   		$sent = $smtp->send($to, $headers, $body);  
+		  
+		  // this is the code to use "mail" instead of SMTP connection. Faster, but more spammy.
+		  unset($headers['Subject']);
+		  unset($headers['To']);
+		  $stringheaders = '';
+		  foreach ($headers as $key => $value) {
+			  $stringheaders .= "$key: $value\r\n";
+		  }
+	  	 $sent = mail($to, $sub, $body, $stringheaders); // wgimprovschool.com uses local server
+ 	  }
+
+
+function get_smtp_object() {
+	global $smtp;
+	
+	if (isset($smtp) && is_object($smtp)) {
+		return $smtp;
+	}
+	
+	$params = array();
+	if (LOCAL) {
+		$params["host"] = "mail.willhines.net";
+		$params["port"] = '26';
+		$params["auth"] = "PLAIN";
+		$params["username"] = 'will@willhines.net';
+		$params["password"] = EMAIL_PASSWORD_LOCAL;
+	} else { // out of date
+		$params["host"] = "ssl://premium130.web-hosting.com";
+		$params["port"] = '465';
+		$params["auth"] = "PLAIN";
+		$params["username"] = 'classes@wgimprovschool.com';
+		$params["password"] = EMAIL_PASSWORD_PRODUCTION;
+	}
+	$smtp = \Mail::factory('smtp', $params); // should now be set globally
+	return $smtp;
+	
+}
+	  
+*/

@@ -41,7 +41,7 @@ if (count($unavailable_workshops) > 0) {
 	if (count($application_workshops) > 0) {
 
 		echo "<h2>Classes Taking Requests</h2>\n";
-		echo "<h4>Requests due end of Monday October 25</h4>\n";
+		echo "<h4>Enrollments Announced December 20</h4>\n";
 
 		$current_date = null;
 		echo "<ul>\n";

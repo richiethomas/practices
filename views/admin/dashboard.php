@@ -64,10 +64,14 @@ foreach ($workshops as $wk) {
 	echo $wk['application'] ? " <span class='text-primary'>- {$wk['applied']} applied</span>" : '';
 	
 	echo "<small>";
-	if ($wk['override_url']) {
-		echo "<div class='zoomlink'>{$wk['override_url']}</div>";
+	if ($wk['location_id'] == ONLINE_LOCATION_ID) {
+		if ($wk['override_url']) {
+			echo "<div class='zoomlink'>{$wk['override_url']}</div>";
+		} else {
+			echo "<div class='zoomlink'>{$wk['online_url']}</div>";
+		}
 	} else {
-		echo "<div class='zoomlink'>{$wk['online_url']}</div>";
+		echo "<div class='zoomlink'>{$wk['lwhere']}</div>";
 	}
 	echo "</small>\n";
 	echo "</li>\n";
