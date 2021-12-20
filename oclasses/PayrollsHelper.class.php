@@ -52,17 +52,11 @@ class PayrollsHelper extends WBHObject {
 	(select 'class' as task, x.id as table_id, w.title, x.start, w.teacher_id, x.rank as rank, w.id as workshop_id
 	from xtra_sessions x, workshops w
 	where w.id = x.workshop_id and x.start >= :start2 and x.start <= :end2)
-	union
-	(select 'show' as task, s.id as table_id, w.title, s.start, w.teacher_id, 0 as rank, w.id as workshop_id
-	from workshops_shows ws, workshops w, shows s
-	where w.id = ws.workshop_id and ws.show_id = s.id and s.start >= :start3 and s.start <= :end3)
 	order by teacher_id, task, start asc",
 	array(':start1' => $mysqlstart,
 	':end1' => $mysqlend,
 	':start2' => $mysqlstart,
-	':end2' => $mysqlend,
-	':start3' => $mysqlstart,
-	':end3' => $mysqlend)); 	
+	':end2' => $mysqlend)); 	
 	
 	//	$stmt = \DB\pdo_query("select w.* from workshops w WHERE w.start >= :start and w.end <= :end order by teacher_id, start desc", array(':start' => date('Y-m-d H:i:s', strtotime($start)), ':end' => date('Y-m-d H:i:s', strtotime($end))));
 	

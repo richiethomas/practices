@@ -4,8 +4,7 @@
 			<h5>Upcoming Workshops</h5>
 		</div>
 		<div class="admin-box-content">
-			
-			
+		
 			<div class="issues float-end border border-4 p-2 m-2">				
 				<h4>Unpaid</h4>
 				<ul>

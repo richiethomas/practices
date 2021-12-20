@@ -116,18 +116,24 @@ echo "<div class=\"row m-3 p-3 justify-content-center\"><div class=\"col-md-8 bo
 </div></div>\n";
 
 
-function list_names($lists) {
-	echo "<div class='mx-4'>\n";
-	echo "<h5>Names</h5>\n";
-	foreach ($lists as $l) {
-		echo "{$l['nice_name']}<br>\n";
+function list_names($lists, $title = 'Enrolled') {
+	
+	if (count($lists) > 0) {
+		echo "<h4 class='mt-2'>{$title}</h4>\n";
+		echo "<div class='mx-4'>\n";
+		echo "<h5>Names</h5>\n";
+		foreach ($lists as $l) {
+			echo "{$l['nice_name']}<br>\n";
+		}
+		echo "<h5>Emails</h5>\n";
+		foreach ($lists as $l) {
+			echo "{$l['email']}<br>\n";
+		}
+		echo "</div>\n";
 	}
-	echo "<h5>Emails</h5>\n";
-	foreach ($lists as $l) {
-		echo "{$l['email']}<br>\n";
-	}
-	echo "</div>\n";
 }
+
+
 
 // teacher / admin info
 if ($u->check_user_level(2)) { 
@@ -135,6 +141,7 @@ if ($u->check_user_level(2)) {
 	
 	$lists = $eh->get_students($wk['id'], ENROLLED);
 	$alists = $eh->get_students($wk['id'], APPLIED);
+	$wlists = $eh->get_students($wk['id'], WAITING);
 	
 	echo "<div class='m-3 p-3 bg-info'>\n";
 	echo "<h3>Teacher/Admin Info</h3>\n";
@@ -148,22 +155,9 @@ if ($u->check_user_level(2)) {
 		echo "</p>";
 	}
 	
-	echo "<h4 class='mt-2'>Enrolled</h4>";
-	if (count($lists) > 0) {
-		list_names($lists);
-	} else {
-		echo "<p>No enrolled!</p>\n";
-	}
-
-	if ($wk['application']) {
-		echo "<h4 class='mt-4'>Requested A Spot</h4>";
-		
-		if (count($alists) > 0) {
-			list_names($alists);
-		} else {
-			echo "<p>No requests!</p>\n";
-		}
-	}
+	list_names($lists, 'Enrolled');
+	list_names($alists, 'Requested A Spot');
+	list_names($wlists, 'Wait List');
 	
 	echo "</div>\n";
 }

@@ -1,6 +1,8 @@
 <?php
 $view->data['heading'] = "upcoming classes";
 
+//\XtraSessions\update_all_ranks();
+
 Wbhkit\set_vars(array('filter_by'));
 
 $your_teacher_id = 0;

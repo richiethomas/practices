@@ -63,7 +63,10 @@ echo "<div class='row mt-md-3 admin-edit-workshop'>\n";
 		echo "<ul>\n";
 		if (!empty($wk['sessions'])) {
 			foreach ($wk['sessions'] as $s) {
-				echo "<li>({$s['rank']}) {$s['friendly_when']} <a href='/admin-workshop/delxtra/{$wk['id']}/{$s['id']}'>delete</a>".($s['reminder_sent'] ? ' <em>- reminder sent</em>' : '');
+				echo "<li>({$s['rank']}) ".
+					($s['class_show'] ? '<b>Show:</b> ' : '').
+					"{$s['friendly_when']} <a href='/admin-workshop/delxtra/{$wk['id']}/{$s['id']}'>delete</a>".
+				($s['reminder_sent'] ? ' <em>- reminder sent</em>' : '');
 				if ($s['online_url']) {
 					echo "<ul><li><a href='{$s['online_url_just_url']}'>{$s['online_url_just_url']}</a>";
 					if ($s['online_url_the_rest']) {
@@ -81,18 +84,7 @@ echo "<div class='row mt-md-3 admin-edit-workshop'>\n";
 		<fieldset name=\"sessions_edit\">".
 		\XtraSessions\xtra_session_fields($wk).
 		Wbhkit\submit('Add Session');
-		echo "</fieldset></form>\n";
-		
-		// list class shows here
-		if (count($wk['class_shows']) > 0) {
-			echo "<h3>Class Shows</h3>\n";
-			echo "<ul>\n";
-			foreach ($wk['class_shows'] as $cs) {
-				echo "<li><a href='/admin-shows/view/?show_id={$cs->fields['id']}'>{$cs->fields['friendly_when']}</a></li>\n";
-			}
-			echo "</ul>\n";
-		}
-		
+		echo "</fieldset></form>\n";		
 
 	include 'ajax-jquery-search.php';
 	echo  "<h2>Add Student</h2><form id='add_student' class='form-inline' action='/admin-workshop/enroll/{$wk['id']}' method='post' novalidate><fieldset name='new_student'>";

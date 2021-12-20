@@ -11,7 +11,7 @@ if ($ac != 'ad') {
 	$wk = \Workshops\get_workshop_info($wid);
 }
 
-$wk_vars = array('title', 'notes', 'start', 'end', 'lid', 'online_url', 'cost', 'capacity', 'notes', 'when_public', 'email', 'con', 'guest_id', 'reminder_sent', 'sold_out_late', 'teacher_id', 'co_teacher_id', 'application',  'start_xtra', 'end_xtra', 'online_url_xtra', 'hideconpay');
+$wk_vars = array('title', 'notes', 'start', 'end', 'lid', 'online_url', 'cost', 'capacity', 'notes', 'when_public', 'email', 'con', 'guest_id', 'reminder_sent', 'sold_out_late', 'teacher_id', 'co_teacher_id', 'application',  'start_xtra', 'end_xtra', 'online_url_xtra', 'hideconpay', 'class_show');
 Wbhkit\set_vars($wk_vars);
 
 $e = new Enrollment();
@@ -20,7 +20,7 @@ $eh = new EnrollmentsHelper();
 switch ($ac) {
 
 	case 'sar':
-		Reminders\remind_enrolled(array($wk['id'], 0, 0));
+		Reminders\remind_enrolled(array($wk['id'], 0));
 		$message = "Reminders sent to enrolled.";
 		break;
 
@@ -101,7 +101,7 @@ switch ($ac) {
 		
 	case 'adxtra':	
 	
-		XtraSessions\add_xtra_session($wid, $start_xtra, $end_xtra, $online_url_xtra);
+		XtraSessions\add_xtra_session($wid, $start_xtra, $end_xtra, $online_url_xtra, $class_show);
 		$wk = Workshops\fill_out_workshop_row($wk);
 		$message = "Added xtra session.";
 		break;

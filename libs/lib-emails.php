@@ -3,6 +3,7 @@ namespace Emails;
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
+use PHPMailer\PHPMailer\Exception;
 
 //require_once 'Mail.php';
 //require_once 'Mail/mime.php';	 // Mail_mime did weird things to encoding of mail
@@ -26,9 +27,14 @@ function centralized_email($to, $sub, $body, $realname = null) {
 	//send the message, check for errors
 	if (LOCAL) {
 		$sent = true;
-		//$sent = $mail->send();
 	} else {
-		$sent = $mail->send();
+		try {
+			$sent = $mail->send();
+		} catch (Exception $e) {
+		    $logger->error($e->errorMessage());
+		} catch (\Exception $e) { 
+		    $logger->error($e->getMessage()); 
+		}
 	}
 	
 	if ($sent) {
@@ -217,34 +223,35 @@ function get_phpmailer_object() {
 		$mail->clearAddresses();
 		return $mail;
 	} else {
-		$mail = new PHPMailer(true);
-		$mail->isSMTP();
-		$mail->SMTPKeepAlive = true; 
 		
-		//Enable SMTP debugging
-		//SMTP::DEBUG_OFF = off (for production use)
-		//SMTP::DEBUG_CLIENT = client messages
-		//SMTP::DEBUG_SERVER = client and server messages
+		$mail = new PHPMailer(true);
+		$mail->WordWrap = 80; 
+		
 		if (LOCAL) {
+			$mail->isSMTP();
+			$mail->SMTPKeepAlive = true; 
+			$mail->SMTPAuth = true;
+			//SMTP::DEBUG_OFF = off (for production use)
+			//SMTP::DEBUG_CLIENT = client messages
+			//SMTP::DEBUG_SERVER = client and server messages
 			$mail->SMTPDebug = SMTP::DEBUG_OFF;
-		} else {
-			$mail->SMTPDebug = SMTP::DEBUG_OFF;
-		}
-		$mail->SMTPAuth = true;
-
-		if (LOCAL) {
 			$mail->Port = 26;
 			$mail->Host = 'mail.willhines.net';
 			$mail->Username = 'will@willhines.net';
 			$mail->Password = EMAIL_PASSWORD_LOCAL;
-		} else {
-			$mail->Port = 465;
-			$mail->Host = 'ssl://premium130.web-hosting.com';
-			$mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;  
-			$mail->Username = 'classes@wgimprovschool.com';
-			$mail->Password = EMAIL_PASSWORD_PRODUCTION;
 		}
 		return $mail;
+		
+		/*
+		
+		// SMTP settings production
+		$mail->Port = 465;
+		$mail->Host = 'ssl://premium130.web-hosting.com';
+		$mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;  
+		$mail->Username = 'classes@wgimprovschool.com';
+		$mail->Password = EMAIL_PASSWORD_PRODUCTION;
+		*/
+		
 	}
 
 }
@@ -322,72 +329,3 @@ Discord chat server: https://discord.gg/GXbP3wgbrc</p>";
 	
 }
 
-/* 
-OLD CODE FROM MAIL SENDING FUNCTION
-
-
-	$crlf = "\n";
-	$headers = array(
-                    'From'       => WEBMASTER,
-                    'Reply-To'   => WEBMASTER,
-					'Return-Path' => WEBMASTER,
-                    'Subject'       => $sub,
-					'To'			=> $to);
-
-	$headers['MIME-Version'] = "1.0";
-	$headers['Content-Type'] = "text/html";
-	$headers['charset'] = "ISO-8859-1";
-	$body = wordwrap($body, 100, "\n");
-
-
-	  if (LOCAL) {
-	  	// connect to SMTP
-		$smtp = get_smtp_object();
-		$headers['To'] = $to = 'whines@gmail.com'; // everything to me on local
-		$sent = true;
-		
-		// comment out below line to stop email locally
- 		//$sent = $smtp->send($to, $headers, $body);  // laptop can use the SMTP server on willhines.net
-		
- 	  } else {
-  		$smtp = get_smtp_object();
-   		$sent = $smtp->send($to, $headers, $body);  
-		  
-		  // this is the code to use "mail" instead of SMTP connection. Faster, but more spammy.
-		  unset($headers['Subject']);
-		  unset($headers['To']);
-		  $stringheaders = '';
-		  foreach ($headers as $key => $value) {
-			  $stringheaders .= "$key: $value\r\n";
-		  }
-	  	 $sent = mail($to, $sub, $body, $stringheaders); // wgimprovschool.com uses local server
- 	  }
-
-
-function get_smtp_object() {
-	global $smtp;
-	
-	if (isset($smtp) && is_object($smtp)) {
-		return $smtp;
-	}
-	
-	$params = array();
-	if (LOCAL) {
-		$params["host"] = "mail.willhines.net";
-		$params["port"] = '26';
-		$params["auth"] = "PLAIN";
-		$params["username"] = 'will@willhines.net';
-		$params["password"] = EMAIL_PASSWORD_LOCAL;
-	} else { // out of date
-		$params["host"] = "ssl://premium130.web-hosting.com";
-		$params["port"] = '465';
-		$params["auth"] = "PLAIN";
-		$params["username"] = 'classes@wgimprovschool.com';
-		$params["password"] = EMAIL_PASSWORD_PRODUCTION;
-	}
-	$smtp = \Mail::factory('smtp', $params); // should now be set globally
-	return $smtp;
-	
-}
-	  
-*/

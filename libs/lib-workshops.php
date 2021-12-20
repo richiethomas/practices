@@ -62,16 +62,16 @@ function fill_out_workshop_row(array $row, bool $get_enrollment_stats = true) {
 	// xtra session info
 	$row['sessions'] = \XtraSessions\get_xtra_sessions($row['id']);	
 	$row['total_class_sessions'] = 1;
-	foreach ($row['sessions'] as $sess) {
-		$row['total_class_sessions']++;
-	}
-	
 	$row['total_show_sessions'] = 0;
-	$row['class_shows'] = get_class_shows($row);
-	foreach ($row['class_shows'] as $cs) {
-		$row['total_show_sessions']++;
+	$row['total_sessions'] = 1;
+	foreach ($row['sessions'] as $sess) {
+		if ($sess['class_show'] == 1) {
+			$row['total_show_sessions']++;
+		} else {
+			$row['total_class_sessions']++;
+		}
+		$row['total_sessions']++;
 	}
-	$row['total_sessions'] = $row['total_class_sessions'] + $row['total_show_sessions'];
 
 	$row['time_summary'] = $row['total_class_sessions'].' class'.\Wbhkit\plural($row['total_class_sessions'], '', 'es');
 	
@@ -84,13 +84,9 @@ function fill_out_workshop_row(array $row, bool $get_enrollment_stats = true) {
 	if (!empty($row['sessions'])) {
 		$row['full_when'] .= "<br>\n";
 		foreach ($row['sessions'] as $s) {
-			$row['full_when'] .= "{$s['friendly_when']}<br>\n";
-		}
-	}
-	if (count($row['class_shows']) > 0 ) {
-		if (empty($row['sessions'])) {  $row['full_when'] .= "<br>\n"; }
-		foreach ($row['class_shows'] as $cs) {
-			$row['full_when'] .= "Show: {$cs->fields['friendly_when']}<br>\n"; 
+			$row['full_when'] .= 
+				($s['class_show'] == 1 ? 'Show: ' : '').
+				"{$s['friendly_when']}<br>\n";
 		}
 	}
 		
@@ -301,10 +297,6 @@ function get_workshops_list_no_html() {
 		" UNION
 		(select w.* from workshops w, xtra_sessions x where x.workshop_id = w.id and w.when_public < '$mysqlnow' and x.start >= '$mysqlnow')";  
 	
-	$sql .=
-		" UNION
-		(select w.* from workshops w, workshops_shows sw, shows s where sw.workshop_id = w.id and sw.show_id = s.id and w.when_public < '$mysqlnow' and s.start > '$mysqlnow')";  
-
 	$sql .= " order by start asc";  // temporary, should be asc
 	
 	$stmt = \DB\pdo_query($sql);
@@ -354,14 +346,9 @@ function get_sessions_to_come(bool $get_enrollments = true) {
 from workshops w
 where start >= date('$mysqlnow'))
 union
-(select x.workshop_id, w.title, x.start, x.end, w.capacity, w.cost, 1 as xtra,  0 as class_show, w.notes, w.teacher_id, w.co_teacher_id, x.rank, x.online_url as override_url, w.online_url, w.application, w.location_id
+(select x.workshop_id, w.title, x.start, x.end, w.capacity, w.cost, 1 as xtra,  x.class_show, w.notes, w.teacher_id, w.co_teacher_id, x.rank, x.online_url as override_url, w.online_url, w.application, w.location_id
 from xtra_sessions x, workshops w 
 where w.id = x.workshop_id and x.start >= date('$mysqlnow'))
-union
-(select ws.workshop_id, w.title, s.start, s.end, w.capacity, w.cost, 1 as xtra, 1 as class_show, w.notes, s.teacher_id, 0 as co_teacher_id, 0 as rank, null as override_url, s.online_url, w.application, w.location_id
-	from shows s, workshops w, workshops_shows ws
-	where ws.show_id = s.id and ws.workshop_id = w.id
-	and s.start >= date('$mysqlnow'))
 order by start asc"); 
 	
 	$teachers = \Teachers\get_all_teachers(); // avoid getting same teacher multiple times	
@@ -369,7 +356,6 @@ order by start asc");
 	$enrollments = array();
 	
 	while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
-		
 		
 		$row['lwhere'] = $lookups->locations[$row['location_id']]['lwhere'];
 		
@@ -462,21 +448,15 @@ function get_sessions_bydate(?string $start = null, ?string $end = null) {
 from workshops w 
 where w.start >= :start1 and w.end <= :end1)
 union
-(select x.workshop_id, x.id as xtra_id, 0 as show_id,  w.title, x.start, x.end, w.capacity, w.cost, 1 as xtra, 0 as class_show, w.notes, w.teacher_id, x.rank, x.online_url as override_url, w.online_url, x.when_teacher_paid, x.actual_pay, 0 as show_teacher_id 
+(select x.workshop_id, x.id as xtra_id, 0 as show_id,  w.title, x.start, x.end, w.capacity, w.cost, 1 as xtra, class_show, w.notes, w.teacher_id, x.rank, x.online_url as override_url, w.online_url, x.when_teacher_paid, x.actual_pay, 0 as show_teacher_id 
 from xtra_sessions x, workshops w
 where w.id = x.workshop_id and x.start >= :start2 and x.end <= :end2)
-union
-(select ws.workshop_id, 0 as xtra_id, s.id as show_id, w.title, s.start, s.end, w.capacity, w.cost, 1 as xtra, 1 as class_show, w.notes, w.teacher_id, 0 as rank, s.online_url as override_url, w.online_url, s.when_teacher_paid, s.actual_pay, s.teacher_id as show_teacher_id
-from workshops_shows ws, workshops w, shows s
-where w.id = ws.workshop_id and ws.show_id = s.id and s.start >= :start3 and s.end <= :end3)
 order by teacher_id, start asc
 ",
 array(':start1' => $mysqlstart,
 ':end1' => $mysqlend,
 ':start2' => $mysqlstart,
-':end2' => $mysqlend,
-':start3' => $mysqlstart,
-':end3' => $mysqlend)); 	
+':end2' => $mysqlend)); 	
 	
 //	$stmt = \DB\pdo_query("select w.* from workshops w WHERE w.start >= :start and w.end <= :end order by teacher_id, start desc", array(':start' => date('Y-m-d H:i:s', strtotime($start)), ':end' => date('Y-m-d H:i:s', strtotime($end))));
 	
@@ -609,24 +589,6 @@ function is_complete_workshop(array $wk) {
 	return false;
 }
 
-function get_class_shows(array $wk) {
-	$class_shows = array();
-
-	$stmt = \DB\pdo_query("select s.*
-		from workshops_shows ws, shows s
-		where ws.show_id = s.id and ws.workshop_id = :id order by start", array(':id' => $wk['id']));
-		
-	//echo \DB\interpolateQuery("select show_idvfrom workshops_shows wsvxwhere ws.workshop_id = :id", array(':id' => $wk['id']));
-	
-	while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
-		$cs = new \ClassShow();
-		$cs->set_into_fields($row);
-		$cs->format_row();
-		$class_shows[] = $cs;
-	}
-	return $class_shows;
-}
-
 function get_cut_and_paste_roster(array $wk, ?array $enrolled = null) {
 	$names = array();
 	$just_emails = array();
@@ -646,25 +608,16 @@ function get_cut_and_paste_roster(array $wk, ?array $enrolled = null) {
 	$class_dates = $wk['when']."\n";
 	if (!empty($wk['sessions'])) {
 		foreach ($wk['sessions'] as $s) {
-			$class_dates .= "{$s['friendly_when']}".
+			$class_dates .= 
+			($s['class_show'] ? 'Show: ' : '').	
+			"{$s['friendly_when']}".
 			($s['online_url'] ? " - {$s['online_url']}" : '')."\n";
 		}
 	}
 	if ($class_dates) {
 		$class_dates = "\n\nClass Sessions:\n------------\n{$class_dates}";
 	}
-	
-	$class_shows_text = '';
-	foreach ($wk['class_shows'] as $cs) {
-		$class_shows_text .= "{$cs->fields['friendly_when']}";
-		if ($cs->fields['online_url'] != $wk['online_url']) {
-			$class_shows_text .= ", {$cs->fields['online_url']}";
-		}
-		$class_shows_text .= "\n";
-	}
-	if ($class_shows_text) {
-		$class_shows_text = "\n\nClass Shows:\n------------\n{$class_shows_text}\n";
-	}
+
 
 	
 	return 
@@ -673,7 +626,6 @@ function get_cut_and_paste_roster(array $wk, ?array $enrolled = null) {
 					"{$wk['title']} - {$wk['showstart']}\n\n".
 					"Main zoom link:\n".($wk['location_id'] == ONLINE_LOCATION_ID ? "{$wk['online_url']}\n" : '').
 						$class_dates.
-						$class_shows_text.
 					"\nNames and Emails\n---------------\n".implode("\n", $names)."\n\nJust the emails\n---------------\n".implode(",\n", $just_emails));
 	
 }

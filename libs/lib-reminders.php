@@ -42,23 +42,15 @@ update xtra_sessions set reminder_sent = 0;
 	$stmt = \DB\pdo_query("select id as workshop_id, start from workshops w where start > :now and reminder_sent = 0", array(':now' => $mysqlnow)); // workshops in the future
 	while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
 		if ((strtotime($row['start']) - time()) / 3600 < REMINDER_HOURS) {
-			$classes_to_remind[] = array($row['workshop_id'], 0, 0);
+			$classes_to_remind[] = array($row['workshop_id'], 0);
 		}
 	}
 	
-	// xtra sessions - session 2 and higher, except shows
-	$stmt = \DB\pdo_query("select id, workshop_id, start from xtra_sessions where start > :now and reminder_sent = 0", array(':now' => $mysqlnow)); // workshops in the future
+	// xtra sessions - session 2 and higher, including shows
+	$stmt = \DB\pdo_query("select id, workshop_id, start, class_show from xtra_sessions where start > :now and reminder_sent = 0", array(':now' => $mysqlnow)); // workshops in the future
 	while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
 		if ((strtotime($row['start']) - time()) / 3600 < REMINDER_HOURS) {
-			$classes_to_remind[] = array($row['workshop_id'], $row['id'], 0); 
-		}
-	}
-	
-	// class shows
-	$stmt = \DB\pdo_query("select s.id, ws.workshop_id, s.start from shows s, workshops_shows ws where ws.show_id = s.id and s.start > :now and s.reminder_sent = 0", array(':now' => $mysqlnow)); // workshops in the future
-	while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
-		if ((strtotime($row['start']) - time()) / 3600 < REMINDER_HOURS) {
-			$classes_to_remind[] = array($row['workshop_id'], 0, $row['id']); 
+			$classes_to_remind[] = array($row['workshop_id'], $row['id']); 
 		}
 	}
 	
@@ -66,9 +58,7 @@ update xtra_sessions set reminder_sent = 0;
 	$wk = array();
 	foreach ($classes_to_remind as $class) {
 		remind_enrolled($class);
-		if ($class[2] > 0) {
-			$stmt = \DB\pdo_query("update shows set reminder_sent = 1 where id = :id", array(':id' => $class[2])); // most recent check
-		} elseif ($class[1] > 0) {
+		if ($class[1] > 0) {
 			$stmt = \DB\pdo_query("update xtra_sessions set reminder_sent = 1 where id = :id", array(':id' => $class[1])); // most recent check
 		} else {
 			$stmt = \DB\pdo_query("update workshops set reminder_sent = 1 where id = :id", array(':id' => $class[0])); // most recent check
@@ -83,17 +73,14 @@ update xtra_sessions set reminder_sent = 0;
 function remind_enrolled(array $class) {
 	
 	$guest = new \User();
-	$cs = new \ClassShow();
 	
 	$wk = \Workshops\get_workshop_info($class[0]);
 	$xtra = \XtraSessions\get_xtra_session($class[1]);
-	$cs->set_by_id($class[2]);
 	
-	$reminder = get_reminder_message_data($wk, $xtra, $cs);
+	$reminder = get_reminder_message_data($wk, $xtra);
 	
 	$subject = $reminder['subject'];
 	$note = $reminder['note'];
-	//$sms = $reminder['sms'];
 	
 	$eh = new \EnrollmentsHelper();
 	$stds = $eh->get_students($class[0], ENROLLED);
@@ -111,7 +98,7 @@ function remind_enrolled(array $class) {
 		
 		$trans = URL."workshop/view/{$wk['id']}";
 
-		if (!$class[1] && !$class[2]) { // if this not an xtra session or a show
+		if (!$class[1]) { // if this not an xtra session or a show
 			$note .= "<p>DROPPING OUT<br>\n
 	---------------------------------<br>\n
 	If you need to drop the class (and it's before the first week), you can do so on this web site at this link. That way if someone is on the waiting list, we can notify them right away they have a chance to join.<br>
@@ -134,10 +121,10 @@ Class info on web site: $trans";
 	if (!LOCAL || REMINDER_TEST) {
 				
 		$trans = URL."workshop/view/{$wk['id']}";
-		$teacher_reminder = get_reminder_message_data($wk, $xtra, $cs, true);
+		$teacher_reminder = get_reminder_message_data($wk, $xtra, true);
 		$msg = $teacher_reminder['note']."<p>Class info online:<br>$trans</p>\n";
 		
-		if (!$xtra['id'] && !$cs->fields['id']) { // is it first session? send teacher the roster
+		if (!$xtra['id']) { // is it first session? send teacher the roster
 			$msg .= "<h3>Full info for class</h3>\n".
 				preg_replace('/\n/', "<br>\n", \Workshops\get_cut_and_paste_roster($wk));
 		}
@@ -160,14 +147,9 @@ Class info on web site: $trans";
 	
 }
 
-function get_reminder_message_data(array $wk, array $xtra, \ClassShow $cs, bool $teacher = false) {
+function get_reminder_message_data(array $wk, array $xtra, bool $teacher = false) {
 	
-	if ($cs->fields['id']) {
-		$start = $cs->fields['friendly_when'];
-		$link = $cs->fields['online_url_display'];
-		$subject = "WGIS class reminder: {$wk['title']} CLASS SHOW - {$start}";
-		
-	} elseif ($xtra['id']) {
+	if ($xtra['id']) {
 		$start = $xtra['friendly_when'];
 		if ($xtra['online_url_display']) {
 			$link = $xtra['online_url_display'];
@@ -186,7 +168,7 @@ function get_reminder_message_data(array $wk, array $xtra, \ClassShow $cs, bool 
 		$subject .= " at {$wk['place']}";	
 	}
 	
-	if ($cs->fields['id']) {
+	if ($xtra['class_show']) {
 		$note = "<p>Greetings. ".($teacher ? "You are teaching" :  "You have")." a class show soonish, ";
 	} elseif ($xtra['id']) {
 		$note = "<p>Greetings. ".($teacher ? "You are teaching" :  "You have")." another session of this class soonish, ";
@@ -207,7 +189,7 @@ $link</p>\n";
 			$note .= "<p>Please note: this is a DIFFERENT LINK than you usually use for this class!</p>\n";
 		}		
 		
-		if ($cs->fields['id']) {
+		if ($xtra['class_show']) {
 			$note .= "<p>Invite your friends and family to watch the show at the Twitch channel:<br>
 https://www.twitch.tv/wgimprovschool</p>\n";
 		}
