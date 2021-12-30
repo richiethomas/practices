@@ -5,7 +5,7 @@
 <?php		
 
 if ($u->logged_in()) {
-	echo "<div>Times shown in: <a href='/you'>{$u->fields['time_zone']}</a></div>";
+	echo "<div>Times shown in ({$u->fields['time_zone_friendly']})</div>";
 }
 
 $current_date = null;

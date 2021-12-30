@@ -83,7 +83,7 @@ if (isset($fb_description)) {
 		 echo "</div>";
 echo "	</nav>";
 if ($u->logged_in()) {
-	echo "<div><span class=\"oi oi-clock p-0\" title=\"time zone\" aria-hidden=\"true\"></span> <a href='/you'>{$u->fields['time_zone']} - {$u->fields['time_zone_friendly']}</a></div>";	
+	echo "<div class='rounded-pill border bg-light p-2 col-4'><span class=\"oi oi-clock p-0\" title=\"time zone\" aria-hidden=\"true\"></span> <a href='/you'>{$u->fields['time_zone']} - {$u->fields['time_zone_friendly']}</a></div>";	
 } 
 
 echo "</div>";

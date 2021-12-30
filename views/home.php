@@ -3,8 +3,8 @@ function teacher_link($tinfo) {
   echo "
 	  <a href='/teachers/view/{$tinfo['id']}'><img class='mx-2 teacher-image align-self-center' src='".\Teachers\get_teacher_photo_src($tinfo['user_id'])."' alt='Teacher Name'></a>
 	<div class=''>
-		<h6 class='mt-0 mb-0 teacher-label'>Teacher</h6>
-		<h5 class='mt-0 mb-0 teacher-name'><a href='/teachers/view/{$tinfo['id']}'> {$tinfo['nice_name']}</a></h5>
+		<!--h6 class='mt-0 mb-0 teacher-label text-muted'>Teacher</h6-->
+		<h5 class='mt-0 mb-0 teacher-name'><a class='text-decoration-none text-muted' href='/teachers/view/{$tinfo['id']}'> {$tinfo['nice_name']}</a></h5>
 	</div>";	
 }	
 	
@@ -93,13 +93,17 @@ function teacher_link($tinfo) {
 		?>
   	  <div class="row justify-content-between my-3 py-3 border-top">
 			<div class="col-md-11 classes-listings-class">
-				<h3 class=""><a href="/workshop/view/<?php echo $wk['id']; ?>"><?php echo $wk['title'];?></a></h3>
+				<h2 class="my-3"><a class='text-decoration-none text-dark' href="/workshop/view/<?php echo $wk['id']; ?>"><?php echo $wk['title'];?></a></h2>
 				<?php 
-				echo "<p class='text-start'>Starting <b>{$wk['showstart']}</b> for {$wk['total_sessions']} ".
-				(($wk['total_sessions'] == 1) ? 'week ': 'weeks').
-				'<br>'. 
-				"{$wk['enrolled']} of {$wk['capacity']} enrolled, <b>{$wk['costdisplay']}</b></p>";
-				
+				echo "
+					
+					<div class='my-4 text-muted'>
+					<span class='mx-2'>{$wk['costdisplay']}</span>
+					<span class='mx-2'><span class=\"oi oi-calendar p-0\" title=\"date\" aria-hidden=\"true\"></span> ".\Wbhkit\friendly_date($wk['start_tz'], false)."</span>
+ 					<span class='mx-2'><span class=\"oi oi-clock p-0\" title=\"time\" aria-hidden=\"true\"></span> ".\Wbhkit\friendly_time($wk['start_tz'])." ({$u->fields['time_zone_friendly']})</span>
+					<span class='mx-2'><span class=\"oi oi-people p-0\" title=\"sessions\" aria-hidden=\"true\"></span> {$wk['total_sessions']} ".(($wk['total_sessions'] == 1) ? 'session ': 'sessions')."</span>
+					</div>";
+					
 				?>
 
 
@@ -112,7 +116,7 @@ function teacher_link($tinfo) {
 				</div>
 				<span class="class-enroll">
 					<?php if ($wk['soldout']) { ?>
-						<span class="text-danger">Sold Out!</span> <a class="btn btn-primary" href="/workshop/view/<?php echo $wk['id']; ?>" role="button">join wait list</a>
+						<span class="text-danger">Sold Out!</span> <a class="btn btn-outlne-primary" href="/workshop/view/<?php echo $wk['id']; ?>" role="button">join wait list</a>
 					<?php } elseif ($wk['application']) { ?>
 						
 						<a class="btn btn-primary" href="/workshop/view/<?php echo $wk['id']; ?>" role="button">Request A Spot</a>
