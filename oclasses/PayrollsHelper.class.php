@@ -17,8 +17,8 @@ class PayrollsHelper extends WBHObject {
 		if (!$end) { $end = "Dec 31 3000"; }
 
 		// get IDs of workshops
-		$mysqlstart = date("Y-m-d H:i:s", strtotime($start));
-		$mysqlend = date("Y-m-d H:i:s", strtotime($end));
+		$mysqlstart = date(MYSQL_FORMAT, strtotime($start));
+		$mysqlend = date(MYSQL_FORMAT, strtotime($end));
 
 		$stmt = \DB\pdo_query("select * from payrolls
 			where (when_paid > :start and when_paid < :end) or
@@ -38,11 +38,11 @@ class PayrollsHelper extends WBHObject {
 	
 	function get_claims(string $start = "Jan 1 1000", string $end = "Dec 31 3000") {
 		
-		//echo "select w.* from workshops w WHERE w.start >= '".date('Y-m-d H:i:s', strtotime($start))."' and w.end <= '".date('Y-m-d H:i:s', strtotime($end))."' order by start desc";
+		//echo "select w.* from workshops w WHERE w.start >= '".date(MYSQL_FORMAT, strtotime($start))."' and w.end <= '".date(MYSQL_FORMAT, strtotime($end))."' order by start desc";
 	
 		// get IDs of workshops
-		$mysqlstart = date("Y-m-d H:i:s", strtotime($start));
-		$mysqlend = date("Y-m-d H:i:s", strtotime($end));
+		$mysqlstart = date(MYSQL_FORMAT, strtotime($start));
+		$mysqlend = date(MYSQL_FORMAT, strtotime($end));
 	
 		$stmt = \DB\pdo_query("
 	(select 'workshop' as task, w.id as table_id, w.title, w.start, w.teacher_id, 1 as rank, w.id as workshop_id
@@ -58,7 +58,7 @@ class PayrollsHelper extends WBHObject {
 	':start2' => $mysqlstart,
 	':end2' => $mysqlend)); 	
 	
-	//	$stmt = \DB\pdo_query("select w.* from workshops w WHERE w.start >= :start and w.end <= :end order by teacher_id, start desc", array(':start' => date('Y-m-d H:i:s', strtotime($start)), ':end' => date('Y-m-d H:i:s', strtotime($end))));
+	//	$stmt = \DB\pdo_query("select w.* from workshops w WHERE w.start >= :start and w.end <= :end order by teacher_id, start desc", array(':start' => date(MYSQL_FORMAT, strtotime($start)), ':end' => date(MYSQL_FORMAT, strtotime($end))));
 	
 		$this->claims = array();
 		while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
@@ -75,8 +75,8 @@ class PayrollsHelper extends WBHObject {
 		':table_id' => $table_id,
 		':teacher_id' => $teacher_id,
 		':amount' => $amount,
-		':when_paid' => date('Y-m-d H:i:s', strtotime($when_paid)),
-		':when_happened' => date('Y-m-d H:i:s', strtotime($when_happened)));
+		':when_paid' => date(MYSQL_FORMAT, strtotime($when_paid)),
+		':when_happened' => date(MYSQL_FORMAT, strtotime($when_happened)));
 		
 		$exists = false;
 		$stmt = \DB\pdo_query("select * from payrolls where task = :task and table_id = :table_id", array(':task' => $task, ':table_id' => $table_id));

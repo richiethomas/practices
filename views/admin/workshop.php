@@ -65,7 +65,7 @@ echo "<div class='row mt-md-3 admin-edit-workshop'>\n";
 			foreach ($wk['sessions'] as $s) {
 				echo "<li>({$s['rank']}) ".
 					($s['class_show'] ? '<b>Show:</b> ' : '').
-					"{$s['friendly_when']} <a href='/admin-workshop/delxtra/{$wk['id']}/{$s['id']}'>delete</a>".
+					"{$s['friendly_when_cali']} <a href='/admin-workshop/delxtra/{$wk['id']}/{$s['id']}'>delete</a>".
 				($s['reminder_sent'] ? ' <em>- reminder sent</em>' : '');
 				if ($s['online_url']) {
 					echo "<ul><li><a href='{$s['online_url_just_url']}'>{$s['online_url_just_url']}</a>";

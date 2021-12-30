@@ -3,11 +3,16 @@
 		<div class="col-md-10">
 			
 <?php		
+
+if ($u->logged_in()) {
+	echo "<div>Times shown in: <a href='/you'>{$u->fields['time_zone']}</a></div>";
+}
+
 $current_date = null;
 foreach ($workshops as $wk) {
 
 	// update date?
-	$next_date = date("l F j, Y", strtotime($wk['start']));
+	$next_date = date("l F j, Y", strtotime($wk['start_tz']));
 	
 	if ($next_date != $current_date) {
 				
@@ -15,8 +20,8 @@ foreach ($workshops as $wk) {
 		$current_date = $next_date;
 	}
 	
-	$start = Wbhkit\friendly_time($wk['start']);
-	$end = Wbhkit\friendly_time($wk['end']);
+	$start = Wbhkit\friendly_time($wk['start_tz']);
+	$end = Wbhkit\friendly_time($wk['end_tz']);
 	
 	echo "<div class='row mt-2'><div class='col-md-6'><a href='/workshop/view/{$wk['id']}'>{$wk['title']}</a> (".($wk['class_show'] ? 'show' : $wk['rank']).")</div>
 	<div class='col-md-2'>$start-$end</div>

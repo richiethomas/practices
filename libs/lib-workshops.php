@@ -89,6 +89,17 @@ function fill_out_workshop_row(array $row, bool $get_enrollment_stats = true) {
 				"{$s['friendly_when']}<br>\n";
 		}
 	}
+	
+	// set full when - cali time
+	$row['full_when_cali'] = $row['when_cali'];
+	if (!empty($row['sessions'])) {
+		$row['full_when_cali'] .= "<br>\n";
+		foreach ($row['sessions'] as $s) {
+			$row['full_when_cali'] .= 
+				($s['class_show'] == 1 ? 'Show: ' : '').
+				"{$s['friendly_when_cali']}<br>\n";
+		}
+	}
 		
 	if (strtotime($row['end']) >= strtotime('now')) { 
 		$row['upcoming'] = 1; 
@@ -127,13 +138,30 @@ function figure_costdisplay(int $cost) {
 // add some columns with date / time stuff figured out
 function format_workshop_startend(array $row) {
 	
-	$tzadd = ' ('.TIMEZONE.')';
+	global $u; // $u->fields['time_zone'] is set in User class
+		
+	$tz = $u->fields['time_zone'];
+
+	$tzadd = " ({$u->fields['time_zone_friendly']})";
 	
-	$row['showstart'] = \Wbhkit\friendly_date($row['start']).' '.\Wbhkit\friendly_time($row['start']);
-	$row['showend'] = \Wbhkit\friendly_time($row['end']);
+	$row['start_tz'] = \Wbhkit\convert_tz($row['start'], $tz);
+	$row['end_tz'] = \Wbhkit\convert_tz($row['end'], $tz);
+	$row['when_public_tz'] = ((isset($row['when_public']) && $row['when_public']) ? \Wbhkit\convert_tz($row['when_public'], $tz) : null);
+	
+	$row['showstart'] = \Wbhkit\friendly_date($row['start_tz']).' '.\Wbhkit\friendly_time($row['start_tz']);
+	$row['showend'] = \Wbhkit\friendly_time($row['end_tz']);
 	$row['when'] = "{$row['showstart']}-{$row['showend']}".$tzadd;
 	$row['showstart'] .= $tzadd;
-	$row['showend'] .= $tzadd;
+	$row['showend'] .= $tzadd;	
+
+	$tzcali = " (".TIMEZONE.")";
+	$row['showstart_cali'] = \Wbhkit\friendly_date($row['start']).' '.\Wbhkit\friendly_time($row['start']);
+	$row['showend_cali'] = \Wbhkit\friendly_time($row['end']);
+	$row['when_cali'] = "{$row['showstart_cali']}-{$row['showend_cali']}".$tzcali;
+	$row['showstart_cali'] .= $tzcali;
+	$row['showend_cali'] .= $tzcali;	
+	
+	
 	return $row;
 }
 
@@ -213,7 +241,7 @@ function check_last_minuteness(array $wk) {
 
 function get_unavailable_workshops() {
 	
-	$mysqlnow = date("Y-m-d H:i:s");
+	$mysqlnow = date(MYSQL_FORMAT);
 	
 	$stmt = \DB\pdo_query("
 select * from workshops where date(start) >= :when1 and when_public >= :when2 order by when_public asc, start asc", array(":when1" => $mysqlnow, ":when2" => $mysqlnow)); 
@@ -230,10 +258,9 @@ select * from workshops where date(start) >= :when1 and when_public >= :when2 or
 
 function get_application_workshops() {
 	
-	$mysqlnow = date("Y-m-d H:i:s");
+	$mysqlnow = date(MYSQL_FORMAT);
 	
-	$stmt = \DB\pdo_query("
-select * from workshops where date(start) >= :when1 and when_public < :when2 and application = 1 order by start asc", array(":when1" => $mysqlnow, ":when2" => $mysqlnow)); 
+	$stmt = \DB\pdo_query("select * from workshops where date(start) >= :when1 and when_public < :when2 and application = 1 order by start asc", array(":when1" => $mysqlnow, ":when2" => $mysqlnow)); 
 		
 	$sessions = array();
 	while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
@@ -289,7 +316,7 @@ function get_search_results(string $page = "1", ?string $needle = null) {
 function get_workshops_list_no_html() {
 	
 	// get IDs of workshops
-	$mysqlnow = date("Y-m-d H:i:s");
+	$mysqlnow = date(MYSQL_FORMAT);
 
 	$sql = "(select w.* from workshops w where when_public < '$mysqlnow' and start >= '$mysqlnow')"; // get public ones to come
 	
@@ -310,8 +337,8 @@ function get_workshops_list_no_html() {
 
 function get_unpaid_students() {
 	// get IDs of workshops
-	$mysql_lastmonth = date("Y-m-d H:i:s", strtotime("-8 weeks"));
-	$mysqlnow = date("Y-m-d H:i:s", strtotime("now"));
+	$mysql_lastmonth = date(MYSQL_FORMAT, strtotime("-8 weeks"));
+	$mysqlnow = date(MYSQL_FORMAT, strtotime("now"));
 
 	$stmt = \DB\pdo_query("
 select r.workshop_id, w.title, u.email, u.display_name, r.user_id, w.start, w.cost
@@ -333,13 +360,13 @@ order by w.start");
 	return $unpaid;
 }
 
-// data only, for admin_calendar
+// for calendar
 function get_sessions_to_come(bool $get_enrollments = true) {
 	
 	global $lookups;
 	
 	// get IDs of workshops
-	$mysqlnow = date("Y-m-d H:i:s", strtotime("-3 hours"));
+	$mysqlnow = date(MYSQL_FORMAT, strtotime("-3 hours"));
 	
 	$stmt = \DB\pdo_query("
 (select w.id, title, start, end, capacity, cost, 0 as xtra, 0 as class_show, notes, teacher_id, co_teacher_id, 1 as rank, '' as override_url, online_url, application, w.location_id
@@ -377,6 +404,7 @@ order by start asc");
 		$row['costdisplay'] = figure_costdisplay($row['cost']);
 		
 		$row = parse_online_url($row);
+		$row = format_workshop_startend($row);
 		
 		if ($get_enrollments) {
 			foreach ($enrollments as $e_wid => $e_row) {
@@ -408,7 +436,7 @@ function get_workshops_list_bydate(?string $start = null, ?string $end = null, b
 	if (!$start) { $start = "Jan 1 1000"; }
 	if (!$end) { $end = "Dec 31 3000"; }
 	
-	$stmt = \DB\pdo_query("select w.* from workshops w WHERE w.start >= :start and w.start <= :end order by ".($byclass ? '' : ' teacher_id, ')." start desc", array(':start' => date('Y-m-d H:i:s', strtotime($start)), ':end' => date('Y-m-d H:i:s', strtotime($end))));
+	$stmt = \DB\pdo_query("select w.* from workshops w WHERE w.start >= :start and w.start <= :end order by ".($byclass ? '' : ' teacher_id, ')." start desc", array(':start' => date(MYSQL_FORMAT, strtotime($start)), ':end' => date(MYSQL_FORMAT, strtotime($end))));
 	
 	$workshops = array();
 	while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
@@ -436,12 +464,12 @@ function get_sessions_bydate(?string $start = null, ?string $end = null) {
 	if (!$start) { $start = "Jan 1 1000"; }
 	if (!$end) { $end = "Dec 31 3000"; }
 	
-	//echo "select w.* from workshops w WHERE w.start >= '".date('Y-m-d H:i:s', strtotime($start))."' and w.end <= '".date('Y-m-d H:i:s', strtotime($end))."' order by start desc";
+	//echo "select w.* from workshops w WHERE w.start >= '".date(MYSQL_FORMAT, strtotime($start))."' and w.end <= '".date(MYSQL_FORMAT, strtotime($end))."' order by start desc";
 	
 	// get IDs of workshops
-	$mysqlstart = date("Y-m-d H:i:s", strtotime($start));
-	$mysqlend = date("Y-m-d H:i:s", strtotime($end));
-	$mysqlnow = date("Y-m-d H:i:s", strtotime("-3 hours"));
+	$mysqlstart = date(MYSQL_FORMAT, strtotime($start));
+	$mysqlend = date(MYSQL_FORMAT, strtotime($end));
+	$mysqlnow = date(MYSQL_FORMAT, strtotime("-3 hours"));
 	
 	$stmt = \DB\pdo_query("
 (select w.id, 0 as xtra_id, 0 as show_id, title, start, end, capacity, cost, 0 as xtra, 0 as class_show, notes, teacher_id, 1 as rank, '' as override_url, online_url, when_teacher_paid, actual_pay, 0 as show_teacher_id
@@ -458,7 +486,7 @@ array(':start1' => $mysqlstart,
 ':start2' => $mysqlstart,
 ':end2' => $mysqlend)); 	
 	
-//	$stmt = \DB\pdo_query("select w.* from workshops w WHERE w.start >= :start and w.end <= :end order by teacher_id, start desc", array(':start' => date('Y-m-d H:i:s', strtotime($start)), ':end' => date('Y-m-d H:i:s', strtotime($end))));
+//	$stmt = \DB\pdo_query("select w.* from workshops w WHERE w.start >= :start and w.end <= :end order by teacher_id, start desc", array(':start' => date(MYSQL_FORMAT, strtotime($start)), ':end' => date(MYSQL_FORMAT, strtotime($end))));
 	
 	$sessions = array();
 	while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
@@ -540,14 +568,14 @@ function add_update_workshop(array $wk, string $ac = 'up') {
 	
 		
 	$params = array(':title' => $wk['title'],
-		':start' => date('Y-m-d H:i:s', strtotime($wk['start'])),
-		':end' => date('Y-m-d H:i:s', strtotime($wk['end'])),
+		':start' => date(MYSQL_FORMAT, strtotime($wk['start'])),
+		':end' => date(MYSQL_FORMAT, strtotime($wk['end'])),
 		':cost' => $wk['cost'],
 		':capacity' => $wk['capacity'],
 		':lid' => $wk['location_id'],
 		':online_url' => $wk['online_url'],
 		':notes' => $wk['notes'],
-		':public' => date('Y-m-d H:i:s', strtotime($wk['when_public'])),
+		':public' => date(MYSQL_FORMAT, strtotime($wk['when_public'])),
 		':tid' => $wk['teacher_id'],
 		':ctid' => $wk['co_teacher_id'],
 		':reminder_sent' => $wk['reminder_sent'],

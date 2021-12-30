@@ -135,7 +135,8 @@ if ($u->check_user_level(3)) {
 
 include "controllers/{$controller}.php";
 
-
+//print_r($lookups->tzs);
+//echo \Wbhkit\drop('time_zone', $lookups->tzs);
 
 function set_page($pinfo) {
 	global $view;

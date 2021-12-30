@@ -78,7 +78,7 @@ class Enrollment extends WBHObject {
 		$statuses = $this->lookups->statuses;
 		$before_status = $this->fields['status_id'];
 		$last_insert_id = null;
-		$datestring_now = date("Y-m-d H:i:s");
+		$datestring_now = date(MYSQL_FORMAT);
 
 		$db = \DB\get_connection();
 
@@ -145,7 +145,7 @@ class Enrollment extends WBHObject {
 	
 		$statuses = $this->lookups->statuses;
 	
-		$stmt = \DB\pdo_query("insert into status_change_log (workshop_id, user_id, status_id, happened) VALUES (:wid, :uid, :status_id, '".date('Y-m-d H:i:s', time())."')", 
+		$stmt = \DB\pdo_query("insert into status_change_log (workshop_id, user_id, status_id, happened) VALUES (:wid, :uid, :status_id, '".date(MYSQL_FORMAT, time())."')", 
 		array(':wid' => $this->fields['workshop_id'],
 		':uid' => $this->fields['user_id'],
 		':status_id' => $status_id));

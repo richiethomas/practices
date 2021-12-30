@@ -44,7 +44,8 @@ if (isset($fb_description)) {
   </head>
   <body>
 	<header>
-	<nav class="navbar navbar-expand-md navbar-light bg-white container-lg container-fluid">
+		<div class="container-lg container-fluid">
+	<nav class="navbar navbar-expand-md navbar-light bg-white">
 		 <a class="navbar-brand" href="/"><span>World's Greatest Improv School</span></a>
 		  <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
 			<span class="navbar-toggler-icon"></span>
@@ -73,14 +74,20 @@ if (isset($fb_description)) {
 					}
 				}
 				if ($u->logged_in()) {		
-					echo "			<li class=\"nav-item\"><a class=\"nav-link\" href=\"/you\" title=\"User Profile\"><span class=\"oi oi-person nav-link p-0\" title=\"person\" aria-hidden=\"true\"></span>{$u->fields['nice_name']}</a></li>\n";
+					echo "			<li class=\"nav-item\"><a class=\"nav-link\" href=\"/you\" title=\"User Profile\"><span class=\"oi oi-person nav-link p-0\" title=\"person\" aria-hidden=\"true\"></span>{$u->fields['nice_name']}</a>";					
+					echo "</li>\n";
 				} else {
 			    	echo "			<li class=\"nav-item\"><a class=\"btn btn-outline-primary my-2 my-sm-0\" data-bs-toggle=\"modal\" data-bs-target=\"#login-modal\">Login</a></li>\n";
 				}
-			echo "</ul>
-		  </div>
-	</nav>
-  </header>";
+			echo "</ul>";	
+		 echo "</div>";
+echo "	</nav>";
+if ($u->logged_in()) {
+	echo "<div><span class=\"oi oi-clock p-0\" title=\"time zone\" aria-hidden=\"true\"></span> <a href='/you'>{$u->fields['time_zone']} - {$u->fields['time_zone_friendly']}</a></div>";	
+} 
+
+echo "</div>";
+echo " </header>";
   
  if ($page != 'home') {
 	 echo "

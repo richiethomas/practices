@@ -31,7 +31,7 @@ foreach ( $rows as $row ) {
 	
 	echo "<div class='col-md-6'>\n"; // start of second column
 	
-	echo "{$row['when']} (".TIMEZONE.") {$public}<br>
+	echo "{$row['when']} {$public}<br>
 		".number_format($row['total_class_sessions'], 0)." class".\Wbhkit\plural($row['total_class_sessions'], '', 'es').", ".number_format($row['total_show_sessions'], 0)." show".\Wbhkit\plural($row['total_show_sessions'])."<br>\n";
 			echo "Instructor: {$row['teacher_info']['nice_name']}";
 			if ($row['co_teacher_id']) {

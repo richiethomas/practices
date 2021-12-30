@@ -276,7 +276,7 @@ class SMTP
                 break;
             case 'html':
                 //Cleans up output a bit for a better looking, HTML-safe output
-                echo gmdate('Y-m-d H:i:s'), ' ', htmlentities(
+                echo gmdate(MYSQL_FORMAT), ' ', htmlentities(
                     preg_replace('/[\r\n]+/', '', $str),
                     ENT_QUOTES,
                     'UTF-8'
@@ -286,7 +286,7 @@ class SMTP
             default:
                 //Normalize line breaks
                 $str = preg_replace('/\r\n|\r/m', "\n", $str);
-                echo gmdate('Y-m-d H:i:s'),
+                echo gmdate(MYSQL_FORMAT),
                 "\t",
                     //Trim trailing space
                 trim(

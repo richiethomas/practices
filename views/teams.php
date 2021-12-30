@@ -8,116 +8,116 @@
 
 <p>Thank you for consulting this bare bones, all-business web page. :)</p>
 
-
-
 <h2>Shows</h2>
 
-<p>Every Monday at 11am and 5pm <?php echo TIMEZONE; ?>, two of the house teams play (that's two at 11am and two more at 5pm). These shows stream on our <a href="community.php#twitch">twitch channel</a>.</p>
+<p>Every <?php
+		$ts1 = \Wbhkit\convert_tz("January 3 2022 11am", $u->fields['time_zone'], 'l ga');
+		$ts2 = \Wbhkit\convert_tz("January 3 2022 5pm", $u->fields['time_zone'], 'l ga');
+		echo "$ts1 and $ts2 ({$u->fields['time_zone_friendly']})";
+		?> , two of the house teams play (that's two at each time). These shows stream on our <a href="community.php#twitch">twitch channel</a>.</p>
 
-<h2>October - December 2021 Schedule</h2>
-
-<p>October 11<br>
-11am: Festival / Firecracker<br>
-5pm: Butt Butt Golf / Redrum</p>
-
-<p>October 18<br>
-11am: Robot / Festival<br>
-5pm: Safe Deposit / Butt Butt Golf</p>
-
-<p>October 25<br>
-11am: Firecracker / Robot<br>
-5pm: Redrum / Safe Deposit</p>
-
-<p>November 1<br>
-11am: Festival / Firecracker<br>
-5pm: Butt Butt Golf / Redrum</p>
-
-<p>November 8<br>
-11am: Robot / Festival<br>
-5pm: Safe Deposit / Butt Butt Golf</p>
-
-<p>November 15<br>
-11am: Firecracker / Robot<br>
-5pm: Redrum / Safe Deposit</p>
-
-<p>November 22<br>
-11am: Festival / Firecracker<br>
-5pm: Butt Butt Golf / Redrum</p>
-
-<p>November 29<br>
-11am: Robot / Festival<br>
-5pm: Safe Deposit / Butt Butt Golf</p>
-
-<p>December 6<br>
-11am: Firecracker / Robot<br>
-5pm: Redrum / Safe Deposit</p>
-
-<p>December 13<br>
-11am: Blender Show - all teams welcome<br>
-5pm: Blender Show - all teams welcome</p>
+<h2>January - April 2022 Schedule</h2>
 
 
-<h2>October - December 2021 Roster</h2>
+<?php
+	
+$t1 = 'Voltage';
+$t2 = 'Officer';
+$t3 = 'Robot';
+$t4 = 'Drama';
+$t5 = 'Dog';
+$t6 = 'Screaming';
+$schedule = array(
+	array ('January 17 2022', "$t1 / $t2", "$t4 / $t5"),
+	array ('January 24 2022', "$t3 / $t1", "$t6 / $t4"),
+	array ('January 31 2022', "$t2 / $t3", "$t5 / $t6"),
+	array ('February 7 2022', "$t1 / $t2", "$t4 / $t5"),
+	array ('February 14 2022', "$t3 / $t1", "$t6 / $t4"),
+	array ('February 21 2022', "$t2 / $t3", "$t5 / $t6"),
+	array ('February 28 2022', "$t1 / $t2", "$t1 / $t2"),
+	array ('March 7 2022', "$t3 / $t1", "$t6 / $t4"),
+	array ('March 14 2022', "$t2 / $t3", "$t5 / $t6"),
+	array ('March 21 2022', "$t1 / $t2", "$t4 / $t5"),
+	array ('March 28 2022', "$t3 / $t1", "$t6 / $t4"),
+	array ('April 4 2022', "$t1 / $t3", "$t5 / $t6"),
+	array ('April 11 2022', "$t4 / $t5", "$t4 / $t5"),
+	array ('April 18 2022', "$t3 / $t1", "$t6 / $t4"),
+	array ('April 25 2022', "Blender Show (all teams welcome)", "Blender Show (all teams welcome)"),
+	
+);
+	
+foreach ($schedule as $s) {
+	echo "<p>".\Wbhkit\convert_tz($s[0].' 11am', $u->fields['time_zone'], 'F j')."<br>\n";
+	echo \Wbhkit\convert_tz($s[0].' 11am', $u->fields['time_zone'], 'ga').": ".$s[1]."<br>\n";
+	echo \Wbhkit\convert_tz($s[0].' 5pm', $u->fields['time_zone'], 'ga').": ".$s[2]."</p>\n";	
+}
 
-<h3>11 AM Teams</h3>
+	
+?>
 
-<p>FESTIVAL: Alanna Cooke,
-Don Colliver,
-Jon Branch,
-John McGlone,
-Karen Brelsford,
-Karen Davidson,
-Laura Hotchkiss.
+
+<h2>Janaury - April 2022 Roster</h2>
+
+<h4><?php echo "{$ts1} Teams ({$u->fields['time_zone_friendly']})"; ?> Teams</h4>
+
+<p>VOLTAGE: Alice Wu, 
+Amanda Bigford, 
+Becky Webb, 
+Dan Smith, 
+Gracie Goodhart, 
+Naiema Din, 
+Sam Boles, 
 COACH: Erick Acuna</p>
 
-<p>FIRECRACKER: Amanda Bigford,
-Becky Webb,
-Daniel Smith,
-Sabrina Banes,
-Sam Boles,
-Taylor Gray,
-Yuehan Liu.
+<p>THE OFFICER DIBBLE QUINTET: 
+Brian Cruz,
+Don Colliver,
+Jon Branch,
+Karen Brelsford,
+Keith Estrella,
+Max Bank,
+Taylor Gray
 COACH: Christine Simpson</p>
 
 <p>ROBOT: Andrew Hopper,
+Bob Hsaio, 
 Dmytro Lazar,
 Jordana Mishory,
+Julia Kelly,
 Kristen Drenning,
-Mike Kelly,
-Nadege Nguyen,
 Todd Sullivan.
 COACH: Sarah Claspell</p>
 
-<h3>5pm Teams</h3>
+<h4><?php echo "{$ts2} Teams ({$u->fields['time_zone_friendly']})"; ?> Teams</h4>
 
-<p>BUTT BUTT GOLF: Álvaro Méndez,
-Andy Morrison,
-Belinda B
-Bob Hsiao,
-Diane R,
-Jason Ely,
-Rachel S,
-Stan Ferguson.
+<p>DRAMA TURKEY: Álvaro Méndez,
+Álvaro Méndez,
+Cassie Grilley,
+Jessie Catherine Webber,
+Kevin DiLucente,
+Neville Bharucha,
+Rosie Grant,
+Tyler Ross
 COACH: Jason Perez</p>
 
-<p>TEAM REDRUM: Cassie Grilley,
-Isabel Galbraith,
+<p>VOICE OF A DOG: Adam Slager,
+Andy Morrison,
 Jenna Jacobsen,
-Jesse Webber,
-Jet Timmerman,
+John Dardenne,
+Magda Mukthar,
 Michael Brown,
-Tyler Ross,
-Victoria Koenitzer.
+Stan Ferguson,
+Victoria Koenitzer
 COACH: Michelle Gilliam</p>
 
-<p>TEAM SAFE DEPOSIT: Jai Hashim,
+<p>SCREAMING IN SUPERMARKETS (LOUD): Isabel Galbraith,
 Levi Meltzer,
 Oleg,
 Ryan Crowe,
 Sahil Desai,
 Seth Nathan Green,
 Sebastian Hernandez,
-Tim Dunk.
+Tim Dunk
 COACH: Ethan Smith.</p>
 
 

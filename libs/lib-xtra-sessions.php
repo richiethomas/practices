@@ -12,7 +12,12 @@ where workshop_id = :id
 order by start", array(':id' => $workshop_id));
 	$sessions = array();
 	while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
-		$row['friendly_when'] = \Wbhkit\friendly_when($row['start']).'-'.\Wbhkit\friendly_time($row['end']);
+		
+		
+		$row = \Workshops\format_workshop_startend($row);
+		
+		$row['friendly_when'] = \Wbhkit\friendly_when($row['start_tz']).'-'.\Wbhkit\friendly_time($row['end_tz']);
+		$row['friendly_when_cali'] = \Wbhkit\friendly_when($row['start']).'-'.\Wbhkit\friendly_time($row['end']);
 		
 		$row = \Workshops\parse_online_url($row);
 		
@@ -29,7 +34,8 @@ function get_xtra_session(int $xtra_id = 0) {
 	$stmt = \DB\pdo_query("select * from xtra_sessions where id = :id", array(':id' => $xtra_id));
 	$sessions = array();
 	while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
-		$row['friendly_when'] = \Wbhkit\friendly_when($row['start']).'-'.\Wbhkit\friendly_time($row['end']);
+		$row = \Workshops\format_workshop_startend($row);
+		$row['friendly_when'] = \Wbhkit\friendly_when($row['start_tz']).'-'.\Wbhkit\friendly_time($row['end_tz']);
 		
 		$row = \Workshops\parse_online_url($row);
 		
@@ -67,8 +73,8 @@ function add_xtra_session(int $workshop_id, string $start, string $end, ?string 
 	$stmt = \DB\pdo_query("insert into xtra_sessions (workshop_id, start, end, online_url, class_show)
 	VALUES (:wid, :start, :end, :url, :class_show)",
 	array(':wid' => $workshop_id, 
-	':start' => date('Y-m-d H:i:s', strtotime($start)), 
-	':end' => date('Y-m-d H:i:s', strtotime($end)),
+	':start' => date(MYSQL_FORMAT, strtotime($start)), 
+	':end' => date(MYSQL_FORMAT, strtotime($end)),
 	':url' => $online_url,
 	':class_show' => $class_show));
 	update_ranks($workshop_id);
@@ -118,8 +124,8 @@ function add_a_week(array $wk, ?int $class_show = 0) {
 		$end = $s['end'];
 	}
 	
-	$start = date('Y-m-d H:i:s', strtotime("+1 week", strtotime($start)));
-	$end = date('Y-m-d H:i:s', strtotime("+1 week", strtotime($end)));
+	$start = date(MYSQL_FORMAT, strtotime("+1 week", strtotime($start)));
+	$end = date(MYSQL_FORMAT, strtotime("+1 week", strtotime($end)));
 	
 	add_xtra_session($wk['id'], $start, $end, $class_show);
 	return \Workshops\fill_out_workshop_row($wk); 

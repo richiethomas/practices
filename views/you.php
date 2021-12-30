@@ -7,6 +7,12 @@ echo "<p>Here you can change your email, display name and see what workshops you
 echo "<div class='row justify-content-center'><div class='col-sm-6'>\n";
 
 echo "<div class='card my-5 bg-light'><div class='card-body'>\n";
+echo "<h3>Change Your Time Zone</h3>\n";
+echo $userhelper->edit_time_zone($u);
+echo "</div></div> <!-- end of card -->\n";
+
+
+echo "<div class='card my-5 bg-light'><div class='card-body'>\n";
 echo "<h3>Change Your Email</h3>\n";
 echo $userhelper->edit_change_email($u);
 echo "</div></div> <!-- end of card -->\n";

@@ -59,6 +59,16 @@ class UserHelper extends WBHObject {
 		return $body;
 	}
 
+	function edit_time_zone(User $u) {
+		if (!$u->fields['time_zone']) { $u->fields['time_zone'] = DEFAULT_TIME_ZONE; }
+		$body = '';
+		$body .= "<form action='{$this->sc}/updatetz/{$u->fields['id']}' method='post'>\n";
+		$body .= \Wbhkit\drop('time_zone', $this->lookups->tzs, $u->fields['time_zone']);
+		$body .= \Wbhkit\submit('Set Time Zone');
+		$body .= "</form>\n";
+		return $body;
+	}
+
 
 
 

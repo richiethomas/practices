@@ -39,7 +39,7 @@ $( document ).ready(function(){
 	<div class="modal-content">
 	  <div class="modal-header">
 		  
-		<h5 id="login_title" class="modal-title">To Log In, We Email You A Link</h5>
+		<h5 id="login_title" class="modal-title">We Email You A Login Link</h5>
 		<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 	  </div>
 	  <div class="modal-body">
@@ -55,6 +55,8 @@ $( document ).ready(function(){
 	</div>
   </div>
 </div>
+
+
 </html>
 
 <?php

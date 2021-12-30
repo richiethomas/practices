@@ -72,8 +72,11 @@
 	<div class="col-md-6">
 		
 		<h2 class="my-4">WGIS Teams</h2>
-		
-		<p>We have house teams that do online shows at 11am and 5pm <?php echo TIMEZONE; ?> (two teams at teach time). For a list of teams and who performs on them and the schedule, see the <a href="/teams">teams page</a>.</p>
+		<p>We have house teams that do online shows at <?php
+		$ts1 = \Wbhkit\convert_tz("January 3 2022 11am", $u->fields['time_zone'], 'l ga');
+		$ts2 = \Wbhkit\convert_tz("January 3 2022 5pm", $u->fields['time_zone'], 'l ga');
+		echo "$ts1 and $ts2 ({$u->fields['time_zone_friendly']})";
+		?> (two teams at teach time). For a list of teams and who performs on them and the schedule, see the <a href="/teams">teams page</a>.</p>
 		
 	</div>
 	<div class="col-md-6">
@@ -92,7 +95,11 @@
 	<div class="col-md-6">
 		<h2 class="mt-4 mb-2">Team Me Up, Scotty!</h2>
 		
-		<p>Team Me Up, Scotty runs on Mondays from 6:30pm-7:30pm <?php echo TIMEZONE; ?>. is a show for WGIS students to do some improv. Hosted by Ethan Smith and Elena Martinez. You can sign up with an existing group or just as a single player who wants to be grouped with other people!</p>
+		<p>Team Me Up, Scotty runs on Mondays from 		<?php
+		$ts1 = \Wbhkit\convert_tz("January 3 2022 6:30pm", $u->fields['time_zone'], 'l g:ia');
+		$ts2 = \Wbhkit\convert_tz("January 3 2022 7:30pm", $u->fields['time_zone'], 'g:ia');
+		echo "$ts1-$ts2 ({$u->fields['time_zone_friendly']})";
+		?>. is a show for WGIS students to do some improv. Hosted by Ethan Smith and Elena Martinez. You can sign up with an existing group or just as a single player who wants to be grouped with other people!</p>
 		<ul>
 			<li>To apply for this, fill out this form: <a href='https://teammeup.link/perform'>https://teammeup.link/perform</a></li>
 		</ul>
@@ -112,7 +119,11 @@
 	<div class="col-md-6">
 		
 		<h2 class="mt-4 mb-2">Friday Jams</h2>
-		<p>Every Friday, there are two open jams for improvisers of all experience levels: 11am and 5pm <?php echo TIMEZONE; ?> (California time)</p>
+		<p>Every Friday, there are two open jams for improvisers of all experience levels: <?php
+		$ts1 = \Wbhkit\convert_tz("January 7 2022 11am", $u->fields['time_zone'], 'l ga');
+		$ts2 = \Wbhkit\convert_tz("January 7 2022 5pm", $u->fields['time_zone'], 'ga');
+		echo "$ts1 and $ts2 ({$u->fields['time_zone_friendly']})";
+		?></p>
 
 		<p>To join them, just go to this zoom link at those times. The jams are private - they are NOT streamed or recorded. They're led by some of WGIS top former students.</p>
 
@@ -133,7 +144,10 @@
 <div class="showrow row align-items-center">
 	<div class="col-md-6">
 		<h2 class="mt-4 mb-2">The Good Leads</h2>
-<p>Every Friday 3pm <?php echo TIMEZONE; ?> (California time), a super team of improvisers perform "the Glen" which is a form based on the play Glengarry Glen Ross.</p>
+<p>Every <?php
+		$ts1 = \Wbhkit\convert_tz("January 7 2022 3pm", $u->fields['time_zone'], 'l ga');
+		echo "$ts1 ({$u->fields['time_zone_friendly']})";
+		?>, a super team of improvisers perform "the Glen" which is a form based on the play Glengarry Glen Ross.</p>
 
 <p>Featuring: Julie Brister,
 Sarah Claspell,

@@ -3,21 +3,15 @@
 class Lookups extends WBHObject {
 	
 	public array $statuses;
-	public array $carriers;
-	public array $carriers_drop;
 	public array $locations;
 	public array $groups;
+	public array $tzs;
 	
     function __construct() {
 		
 		$stmt = \DB\pdo_query("select * from statuses order by id");
 		while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
 			$this->statuses[$row['id']] = $row['status_name'];
-		}
-		$stmt = \DB\pdo_query("select * from carriers order by id");
-		while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
-			$this->carriers[$row['id']] = $row;
-			$this->carriers_drop[$row['id']] = $row['network'];
 		}
 		
 		$stmt = \DB\pdo_query("select * from locations order by id");
@@ -31,6 +25,13 @@ class Lookups extends WBHObject {
 			$this->groups[$row['id']] = $row['name'];
 		}
 		
+		$tzs = DateTimeZone::listIdentifiers(DateTimeZone::ALL);
+		$dateTime = new DateTime();
+		foreach ($tzs as $tz) {
+			
+			$dateTime->setTimeZone(new DateTimeZone($tz));
+			$this->tzs[$tz] = $tz." ({$dateTime->format('T')})";
+		}
     }
 	
 	public function find_status_by_value($stname) {

@@ -44,7 +44,13 @@ function teacher_link($tinfo) {
 
 			  <dl class="row my-5">
 			    <dt class="col-sm-3">WGIS Teams</dt>
-			    <dd class="col-sm-9">We have online house teams! Every Monday 11am and 5pm (California time, <?php echo TIMEZONE; ?>) <a href="/teams">See more info here</a>.</dd>
+			    <dd class="col-sm-9">We have online house teams! Every <?php
+					
+					$ts1 = \Wbhkit\convert_tz("January 3 2022 11am", $u->fields['time_zone'], 'l ga');
+					$ts2 = \Wbhkit\convert_tz("January 3 2022 5pm", $u->fields['time_zone'], 'l ga');
+					echo "$ts1 and $ts2 ({$u->fields['time_zone_friendly']})";
+					
+					?> <a href="/teams">See more info here</a>.</dd>
 			  </dl>
 
 			  <dl class="row my-5">
@@ -63,7 +69,7 @@ function teacher_link($tinfo) {
   
   <div id="classes">
 	<div class="container-fluid classes-header container-header-banner"><h3 class="container-lg container-fluid">Current & Upcoming Classes</h3></div>
-	<h4 class="text-center class-time-announcement mt-5 mb-5 col-12">All Class Dates and Times are California Time (<?php echo TIMEZONE; ?>)</h4>
+	<!--<h4 class="text-center class-time-announcement mt-5 mb-5 col-12">All Class Dates and Times are California Time (<?php echo TIMEZONE; ?>)</h4>-->
 	
 <?php
 	include 'unavailable_workshops.php';	

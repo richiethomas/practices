@@ -924,7 +924,7 @@ class PHPMailer
             default:
                 //Normalize line breaks
                 $str = preg_replace('/\r\n|\r/m', "\n", $str);
-                echo gmdate('Y-m-d H:i:s'),
+                echo gmdate(MYSQL_FORMAT),
                 "\t",
                     //Trim trailing space
                 trim(

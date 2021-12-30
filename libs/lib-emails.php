@@ -1,6 +1,8 @@
 <?php
 namespace Emails;	
 
+define('MUTE_LOCAL_EMAIL', false);
+
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
@@ -25,7 +27,7 @@ function centralized_email($to, $sub, $body, $realname = null) {
 	$mail->msgHTML($body);
 
 	//send the message, check for errors
-	if (LOCAL) {
+	if (LOCAL && MUTE_LOCAL_EMAIL) {
 		$sent = true;
 	} else {
 		try {
@@ -131,7 +133,7 @@ If you no longer want to be notified of open spots, you can drop out here: <br>
 		--------------------------------<br>
 		<b>Title:</b> {$wk['title']}<br>
 		<b>Teacher:</b> {$wk['teacher_info']['nice_name']}".($wk['co_teacher_id'] ?  ", {$wk['co_teacher_info']['nice_name']}" : '')."<br>
-		<b>When:</b> {$wk['full_when']} (".TIMEZONE." - California time)<br>
+		<b>When:</b> {$wk['full_when']}<br>
 		<b>Cost:</b> {$wk['costdisplay']}<br>";
 		
 		
@@ -159,43 +161,15 @@ function get_dropping_late_warning() {
 
 
 
-function email_footer($faq = false) {
-
-	$faqadd =  $faq ? get_faq() : '';
+function email_footer() {
 
 	return "
-$faqadd
-
 <p>Thanks!</p>
 
 <p>World's Greatest Improv School<br>
 <a href='http://www.wgimprovschool.com/'>http://www.wgimprovschool.com/</a></p>";
 }
 
-function get_faq() {
-	
-return "<h2>Some Things To Know</h2>
-<dl>
-<dt>How does online work?</dt>
-<dd>You need the Zoom app, which is free. On the day of the workshop, or maybe the day before you'll get a link to a Zoom meeting.<br>
-Zoom available at: http://www.zoom.us/</dd>
-
-<dt>Can I drop out?</dt>
-<dd>Yes, use the link in your confirmation email to go to the web site, where you can drop out. If you drop within ".LATE_HOURS." of the start of class, you must still pay for your spot.</dd>
-
-<dt>How should I pay?</dt>
-<dd>Venmo @wgimprovschool, or paypal payments@wgimprovschool.com.</dd>
-
-<dt>What if I'm on a waiting list?</dt>
-<dd>You'll get an email the moment a spot opens up, with a link to ACCEPT or DECLINE.</dd>
-
-<dt>What's the late policy? Or the policy on leaving early?</dt>
-<dd>Arriving late or leaving early is fine. If you're late I might ask you to wait to join in until I say so.</dd>
-
-<dt>What levels?</dt>
-<dd>Each workshop/course has a reccomended pre-requiste. But I won't really check. Take the ones you think you can contribute to and get something from.</dd>
-</dl>";
-}	
 
 function get_workshop_summary($wk) {
 	
@@ -204,7 +178,7 @@ function get_workshop_summary($wk) {
 <b>Class information:</b><br>
 <b>Title:</b> {$wk['title']}<br>
 <b>Teacher:</b> {$wk['teacher_info']['nice_name']}".($wk['co_teacher_id'] ?  ", {$wk['co_teacher_info']['nice_name']}" : '')."<br>
-<b>When:</b> {$wk['full_when']} (".TIMEZONE." - California time)";
+<b>When:</b> {$wk['full_when']}";
 
 	if ($wk['location_id'] != ONLINE_LOCATION_ID) {
 		$summary .= "<br>

@@ -15,7 +15,7 @@ echo "<div class='row mt-md-3 admin-edit-workshop'>\n";
 			echo  "<h4>{$status_name} (".$stats[$stid].")</h4>\n";
 			foreach ($lists[$stid] as $s) {
 				echo "<div class='row my-3'><div class='col-md-5'>".
-					Wbhkit\checkbox('users', $s['id'], "<a href='/admin-users/view/{$s['id']}'>{$s['nice_name']}</a>", false, true)."</div>";
+					Wbhkit\checkbox('users', $s['id'], "<a href='/admin-users/view/{$s['id']}'>{$s['nice_name']}</a>", false, true)."</div></div>";
 			}
 		}
 		echo "<div class='mt-4'>".

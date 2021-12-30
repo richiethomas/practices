@@ -46,7 +46,7 @@ class EnrollmentsHelper extends WBHObject {
 			$stmt = \DB\pdo_query($sql, array(':wid' => $wk['id']));
 		} else {
 			// if we are showing all, only show last 3 days
-			$sql = preg_replace('/WORKSHOPMAYBE/', 'wk.start >= "'.date("Y-m-d H:i:s", strtotime("7 days ago")).'" and ', $sql);
+			$sql = preg_replace('/WORKSHOPMAYBE/', 'wk.start >= "'.date(MYSQL_FORMAT, strtotime("7 days ago")).'" and ', $sql);
 			$stmt = \DB\pdo_query($sql);
 		}
 		
@@ -108,7 +108,7 @@ class EnrollmentsHelper extends WBHObject {
 		if (!$u->logged_in() || !isset($u->fields['id'])) {
 			return "<p>Not logged in!</p>\n";
 		}
-		$mysqlnow = date("Y-m-d H:i:s");
+		$mysqlnow = date(MYSQL_FORMAT);
 	
 		$sql = "select *, r.id as enrollment_id, r.paid, r.pay_override 
 		from registrations r, workshops w, locations l

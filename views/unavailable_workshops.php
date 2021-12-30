@@ -41,25 +41,25 @@ if (count($unavailable_workshops) > 0) {
 	if (count($application_workshops) > 0) {
 
 		echo "<h2>Classes Taking Requests</h2>\n";
-		echo "<h4>Enrollments Announced December 20</h4>\n";
+		//echo "<h4>Enrollments Announced December 20</h4>\n";
+
+		echo "<p class=\"font-weight-light\">(All times ".$u->fields['time_zone_friendly'].")</p>\n";
 
 		$current_date = null;
 		echo "<ul>\n";
 		foreach ($application_workshops as $wk) {
 	
-			$wkdate = date("l F j", strtotime($wk['start']));
-			$start = Wbhkit\friendly_time($wk['start']);
-			$end = Wbhkit\friendly_time($wk['end']);	
+			$wkdate = date("l F j", strtotime($wk['start_tz']));
+			$start = Wbhkit\friendly_time($wk['start_tz']);
+			$end = Wbhkit\friendly_time($wk['end_tz']);	
 			echo "<li class='mb-2'>$wkdate: <a href='/workshop/view/{$wk['id']}'>{$wk['title']}</a><br>
 				<small>$start {$wk['costdisplay']} (USD), Instructor: <a href='/teachers/view/{$wk['teacher_id']}'>{$wk['teacher_info']['nice_name']}</a><br>
 			{$wk['time_summary']}<br></small></li>\n";	
 		}	
 		echo "</ul>\n";
-		
-
+		echo "</div></div>";
 	}
 
-	echo "<p class=\"font-weight-light\">(All times ".TIMEZONE." - California time)</p></div></div>\n";
 
 }
 

@@ -2,6 +2,8 @@
 	
 class User extends WBHObject {
 	
+	private string $default_time_zone;
+	
 	
 	function __construct() {		
 		parent::__construct(); // load logger, lookups
@@ -11,27 +13,41 @@ class User extends WBHObject {
 			'email' => null,
 			'display_name' => null,
 			'ukey' => null,
-			'send_text'=> null,
-			'carrier_id' => null,
-			'phone' => null,
 			'new_email' => null,
 			'temp_ukey' => null,
 			'group_id' => null,
 			'joined' => null,
 			'nice_name' => null,
-			'fullest_name' => null	
+			'fullest_name' => null,
+			'time_zone' => null,
+			'time_zone_friendly' => null
 			);
 			
+		$this->default_time_zone = DEFAULT_TIME_ZONE;
 		$this->set_into_fields($fields);
-				
-
+		$this->fields['time_zone'] = $this->default_time_zone;
+		$this->set_time_zone_friendly();
 	}
+
+
+	private function clear_fields() {
+		$this->fields = array();
+		$this->fields['time_zone'] = DEFAULT_TIME_ZONE;
+		$this->set_time_zone_friendly();
+	}
+
+	private function set_time_zone_friendly() {
+		$dateTime = new DateTime();
+		$dateTime->setTimeZone(new DateTimeZone($this->fields['time_zone']));
+		$this->fields['time_zone_friendly'] = $dateTime->format('T');
+	}
+
 
 	function set_by_email(string $email) {
 		
 		global $last_insert_id;
 
-		$this->fields = array();
+		$this->clear_fields();
 		
 		$stmt = \DB\pdo_query("select u.* from users u where email = :email", array(':email' => $email));
 		while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
@@ -42,7 +58,7 @@ class User extends WBHObject {
 	
 		// didn't find one? make one
 		if ($this->validate_email($email)) {
-			$stmt = \DB\pdo_query("insert into users (email, joined) VALUES (:email, '".date("Y-m-d H:i:s")."')", array(':email' => $email));
+			$stmt = \DB\pdo_query("insert into users (email, joined) VALUES (:email, '".date(MYSQL_FORMAT)."')", array(':email' => $email));
 			$this->set_by_id($last_insert_id); // fast way to get all fields in this object
 			$this->set_nice_name();
 			$this->get_key();
@@ -61,7 +77,7 @@ class User extends WBHObject {
 			return false;
 		}
 		
-		$this->fields = array();
+		$this->clear_fields();
 		
 		$stmt = \DB\pdo_query("select u.* from users u where u.id = :id", array(":id" => $id));
 		while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
@@ -73,7 +89,7 @@ class User extends WBHObject {
 	}
 
 	function set_by_key(string $key) {
-		$this->fields = array();
+		$this->clear_fields();
 		$stmt = \DB\pdo_query("select * from users where ukey = :key", array(':key' => $key));
 		while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
 			$this->set_into_fields($row);
@@ -94,6 +110,11 @@ class User extends WBHObject {
 		} else {
 			$this->fields['nice_name'] = $this->fields['fullest_name'] = $this->fields['email'];
 		}
+		
+		if (!isset($this->fields['time_zone']) || !$this->fields['time_zone']) {
+			$this->fields['time_zone'] = $this->default_time_zone;
+		}
+		$this->set_time_zone_friendly();
 		return true;
 	}
 
@@ -171,7 +192,13 @@ class User extends WBHObject {
 			}
 			$trans = URL."home/k/".$this->get_key();
 			$body = "<p>Use this link to log in:</p>
-	<p>{$trans}</p><p>(Sent: ".date('D M n, Y g:ia').")</p>".\Emails\email_footer();
+	<p>{$trans}</p>";
+			
+			//<p>(Sent: ".date('D M n, Y g:ia').")</p>
+			
+			$body .= "<p>SET YOUR TIME ZONE:<br>\n--------------------<br>\nYou can set your time zone (and change other settings like display name, email) at: ".URL."you</p>";
+			
+			$body .= \Emails\email_footer();
 
 			return \Emails\centralized_email($this->fields['email'], "Log in to WGIS", $body);
 			
@@ -190,7 +217,7 @@ class User extends WBHObject {
 		unset($_SESSION['s_key']);
 	    unset($_COOKIE['c_key']);
 	    setcookie('c_key', null, -1);
-		$this->fields = array(); // clear current user
+		$this->clear_fields(); // clear current user
 		$this->message = 'You are logged out!';
 	}
 
@@ -222,7 +249,16 @@ class User extends WBHObject {
 		return false;		
 	}	
 	
-	
+	function update_time_zone(string $time_zone = "America/Los_Angeles") {
+		// update user info
+		$stmt = \DB\pdo_query("update users set time_zone = :time_zone where id = :uid", 
+			array(
+				':time_zone' => $time_zone, 
+				':uid' => $this->fields['id'])
+		);
+		$this->fields['time_zone'] = $time_zone;
+		return true;
+	}
 
 	function update_display_name(string $display_name) {
 		

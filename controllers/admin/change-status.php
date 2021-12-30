@@ -34,7 +34,7 @@ if (!$e->fields['id'])  {
 
 switch ($ac) {
 	case 'cr':
-		$stmt = \DB\pdo_query("update registrations set last_modified = :lmod where workshop_id = :wid and user_id = :gid", array(':lmod' => date('Y-m-d H:i:s', strtotime($lmod)), ':wid' => $wid, ':gid' => $guest_id));
+		$stmt = \DB\pdo_query("update registrations set last_modified = :lmod where workshop_id = :wid and user_id = :gid", array(':lmod' => date(MYSQL_FORMAT, strtotime($lmod)), ':wid' => $wid, ':gid' => $guest_id));
 		break;
 	
 	case 'cs':

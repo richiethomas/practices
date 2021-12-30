@@ -4,7 +4,7 @@
 $sessions = '';
 	
 if (!\Workshops\is_public($wk)) {
-	$point = "This workshop is not available for signups yet. It will be available at <b>".date("l M j, g:ia", strtotime($wk['when_public']))."</b> (".TIMEZONE.")";
+	$point = "This workshop is not available for signups yet. It will be available at <b>".date("l M j, g:ia", strtotime($wk['when_public_tz']))."</b> ({$u->fields['time_zone']})";
 } elseif ($wk['upcoming'] == 0) {
 	$point = "This workshop had started or is in the past.";
 } else {
@@ -108,9 +108,8 @@ echo "</div></div>\n"; // end of main row
 echo "<div class=\"row m-3 p-3 justify-content-center\"><div class=\"col-md-8 border border-info\">
 <h2>How This Works</h2>
 <ul>
-	<li>All times are California local time (PDT).</li>
 	<li>Pay via Venmo (@wgimprovschool - a business) or Paypal (payments@wgimprovschool.com)</li>
-	<li>Classes are held over <a href=\"http://www.zoom.us/\">Zoom</a> unless the title includes IN PERSON</li>
+	<li>Classes are online, on <a href=\"http://www.zoom.us/\">Zoom</a> unless the title includes IN PERSON</li>
 	<li><b>LATE DROP POLICY: If drop less than ".LATE_HOURS." hours before and it was sold out, we will ask you to still pay!</b></li>
 </ul>
 </div></div>\n";

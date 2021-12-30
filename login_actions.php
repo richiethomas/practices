@@ -4,6 +4,10 @@ $link_email_sent_flag = false;
 
 switch ($ac) {
 
+
+
+
+
 	case 'k':
 	
 		if ($u->set_by_key($params[2])) {
@@ -116,23 +120,19 @@ switch ($ac) {
 		$u->update_display_name($display_name);		
 		break;		
 
-
-	// update text preferences
-	case 'updateu':
-
-		Wbhkit\set_vars(array('carrier_id', 'phone', 'send_text'));
-
+	case 'updatetz':
+		Wbhkit\set_vars(array('time_zone'));
+	
 		if (!$u->logged_in()) {
-			$error = 'You are not logged in! You have to be logged in to update your text preferences.';
+			$error = 'You are not logged in! You have to be logged in to update your display name.';
+			$logger->debug($error);
 			break;
 		}
-		$u->update_text_preferences($phone, $send_text, $carrier_id); 
-		if ($u->error) {
-			$error = $u->error;
-		} else {
-			$message = "Text preferences updated!";
-		}
+		$message = "Changing time zone to '$time_zone'";
+		$logger->info($message);
+		$u->update_time_zone($time_zone);		
 		break;		
+			
 
 
 	case 'concemail':

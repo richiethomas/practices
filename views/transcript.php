@@ -32,7 +32,10 @@ if ($admin) {
 			echo "</div>\n";  // title cell
 			
 		
-			echo "	<div class='col-sm'>{$t['full_when']} (".TIMEZONE.")<br>
+			echo "	<div class='col-sm'>";
+			echo $admin ? $t['full_when_cali'] : $t['full_when'];
+			
+			echo "<br>
 				<small>Instructor: <a href=\"/teachers/view/{$t['teacher_id']}\">{$t['teacher_info']['nice_name']}</a>";
 			
 			if ($t['co_teacher_id']) {

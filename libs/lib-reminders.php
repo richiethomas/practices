@@ -1,8 +1,6 @@
 <?php
 namespace Reminders;
 
-define('REMINDER_TEST', true);
-
 function get_reminders(int $how_many = 100) {
 	
 	// check reminder database -- has it been 6 hours?
@@ -32,7 +30,7 @@ update xtra_sessions set reminder_sent = 0;
 	
 	// if yes, get a list of all workshops that have yet to start within REMINDER_HOURS
 	$classes_to_remind = array();
-	$mysqlnow = date("Y-m-d H:i:s");
+	$mysqlnow = date(MYSQL_FORMAT);
 	
 	
 	// set up $workshops_to_remind
@@ -112,28 +110,24 @@ Class info on web site: $trans";
 				
 		//\Emails\centralized_email('whines@gmail.com', $subject, $base_msg); // for testing, i get everything
 
-		if (!LOCAL || REMINDER_TEST) {
-			\Emails\centralized_email($std['email'], $subject, $base_msg);
-			$guest->set_by_id($std['id']);
-		}
+		\Emails\centralized_email($std['email'], $subject, $base_msg);
+		$guest->set_by_id($std['id']);
 	}
 	//remind teacher
-	if (!LOCAL || REMINDER_TEST) {
 				
-		$trans = URL."workshop/view/{$wk['id']}";
-		$teacher_reminder = get_reminder_message_data($wk, $xtra, true);
-		$msg = $teacher_reminder['note']."<p>Class info online:<br>$trans</p>\n";
-		
-		if (!$xtra['id']) { // is it first session? send teacher the roster
-			$msg .= "<h3>Full info for class</h3>\n".
-				preg_replace('/\n/', "<br>\n", \Workshops\get_cut_and_paste_roster($wk));
-		}
-		
-		\Emails\centralized_email($wk['teacher_info']['email'], $teacher_reminder['subject'], $msg);
+	$trans = URL."workshop/view/{$wk['id']}";
+	$teacher_reminder = get_reminder_message_data($wk, $xtra, true);
+	$msg = $teacher_reminder['note']."<p>Class info online:<br>$trans</p>\n";
+	
+	if (!$xtra['id']) { // is it first session? send teacher the roster
+		$msg .= "<h3>Full info for class</h3>\n".
+			preg_replace('/\n/', "<br>\n", \Workshops\get_cut_and_paste_roster($wk));
 	}
 	
+	\Emails\centralized_email($wk['teacher_info']['email'], $teacher_reminder['subject'], $msg);
+	
 	// if not full -- point it out to Will
-	if ($wk['enrolled'] < $wk['capacity'] && (!LOCAL || REMINDER_TEST)) {
+	if ($wk['enrolled'] < $wk['capacity']) {
 		
 		$alert_msg = "'{$wk['title']}' is not full. {$wk['enrolled']} of {$wk['capacity']} signed up<br>\n".
 			URL."admin-workshop/view/{$wk['id']}<br>\n".

@@ -374,3 +374,12 @@ function plural( $amount, $singular = '', $plural = 's' ) {
     }
     return $plural;
 }
+
+function convert_tz(string $ts, string $tz = DEFAULT_TIME_ZONE, $fmt = MYSQL_FORMAT ) {
+	
+	date_default_timezone_set(DEFAULT_TIME_ZONE);
+	$datetime = new \DateTime($ts);
+	$datetime->setTimezone(new \DateTimeZone($tz));
+	return $datetime->format($fmt);
+	
+}

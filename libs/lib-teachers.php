@@ -108,7 +108,7 @@ function get_teacher_upcoming_classes($tid) {
 	
 	$workshops = array();
 	// get all active teachers, and also upcoming courses they are teaching	
-	$stmt = \DB\pdo_query("select wk.* from workshops wk where (teacher_id = :tid or co_teacher_id = :ctid) and start > :now order by start", array(':now' => date("Y-m-d H:i:s"), ':tid' => $tid, ':ctid' => $tid));
+	$stmt = \DB\pdo_query("select wk.* from workshops wk where (teacher_id = :tid or co_teacher_id = :ctid) and start > :now order by start", array(':now' => date(MYSQL_FORMAT), ':tid' => $tid, ':ctid' => $tid));
 	while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
 		$workshops[] = \Workshops\fill_out_workshop_row($row, false); // don't need enrollment stats 
 	}

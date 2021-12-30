@@ -46,7 +46,7 @@ class WBHObject
 	
 	function set_mysql_datetime_field(string $fn, ?string $ts = null) {
 		if ($ts) {
-			$this->fields[$fn] = date('Y-m-d H:i:s', strtotime($ts));
+			$this->fields[$fn] = date(MYSQL_FORMAT, strtotime($ts));
 		} else {
 			$this->fields[$fn] = null;
 		}

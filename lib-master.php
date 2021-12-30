@@ -32,7 +32,18 @@ $error = '';
 $message = '';
 $body = '';
 $last_insert_id = null;
-date_default_timezone_set ( 'America/Los_Angeles' );
+
+
+define('DEFAULT_TIME_ZONE', 'America/Los_Angeles');
+date_default_timezone_set ( DEFAULT_TIME_ZONE );
+//define('TIMEZONE', 'PDT');
+
+$dateTime = new DateTime();
+$dateTime->setTimeZone(new DateTimeZone(DEFAULT_TIME_ZONE));
+define('TIMEZONE', $dateTime->format('T'));
+
+
+define('MYSQL_FORMAT', 'Y-m-d H:i:s');
 define('LOCAL', ($_SERVER['SERVER_NAME'] == 'localhost') ? true : false);
 define('DEBUG_MODE', true);
 define('DEBUG_LOG', 'info.txt');
@@ -43,7 +54,7 @@ if (LOCAL) {
 	define('URL', "https://{$_SERVER['HTTP_HOST']}/");
 }
 define('ONLINE_LOCATION_ID', 8);
-define('TIMEZONE', 'PDT');
+
 define('LATE_HOURS', 24);
 define('REMINDER_HOURS', 24);
 define('USER_PHOTO_MAX_BYTES', 5000000);

@@ -101,6 +101,8 @@ switch ($ac) {
 		
 	case 'adxtra':	
 	
+		$class_show = (int)$class_show;
+	
 		XtraSessions\add_xtra_session($wid, $start_xtra, $end_xtra, $online_url_xtra, $class_show);
 		$wk = Workshops\fill_out_workshop_row($wk);
 		$message = "Added xtra session.";
