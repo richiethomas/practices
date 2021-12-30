@@ -16,7 +16,7 @@ class UserHelper extends WBHObject {
 	
 		$order_by = array('n' => 'a.email', 't' => 'classes desc', 'd' => 'a.joined desc');
 
-		$sql = "SELECT a.id, a.email, a.display_name, a.phone, COUNT(b.id) AS 'classes', a.joined  
+		$sql = "SELECT a.id, a.email, a.display_name, COUNT(b.id) AS 'classes', a.joined  
 		FROM 
 			users a 
 		   LEFT JOIN
@@ -31,11 +31,10 @@ class UserHelper extends WBHObject {
 			$stmt = \DB\pdo_query($sql);
 		} else {
 			$where = "where a.email like :needle1";
-			$where .= " or a.phone like :needle2";
-			$where .= " or a.display_name like :needle3";
+			$where .= " or a.display_name like :needle2";
 		
 			$sql = preg_replace('/WHERECLAUSE/', $where, $sql);
-			$stmt = \DB\pdo_query($sql, array(':needle1' => "%$needle%", ':needle2' => "%$needle%", ':needle3' => "%$needle%" ));
+			$stmt = \DB\pdo_query($sql, array(':needle1' => "%$needle%", ':needle2' => "%$needle%" ));
 		}
 	
 		$stds = array();

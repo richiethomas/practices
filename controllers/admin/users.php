@@ -1,7 +1,7 @@
 <?php
 $view->data['heading'] = "users";
 
-Wbhkit\set_vars(array('carrier_id', 'phone', 'send_text', 'newemail', 'display_name', 'group_id', 'hideconpay'));
+Wbhkit\set_vars(array('newemail', 'display_name', 'group_id', 'hideconpay'));
 
 $guest_id =  (int) ($params[2] ?? 0);
 if (!$guest_id) {
