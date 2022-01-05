@@ -28,7 +28,10 @@ function fill_out_workshop_row(array $row, bool $get_enrollment_stats = true) {
 		$row['when_public'] = '';
 	}
 	$row['soldout'] = 0; // so many places in the code refer to this
+	
 	$row = format_workshop_startend($row);
+	$row['tags_array'] = get_tags($row['tags']);	
+	
 	
 	// create short title if it's more then 2 words
 	$row['short_title'] = $row['title'];
@@ -59,26 +62,8 @@ function fill_out_workshop_row(array $row, bool $get_enrollment_stats = true) {
 	// url stuff
 	$row = parse_online_url($row);
 
-	// xtra session info
-	$row['sessions'] = \XtraSessions\get_xtra_sessions($row['id']);	
-	$row['total_class_sessions'] = 1;
-	$row['total_show_sessions'] = 0;
-	$row['total_sessions'] = 1;
-	foreach ($row['sessions'] as $sess) {
-		if ($sess['class_show'] == 1) {
-			$row['total_show_sessions']++;
-		} else {
-			$row['total_class_sessions']++;
-		}
-		$row['total_sessions']++;
-	}
-
-	$row['time_summary'] = $row['total_class_sessions'].' class'.\Wbhkit\plural($row['total_class_sessions'], '', 'es');
+	$row = fill_out_xtra_sessions($row);
 	
-	if ($row['total_show_sessions'] > 0) {
-		$row['time_summary'] .= ', '.$row['total_show_sessions'].' show'.\Wbhkit\plural($row['total_show_sessions']);
-	}
-
 	// set full when
 	$row['full_when'] = $row['when'];
 	if (!empty($row['sessions'])) {
@@ -89,7 +74,7 @@ function fill_out_workshop_row(array $row, bool $get_enrollment_stats = true) {
 				"{$s['friendly_when']}<br>\n";
 		}
 	}
-	
+
 	// set full when - cali time
 	$row['full_when_cali'] = $row['when_cali'];
 	if (!empty($row['sessions'])) {
@@ -107,7 +92,7 @@ function fill_out_workshop_row(array $row, bool $get_enrollment_stats = true) {
 		$row['upcoming'] = 0;
 	}
 	$row = check_last_minuteness($row);
-	
+		
 	if ($get_enrollment_stats) {
 
 		// set teacher pay
@@ -161,8 +146,32 @@ function format_workshop_startend(array $row) {
 	$row['showstart_cali'] .= $tzcali;
 	$row['showend_cali'] .= $tzcali;	
 	
-	
 	return $row;
+}
+
+
+function fill_out_xtra_sessions($row) {
+	// xtra session info
+	$row['sessions'] = \XtraSessions\get_xtra_sessions($row['id']);	
+	$row['total_class_sessions'] = 1;
+	$row['total_show_sessions'] = 0;
+	$row['total_sessions'] = 1;
+	foreach ($row['sessions'] as $sess) {
+		if ($sess['class_show'] == 1) {
+			$row['total_show_sessions']++;
+		} else {
+			$row['total_class_sessions']++;
+		}
+		$row['total_sessions']++;
+	}
+
+	$row['time_summary'] = $row['total_class_sessions'].' class'.\Wbhkit\plural($row['total_class_sessions'], '', 'es');
+
+	if ($row['total_show_sessions'] > 0) {
+		$row['time_summary'] .= ', '.$row['total_show_sessions'].' show'.\Wbhkit\plural($row['total_show_sessions']);
+	}
+
+	return $row;		
 }
 
 // used in fill_out_workshop_row and also get_sessions_to_come
@@ -373,7 +382,7 @@ function get_sessions_to_come(bool $get_enrollments = true) {
 from workshops w
 where start >= date('$mysqlnow'))
 union
-(select x.workshop_id, w.title, x.start, x.end, w.capacity, w.cost, 1 as xtra,  x.class_show, w.notes, w.teacher_id, w.co_teacher_id, x.rank, x.online_url as override_url, w.online_url, w.application, w.location_id
+(select x.workshop_id as id, w.title, x.start, x.end, w.capacity, w.cost, 1 as xtra,  x.class_show, w.notes, w.teacher_id, w.co_teacher_id, x.rank, x.online_url as override_url, w.online_url, w.application, w.location_id
 from xtra_sessions x, workshops w 
 where w.id = x.workshop_id and x.start >= date('$mysqlnow'))
 order by start asc"); 
@@ -382,7 +391,13 @@ order by start asc");
 	$sessions = array();
 	$enrollments = array();
 	
+	$total_sessions = array();
+	
+	
 	while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
+				
+		
+		$row['total_sessions'] = check_total_sessions($row['id'], $total_sessions);
 		
 		$row['lwhere'] = $lookups->locations[$row['location_id']]['lwhere'];
 		
@@ -420,6 +435,19 @@ order by start asc");
 		}
 	}
 	return $sessions;
+}
+
+// used in "get sessions to come"
+function check_total_sessions(int $wid, array &$total_sessions) {
+	foreach ($total_sessions as $id => $val) {
+		if ($wid == $id) {
+			return $val;
+		}
+	}
+	$row['id'] = $wid;
+	$row = fill_out_xtra_sessions($row);
+	$total_sessions[$wid] = $row['total_sessions'];
+	return $row['total_sessions'];
 }
 
 
@@ -516,7 +544,8 @@ function get_empty_workshop() {
 		'teacher_id' => 1,
 		'co_teacher_id' => null,
 		'reminder_sent' => 0,
-		'application' => 0
+		'application' => 0,
+		'tags' => null
 	);
 }
 
@@ -535,6 +564,7 @@ function workshop_fields(array $wk) {
 	global $lookups;
 	
 	return \Wbhkit\texty('title', $wk['title'], null, null, null, 'Required', ' required ').
+	\Wbhkit\texty('tags', $wk['tags']).
 	\Wbhkit\drop('lid', $lookups->locations_drop(), $wk['location_id'], 'Location', null, 'Required', ' required ').
 	\Wbhkit\textarea('online_url', $wk['online_url'], 'Online URL').	
 	\Wbhkit\texty('start', $wk['start'], null, null, null, 'Required', ' required ').
@@ -565,6 +595,7 @@ function add_update_workshop(array $wk, string $ac = 'up') {
 	if (!$wk['co_teacher_id']) { $wk['co_teacher_id'] = NULL; }
 	if (!$wk['reminder_sent']) { $wk['reminder_sent'] = 0; }
 	if (!$wk['application']) { $wk['application'] = 0; }
+	if (!$wk['tags']) { $wk['tags'] = null; }
 	
 		
 	$params = array(':title' => $wk['title'],
@@ -579,16 +610,18 @@ function add_update_workshop(array $wk, string $ac = 'up') {
 		':tid' => $wk['teacher_id'],
 		':ctid' => $wk['co_teacher_id'],
 		':reminder_sent' => $wk['reminder_sent'],
-		':application' => $wk['application']);
+		':application' => $wk['application'],
+		':tags' => $wk['tags']
+	);
 		
 		if ($ac == 'up') {
 			$params[':wid'] = $wk['id'];
-			$sql = "update workshops set title = :title, start = :start, end = :end, cost = :cost, capacity = :capacity, location_id = :lid, online_url = :online_url,  notes = :notes, when_public = :public, reminder_sent = :reminder_sent, teacher_id = :tid, co_teacher_id = :ctid, application = :application where id = :wid";			
+			$sql = "update workshops set title = :title, start = :start, end = :end, cost = :cost, capacity = :capacity, location_id = :lid, online_url = :online_url,  notes = :notes, when_public = :public, reminder_sent = :reminder_sent, teacher_id = :tid, co_teacher_id = :ctid, application = :application, tags = :tags where id = :wid";			
 			$stmt = \DB\pdo_query($sql, $params);
 			return $wk['id'];
 		} elseif ($ac = 'ad') {
-			$stmt = \DB\pdo_query("insert into workshops (title, start, end, cost, capacity, location_id, online_url, notes, when_public, reminder_sent, teacher_id, co_teacher_id, application)
-			VALUES (:title, :start, :end, :cost, :capacity, :lid, :online_url,  :notes,  :public, :reminder_sent, :tid, :ctid, :application)",
+			$stmt = \DB\pdo_query("insert into workshops (title, start, end, cost, capacity, location_id, online_url, notes, when_public, reminder_sent, teacher_id, co_teacher_id, application, tags)
+			VALUES (:title, :start, :end, :cost, :capacity, :lid, :online_url,  :notes,  :public, :reminder_sent, :tid, :ctid, :application, :tags)",
 			$params);
 			return $last_insert_id; // set as a global by my dbo routines
 		}
@@ -679,3 +712,16 @@ function parse_online_url($row) {
 	
 }
 
+function get_tags(string $tags_string = null) {
+	
+	$tags_array = array();
+	if ($tags_string) {
+		$tags_array = explode(',', $tags_string);
+		foreach ($tags_array as $k =>$v) {
+			$tags_array[$k] = trim($v);
+		}
+		sort($tags_array);
+	}
+	return $tags_array;
+	
+}

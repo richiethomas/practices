@@ -45,6 +45,8 @@ switch ($ac) {
 		$base_msg = $note.Emails\get_workshop_summary($wk);
 
 
+		
+		
 		foreach ($stds as $std) {
 			
 			$trans = URL."workshop/view/{$wk['id']}";
@@ -56,6 +58,9 @@ switch ($ac) {
 			$guest->set_by_id($std['id']);
 		
 		}
+		// send a copy to the webmaster
+		Emails\centralized_email(WEBMASTER, $subject, $msg);
+
 		$message = "Email '$subject' sent to $sent";
 		$logger->info($message);
 		break;

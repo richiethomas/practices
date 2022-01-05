@@ -24,6 +24,8 @@ function centralized_email($to, $sub, $body, $realname = null) {
 	}
 		
 	$mail->Subject = $sub;
+	
+	$body = wordwrap($body, 110, "<br>\n");
 	$mail->msgHTML($body);
 
 	//send the message, check for errors
@@ -273,7 +275,6 @@ function payment_text($wk, $reminder = 0) {
 
 		// start date
 		$wdate = date('n/j', (strtotime($wk['start'])));		
-		$wnames = explode(' ', $wk['title']);
 		
 		$pt .= "Put '".strtoupper("{$wdate} {$t_last_name} {$wk['short_title']}")."' in your payment.<br><br>\n\nDue by the start of class. You'll get a confirmation email within 12 hours of paying.<br><br>\n\n";
 

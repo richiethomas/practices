@@ -11,7 +11,7 @@ if ($ac != 'ad') {
 	$wk = \Workshops\get_workshop_info($wid);
 }
 
-$wk_vars = array('title', 'notes', 'start', 'end', 'lid', 'online_url', 'cost', 'capacity', 'notes', 'when_public', 'email', 'con', 'guest_id', 'reminder_sent', 'sold_out_late', 'teacher_id', 'co_teacher_id', 'application',  'start_xtra', 'end_xtra', 'online_url_xtra', 'hideconpay', 'class_show');
+$wk_vars = array('title', 'notes', 'start', 'end', 'lid', 'online_url', 'cost', 'capacity', 'notes', 'when_public', 'email', 'con', 'guest_id', 'reminder_sent', 'sold_out_late', 'teacher_id', 'co_teacher_id', 'application',  'start_xtra', 'end_xtra', 'online_url_xtra', 'hideconpay', 'class_show', 'tags');
 Wbhkit\set_vars($wk_vars);
 
 $e = new Enrollment();

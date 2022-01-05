@@ -141,6 +141,7 @@ if ($u->check_user_level(2)) {
 	$lists = $eh->get_students($wk['id'], ENROLLED);
 	$alists = $eh->get_students($wk['id'], APPLIED);
 	$wlists = $eh->get_students($wk['id'], WAITING);
+	$dlists = $eh->get_students($wk['id'], DROPPED);
 	
 	echo "<div class='m-3 p-3 bg-info'>\n";
 	echo "<h3>Teacher/Admin Info</h3>\n";
@@ -157,6 +158,7 @@ if ($u->check_user_level(2)) {
 	list_names($lists, 'Enrolled');
 	list_names($alists, 'Requested A Spot');
 	list_names($wlists, 'Wait List');
+	list_names($dlists, 'Dropped');
 	
 	echo "</div>\n";
 }

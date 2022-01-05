@@ -32,7 +32,7 @@ function svg_code($svg_name){
 	 	
 
 	<!-- Custom styles for this template -->
-	<link href="/admin.css" rel="stylesheet">
+	<link href="/assets/admin.css" rel="stylesheet">
     <!-- iconic (open source version) -->
     <link href="/open-iconic/font/css/open-iconic-bootstrap.css" rel="stylesheet">
 

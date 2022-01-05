@@ -17,7 +17,7 @@ $heading = isset($heading) ? "wgis: $heading" : "World's Greatest Improv School"
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
 	 	
 	<!-- Custom styles for this template -->
-	<link href="/wgis.css" rel="stylesheet">
+	<link href="/assets/wgis.css" rel="stylesheet">
 	
     <!-- iconic (open source version) -->
     <link href="/open-iconic/font/css/open-iconic-bootstrap.css" rel="stylesheet">
@@ -82,9 +82,12 @@ if (isset($fb_description)) {
 			echo "</ul>";	
 		 echo "</div>";
 echo "	</nav>";
+
+// time zone
 if ($u->logged_in()) {
-	echo "<div class='rounded-pill border bg-light p-2 col-4'><span class=\"oi oi-clock p-0\" title=\"time zone\" aria-hidden=\"true\"></span> <a href='/you'>{$u->fields['time_zone']} - {$u->fields['time_zone_friendly']}</a></div>";	
+	echo "<p class='rounded-pill border bg-light p-2 col-sm-4'><span class=\"oi oi-clock p-0\" title=\"time zone\" aria-hidden=\"true\"></span> <a href='/you'>{$u->fields['time_zone']} - {$u->fields['time_zone_friendly']}</a></p>";	
 } 
+
 
 echo "</div>";
 echo " </header>";

@@ -128,7 +128,7 @@ switch ($ac) {
 			$logger->debug($error);
 			break;
 		}
-		$message = "Changing time zone to '$time_zone'";
+		$message = "Changing time zone to '$time_zone' for '{$u->fields['email']}'";
 		$logger->info($message);
 		$u->update_time_zone($time_zone);		
 		break;		
