@@ -232,7 +232,7 @@ function get_modal($id, $title, $body) {
         </div>
         <div class="modal-body">'.$body.'</div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><span class="oi oi-circle-x" title="circle-x" aria-hidden="true"></span> Close</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="bi-x"></i> Close</button>
         </div>
       </div>
     </div>

@@ -24,7 +24,7 @@ echo "</div></div> <!-- end of card -->\n";
 
 echo "<div class='card my-5 bg-light'><div class='card-body'>\n";
 echo "<h3>Log Out</h3>\n";
-echo "<a class='btn btn-outline-primary' href=\"/home/lo\"><span class=\"oi oi-account-logout\" title=\"account-logout\" aria-hidden=\"true\"></span> log out of willhinesimprov.com</a>";
+echo "<a class='btn btn-outline-primary' href=\"/home/lo\"><i class='bi-box-arrow-left'></i> log out of willhinesimprov.com</a>";
 echo "</div></div> <!-- end of card -->\n";
 
 echo "</div></div> <!-- end of 6 col row -->\n";

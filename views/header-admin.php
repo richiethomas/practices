@@ -1,20 +1,3 @@
-<?php
-function svg_code($svg_name){
-	switch($svg_name){
-		case 'chevron_lightgray_left':
-		?>
-		<svg width="6px" height="8px" viewBox="0 0 6 8" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-					<g id="Left-Chevron-Admin-White" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-						<g id="Path-2" transform="translate(2.000000, 1.000000)" stroke="#FFFFFF" stroke-width="2">
-							<polyline id="Path" transform="translate(1.500000, 3.000000) rotate(-180.000000) translate(-1.500000, -3.000000) " points="0 8.8817842e-15 3 3.0181399 0 6"></polyline>
-						</g>
-					</g>
-				</svg>
-		<?php
-		break;
-	}
-}
-?>
 <!doctype html>
 <html lang="en">
   <head>
@@ -28,15 +11,13 @@ function svg_code($svg_name){
 
 	<!-- Bootstrap core CSS -->	
 	<link href="/assets/boot.css" rel="stylesheet">
+	<link href="/assets/bootstrap-icons.css" rel="stylesheet">
 
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
 	 	
 
 	<!-- Custom styles for this template -->
 	<link href="/assets/admin.css" rel="stylesheet">
-
-	<script src="/admin.js"></script>
-
 
 <style>	
 	table th.workshop-name {
@@ -99,9 +80,9 @@ function svg_code($svg_name){
 <?php } ?>
 			<li><hr/></li>
 
-			<li class="nav-item user-item"><a class="nav-link d-flex align-items-center" href="/you"><span class="oi oi-person" title="person" aria-hidden="true"></span> Will Hines</a></li>
+			<li class="nav-item user-item"><a class="nav-link d-flex align-items-center" href="/you"><i class='bi-person'></i> <?php echo $u->fields['nice_name']; ?></a></li>
 			<li><hr/></li>
-			<li class="nav-item back-to-website"><a class="nav-link" href="/" ><?php svg_code('chevron_lightgray_left'); ?>To Website</a>
+			<li class="nav-item back-to-website"><a class="nav-link" href="/" ><i class='bi-chevron-left'></i> To Website</a>
 		  </li>
 		</ul>
 	</nav>

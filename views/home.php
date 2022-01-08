@@ -77,6 +77,12 @@ function teacher_link($tinfo) {
 	
 	
 	<div class="container-lg container-fluid" id="classes-listings">
+		<div class="my-3 py-3" id="filter-by-container" style="display:none;"> 
+		    <h4 class="mt-3" style="display: inline-block;">Filtering By: </h4>
+		    <span data-tag="" class="classtag badge bg-light text-dark rounded-pill me-3 border" id="filter-by"></span>
+		</div>
+		
+		
 		<?php
 		$classes_shown = 0;
 		foreach ($upcoming_workshops as $wk) {
@@ -111,10 +117,10 @@ function teacher_link($tinfo) {
 					
 					<div class='row mb-4 text-muted'>
 				
-					<div class='col-sm-2'><span class=\"oi oi-dollar p-0 text-primary\" title=\"cost\" aria-hidden=\"true\"></span> {$wk['costdisplay']}</div>
-					<div class='col-sm-2'><span class=\"oi oi-calendar p-0 text-primary\" title=\"date\" aria-hidden=\"true\"></span> ".date('D M j', strtotime($wk['start_tz']))."</div>
- 					<div class='col-sm-2'><span class=\"oi oi-clock p-0 text-primary\" title=\"time\" aria-hidden=\"true\"></span> ".\Wbhkit\friendly_time($wk['start_tz'])." ({$u->fields['time_zone_friendly']})</div>
-					<div class='col-sm-3'><span class=\"oi oi-people p-0 text-primary\" title=\"sessions\" aria-hidden=\"true\"></span> {$wk['total_sessions']} ".(($wk['total_sessions'] == 1) ? 'session ': 'sessions')."</div>";
+					<div class='col-sm-2'><i class='bi-cash text-primary'></i> {$wk['costdisplay']}</div>
+					<div class='col-sm-2'><i class='bi-calendar text-primary'></i> ".date('D M j', strtotime($wk['start_tz']))."</div>
+ 					<div class='col-sm-2'><i class='bi-clock text-primary'></i> ".\Wbhkit\friendly_time($wk['start_tz'])." ({$u->fields['time_zone_friendly']})</div>
+					<div class='col-sm-3'><i class='bi-calendar-range text-primary'></i> {$wk['total_sessions']} ".(($wk['total_sessions'] == 1) ? 'session ': 'sessions')."</div>";
 					
 					echo "</div>";
 					
@@ -151,7 +157,44 @@ function teacher_link($tinfo) {
 		
 		?>
 
+<script>
+    function filterByTag(tag) {
+        let classesDivs = document.getElementById('classes-listings').children;
+        classesDivs = Array.from(classesDivs);
+        classesDivs.forEach(classDiv => {
+            // If tag is empty string or classDiv has a span with tag 
+            if (tag === '' || classDiv.querySelector(`span[data-tag="${tag}"]`) !== null) {
+                classDiv.style.display = '';
+            } else {
+                classDiv.style.display = 'none';
+            }
+        });
+    }
 
+
+    let xIcon = `<i class="bi bi-x"></i>`;
+
+    function toggleFilter(tag) {
+        let filterDiv = document.getElementById('filter-by-container');
+        let filterButton = document.getElementById('filter-by');
+
+        filterButton.innerHTML = `${xIcon} ${tag.toUpperCase()}`;
+        if (tag === '') {
+            filterDiv.style.display = 'none';
+            return;
+        }
+        filterDiv.style.display = '';
+    }
+
+
+    document.addEventListener("click", function (e) {
+        if (e.target.classList.contains("classtag")) {
+            let tag = e.target.dataset.tag;
+            filterByTag(tag);
+            toggleFilter(tag);
+        }
+    }); 
+</script>
 
   
 	</div> <!-- end of 'classes listings' div-->
