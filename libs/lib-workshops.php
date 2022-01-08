@@ -2,6 +2,17 @@
 namespace Workshops;
 	
 // workshops
+function get_recent_workshops_simple(?int $limit = 100) {
+	
+	$stmt = \DB\pdo_query("select * from workshops order by id desc limit $limit");
+	$all = array();
+	while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
+		$all[$row['id']] = $row;
+	}
+	return $all;
+}
+
+
 function get_workshop_info(int $id = 0) {
 
 	if ($id == 0) {
@@ -718,10 +729,33 @@ function get_tags(string $tags_string = null) {
 	if ($tags_string) {
 		$tags_array = explode(',', $tags_string);
 		foreach ($tags_array as $k =>$v) {
-			$tags_array[$k] = trim($v);
+			$tags_array[$k] = strtolower(trim($v));
 		}
 		sort($tags_array);
 	}
 	return $tags_array;
 	
+}
+function print_tags($wk) {
+	
+	$output = null;
+		
+	if (count($wk['tags_array']) > 0) {
+		foreach ($wk['tags_array'] as $tag) {
+			$output .= "\t\t<span data-tag='{$tag}' class='classtag badge bg-light text-dark rounded-pill me-3 border'>".strtoupper($tag)."</span>\n";
+		}
+	}
+
+	if ($wk['open'] <= 2 && $wk['open'] > 0) {
+		$output .= "\t\t<span data-tag='close' class='classtag badge rounded-pill me-3 border dangerlight'>{$wk['open']} SPOT".strtoupper(\Wbhkit\plural($wk['open']))." LEFT</span>\n";
+	}
+	
+	return $output;
+
+}
+
+function update_tags(int $id, string $tags) {
+	$sql = "update workshops set tags = :tags where id = :id";			
+	$stmt = \DB\pdo_query($sql, array(':id' => $id, ':tags' => $tags));
+	return true;
 }

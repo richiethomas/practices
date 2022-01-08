@@ -3,6 +3,8 @@ echo $links;
 
 if ($admin) {
 	echo "<form action='/admin-users/at/$guest_id' method='post'>\n";
+	echo Wbhkit\submit("update paid");
+	echo Wbhkit\checkbox('hideconpay', 1, $label = 'no confirm payment', $hideconpay == 1);
 }
 
 ?>
@@ -42,6 +44,10 @@ if ($admin) {
 				echo ", <a href=\"/teachers/view/{$t['co_teacher_id']}\">{$t['co_teacher_info']['nice_name']}</a>";
 			}
 			
+			if ($admin) {
+				echo "<br>\n".$t['costdisplay'];
+			}
+			
 			echo "</small></div>\n"; // when col	
 			if ($admin) { echo "<div class='col-sm my-2'>{$t['place']}</div>\n"; } // where col
 			echo "	<div class='col-sm'>{$statuses[$t['status_id']]}";
@@ -52,11 +58,5 @@ if ($admin) {
 	
 ?>
 <?php 
-if ($admin) {
-	
-	echo Wbhkit\checkbox('hideconpay', 1, $label = 'no confirm payment', $hideconpay == 1);
-	echo Wbhkit\submit("update paid");
-	echo "</form>\n";
-}
 echo $links; 
 ?>

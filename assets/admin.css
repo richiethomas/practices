@@ -166,24 +166,6 @@ body.admin main a {
   text-indent: 1rem;
 }
 
-.admin-box#admin-box-teachers .teachers_listings-teacher {
-  min-width: 150px;
-  margin-bottom: 1rem;
-}
-
-.admin-box#admin-box-teachers .teacher-image {
-  width: 112px;
-  height: 112px;
-  min-width: 112px;
-  min-height: 112px;
-  margin: 0 auto 1rem;
-  display: block;
-}
-
-.admin-box#admin-box-teachers .teacher-name {
-  text-align: center;
-}
-
 /* Listings, such as for Workshops */
 
 #admin-table-listings {

@@ -31,8 +31,8 @@ echo "<div class='row mt-md-3 admin-edit-workshop'>\n";
 				"</div>\n";
 			}
 		}
-		echo Wbhkit\checkbox('hideconpay', 1, $label = 'no confirm payment', $hideconpay == 1);
 		echo Wbhkit\submit("update paid");
+		echo Wbhkit\checkbox('hideconpay', 1, $label = 'no confirm payment', $hideconpay == 1);
 		echo "</form>\n";		
 		
 		

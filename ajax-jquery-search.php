@@ -2,7 +2,7 @@
 // AJAX call for autocomplete 
 // from https://phppot.com/jquery/jquery-ajax-autocomplete-country-example/
 $(document).ready(function(){
-	//serach users
+	//search users
 	$("#search-box").keyup(function(){
 		$.ajax({
 		type: "POST",

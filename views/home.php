@@ -91,28 +91,32 @@ function teacher_link($tinfo) {
 			
 			$classes_shown++; // count how many classes we actually list
 		?>
+	
+				
   	  <div class="row justify-content-between my-3 py-3 border-top">
-			<div class="col-md-11 classes-listings-class">
+			<div data-classid="<?php echo $wk['id']; ?>" class="col-md-11 classes-listings-class">
 				
 				<?php
-				if (count($wk['tags_array']) > 0) {
-					foreach ($wk['tags_array'] as $tag) {
-						echo "<span class='badge rounded-pill bg-secondary me-3'>$tag</span>";
-					}
-				}
-					
+				echo \Workshops\print_tags($wk);
 				?>
 				
 				<h2 class="mt-3"><a class='text-decoration-none text-dark' href="/workshop/view/<?php echo $wk['id']; ?>"><?php echo $wk['title'];?></a></h2>
 				<?php 
+				
+				if (substr($wk['costdisplay'], 0 ,1) == '$') {
+					$wk['costdisplay'] = substr($wk['costdisplay'],1); // remove leading $
+				}
+					
 				echo "
 					
 					<div class='row mb-4 text-muted'>
-					<div class='col-sm-2'>{$wk['costdisplay']}</div>
-					<div class='col-sm-2'><span class=\"oi oi-calendar p-0\" title=\"date\" aria-hidden=\"true\"></span> ".date('D M j', strtotime($wk['start_tz']))."</div>
- 					<div class='col-sm-2'><span class=\"oi oi-clock p-0\" title=\"time\" aria-hidden=\"true\"></span> ".\Wbhkit\friendly_time($wk['start_tz'])." ({$u->fields['time_zone_friendly']})</div>
-					<div class='col-sm-3'><span class=\"oi oi-people p-0\" title=\"sessions\" aria-hidden=\"true\"></span> {$wk['total_sessions']} ".(($wk['total_sessions'] == 1) ? 'session ': 'sessions')."</div>
-					</div>";
+				
+					<div class='col-sm-2'><span class=\"oi oi-dollar p-0 text-primary\" title=\"cost\" aria-hidden=\"true\"></span> {$wk['costdisplay']}</div>
+					<div class='col-sm-2'><span class=\"oi oi-calendar p-0 text-primary\" title=\"date\" aria-hidden=\"true\"></span> ".date('D M j', strtotime($wk['start_tz']))."</div>
+ 					<div class='col-sm-2'><span class=\"oi oi-clock p-0 text-primary\" title=\"time\" aria-hidden=\"true\"></span> ".\Wbhkit\friendly_time($wk['start_tz'])." ({$u->fields['time_zone_friendly']})</div>
+					<div class='col-sm-3'><span class=\"oi oi-people p-0 text-primary\" title=\"sessions\" aria-hidden=\"true\"></span> {$wk['total_sessions']} ".(($wk['total_sessions'] == 1) ? 'session ': 'sessions')."</div>";
+					
+					echo "</div>";
 					
 				?>
 
@@ -126,7 +130,7 @@ function teacher_link($tinfo) {
 				</div>
 				<span class="class-enroll">
 					<?php if ($wk['soldout']) { ?>
-						<span class="text-danger">Sold Out!</span> <a class="btn btn-outline-primary" href="/workshop/view/<?php echo $wk['id']; ?>" role="button">join wait list</a>
+						<span class="text-danger">Sold Out!</span> <a class="btn btn-outline-primary" href="/workshop/view/<?php echo $wk['id']; ?>" role="button">Join Wait List</a>
 					<?php } elseif ($wk['application']) { ?>
 						
 						<a class="btn btn-primary" href="/workshop/view/<?php echo $wk['id']; ?>" role="button">Request A Spot</a>
@@ -146,6 +150,9 @@ function teacher_link($tinfo) {
 		}
 		
 		?>
+
+
+
   
 	</div> <!-- end of 'classes listings' div-->
 </div> <!-- end of 'classes' div -->
@@ -155,8 +162,8 @@ function teacher_link($tinfo) {
 	  <h3 class="">Mailing List</h3>
 	  <div class="row">
 		<div class="col-lg-6 col-sm-12">
-		  <p>If you want to know about classes the minute the go online, join my mailing list.</p>
-			<p>You are NOT automatically put on my mailing list when you take a workshop.</p>
+		  <p>If you want to know about classes the minute the go online, join the mailing list.</p>
+			<p>You are NOT automatically put on the mailing list when you take a workshop.</p>
 		  </div>
 		  <div class="col-lg-6 col-md-8 col-sm-12">
 			 <form action="https://willhines.us8.list-manage.com/subscribe/post?u=881f841fbb8bf66576e6e66cf&amp;id=43b29422a0" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>

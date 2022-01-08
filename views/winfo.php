@@ -67,8 +67,15 @@ if (!\Workshops\is_public($wk)) {
 echo "<div class='row my-3 py-3'><div class='col-sm-6'>\n";
 
 // start of main row, and class info col
-echo "<h2>{$wk['title']}</h2>
-<p>{$wk['notes']}</p>
+
+
+
+
+echo "<h2>{$wk['title']}</h2>";
+
+echo \Workshops\print_tags($wk);
+
+echo "<p>{$wk['notes']}</p>
 <p>{$wk['full_when']}<br><br>
 {$wk['costdisplay']}, {$wk['enrolled']} (of {$wk['capacity']}) enrolled</p>\n";
 

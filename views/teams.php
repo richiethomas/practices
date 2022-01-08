@@ -66,7 +66,7 @@ Becky Webb,
 Dan Smith, 
 Gracie Goodhart, 
 Naiema Din, 
-Sam Boles, 
+Sam Boles.<br>
 COACH: Erick Acuna</p>
 
 <p>THE OFFICER DIBBLE QUINTET: 
@@ -76,7 +76,7 @@ Jon Branch,
 Karen Brelsford,
 Keith Estrella,
 Max Bank,
-Taylor Gray
+Taylor Gray<br>
 COACH: Christine Simpson</p>
 
 <p>ROBOT: Andrew Hopper,
@@ -85,19 +85,18 @@ Dmytro Lazar,
 Jordana Mishory,
 Julia Kelly,
 Kristen Drenning,
-Todd Sullivan.
+Todd Sullivan.<br>
 COACH: Sarah Claspell</p>
 
 <h4><?php echo "{$ts2} Teams ({$u->fields['time_zone_friendly']})"; ?> Teams</h4>
 
 <p>DRAMA TURKEY: Álvaro Méndez,
-Álvaro Méndez,
 Cassie Grilley,
 Jessie Catherine Webber,
 Kevin DiLucente,
 Neville Bharucha,
 Rosie Grant,
-Tyler Ross
+Tyler Ross.<br>
 COACH: Jason Perez</p>
 
 <p>VOICE OF A DOG: Adam Slager,
@@ -107,7 +106,7 @@ John Dardenne,
 Magda Mukthar,
 Michael Brown,
 Stan Ferguson,
-Victoria Koenitzer
+Victoria Koenitzer.<br>
 COACH: Michelle Gilliam</p>
 
 <p>SCREAMING IN SUPERMARKETS (LOUD): Isabel Galbraith,
@@ -117,7 +116,7 @@ Ryan Crowe,
 Sahil Desai,
 Seth Nathan Green,
 Sebastian Hernandez,
-Tim Dunk
+Tim Dunk.<br>
 COACH: Ethan Smith.</p>
 
 

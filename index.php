@@ -8,7 +8,7 @@ include 'lib-master.php'; // variables, objects, includes, defaults
 // parse params out of URL
 //
 $request  = substr($_SERVER['REQUEST_URI'],1); // strip leading slash
-$sc = $request;
+$sc = $request = preg_replace('/(.*)\?.*/', "$1", $request); // get rid of trailing "?akdasfsdhfdskj" type stuff
 $params = explode("/", $request);
 $ac = (isset($params[1]) ? $params[1] : 'view'); // action defaults to 'view'
 
@@ -122,7 +122,8 @@ if ($u->check_user_level(3)) {
 		'admin-debug' => 'admin/debug-log',
 		'admin-revenue' => 'admin/revenue',
 		'admin-payroll' => 'admin/payroll',
-		'admin-bulk' => 'admin/bulk-status'
+		'admin-bulk' => 'admin/bulk-status',
+		'admin-tags' => 'admin/bulk-tags'
 	);
 
 	foreach ($admin_controllers as $ci => $cv) {
