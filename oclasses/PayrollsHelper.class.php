@@ -44,24 +44,20 @@ class PayrollsHelper extends WBHObject {
 		$mysqlstart = date(MYSQL_FORMAT, strtotime($start));
 		$mysqlend = date(MYSQL_FORMAT, strtotime($end));
 	
+		// only need workshops table since we only need first sesssion
 		$stmt = \DB\pdo_query("
-	(select 'workshop' as task, w.id as table_id, w.title, w.start, w.teacher_id, 1 as rank, w.id as workshop_id
+	(select 'workshop' as task, w.id as table_id, w.title, w.start, w.teacher_id, 1 as rank, w.id as workshop_id, w.id
 	from workshops w
 	where w.start >= :start1 and w.start <= :end1)
-	union
-	(select 'class' as task, x.id as table_id, w.title, x.start, w.teacher_id, x.rank as rank, w.id as workshop_id
-	from xtra_sessions x, workshops w
-	where w.id = x.workshop_id and x.start >= :start2 and x.start <= :end2)
 	order by teacher_id, task, start asc",
 	array(':start1' => $mysqlstart,
-	':end1' => $mysqlend,
-	':start2' => $mysqlstart,
-	':end2' => $mysqlend)); 	
-	
-	//	$stmt = \DB\pdo_query("select w.* from workshops w WHERE w.start >= :start and w.end <= :end order by teacher_id, start desc", array(':start' => date(MYSQL_FORMAT, strtotime($start)), ':end' => date(MYSQL_FORMAT, strtotime($end))));
+	':end1' => $mysqlend)); 	
+
+
 	
 		$this->claims = array();
 		while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
+			$row = \Workshops\fill_out_xtra_sessions($row); // no enrollment stats needed
 			$this->claims[] = $row;
 		}
 		return $this->claims;

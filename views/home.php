@@ -90,11 +90,6 @@ function teacher_link($tinfo) {
 			if (!Wbhkit\is_future($wk['start'])) {
 				continue; // skip ones that already started
 			}
-			//if ($wk['soldout']) {
-			//	continue; // skip sold out classes
-			//}
-			
-			
 			$classes_shown++; // count how many classes we actually list
 		?>
 	

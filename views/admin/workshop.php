@@ -5,10 +5,10 @@ echo "<div class='row mt-md-3 admin-edit-workshop'>\n";
 
 		// enrollment column
 		echo "<div class='col-md-7'><h2>Enrollment Info <small><br>
-			<a class='btn btn-primary' href='/admin-messages/view/{$wk['id']}'><span class='oi oi-envelope-closed' title='envelope-closed' aria-hidden='true'></span> message</a> 
-			<a class='btn btn-primary'  href='/admin-workshop/nw/{$wk['id']}'><span class='oi oi-clock' title='clock' aria-hidden='true'></span> notify waiting</a>
+			<a class='btn btn-primary' href='/admin-messages/view/{$wk['id']}'><i class='bi-envelope'></i> message</a> 
+			<a class='btn btn-primary'  href='/admin-workshop/nw/{$wk['id']}'><i class='bi-clock'></i> notify waiting</a>
 
-			<a class='btn btn-primary'  href='/admin-workshop/sar/{$wk['id']}'><span class='oi oi-clock' title='clock' aria-hidden='true'></span> send all reminders</a>
+			<a class='btn btn-primary'  href='/admin-workshop/sar/{$wk['id']}'><i class='bi-exclamation-circle'></i> send all reminders</a>
 			</small></h2>\n";
 
 		//show enrollment totals at top

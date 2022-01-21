@@ -63,6 +63,7 @@ function get_teacher_fields($t) {
 		\Wbhkit\textarea('bio', $t['bio']).
 		\Wbhkit\checkbox('active', 1, null, $t['active']).
 		\Wbhkit\texty('default_rate', $t['default_rate']).
+		\Wbhkit\texty('student_email', $t['student_email']).
 		\Wbhkit\submit('Update');
 }
 
@@ -197,7 +198,8 @@ function empty_teacher() {
 		'user_id' => null,
 		'bio' => null,
 		'active' => 0,
-		'default_rate' => 0
+		'default_rate' => 0,
+		'student_email' => null
 	);
 	
 }

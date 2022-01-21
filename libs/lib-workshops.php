@@ -43,7 +43,6 @@ function fill_out_workshop_row(array $row, bool $get_enrollment_stats = true) {
 	$row = format_workshop_startend($row);
 	$row['tags_array'] = get_tags($row['tags']);	
 	
-	
 	// create short title if it's more then 2 words
 	$row['short_title'] = $row['title'];
     if (str_word_count($row['short_title'], 0) > 2) {
@@ -487,14 +486,9 @@ function get_workshops_list_bydate(?string $start = null, ?string $end = null, b
 
 function get_teacher_pay(array $wk) {
 	
-	if ($wk['teacher_id'] == 1) {
-		return 0;
-	} else {
-		return ($wk['total_class_sessions'] * $wk['teacher_info']['default_rate']) +
-			($wk['total_show_sessions'] * ($wk['teacher_info']['default_rate'] / 2));
-	}
+	return ($wk['total_class_sessions'] * $wk['teacher_info']['default_rate']) +
+		($wk['total_show_sessions'] * ($wk['teacher_info']['default_rate'] / 2));
 
-	return 0;
 }
 
 
@@ -640,7 +634,6 @@ function add_update_workshop(array $wk, string $ac = 'up') {
 }
 
 function delete_workshop(int $workshop_id) {
-	$stmt = \DB\pdo_query("delete from workshops_shows where workshop_id = :wid", array(':wid' => $workshop_id));
 	$stmt = \DB\pdo_query("delete from registrations where workshop_id = :wid", array(':wid' => $workshop_id));
 	$stmt = \DB\pdo_query("delete from xtra_sessions where workshop_id = :wid", array(':wid' => $workshop_id));
 	$stmt = \DB\pdo_query("delete from workshops where id = :wid", array(':wid' => $workshop_id));
@@ -758,4 +751,21 @@ function update_tags(int $id, string $tags) {
 	$sql = "update workshops set tags = :tags where id = :id";			
 	$stmt = \DB\pdo_query($sql, array(':id' => $id, ':tags' => $tags));
 	return true;
+}
+
+function email_teacher_info($wk) {
+	$output = null;	
+	
+	if ($wk['teacher_info']['student_email'] || ($wk['co_teacher_id'] && $wk['co_teacher_info']['student_email'])) {
+		$output .= "TEACHER CONTACT<br>\n---------------<br>\n";
+	}
+	
+	if ($wk['teacher_info']['student_email']) {
+		$output .= "If you wish to contact your teacher, their contact email is: {$wk['teacher_info']['student_email']}.<br>\n";
+	}
+	if ($wk['co_teacher_id'] && $wk['co_teacher_info']['student_email']) {
+		$output .= "If you wish to contact your co-teacher, their contact email is: {$wk['co_teacher_info']['student_email']}.<br>\n";
+	}
+	
+	return $output;
 }

@@ -94,7 +94,8 @@ $controllers = array(
 	'you',
 	'calendar',
 	'teachers',
-	'workshop');
+	'workshop',
+	'payment');
 
 $controller = 'home'; // default
 foreach ($controllers as $c) {

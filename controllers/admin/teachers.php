@@ -25,8 +25,12 @@ switch ($ac) {
 		break;
 		
 	case 'up':
-		list($t['id'], $t['bio'], $t['active'], $t['default_rate']) = array($tid, $bio, $active, $default_rate);
-			$tid = Teachers\update_teacher_info($t);
+		$id = $tid;
+		$user_id = $t['user_id'];
+		foreach (Teachers\empty_teacher() as $k => $v) {
+			$t[$k] = $$k;
+		}
+		$tid = Teachers\update_teacher_info($t);
 		break;
 		
 	case 'photo':
@@ -35,10 +39,6 @@ switch ($ac) {
 	
 }
 
-//$all = ($needle ? $userhelper->find_students($needle, $sort) : array());
-
-//$view->add_globals(array('needle', 'sort', 'all'));
-//$view->data['search_opts'] = array('n' => 'by name', 't' => 'by total classes', 'd' => 'by date registered');
 $view->data['t'] = $t;
 $view->data['t_classes'] = $t_classes;
 $view->data['teachers'] = Teachers\get_all_teachers();

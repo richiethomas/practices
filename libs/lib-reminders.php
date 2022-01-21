@@ -87,14 +87,16 @@ function remind_enrolled(array $class) {
 
 	foreach ($stds as $std) {
 		
-		// add note if student has to pay
 		$note = $reminder['note'];
-		
+
+		// add note if student has to pay
 		if (!$std['paid']) {
 			$note .= \Emails\payment_text($wk, 1);
 		}
 		
 		$trans = URL."workshop/view/{$wk['id']}";
+
+		$note .= \Workshops\email_teacher_info($wk);
 
 		if (!$class[1]) { // if this not an xtra session or a show
 			$note .= "<p>DROPPING OUT<br>\n
@@ -114,7 +116,6 @@ Class info on web site: $trans";
 		$guest->set_by_id($std['id']);
 	}
 	//remind teacher
-				
 	$trans = URL."workshop/view/{$wk['id']}";
 	$teacher_reminder = get_reminder_message_data($wk, $xtra, true);
 	$msg = $teacher_reminder['note']."<p>Class info online:<br>$trans</p>\n";
@@ -190,7 +191,8 @@ https://www.twitch.tv/wgimprovschool</p>\n";
 	} else {
 		$note .= "<p>LOCATION:<br>\n---------<br>\n{$wk['place']}<br>\n{$wk['address']}<br>\n{$wk['city']}, {$wk['state']} {$wk['zip']}</p>\n";
 		
-	}
+	}	
+
 
 	
 	return array(

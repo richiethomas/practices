@@ -68,7 +68,7 @@ function confirm_email($e, $status_id = ENROLLED) {
 
 			if ($wk['location_id'] == ONLINE_LOCATION_ID) {
 				$body .= "<p>ZOOM LINK:<br>\n----------<br>\nThe Zoom link to your workshop is: {$wk['online_url_display']}<br>\n";
-				$body .= "<br><br>\nTry to show up 5 minutes early if you can so we can get started right away.  If your class is multiple sessions, that link should work for all of them. We'll send you an email if the link changes.</p>\n";
+				$body .= "<br>\nTry to show up 5 minutes early if you can so we can get started right away.  If your class is multiple sessions, that link should work for all of them. We'll send you an email if the link changes.</p>\n";
 			} else {
 				$body .= "<p>LOCATION:<br>\n---------<br>\n{$wk['place']}<br>\n{$wk['address']}<br>\n{$wk['city']}, {$wk['state']} {$wk['zip']}</p>\n";
 			}
@@ -76,10 +76,13 @@ function confirm_email($e, $status_id = ENROLLED) {
 			$body .= payment_text($wk);
 						
 			$body .= 
-"<p>CLASS INFO<br> \n----------<br> \nDescription and times/dates are both in this email and also listed here:<br>\n{$trans}</p>\n";
+"<p>CLASS INFO<br>\n----------<br>\nDescription and times/dates are both in this email and also listed here:<br>\n{$trans}</p>\n";
 			
-			$body .= email_boilerplate();
+			$body .= \Workshops\email_teacher_info($wk);
 
+			$body .= email_boilerplate();
+			
+			
 			$send_faq = false;
 			break;
 		case WAITING:

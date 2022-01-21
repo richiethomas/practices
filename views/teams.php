@@ -22,11 +22,11 @@
 <?php
 	
 $t1 = 'Voltage';
-$t2 = 'Officer';
+$t2 = 'The Office Dibbler Quintet';
 $t3 = 'Robot';
-$t4 = 'Drama';
-$t5 = 'Dog';
-$t6 = 'Screaming';
+$t4 = 'Drama Turkey';
+$t5 = 'Voice of a Dog';
+$t6 = 'Screaming In Supermarkets (Loud)';
 $schedule = array(
 	array ('January 17 2022', "$t1 / $t2", "$t4 / $t5"),
 	array ('January 24 2022', "$t3 / $t1", "$t6 / $t4"),
@@ -47,7 +47,7 @@ $schedule = array(
 );
 	
 foreach ($schedule as $s) {
-	echo "<p>".\Wbhkit\convert_tz($s[0].' 11am', $u->fields['time_zone'], 'F j')."<br>\n";
+	echo "<p><b>".\Wbhkit\convert_tz($s[0].' 11am', $u->fields['time_zone'], 'F j')."</b><br>\n";
 	echo \Wbhkit\convert_tz($s[0].' 11am', $u->fields['time_zone'], 'ga').": ".$s[1]."<br>\n";
 	echo \Wbhkit\convert_tz($s[0].' 5pm', $u->fields['time_zone'], 'ga').": ".$s[2]."</p>\n";	
 }
