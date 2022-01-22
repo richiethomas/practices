@@ -156,6 +156,14 @@ function format_workshop_startend(array $row) {
 	$row['showstart_cali'] .= $tzcali;
 	$row['showend_cali'] .= $tzcali;	
 	
+	
+	
+	foreach (array('start', 'end', 'when_public') as $tv) {
+		if (isset($row[$tv])) {
+			$row[$tv] = \Wbhkit\present_ts($row[$tv]);
+		}
+	}
+	
 	return $row;
 }
 
@@ -307,7 +315,12 @@ function get_search_results(string $page = "1", ?string $needle = null) {
 	
 	// get IDs of workshops
 	$sql = "select w.* from workshops w ";
-	if ($needle) { $sql .= " where w.title like '%$needle%' "; }
+	if ($needle) { 
+		$sql .= " , teachers t, users u 
+		where (w.teacher_id = t.id or w.co_teacher_id = t.id) 
+		and t.user_id = u.id
+		and (w.title like '%$needle%' or u.display_name like '%$needle%')"; 
+	}
 	$sql .= " order by start desc"; // get all
 		
 	// prep paginator
@@ -740,7 +753,7 @@ function print_tags($wk) {
 	}
 
 	if ($wk['open'] <= 2 && $wk['open'] > 0) {
-		$output .= "\t\t<span data-tag='close' class='classtag badge rounded-pill me-3 border dangerlight'>{$wk['open']} SPOT".strtoupper(\Wbhkit\plural($wk['open']))." LEFT</span>\n";
+		$output .= "\t\t<span data-tag='few spots left' class='classtag badge rounded-pill me-3 border dangerlight'>{$wk['open']} SPOT".strtoupper(\Wbhkit\plural($wk['open']))." LEFT</span>\n";
 	}
 	
 	return $output;
