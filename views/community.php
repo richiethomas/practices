@@ -91,29 +91,6 @@
 </div>
 
 
-<div class="showrow row">
-	<div class="col-md-6">
-		<h2 class="mt-4 mb-2">Team Me Up, Scotty!</h2>
-		
-		<p>Team Me Up, Scotty runs on Mondays from 		<?php
-		$ts1 = \Wbhkit\convert_tz("January 3 2022 6:30pm", $u->fields['time_zone'], 'l g:ia');
-		$ts2 = \Wbhkit\convert_tz("January 3 2022 7:30pm", $u->fields['time_zone'], 'g:ia');
-		echo "$ts1-$ts2 ({$u->fields['time_zone_friendly']})";
-		?>. is a show for WGIS students to do some improv. Hosted by Ethan Smith and Elena Martinez. You can sign up with an existing group or just as a single player who wants to be grouped with other people!</p>
-		<ul>
-			<li>To apply for this, fill out this form: <a href='https://teammeup.link/perform'>https://teammeup.link/perform</a></li>
-		</ul>
-		
-	</div>
-	<div class="col-md-6">	
-		<figure class="figure float-end">
-		  <img src="/images/team_me_up.png" class="figure-img img-fluid rounded" alt="Team Me Up, Scotty!">
-		  <figcaption class="figure-caption text-end">art by Ethan Smith</figcaption>
-		</figure>
-				
-	</div>
-</div>
-
 <a id="jams"></a>
 <div class="showrow row align-items-center">
 	<div class="col-md-6">

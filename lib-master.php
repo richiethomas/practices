@@ -1,9 +1,4 @@
 <?php
-/*
-using Bootstrap 5.1.1
-tested on PHP 7.4.9
-*/
-
 // debug timer
 define('TIMER', false);
 $start_hrtime = 0;
@@ -36,8 +31,6 @@ $last_insert_id = null;
 
 define('DEFAULT_TIME_ZONE', 'America/Los_Angeles');
 date_default_timezone_set ( DEFAULT_TIME_ZONE );
-//define('TIMEZONE', 'PDT');
-
 $dateTime = new DateTime();
 $dateTime->setTimeZone(new DateTimeZone(DEFAULT_TIME_ZONE));
 define('TIMEZONE', $dateTime->format('T'));
@@ -48,22 +41,13 @@ define('LOCAL', ($_SERVER['SERVER_NAME'] == 'localhost') ? true : false);
 define('DEBUG_MODE', true);
 define('DEBUG_LOG', 'info.txt');
 define('ERROR_LOG', 'error_log.txt');
-if (LOCAL) {
-	define('URL', "http://{$_SERVER['HTTP_HOST']}/");
-} else {
-	define('URL', "https://{$_SERVER['HTTP_HOST']}/");
-}
+define('URL', (LOCAL ? "http://{$_SERVER['HTTP_HOST']}/" : "https://{$_SERVER['HTTP_HOST']}/"));
 define('ONLINE_LOCATION_ID', 8);
-
 define('LATE_HOURS', 24);
 define('REMINDER_HOURS', 24);
 define('USER_PHOTO_MAX_BYTES', 5000000);
+define('WEBMASTER', (LOCAL ? "will@willhines.net" : "classes@wgimprovschool.com"));
 
-if (LOCAL) {
-	define('WEBMASTER', "will@willhines.net");	
-} else {
-	define('WEBMASTER', "classes@wgimprovschool.com");
-} 
 //
 // objects
 //

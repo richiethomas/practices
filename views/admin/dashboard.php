@@ -19,6 +19,31 @@
 				}
 				?>
 				</ul>
+				
+				<h4>Not Sold Out</h4>
+				<ul>
+				<?php
+				$ids = array();
+				$ts_now = strtotime('now');
+				foreach ($workshops as $wk) {
+					if (!in_array($wk['id'], $ids)) {
+						if ($wk['enrolled'] < $wk['capacity']) {
+							$ts = strtotime($wk['course_start']);
+							
+							if ($ts >= $ts_now) { 			
+							
+								echo "<li>".\Wbhkit\figure_minutes($ts).": <a href='/admin-workshop/view/{$wk['id']}'>{$wk['title']}</a> ({$wk['enrolled']} / {$wk['capacity']})";
+								if ($wk['applied']) { echo " <span class='text-primary'>- {$wk['applied']}</span>"; }
+								echo "</li>\n";
+							}
+						}
+						$ids[] = $wk['id'];
+					}
+				}
+					
+					
+				?>
+				</ul>
 			</div>
 			
 			

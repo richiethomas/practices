@@ -388,10 +388,16 @@ function present_ts(?string $dt) {
 	if (!$dt) { return ''; }
 	$timestamp = strtotime($dt);
 	if (date('Y', $timestamp) == '1969') { return ''; }
-	if (date('i', $timestamp) == 0) {
+	return figure_minutes($timestamp);
+}
+
+
+function figure_minutes(?string $ts) {
+	if (!$ts) { return ''; }
+	if (date('i', $ts) == 0) {
 		$df = 'D M j Y ga';
 	} else {
 		$df = 'D M j Y g:ia';
 	}
-	return date($df, $timestamp);
+	return date($df, $ts);
 }
