@@ -771,6 +771,13 @@ function update_tags(int $id, string $tags) {
 	return true;
 }
 
+function update_hidden(int $id, string $hidden) {
+	$sql = "update workshops set hidden = :hidden where id = :id";			
+	$stmt = \DB\pdo_query($sql, array(':id' => $id, ':hidden' => $hidden));
+	return true;
+}
+
+
 function email_teacher_info($wk) {
 	$output = null;	
 	

@@ -32,7 +32,7 @@
 							
 							if ($ts >= $ts_now) { 			
 							
-								echo "<li>".\Wbhkit\figure_minutes($ts).": <a href='/admin-workshop/view/{$wk['id']}'>{$wk['title']}</a> ({$wk['enrolled']} / {$wk['capacity']})";
+								echo "<li>".\Wbhkit\figure_year_minutes($ts).": <a href='/admin-workshop/view/{$wk['id']}'>{$wk['title']}</a> ({$wk['enrolled']}/{$wk['capacity']})";
 								if ($wk['applied']) { echo " <span class='text-primary'>- {$wk['applied']}</span>"; }
 								echo "</li>\n";
 							}
@@ -60,7 +60,7 @@ foreach ($workshops as $wk) {
 	}
 
 	// update date?
-	$next_date = date("l F j, Y", strtotime($wk['start']));
+	$next_date = date("D M j", strtotime($wk['start']));
 	
 	if ($next_date != $current_date) {
 		
@@ -77,16 +77,13 @@ foreach ($workshops as $wk) {
 	
 	$xtra = $wk['class_show'] ? ' show' : '';
 		
-	echo "<li class='mt-3 $xtra' data-teacher=\"teacher-{$wk['teacher_id']}\"><a   href='/admin-workshop/view/{$wk['id']}'>{$wk['title']}</a> ({$wk['rank']}".($wk['class_show'] ? ' - show' : '')."), $start-$end (".number_format($wk['enrolled'], 0)." / ".number_format($wk['capacity'], 0).")";
+	echo "<li class='mt-3 $xtra' data-teacher=\"teacher-{$wk['teacher_id']}\"><a   href='/admin-workshop/view/{$wk['id']}'>{$wk['title']}</a> ({$wk['rank']}/{$wk['total_sessions']}".($wk['class_show'] ? ' - show' : '')."), $start-$end";
 	
 	echo " - {$wk['teacher_name']}";
 	if ($wk['co_teacher_id']) {
 		echo ", {$wk['co_teacher_name']}";
 	}
-	echo " - {$wk['cost']}";
-	
-	echo $wk['application'] ? " <span class='text-primary'>- {$wk['applied']} applied</span>" : '';
-	
+		
 	echo "<small>";
 	if ($wk['location_id'] == ONLINE_LOCATION_ID) {
 		if ($wk['override_url']) {

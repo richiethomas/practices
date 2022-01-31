@@ -388,16 +388,31 @@ function present_ts(?string $dt) {
 	if (!$dt) { return ''; }
 	$timestamp = strtotime($dt);
 	if (date('Y', $timestamp) == '1969') { return ''; }
-	return figure_minutes($timestamp);
+	return date('D M j Y'.figure_minutes_df($timestamp), $timestamp);
 }
 
 
-function figure_minutes(?string $ts) {
+function figure_year_df(?string $ts) {
+	if (!$ts) { return ''; }
+	if (date('Y', $ts) == date('Y', strtotime('now'))) {
+		return '';
+	} else {
+		return ' Y';
+	}
+}
+
+
+function figure_minutes_df(?string $ts) {
 	if (!$ts) { return ''; }
 	if (date('i', $ts) == 0) {
-		$df = 'D M j Y ga';
+		return ' ga';
 	} else {
-		$df = 'D M j Y g:ia';
+		return ' g:ia';
 	}
+}
+
+function figure_year_minutes(?string $ts) {
+	if (!$ts) { return ''; }
+	$df = 'D M j'.figure_year_df($ts).figure_minutes_df($ts);
 	return date($df, $ts);
 }

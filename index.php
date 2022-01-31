@@ -124,7 +124,7 @@ if ($u->check_user_level(3)) {
 		'admin-revenue' => 'admin/revenue',
 		'admin-payroll' => 'admin/payroll',
 		'admin-bulk' => 'admin/bulk-status',
-		'admin-tags' => 'admin/bulk-tags'
+		'admin-bulk-workshops' => 'admin/bulk-workshops'
 	);
 
 	foreach ($admin_controllers as $ci => $cv) {

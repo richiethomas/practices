@@ -62,7 +62,7 @@
 			<li class="nav-item"><a class="nav-link" href="/admin-teachers">Teachers</a></li>
 			<li class="nav-item"><a class="nav-link" href="/admin-search">Students</a> </li>
 			<li class="nav-item"><a class="nav-link" href="/admin-emails">Emails</a> </li>
-			<li class="nav-item"><a class="nav-link" href="/admin-tags">Tags</a> </li>
+			<li class="nav-item"><a class="nav-link" href="/admin-bulk-workshops">Bulk</a> </li>
 
 <?php if ($u->check_user_level(3)) { ?>
 			<li><hr/></li>

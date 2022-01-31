@@ -9,15 +9,24 @@ switch ($ac) {
 	case 'update':
 		
 		foreach ($_REQUEST as $k => $v) {
+			// were tags changes
 			if (substr($k, 0, 5) == 'tags_') {
 				$ps = explode('_', $k);
-				if ($v && $v != $_REQUEST["hidden_{$ps[1]}"]) {
+				if ($v && $v != $_REQUEST["hiddentags_{$ps[1]}"]) {
 					\Workshops\update_tags($ps[1], $v);
 				}
 			}
+			// was hidden flag changed
+			if (substr($k, 0, 13) == 'hiddenhidden_') {
+				$ps = explode('_', $k);
+				$hidden_flag_checkbox = isset($_REQUEST["hidden_{$ps[1]}"]) ? 1 : 0;
+				if ($v != $hidden_flag_checkbox);
+				\Workshops\update_hidden($ps[1], $hidden_flag_checkbox);
+			}
+			
+			
 		}
 		break;
-		
 }
 
 
