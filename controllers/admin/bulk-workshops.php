@@ -32,7 +32,7 @@ switch ($ac) {
 
 
 $view->data['workshops'] = \Workshops\get_recent_workshops_simple();
-$view->renderPage('admin/bulk-tags');
+$view->renderPage('admin/bulk-workshops');
 
 
 

@@ -4,7 +4,12 @@ namespace Workshops;
 // workshops
 function get_recent_workshops_simple(?int $limit = 100) {
 	
-	$stmt = \DB\pdo_query("select * from workshops order by id desc limit $limit");
+	$stmt = \DB\pdo_query("
+		select w.*, u.display_name as teacher_name
+		from workshops w, users u, teachers t
+		where w.teacher_id = t.id
+		and t.user_id = u.id
+		order by w.id desc limit $limit");
 	$all = array();
 	while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
 		$all[$row['id']] = $row;

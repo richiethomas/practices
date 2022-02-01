@@ -44,9 +44,6 @@
 		font-style: italic;
 	}
 </style>
-
-  
-
 	
  </head>
   <body class="admin d-flex align-content-stretch align-items-stretch">
