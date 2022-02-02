@@ -13,7 +13,6 @@ order by start", array(':id' => $workshop_id));
 	$sessions = array();
 	while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
 		
-		
 		$row = \Workshops\format_workshop_startend($row);
 		
 		$row['friendly_when'] = \Wbhkit\friendly_when($row['start_tz']).'-'.\Wbhkit\friendly_time($row['end_tz']);

@@ -3,8 +3,6 @@ $view->data['heading'] = "upcoming classes";
 
 //\XtraSessions\update_all_ranks();
 
-Wbhkit\set_vars(array('filter_by'));
-
 $your_teacher_id = 0;
 if ($t = Teachers\is_teacher($u->fields['id'])) {
 	$your_teacher_id = $t['id'];
@@ -23,6 +21,12 @@ if ($ac=='del') {
 		$message = "Deleted '{$wk['title']}'";
 		$logger->info($message);
 	}
+}
+
+if ($ac == 'view') {
+	$filter_by = 	(int) ($params[2] ?? 0);
+} else {
+	$filter_by = 0;
 }
 
 $view->data['faculty'] = Teachers\get_all_teachers(true); // active teachers

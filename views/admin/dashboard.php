@@ -1,4 +1,5 @@
 	<h2>Dashboard</h2>
+		
 	<div class="admin-box" id="admin-box-upcoming-workshops">
 		<div class="admin-box-title">
 			<h5>Upcoming Workshops</h5>
@@ -6,52 +7,94 @@
 		<div class="admin-box-content">
 		
 			<div class="issues float-end border border-4 p-2 m-2">				
-				<h4>Unpaid</h4>
-				<ul>
+
 				<?php
 				$last_wk = null;
+				$uphtml = '';
 				foreach ($unpaid as $up) {
 					if ($last_wk != $up['workshop_id']) {
-						echo "<p class='m-0'><b><a href='/admin-workshop/view/{$up['workshop_id']}'>{$up['title']}</a> - ".date('D M j', strtotime($up['start']))." - {$up['cost']}</b></p>\n";
+						$uphtml .= "<p class='m-0'><b><a href='/admin-workshop/view/{$up['workshop_id']}'>{$up['title']}</a> - ".date('D M j', strtotime($up['start']))." - {$up['cost']}</b></p>\n";
 						$last_wk = $up['workshop_id'];
 					}
-					echo "<p class='m-0 ps-4'>{$up['nice_name']} - {$up['email']}</p>\n";
+					$uphtml .= "<p class='m-0 ps-4'>{$up['nice_name']} - {$up['email']}</p>\n";
+				}
+				
+				if ($uphtml) {
+					echo "<h4>Unpaid</h4>
+				<ul>
+					$uphtml
+				</ul>\n";
 				}
 				?>
-				</ul>
 				
-				<h4>Not Sold Out</h4>
-				<ul>
+				
 				<?php
-				$ids = array();
 				$ts_now = strtotime('now');
+				$ts_twoweeks = strtotime('+10 days');
+				$nsohtml = '';
 				foreach ($workshops as $wk) {
-					if (!in_array($wk['id'], $ids)) {
+					if (!$wk['hidden'] && $wk['xtra'] == 0) {
 						if ($wk['enrolled'] < $wk['capacity']) {
 							$ts = strtotime($wk['course_start']);
 							
-							if ($ts >= $ts_now) { 			
+							if ($ts >= $ts_now && $ts <= $ts_twoweeks) { 			
 							
-								echo "<li>".\Wbhkit\figure_year_minutes($ts).": <a href='/admin-workshop/view/{$wk['id']}'>{$wk['title']}</a> ({$wk['enrolled']}/{$wk['capacity']})";
-								if ($wk['applied']) { echo " <span class='text-primary'>- {$wk['applied']}</span>"; }
-								echo "</li>\n";
+								$nsohtml .= "<li>".\Wbhkit\figure_year_minutes($ts).": <a href='/admin-workshop/view/{$wk['id']}'>{$wk['title']}</a> ({$wk['enrolled']}/{$wk['capacity']})";
+								if ($wk['applied']) { $nso .= " <span class='text-primary'>- {$wk['applied']}</span>"; }
+								$nsohtml .= "</li>\n";
 							}
 						}
-						$ids[] = $wk['id'];
 					}
 				}
-					
-					
+				if ($nsohtml) {
+					echo "<h4>Not Full, 10 Days Out</h4>
+				<ul>
+					$nsohtml
+				</ul>\n";
+				}	
+				
+				
+				
+				$hiddenhtml = '';
+				foreach ($workshops as $wk) {
+					if ($wk['hidden'] == 1 && $wk['xtra'] == 0) {
+						$ts = strtotime($wk['course_start']);
+						$hiddenhtml .= "<li>".\Wbhkit\figure_year_minutes($ts).": <a href='/admin-workshop/view/{$wk['id']}'>{$wk['title']}</a></li>\n";
+						
+					}
+				}
+				if ($hiddenhtml) {
+					echo "<h4>Hidden</h4>\n
+						<ul>
+							$hiddenhtml
+						</ul>";
+				}
 				?>
-				</ul>
+			</div>			
+			<p><i>(class # / total classes)</i></p>
+
+
+<script type="text/javascript">
+$(function(){
+  $("#filter_by").change(function(){
+    window.location='/admin/view/' + this.value
+  });
+});
+</script>
+
+
+			<div class='col-3'>
+			<?php
+			echo \Wbhkit\drop('filter_by', \Teachers\teachers_dropdown_array(true), $filter_by, 'Teacher');
+			?>
 			</div>
 			
-			
-			<p><i>(enrolled / capacity)</i></p>
 
 <?php		
 $current_date = null;
 foreach ($workshops as $wk) {
+
+	if ($wk['hidden']) { continue; }
 
 	if ($filter_by != 'all' && $filter_by > 0) {
 		if ($wk['teacher_id'] != $filter_by) {
@@ -73,28 +116,15 @@ foreach ($workshops as $wk) {
 	}
 	
 	$start = Wbhkit\friendly_time($wk['start']);
-	$end = Wbhkit\friendly_time($wk['end']);
 	
 	$xtra = $wk['class_show'] ? ' show' : '';
 		
-	echo "<li class='mt-3 $xtra' data-teacher=\"teacher-{$wk['teacher_id']}\"><a   href='/admin-workshop/view/{$wk['id']}'>{$wk['title']}</a> ({$wk['rank']}/{$wk['total_sessions']}".($wk['class_show'] ? ' - show' : '')."), $start-$end";
+	echo "<li class='mt-1 $xtra' data-teacher=\"teacher-{$wk['teacher_id']}\"><a   href='/admin-workshop/view/{$wk['id']}'>{$wk['title']}</a> ({$wk['rank']}/{$wk['total_sessions']}".($wk['class_show'] ? ' - show' : '')."), $start";
 	
 	echo " - {$wk['teacher_name']}";
 	if ($wk['co_teacher_id']) {
 		echo ", {$wk['co_teacher_name']}";
 	}
-		
-	echo "<small>";
-	if ($wk['location_id'] == ONLINE_LOCATION_ID) {
-		if ($wk['override_url']) {
-			echo "<div class='zoomlink'>{$wk['override_url']}</div>";
-		} else {
-			echo "<div class='zoomlink'>{$wk['online_url']}</div>";
-		}
-	} else {
-		echo "<div class='zoomlink'>{$wk['lwhere']}</div>";
-	}
-	echo "</small>\n";
 	echo "</li>\n";
 	
 }	

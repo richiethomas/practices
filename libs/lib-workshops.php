@@ -407,11 +407,11 @@ function get_sessions_to_come(bool $get_enrollments = true, bool $hidden = false
 	$mysqlnow = date(MYSQL_FORMAT, strtotime("-3 hours"));
 	
 	$stmt = \DB\pdo_query("
-(select w.id, title, start, end, capacity, cost, 0 as xtra, 0 as class_show, notes, teacher_id, co_teacher_id, 1 as rank, '' as override_url, online_url, application, w.location_id, w.start as course_start
+(select w.id, title, start, end, capacity, cost, 0 as xtra, 0 as class_show, notes, teacher_id, co_teacher_id, 1 as rank, '' as override_url, online_url, application, w.location_id, w.start as course_start, w.hidden
 from workshops w
 where start >= date('$mysqlnow') ".($hidden ? '' : " and w.hidden = 0").") 
 union
-(select x.workshop_id as id, w.title, x.start, x.end, w.capacity, w.cost, 1 as xtra,  x.class_show, w.notes, w.teacher_id, w.co_teacher_id, x.rank, x.online_url as override_url, w.online_url, w.application, w.location_id, w.start as course_start
+(select x.workshop_id as id, w.title, x.start, x.end, w.capacity, w.cost, 1 as xtra,  x.class_show, w.notes, w.teacher_id, w.co_teacher_id, x.rank, x.online_url as override_url, w.online_url, w.application, w.location_id, w.start as course_start, w.hidden
 from xtra_sessions x, workshops w 
 where w.id = x.workshop_id and x.start >= date('$mysqlnow') ".($hidden ? '' : " and w.hidden = 0")." ) 
 order by start asc"); 
