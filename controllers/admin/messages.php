@@ -62,7 +62,6 @@ switch ($ac) {
 		Emails\centralized_email(WEBMASTER, $subject, $msg);
 
 		$message = "Email '$subject' sent to $sent";
-		$logger->info($message);
 		break;
 
 	case 'roster':

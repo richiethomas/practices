@@ -37,18 +37,18 @@ update xtra_sessions set reminder_sent = 0;
 	// first number id, second number xtra_session row id (0 if not an xtra session)
 	
 	// first do workshops table - these are session 1s
-	$stmt = \DB\pdo_query("select id as workshop_id, start from workshops w where start > :now and reminder_sent = 0", array(':now' => $mysqlnow)); // workshops in the future
+	$stmt = \DB\pdo_query("select id as workshop_id, start, w.title from workshops w where start > :now and reminder_sent = 0", array(':now' => $mysqlnow)); // workshops in the future
 	while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
 		if ((strtotime($row['start']) - time()) / 3600 < REMINDER_HOURS) {
-			$classes_to_remind[] = array($row['workshop_id'], 0);
+			$classes_to_remind[] = array($row['workshop_id'], 0, $row['title']);
 		}
 	}
 	
 	// xtra sessions - session 2 and higher, including shows
-	$stmt = \DB\pdo_query("select id, workshop_id, start, class_show from xtra_sessions where start > :now and reminder_sent = 0", array(':now' => $mysqlnow)); // workshops in the future
+	$stmt = \DB\pdo_query("select x.id, x.workshop_id, x.start, x.class_show, w.title from xtra_sessions x, workshops w where x.workshop_id = w.id and x.start > :now and x.reminder_sent = 0", array(':now' => $mysqlnow)); // workshops in the future
 	while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
 		if ((strtotime($row['start']) - time()) / 3600 < REMINDER_HOURS) {
-			$classes_to_remind[] = array($row['workshop_id'], $row['id']); 
+			$classes_to_remind[] = array($row['workshop_id'], $row['id'], $row['title']); 
 		}
 	}
 	
@@ -69,6 +69,8 @@ update xtra_sessions set reminder_sent = 0;
 }
 
 function remind_enrolled(array $class) {
+	
+	global $logger;
 	
 	$guest = new \User();
 	
@@ -138,6 +140,7 @@ Class info on web site: $trans";
 	}
 	
 	//\Emails\centralized_email('whines@gmail.com', $subject, $msg);
+	$logger->info("Reminders sent for: {$class[2]}");
 	
 	
 }

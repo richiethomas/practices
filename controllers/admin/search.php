@@ -35,10 +35,8 @@ switch ($ac) {
 		}
 		if (!$message) {
 			$message = "No zero registation students to delete.";
-			$logger->info($message);
 		} else {
 			$message .= "'{$total_deleted}' zero registration students removed.";
-			$logger->info($message);
 		}
 		$needle = 'everyone';
 		break;

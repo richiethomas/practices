@@ -758,7 +758,7 @@ function print_tags($wk) {
 		
 	if (count($wk['tags_array']) > 0) {
 		foreach ($wk['tags_array'] as $tag) {
-			$output .= "\t\t<span data-tag='{$tag}' class='classtag badge bg-light text-dark rounded-pill me-3 border'>".strtoupper($tag)."</span>\n";
+			$output .= "\t\t<span data-tag='{$tag}' class='classtag badge bg-light text-dark rounded-pill me-1 border'>".strtoupper($tag)."</span>\n";
 		}
 	}
 

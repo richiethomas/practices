@@ -21,7 +21,7 @@ $eh = new EnrollmentsHelper();
 switch ($ac) {
 
 	case 'sar':
-		Reminders\remind_enrolled(array($wk['id'], 0));
+		Reminders\remind_enrolled(array($wk['id'], 0, $wk['title']));
 		$message = "Reminders sent to enrolled.";
 		break;
 

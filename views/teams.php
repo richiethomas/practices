@@ -22,7 +22,7 @@
 <?php
 	
 $t1 = 'Voltage';
-$t2 = 'The Office Dibbler Quintet';
+$t2 = 'The Officer Dibbler Quintet';
 $t3 = 'Robot';
 $t4 = 'Drama Turkey';
 $t5 = 'Voice of a Dog';

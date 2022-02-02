@@ -4,10 +4,6 @@ $link_email_sent_flag = false;
 
 switch ($ac) {
 
-
-
-
-
 	case 'k':
 	
 		if ($u->set_by_key($params[2])) {
@@ -51,19 +47,17 @@ switch ($ac) {
 				$message = "Thanks! I've sent a link to your {$u->fields['email']}. If you don't see it <a href='index.php'>click here to refresh the page</a> and try again.";
 				
 				if (LOCAL) {
-					
 					$trans = URL."home/k/".$u->get_key();
 					$message .= "<br><br>This is the link: <a href='$trans'>{$trans}</a>";
-						
-						
 				}
 				
 				$link_email_sent_flag = true;
 				$u->soft_logout();
-				$logger->debug($message);
+				$logger->info($message);
+
 			} else {
 				$error = "I was unable to email a link to {$u->fields['email']}! Sorry.";
-				$logger->debug($error);
+				$logger->error($error);
 			}
 		
 		} else {
@@ -86,22 +80,23 @@ switch ($ac) {
 
 		if (!$u->logged_in()) {
 			$error = 'You are not logged in! You have to be logged in to change your email.';
-			$logger->debug($error);
+			$logger->info($error);
 			break;
 		}
 		if (!$u->validate_email($newemail)) {
 			$error = 'You asked to change your email but the new email \'$newemail\' is not a valid email';
-			$logger->debug($error);
+			$logger->error($error);
 			break;
 		}
 
 		if ($u->change_email_phase_one($newemail)) {
 			$message = "Okay, a link has been sent to the new email address ({$newemail}). Check your spam folder if you don't see it.";
-			$logger->debug($message);
+			$logger->info($message);
+
 		} else {
 			// if error, email already being used
 			$error = $u->error;
-			$logger->debug($error);
+			$logger->error($error);
 		}
 		break;
 
@@ -112,7 +107,7 @@ switch ($ac) {
 	
 		if (!$u->logged_in()) {
 			$error = 'You are not logged in! You have to be logged in to update your display name.';
-			$logger->debug($error);
+			$logger->info($error);
 			break;
 		}
 		$message = "Changing display name to '$display_name' from '{$u->fields['display_name']}'";
@@ -125,7 +120,7 @@ switch ($ac) {
 	
 		if (!$u->logged_in()) {
 			$error = 'You are not logged in! You have to be logged in to update your display name.';
-			$logger->debug($error);
+			$logger->info($error);
 			break;
 		}
 		$message = "Changing time zone to '$time_zone' for '{$u->fields['email']}'";
@@ -138,7 +133,7 @@ switch ($ac) {
 	case 'concemail':
 		if (!$u->logged_in()) {
 			$error = 'You are not logged in! You have to be logged in to change your email.';
-			$logger->debug($error);
+			$logger->info($error);
 			break;
 		}
 		
@@ -150,7 +145,7 @@ switch ($ac) {
 		} else {
 			// if error, email being used
 			$error = $u->error;
-			$logger->debug($error);
+			$logger->error($error);
 		}
 		break;
 

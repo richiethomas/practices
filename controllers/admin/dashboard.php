@@ -8,9 +8,6 @@ if ($t = Teachers\is_teacher($u->fields['id'])) {
 	$your_teacher_id = $t['id'];
 }
 
-if (!$filter_by) {
-	$filter_by = 'all';
-}
 
 if ($ac=='del') {
 	$wid = 	(int) ($params[2] ?? 0);

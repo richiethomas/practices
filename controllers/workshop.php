@@ -25,13 +25,13 @@ if (Workshops\is_public($wk)) {
 		case 'enroll':
 			if (!$u->logged_in()) {
 				$error = "You must be logged in to enroll.";
-				$logger->debug("attempted enroll with no one logged in.");
+				$logger->info("attempted enroll with no one logged in.");
 				break;
 			}
 			if (isset($wk['upcoming']) && $wk['upcoming'] == 0) {
 				$error = 'This workshop is past';
 				if (isset($wk['title'])) {
-					$logger->debug("{$u->fields['nice_name']} cannot enroll since {$wk['title']} is past.");
+					$logger->info("{$u->fields['nice_name']} cannot enroll since {$wk['title']} is past.");
 				}
 				break;
 			}	
@@ -64,7 +64,7 @@ if (Workshops\is_public($wk)) {
 				
 			if (!$u->logged_in()) {
 				$error = 'You are not logged in! You have to be logged in to drop a workshop.';
-				$logger->debug("attempted drop with no one logged in.");
+				$logger->info("attempted drop with no one logged in.");
 			
 				break;
 			}

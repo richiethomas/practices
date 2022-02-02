@@ -139,26 +139,10 @@ nav li.nav-item .user-logged-in:hover img {
   font-weight: 600;
 }
 
-@media (min-width: 768px) and (max-width: 992px) {
-  .classes-listings-class .class-meta .class-price {
-    display: none;
-  }
-}
-
-@media (max-width: 500px) {
-  .classes-listings-class .class-meta .class-price {
-    display: none;
-  }
-}
-
 /* Teacher  */
 
 .teacher-image {
   border-radius: 50%;
-}
-.classes-listings-class .class-meta .teacher-image {
-  width: 50px;
-  height: 50px;
 }
 
 .teacher-label {

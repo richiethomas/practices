@@ -38,9 +38,11 @@ define('TIMEZONE', $dateTime->format('T'));
 
 define('MYSQL_FORMAT', 'Y-m-d H:i:s');
 define('LOCAL', ($_SERVER['SERVER_NAME'] == 'localhost') ? true : false);
-define('DEBUG_MODE', true);
+
+// to control logging levels, see lib-logger.php
 define('DEBUG_LOG', 'info.txt');
 define('ERROR_LOG', 'error_log.txt');
+
 define('URL', (LOCAL ? "http://{$_SERVER['HTTP_HOST']}/" : "https://{$_SERVER['HTTP_HOST']}/"));
 define('ONLINE_LOCATION_ID', 8);
 define('LATE_HOURS', 24);

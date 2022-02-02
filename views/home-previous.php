@@ -1,8 +1,11 @@
 <?php
 function teacher_link($tinfo) {
-  return "
-	  <a href='/teachers/view/{$tinfo['id']}'><img style='width: 50px; height: 50px' class='float-start mx-2 teacher-image align-self-center' src='".\Teachers\get_teacher_photo_src($tinfo['user_id'])."' alt='Teacher Name'></a>
-		<p class='mt-0 mb-0 teacher-name'><a class='text-decoration-none text-muted' href='/teachers/view/{$tinfo['id']}'> {$tinfo['nice_name']}</a></p>";	
+  echo "
+	  <a href='/teachers/view/{$tinfo['id']}'><img class='mx-2 teacher-image align-self-center' src='".\Teachers\get_teacher_photo_src($tinfo['user_id'])."' alt='Teacher Name'></a>
+	<div class=''>
+		<!--h6 class='mt-0 mb-0 teacher-label text-muted'>Teacher</h6-->
+		<p class='mt-0 mb-0 teacher-name'><a class='text-decoration-none text-muted' href='/teachers/view/{$tinfo['id']}'> {$tinfo['nice_name']}</a></p>
+	</div>";	
 }	
 	
 ?>	
@@ -91,7 +94,7 @@ function teacher_link($tinfo) {
 		?>
 	
 				
-  	  <div class="row justify-content-between my-2 py-2 border-top">
+  	  <div class="row justify-content-between my-3 py-3 border-top">
 			<div data-classid="<?php echo $wk['id']; ?>" class="col-md-11 classes-listings-class">
 				
 				<?php
@@ -104,37 +107,40 @@ function teacher_link($tinfo) {
 				if (substr($wk['costdisplay'], 0 ,1) == '$') {
 					$wk['costdisplay'] = substr($wk['costdisplay'],1); // remove leading $
 				}
-				if ($wk['costdisplay'] == 'Pay what you can') {
-					$wk['costdisplay'] = 'donation';
-				}
 					
 				echo "
-					<div class='row mb-2 text-muted'>";
-					echo "<div class='col-sm-3'>".teacher_link($wk['teacher_info']);
-					if ($wk['co_teacher_id']) { 
-						echo teacher_link($wk['co_teacher_info']); 
-					} 
-					echo "</div>";
+					
+					<div class='row mb-4 text-muted'>
 				
-					echo "<div class='col-sm-3'><i class='bi-calendar text-primary'></i> ".date('D M j', strtotime($wk['start_tz'])).', '.\Wbhkit\friendly_time($wk['start_tz'])." ({$u->fields['time_zone_friendly']})</div>
-					<div class='col-sm-2'><i class='bi-calendar-range text-primary'></i> {$wk['total_sessions']} ".(($wk['total_sessions'] == 1) ? 'session ': 'sessions')."</div>
-					<div class='col-sm-2'><i class='bi-cash text-primary'></i> {$wk['costdisplay']}</div>";
+					<div class='col-sm-2'><i class='bi-cash text-primary'></i> {$wk['costdisplay']}</div>
+					<div class='col-sm-2'><i class='bi-calendar text-primary'></i> ".date('D M j', strtotime($wk['start_tz']))."</div>
+ 					<div class='col-sm-2'><i class='bi-clock text-primary'></i> ".\Wbhkit\friendly_time($wk['start_tz'])." ({$u->fields['time_zone_friendly']})</div>
+					<div class='col-sm-3'><i class='bi-calendar-range text-primary'></i> {$wk['total_sessions']} ".(($wk['total_sessions'] == 1) ? 'session ': 'sessions')."</div>";
 					
-					echo "<div class='col-sm-2'>";
-					if ($wk['soldout']) { 
-						echo '<span class="text-danger">Sold Out!</span> <a class="btn btn-outline-primary" href="/workshop/view/'.$wk['id'].'" role="button">Wait List</a>';
-					} elseif ($wk['application']) { 
-						echo '<a class="btn btn-primary" href="/workshop/view/'.$wk['id'].'" role="button">Apply</a>';
-					} else { 
-						echo '<a class="btn btn-primary" href="/workshop/view/'.$wk['id'].'" role="button">Enroll</a>';
-					}
-				  echo '</div>';
+					echo "</div>";
 					
-					
-				echo "</div>";
 				?>
 
 
+				<div class="class-meta d-flex justify-content-between align-items-center">
+				<div class="d-flex class-teacher col-7 mr-0 px-0 align-items-center">
+					<?php echo teacher_link($wk['teacher_info']); ?>
+					<?php if ($wk['co_teacher_id']) { ?>
+						<?php echo teacher_link($wk['co_teacher_info']); ?>
+					<?php } ?>  
+				</div>
+				<span class="class-enroll">
+					<?php if ($wk['soldout']) { ?>
+						<span class="text-danger">Sold Out!</span> <a class="btn btn-outline-primary" href="/workshop/view/<?php echo $wk['id']; ?>" role="button">Join Wait List</a>
+					<?php } elseif ($wk['application']) { ?>
+						
+						<a class="btn btn-primary" href="/workshop/view/<?php echo $wk['id']; ?>" role="button">Request A Spot</a>
+						
+					<?php } else { ?>
+						<a class="btn btn-primary" href="/workshop/view/<?php echo $wk['id']; ?>" role="button">Enroll</a>
+					<?php } ?>
+				</span>
+			  </div>
 			</div>
  	  </div>
 			<?php
@@ -227,12 +233,12 @@ function teacher_link($tinfo) {
 	</div>
 
 
-<div id="buy-the-book" class="container mb-5">
+  <div id="buy-the-book" class="container mb-5">
 	<h3 class="mb-3">Buy the Book</h3>
 <div class="row"><img src="/images/htbtgioe_cover.jpg" class="col-sm-12 col-md-3 align-self-start mb-2" alt="How To Be The Greatest Improviser On Earth" />
 	<p class="col-sm-12 col-md-9">If the workshops are sold out, you could buy "How to Be the Greatest Improviser on Earth" written by Will Hines, the founder of this school. Print and digital versions <a href="https://www.amazon.com/dp/0982625723">on Amazon</a>.</p></div>
   </div>
- 
+  
   
   
 

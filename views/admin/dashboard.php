@@ -9,6 +9,7 @@
 			<div class="issues float-end border border-4 p-2 m-2">				
 
 				<?php
+				// unpaid students
 				$last_wk = null;
 				$uphtml = '';
 				foreach ($unpaid as $up) {
@@ -29,6 +30,7 @@
 				
 				
 				<?php
+				// not full, 10 days out
 				$ts_now = strtotime('now');
 				$ts_twoweeks = strtotime('+10 days');
 				$nsohtml = '';
@@ -54,12 +56,12 @@
 				}	
 				
 				
-				
+				// hidden classes
 				$hiddenhtml = '';
 				foreach ($workshops as $wk) {
 					if ($wk['hidden'] == 1 && $wk['xtra'] == 0) {
 						$ts = strtotime($wk['course_start']);
-						$hiddenhtml .= "<li>".\Wbhkit\figure_year_minutes($ts).": <a href='/admin-workshop/view/{$wk['id']}'>{$wk['title']}</a></li>\n";
+						$hiddenhtml .= "<li>".\Wbhkit\figure_year_minutes($ts).": <a href='/admin-workshop/view/{$wk['id']}'>{$wk['title']}</a>, {$wk['teacher_name']}</li>\n";
 						
 					}
 				}
