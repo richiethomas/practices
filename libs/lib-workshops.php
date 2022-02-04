@@ -799,3 +799,16 @@ function email_teacher_info($wk) {
 	
 	return $output;
 }
+
+
+// for front page
+function format_cost_display(string $cd) {
+	if (substr($cd, 0 ,1) == '$') {
+		$cd = substr($cd,1); // remove leading $
+	}
+	if ($cd == 'Pay what you can') {
+		$cd = 'donation';
+	}
+	return $cd;
+}
+

@@ -47,10 +47,8 @@ switch ($ac) {
 				
 		if ($ac == 'up') {
 			$message = "Updated practice ({$wid}) - {$wk['title']}";
-			$logger->info($message);
 		} elseif ($ac == 'ad') {
 			$message = "Added practice ({$wk['id']}) - ({$title}) ";
-			$logger->info($message);
 		}
 		break;
 		
@@ -72,10 +70,8 @@ switch ($ac) {
 			$e->set_by_u_wk($guest, $wk);
 			if ($e->drop_session()) {
 				$message = "Removed user ({$guest->fields['email']}) from practice '{$wk['title']}'";
-				$logger->info($message);
 			} else {
 				$error = $e->error;
-				$logger->error($error);
 			}
 		} else {
 			$error = "Could not remove student because I could not tell which student.";
@@ -163,6 +159,11 @@ switch ($ac) {
 		break;
 							
 }
+
+
+if ($error) { $logger->error($error); }
+if ($message) { $logger->debug($message); }
+
 
 
 $stats = array();

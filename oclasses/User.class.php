@@ -4,7 +4,6 @@ class User extends WBHObject {
 	
 	private string $default_time_zone;
 	
-	
 	function __construct() {		
 		parent::__construct(); // load logger, lookups
 						
@@ -94,7 +93,7 @@ class User extends WBHObject {
 		while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
 			$this->set_into_fields($row);
 			$this->set_nice_name();
-			$this->remember_key($key);
+			$this->remember_key($key);			
 			return $this->fields['id'];
 		}
 

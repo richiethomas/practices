@@ -25,14 +25,10 @@ if (Workshops\is_public($wk)) {
 		case 'enroll':
 			if (!$u->logged_in()) {
 				$error = "You must be logged in to enroll.";
-				$logger->info("attempted enroll with no one logged in.");
 				break;
 			}
 			if (isset($wk['upcoming']) && $wk['upcoming'] == 0) {
-				$error = 'This workshop is past';
-				if (isset($wk['title'])) {
-					$logger->info("{$u->fields['nice_name']} cannot enroll since {$wk['title']} is past.");
-				}
+				$error = "That workshop already started.";
 				break;
 			}	
 			
@@ -47,14 +43,16 @@ if (Workshops\is_public($wk)) {
 										
 					$message .= "</ul>\n";
 				} elseif ($e->fields['status_id'] == APPLIED) {
-					$message = "'{$u->fields['nice_name']}' has applied for  '{$wk['title']}'! You'll be notified soon if you got in or not.\n";
+					$message = "'{$u->fields['nice_name']}' has applied for '{$wk['title']}'! You'll be notified soon if you got in or not.\n";
 
 				} elseif ($e->fields['status_id'] == WAITING) {
 					$message = "This practice is full. '{$u->fields['nice_name']}' is now on the waiting list.";
 				} 
+				$logger->info("'{$u->fields['nice_name']}' is status '".$lookups->find_status_by_value($e->fields['status_id'])."' for'{$wk['title']}'");
 			
 			} else {
 				$error = $e->error;
+				$logger->info($error);
 			}
 			$wk = Workshops\set_enrollment_stats($wk);
 			break;
@@ -64,15 +62,12 @@ if (Workshops\is_public($wk)) {
 				
 			if (!$u->logged_in()) {
 				$error = 'You are not logged in! You have to be logged in to drop a workshop.';
-				$logger->info("attempted drop with no one logged in.");
-			
 				break;
 			}
 
 			if (isset($wk['title'])) {
 				$message = "Do you really want to drop '".$wk['title']."'? Then click <a class='btn btn-warning' href='/workshop/condrop/{$wid}'>confirm drop</a>";
 			}
-			
 			
 			$show_other_action = false;
 		
@@ -94,6 +89,7 @@ if (Workshops\is_public($wk)) {
 				$e->notify_waiting($wk);
 			}
 			$message = "Dropped user ({$u->fields['email']}) from '{$wk['title']}.'";
+			$logger->info($message);
 			break;	
 			
 			

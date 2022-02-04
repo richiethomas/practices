@@ -34,10 +34,19 @@ class Lookups extends WBHObject {
 		}
     }
 	
-	public function find_status_by_value($stname) {
+	public function find_status_by_name(string $stname) {
 		foreach ($this->statuses as $status_id => $status_name) {
 			if ($status_name == $stname) {
 				return $status_id;
+			}
+		}
+		return false;
+	}
+
+	public function find_status_by_value(int $stid) {
+		foreach ($this->statuses as $status_id => $status_name) {
+			if ($status_id == $stid) {
+				return $status_name;
 			}
 		}
 		return false;

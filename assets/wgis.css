@@ -120,24 +120,6 @@ nav li.nav-item .user-logged-in:hover img {
   font-weight: 300;
 }
 
-.class-time-announcement {
-  font-size: 1.25rem;
-  color: var(--color-dark-blue);
-  //margin: 3rem 0;
-}
-
-.classes-listings-class p.class-time-info {
-  font-size: 1rem;
-  font-weight: bold;
-}
-
-.class-price {
-  font-size: 1.125rem;
-  color: var(--color-black);
-  text-align: center;
-  line-height: 1;
-  font-weight: 600;
-}
 
 /* Teacher  */
 

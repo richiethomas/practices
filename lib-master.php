@@ -64,10 +64,10 @@ include 'libs/lib-teachers.php';
 include 'libs/lib-reminders.php';
 	
 $lookups = new Lookups;	
-define('ENROLLED', $lookups->find_status_by_value('enrolled'));
-define('WAITING', $lookups->find_status_by_value('waiting'));
-define('DROPPED', $lookups->find_status_by_value('dropped'));
-define('APPLIED', $lookups->find_status_by_value('applied'));
+define('ENROLLED', $lookups->find_status_by_name('enrolled'));
+define('WAITING', $lookups->find_status_by_name('waiting'));
+define('DROPPED', $lookups->find_status_by_name('dropped'));
+define('APPLIED', $lookups->find_status_by_name('applied'));
 define('SMARTENROLL', 100); // special status ENROLL or WAIT pending capacity -- see Enrollment.class.php
 
 $smtp = null; // global smtp object for sending mail, keeping connection open
@@ -98,7 +98,7 @@ function get_nav_items(){
 
 		array('title' => "Teachers", "href" => "/teachers"),
 		array('title' => "School", "href" => "/about-school"),
-		array('title' => "Catalog", "href" => "/about-catalog"),
+		//array('title' => "Catalog", "href" => "/about-catalog"),
 		array('title' => "How It Works", "href" => "/about-works")
 	));
 	$nav_items[] = array('title' => "Community", "href" => "/community");
