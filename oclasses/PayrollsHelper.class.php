@@ -52,8 +52,6 @@ class PayrollsHelper extends WBHObject {
 	order by teacher_id, task, start asc",
 	array(':start1' => $mysqlstart,
 	':end1' => $mysqlend)); 	
-
-
 	
 		$this->claims = array();
 		while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
@@ -96,6 +94,32 @@ class PayrollsHelper extends WBHObject {
 		}
 		return true;
 	}	
+	
+	
+	function get_recorded_teacher_pay(int $wid) {
+		
+		$sql = "select p.* 
+			from payrolls p
+			where p.task = 'workshop' and p.table_id = :id
+			UNION
+			select p.*
+			from payrolls p, xtra_sessions x
+			where p.task = 'class'
+			and p.table_id = x.id
+			and x.workshop_id = :id2";
+
+		$stmt = \DB\pdo_query($sql, array(':id' => $wid, ':id2' => $wid));
+		
+		$pay = 0;
+		while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
+			$pay += $row['amount'];
+		}
+		
+		return $pay;
+		
+		
+	}
+	
 }
 	
 ?>

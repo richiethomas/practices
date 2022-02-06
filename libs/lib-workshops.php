@@ -113,7 +113,7 @@ function fill_out_workshop_row(array $row, bool $get_enrollment_stats = true) {
 
 		// set teacher pay
 	
-		$row['teacher_pay'] = 		$row['total_class_sessions']*$row['teacher_info']['default_rate'] + 		$row['total_show_sessions']*($row['teacher_info']['default_rate']/2);
+		$row['teacher_pay'] = get_teacher_pay($row);
 		
 		$row = set_actual_revenue($row);
 		$row = set_enrollment_stats($row);
@@ -501,10 +501,14 @@ function get_workshops_list_bydate(?string $start = null, ?string $end = null, b
 	return $workshops;
 }	
 
-
 function get_teacher_pay(array $wk) {
 	
-	return ($wk['total_class_sessions'] * $wk['teacher_info']['default_rate']) +
+	$ph = new \PayrollsHelper();
+	$pay = $ph->get_recorded_teacher_pay($wk['id']);
+
+	
+	// send back recorded pay or estimated pay
+	return $pay ? $pay : ($wk['total_class_sessions'] * $wk['teacher_info']['default_rate']) +
 		($wk['total_show_sessions'] * ($wk['teacher_info']['default_rate'] / 2));
 
 }

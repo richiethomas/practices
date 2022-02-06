@@ -81,22 +81,20 @@ $table_open = "<table class='table table-striped my-3'>
 				echo $table_open;
 				$teacher_id = $wk['teacher_id'];
 			}
-			
-			$teacher_pay = \Workshops\get_teacher_pay($wk);
-			
-			echo "<tr><td width='300'>({$wk['id']}-{$wk['teacher_id']}) <a href='/admin-workshop/view/{$wk['id']}'>{$wk['title']}</a> <small>({$wk['showstart']})</small></td>
+						
+			echo "<tr><td width='300'>({$wk['id']}) <a href='/admin-workshop/view/{$wk['id']}'>{$wk['title']}</a> <small>({$wk['showstart']})</small></td>
 			<td>{$wk['paid']} / {$wk['enrolled']} / {$wk['capacity']}</td>
 			<td>{$wk['cost']}</td>
 			<td>{$wk['actual_revenue']}</td>
-			<td>".number_format($teacher_pay)."</td>
-			<td>".number_format($wk['actual_revenue'] - $teacher_pay)."</td>
+			<td>".number_format($wk['teacher_pay'])."</td>
+			<td>".number_format($wk['actual_revenue'] - $wk['teacher_pay'])."</td>
 			</tr>\n";
 						
 			$totals['suggested_paid'] += $wk['actual_revenue'];
-			$totals['teacher_pay'] += $teacher_pay;
+			$totals['teacher_pay'] += $wk['teacher_pay'];
 			
 			$teacher_totals['suggested_paid'] += $wk['actual_revenue'];
-			$teacher_totals['teacher_pay'] += $teacher_pay;
+			$teacher_totals['teacher_pay'] += $wk['teacher_pay'];
 
 			$previous_wk = $wk;
 			
