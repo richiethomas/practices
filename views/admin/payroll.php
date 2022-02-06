@@ -135,7 +135,7 @@ echo "<table class='table table-striped my-3'>
 	<thead><tr>
 		<th>who</th>
 		<th>what</th>
-		<th>how much</th>
+		<th>rev / pay</th>
 		<th>when</th>
 		<th>action</th>
 	</thead><tbody>";
@@ -164,8 +164,8 @@ foreach ($claims as $c) {
 	echo "<tr>\n";
 	echo "<td>".\Wbhkit\drop("{$id}teacherid", $teacher_opts, $c['teacher_id'], 
 	0)."</td>\n";
-	echo "<td>{$c['title']} <small>({$c['workshop_id']}) (".date('D M j ga', strtotime($c['start'])).' #'.($c['rank'] ? $c['rank'] : 'show').")</small></td>\n";
-	echo "<td>".\Wbhkit\texty("{$id}amount", $c['amount'], 0)."</td>\n";
+	echo "<td><a href='/admin-workshop/view/{$c['id']}'>{$c['title']}</a> <small>({$c['workshop_id']}) (".date('D M j ga', strtotime($c['start'])).' #'.($c['rank'] ? $c['rank'] : 'show').")</small></td>\n";
+	echo "<td><small class='mx-3'>{$c['actual_revenue']}<br>".\Wbhkit\texty("{$id}amount", $c['amount'], 0)."</td>\n";
 	echo "<td>".\Wbhkit\texty("{$id}whenpaid", date("j-M-Y"), 0)."</td>\n";
 	echo "<td><button class='btn btn-success btn-sm' onClick=\"return single_claim('".$c['task']."', '".$c['table_id']."')\">Claim</button></td>\n";
 	echo \Wbhkit\hidden("{$id}whenhappened", $c['start'], true);

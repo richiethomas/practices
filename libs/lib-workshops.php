@@ -142,7 +142,6 @@ function format_workshop_startend(array $row) {
 	global $u; // $u->fields['time_zone'] is set in User class
 		
 	$tz = $u->fields['time_zone'];
-
 	$tzadd = " ({$u->fields['time_zone_friendly']})";
 	
 	$row['start_tz'] = \Wbhkit\convert_tz($row['start'], $tz);
@@ -782,6 +781,15 @@ function update_hidden(int $id, string $hidden) {
 	return true;
 }
 
+function update_wp(int $id, string $wp) {
+	
+	$wp = date(MYSQL_FORMAT, strtotime($wp));
+	$sql = "update workshops set when_public = :wp where id = :id";			
+	$stmt = \DB\pdo_query($sql, array(':id' => $id, ':wp' => $wp));
+	return true;
+}
+
+
 
 function email_teacher_info($wk) {
 	$output = null;	
@@ -810,5 +818,52 @@ function format_cost_display(string $cd) {
 		$cd = 'donation';
 	}
 	return $cd;
+}
+
+function find_conflicts(array $sessions) {
+
+	$conflicts = array();
+	
+	while ($s1 = array_pop($sessions)) {
+		
+		$start1 = strtotime($s1['start']);
+		$end1 = strtotime($s1['end']);
+		
+		$counter = 0;
+		$other_teachers_courses = array();
+			
+		foreach ($sessions as $s2) {
+			
+			if (in_array($s2['id'], $other_teachers_courses)) {
+				continue;
+			}
+									
+			$start2 = strtotime($s2['start']);
+			$end2 = strtotime($s2['end']);
+			
+			// teacher / co-teacher overlap?
+			if (
+				($s1['teacher_id'] == $s2['teacher_id'] || $s1['teacher_id'] == $s2['co_teacher_id']) ||
+				(($s1['co_teacher_id']) && ($s1['co_teacher_id'] == $s2['co_teacher_id'] || $s1['co_teacher_id'] == $s2['teacher_id']))
+				) {
+				
+					// time overlap?
+					if ($start1 >= $start2 && $start1 <= $end2 || 
+					$end1 >= $start2 && $end1 <= $end2 || 
+					$start1 <= $start2 && $end1 >= $end2) {
+				
+						$conflicts[] = array($s1, $s2);
+					}
+				
+			} else {
+				$other_teachers_courses[] = $s2['id'];
+			}
+			$counter++;
+				
+		}
+				
+	}	
+	return $conflicts;
+	
 }
 

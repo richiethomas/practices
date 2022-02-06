@@ -34,7 +34,7 @@
 
 <h2>Do I Need Prior Experience?</h2>
 
-<p>Usually you decide if you're ready by reading the description fo the class. Some classes have specific pre-requisities. If you're not sure, email Will (address at bottom of site) and he might grant an exception.</p>
+<p>Usually you decide if you're ready by reading the description of the class. Some classes have specific pre-requisities. If you're not sure, email Will (address at bottom of site) and he might grant an exception.</p>
 
 <h2>Does Improv and Sketch Really Work Over Zoom?</h2>
 

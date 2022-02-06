@@ -64,8 +64,15 @@ echo "<div class='row mt-md-3 admin-edit-workshop'>\n";
 		if (!empty($wk['sessions'])) {
 			foreach ($wk['sessions'] as $s) {
 				echo "<li>({$s['rank']}) ".
-					($s['class_show'] ? '<b>Show:</b> ' : '').
-					"{$s['friendly_when_cali']} <a href='/admin-workshop/delxtra/{$wk['id']}/{$s['id']}'>delete</a>".
+					($s['class_show'] ? '<b>Show:</b> ' : '');
+				
+				if (date('M j Y', strtotime($s['start'])) != date('M j Y', strtotime($s['end']))) {
+					echo date('D M j Y g:ia', strtotime($s['start']))."-<span class='text-danger'><b>".date('D M j Y g:ia', strtotime($s['end']))."</b></span>";
+				} else {
+					echo	"{$s['friendly_when_cali']}";
+				}
+				
+				echo " <a href='/admin-workshop/delxtra/{$wk['id']}/{$s['id']}'>delete</a>".
 				($s['reminder_sent'] ? ' <em>- reminder sent</em>' : '');
 				if ($s['online_url']) {
 					echo "<ul><li><a href='{$s['online_url_just_url']}'>{$s['online_url_just_url']}</a>";

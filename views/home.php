@@ -82,9 +82,9 @@ function class_row(array $wk) {
 
 
 
-  <div class="container col-xxl-8 px-4 py-5 bg-light">
+  <div class="container col-xxl-12 px-4 py-5 bg-light">
     <div class="row flex-lg-row-reverse align-items-center g-5 py-5">
-      <div class="col-10 col-sm-8 col-lg-6">
+      <div class="col-lg-6">
 		<figure class="figure">
 		  <a href="/teams"><img src="/images/teams.png" class="figure-img img-fluid rounded" alt="2021 Winter Teams"></a>
 		  <figcaption class="figure-caption text-end">art by Gareth O'Connor</figcaption>
@@ -124,7 +124,7 @@ function class_row(array $wk) {
 
 	<div class="container-lg container-fluid" id="classes-listings">
 		
-		<p class='my-5'>Here's a <a class='text-muted' href='/classes'>compact view</a> of this list.</p>
+		<p class='my-5'>Here's a <a class='text-muted' href='/classes'>compact list</a> of upcoming classes.</p>
 		
 		
 		<div class="my-3 py-3" id="filter-by-container" style="display:none;"> 

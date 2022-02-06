@@ -26,10 +26,7 @@
 					$uphtml
 				</ul>\n";
 				}
-				?>
-				
-				
-				<?php
+
 				// not full, 10 days out
 				$ts_now = strtotime('now');
 				$ts_twoweeks = strtotime('+10 days');
@@ -71,7 +68,25 @@
 							$hiddenhtml
 						</ul>";
 				}
+				
+				
+				// conflicts
+				if (count($conflicts) > 0 ) {
+					
+					echo "<h4>Conflicts</h4>\n";
+					
+					foreach ($conflicts as $c) {
+						echo "<ul>\n";
+						echo "<li><a href='/admin-workshop/view/{$c[0]['id']}'>{$c[0]['title']}</a> ({$c[0]['rank']}) ({$c[0]['start']}-{$c[0]['end']})</li>\n";
+						echo "<li><a href='/admin-workshop/view/{$c[1]['id']}'>{{$c[1]['title']}</a> ({$c[1]['rank']}) ({$c[1]['start']}-{$c[1]['end']})</li>\n";
+						echo "</ul>\n";
+					}
+					
+				}
+				
+				
 				?>
+				<p><small>all sql: <?php echo number_format($atime,1).'msec, conflicts: '.number_format($ctime,1); ?> msec</small></p>
 			</div>			
 			<p><i>(class # / total classes)</i></p>
 

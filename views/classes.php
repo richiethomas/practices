@@ -24,21 +24,24 @@ foreach ($upcoming_workshops as $wk) {
 	
 	$row_html = "<div class='row mt-4'>\n";
 	$row_html .= "<div class='col-md-2'>".date("D M j", strtotime($wk['start_tz']))." $start</div>\n";
-	$row_html .= "<div class='col-md-3'><a href='/workshop/view/{$wk['id']}'>{$wk['title']}</a>";
+	$row_html .= "<div class='col-md-4'><a href='/workshop/view/{$wk['id']}'>{$wk['title']}</a>";
 	
 	if ($wk['soldout']) {
 		$row_html .= " - <span class='text-danger'>Sold Out</span>";
 	}
 	
 	$row_html .= "</div>\n";
-	$row_html .= "<div class='col-md-3'>{$wk['total_sessions']} ".($wk['total_sessions'] == 1 ? 'session': 'sessions').", {$wk['costdisplay']}</div>\n";
-	$row_html .= "<div class='col-md-4'><a href='/teachers/view/{$wk['teacher_id']}'>{$wk['teacher_info']['nice_name']}</a>";
+	$row_html .= "<div class='col-md-3'><a href='/teachers/view/{$wk['teacher_id']}'>{$wk['teacher_info']['nice_name']}</a>";
 	
 	if ($wk['co_teacher_id']) {
 		$row_html .= ", <a href='/teachers/view/{$wk['co_teacher_id']}'>{$wk['co_teacher_info']['nice_name']}</a>";
 	}
+
+	$row_html .= "</div>\n";
+
+	$row_html .= "<div class='col-md-3'>{$wk['total_sessions']} ".($wk['total_sessions'] == 1 ? 'session': 'sessions').", {$wk['costdisplay']}</div>\n";
 	
-	$row_html .= "</div>\n</div>\n";
+	$row_html .= "</div>\n";
 	
 	if ($wk['total_sessions'] == 1) {
 		$wk_html .= $row_html;

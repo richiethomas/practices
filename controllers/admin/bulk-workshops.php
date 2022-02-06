@@ -16,12 +16,22 @@ switch ($ac) {
 					\Workshops\update_tags($ps[1], $v);
 				}
 			}
+
 			// was hidden flag changed
 			if (substr($k, 0, 13) == 'hiddenhidden_') {
 				$ps = explode('_', $k);
 				$hidden_flag_checkbox = isset($_REQUEST["hidden_{$ps[1]}"]) ? 1 : 0;
-				if ($v != $hidden_flag_checkbox);
-				\Workshops\update_hidden($ps[1], $hidden_flag_checkbox);
+				if ($v != $hidden_flag_checkbox) {
+					\Workshops\update_hidden($ps[1], $hidden_flag_checkbox);
+				}
+			}
+
+			// was 'when public' changed
+			if (substr($k, 0, 3) == 'wp_') {
+				$ps = explode('_', $k);
+				if (strtotime($v) != $_REQUEST["hiddenwp_{$ps[1]}"]) {
+					\Workshops\update_wp($ps[1], $v);
+				}
 			}
 			
 			
