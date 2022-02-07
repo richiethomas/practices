@@ -1,6 +1,6 @@
 <?php
 // debug timer
-define('TIMER', false);
+define('TIMER', true);
 $start_hrtime = 0;
 if (TIMER) {
 	$start_hrtime=hrtime(true);

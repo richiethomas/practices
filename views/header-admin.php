@@ -1,3 +1,4 @@
+
 <!doctype html>
 <html lang="en">
   <head>
@@ -60,18 +61,19 @@
 			<li class="nav-item"><a class="nav-link" href="/admin-search">Students</a> </li>
 			<li class="nav-item"><a class="nav-link" href="/admin-emails">Emails</a> </li>
 			<li class="nav-item"><a class="nav-link" href="/admin-bulk-workshops">Bulk</a> </li>
+			<li class="nav-item"><a class="nav-link" href="/admin-conflicts">Conflicts</a> </li>
+			<li class="nav-item"><a class="nav-link" href="/admin-reminders">Reminders</a></li>
+		    <li class="nav-item dropdown">
+		      <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Logs</a>
+		      <div class="dropdown-menu nav-item">
+		        <a class="dropdown-item nav-link" href="/admin-debug">Debug Log</a>
+		        <a class="dropdown-item nav-link" href="/admin-error">Error Log</a>
+		        <a class="dropdown-item nav-link" href="/admin-status">Status Log</a>
+		      </div>
+		    </li>
 
 <?php if ($u->check_user_level(3)) { ?>
 			<li><hr/></li>
-			<li class="nav-item"><a class="nav-link" href="/admin-reminders">Reminders</a></li>
-    <li class="nav-item dropdown">
-      <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Logs</a>
-      <div class="dropdown-menu nav-item">
-        <a class="dropdown-item nav-link" href="/admin-debug">Debug Log</a>
-        <a class="dropdown-item nav-link" href="/admin-error">Error Log</a>
-        <a class="dropdown-item nav-link" href="/admin-status">Status Log</a>
-      </div>
-    </li>
 			<li class="nav-item"><a class="nav-link" href="/admin-revenue">Revenue</a></li>
 			<li class="nav-item"><a class="nav-link" href="/admin-payroll">Payroll</a></li>
 <?php } ?>

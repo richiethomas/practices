@@ -48,7 +48,7 @@ if (Workshops\is_public($wk)) {
 				} elseif ($e->fields['status_id'] == WAITING) {
 					$message = "This practice is full. '{$u->fields['nice_name']}' is now on the waiting list.";
 				} 
-				$logger->info("'{$u->fields['nice_name']}' is status '".$lookups->find_status_by_value($e->fields['status_id'])."' for'{$wk['title']}'");
+				$logger->debug("'{$u->fields['nice_name']}' is status '".$lookups->find_status_by_value($e->fields['status_id'])."' for'{$wk['title']}'");
 			
 			} else {
 				$error = $e->error;
@@ -89,7 +89,7 @@ if (Workshops\is_public($wk)) {
 				$e->notify_waiting($wk);
 			}
 			$message = "Dropped user ({$u->fields['email']}) from '{$wk['title']}.'";
-			$logger->info($message);
+			$logger->debug($message);
 			break;	
 			
 			

@@ -60,7 +60,9 @@ $( document ).ready(function(){
 </html>
 
 <?php
-if (TIMER) {
-	echo show_hrtime();
-}
+	if (TIMER) {
+		echo "<!-- ";
+		show_hrtime();
+		echo "-->\n";
+	}
 ?>

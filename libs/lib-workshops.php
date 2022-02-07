@@ -824,50 +824,5 @@ function format_cost_display(string $cd) {
 	return $cd;
 }
 
-function find_conflicts(array $sessions) {
 
-	$conflicts = array();
-	
-	while ($s1 = array_pop($sessions)) {
-		
-		$start1 = strtotime($s1['start']);
-		$end1 = strtotime($s1['end']);
-		
-		$counter = 0;
-		$other_teachers_courses = array();
-			
-		foreach ($sessions as $s2) {
-			
-			if (in_array($s2['id'], $other_teachers_courses)) {
-				continue;
-			}
-									
-			$start2 = strtotime($s2['start']);
-			$end2 = strtotime($s2['end']);
-			
-			// teacher / co-teacher overlap?
-			if (
-				($s1['teacher_id'] == $s2['teacher_id'] || $s1['teacher_id'] == $s2['co_teacher_id']) ||
-				(($s1['co_teacher_id']) && ($s1['co_teacher_id'] == $s2['co_teacher_id'] || $s1['co_teacher_id'] == $s2['teacher_id']))
-				) {
-				
-					// time overlap?
-					if ($start1 >= $start2 && $start1 <= $end2 || 
-					$end1 >= $start2 && $end1 <= $end2 || 
-					$start1 <= $start2 && $end1 >= $end2) {
-				
-						$conflicts[] = array($s1, $s2);
-					}
-				
-			} else {
-				$other_teachers_courses[] = $s2['id'];
-			}
-			$counter++;
-				
-		}
-				
-	}	
-	return $conflicts;
-	
-}
 
