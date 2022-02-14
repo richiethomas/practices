@@ -96,9 +96,9 @@ function get_nav_items(){
 	$nav_items[] = array('title' => "Calendar", "href" => "/calendar");
 	$nav_items[] = array('title' => "About", "href" => "/about-school", 'children' => array(
 
+		array('title' => "Classes", "href" => "/classes"),
 		array('title' => "Teachers", "href" => "/teachers"),
 		array('title' => "School", "href" => "/about-school"),
-		//array('title' => "Catalog", "href" => "/about-catalog"),
 		array('title' => "How It Works", "href" => "/about-works")
 	));
 	$nav_items[] = array('title' => "Community", "href" => "/community");

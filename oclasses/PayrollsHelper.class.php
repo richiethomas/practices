@@ -55,7 +55,8 @@ class PayrollsHelper extends WBHObject {
 	
 		$this->claims = array();
 		while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
-			$row = \Workshops\fill_out_xtra_sessions($row); // no enrollment stats needed
+			$row = \Workshops\fill_out_xtra_sessions($row); 
+			$row = \Workshops\set_enrollment_stats($row);
 			$row = \Workshops\set_actual_revenue($row);
 			$this->claims[] = $row;
 		}

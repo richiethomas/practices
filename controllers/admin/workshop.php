@@ -161,9 +161,8 @@ switch ($ac) {
 }
 
 
-if ($error) { $logger->error($error); }
+if ($error && !preg_match('/you sure/', $error)) { $logger->error($error); }
 if ($message) { $logger->debug($message); }
-
 
 
 $stats = array();

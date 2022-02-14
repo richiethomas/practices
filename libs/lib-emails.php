@@ -25,7 +25,6 @@ function centralized_email($to, $sub, $body, $realname = null) {
 		
 	$mail->Subject = $sub;
 	
-	$body = wordwrap($body, 110, "<br>\n");
 	$mail->msgHTML($body);
 
 	//send the message, check for errors
@@ -42,7 +41,7 @@ function centralized_email($to, $sub, $body, $realname = null) {
 	}
 	
 	if ($sent) {
-		$logger->debug("emailed '$to', '$sub'");
+		$logger->info("emailed '$to', '$sub'");
 		return true;
 	} else {
 		$logger->error($mail->ErrorInfo);
@@ -204,7 +203,7 @@ function get_phpmailer_object() {
 	} else {
 		
 		$mail = new PHPMailer(true);
-		$mail->WordWrap = 80; 
+		$mail->WordWrap = 100; 
 		
 		if (LOCAL) {
 			$mail->isSMTP();

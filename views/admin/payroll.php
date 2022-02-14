@@ -157,7 +157,18 @@ foreach ($claims as $c) {
 	$t = \Teachers\find_teacher_in_teacher_array($c['teacher_id'], $faculty);
 	
 	
-	$c['amount'] = $c['total_class_sessions']*$t['default_rate'] + $c['total_show_sessions']*($t['default_rate'] / 2);
+	// if class is nearly sold out, bonus rate
+	if ($c['cost'] != 1 && $c['enrolled'] / $c['capacity'] > .75) {
+		$rate = $t['default_rate'] + 50;
+	} else {
+		$rate = $t['default_rate'];
+	}
+	
+	
+	
+	$c['amount'] = 
+		$c['total_class_sessions']*$rate + 
+		$c['total_show_sessions']*($rate / 2);
 		
 	$id = "pd_{$c['task']}_{$c['table_id']}_";
 	
@@ -165,7 +176,7 @@ foreach ($claims as $c) {
 	echo "<td>".\Wbhkit\drop("{$id}teacherid", $teacher_opts, $c['teacher_id'], 
 	0)."</td>\n";
 	echo "<td><a href='/admin-workshop/view/{$c['id']}'>{$c['title']}</a> <small>({$c['workshop_id']}) (".date('D M j ga', strtotime($c['start'])).' #'.($c['rank'] ? $c['rank'] : 'show').")</small></td>\n";
-	echo "<td><small class='mx-3'>{$c['actual_revenue']}<br>".\Wbhkit\texty("{$id}amount", $c['amount'], 0)."</td>\n";
+	echo "<td><small class='mx-3'>{$c['actual_revenue']} ($rate)<br>".\Wbhkit\texty("{$id}amount", $c['amount'], 0)."</td>\n";
 	echo "<td>".\Wbhkit\texty("{$id}whenpaid", date("j-M-Y"), 0)."</td>\n";
 	echo "<td><button class='btn btn-success btn-sm' onClick=\"return single_claim('".$c['task']."', '".$c['table_id']."')\">Claim</button></td>\n";
 	echo \Wbhkit\hidden("{$id}whenhappened", $c['start'], true);

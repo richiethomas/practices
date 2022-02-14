@@ -5,9 +5,23 @@
 			<h5>Upcoming Workshops</h5>
 		</div>
 		<div class="admin-box-content">
-		
-			<div class="issues float-end border border-4 p-2 m-2">				
 
+
+<script>
+$( document ).ready(function() {
+	$( "#dashalertsbutton" ).click(
+		function() { $("#dashalerts").toggle(200); }
+	);
+});	
+
+
+
+</script>
+		
+
+			<div class="issues float-end border border-4 p-2 m-2">				
+				<button id="dashalertsbutton" type="button" class="btn-close float-end" aria-label="Close"></button>
+				<div id="dashalerts">
 				<?php
 				// unpaid students
 				$last_wk = null;
@@ -27,16 +41,16 @@
 				</ul>\n";
 				}
 
-				// not full, 10 days out
+				// not full, 15 days out
 				$ts_now = strtotime('now');
-				$ts_twoweeks = strtotime('+10 days');
+				$ts_then = strtotime('+15 days');
 				$nsohtml = '';
 				foreach ($workshops as $wk) {
 					if (!$wk['hidden'] && $wk['xtra'] == 0) {
 						if ($wk['enrolled'] < $wk['capacity']) {
 							$ts = strtotime($wk['course_start']);
 							
-							if ($ts >= $ts_now && $ts <= $ts_twoweeks) { 			
+							if ($ts >= $ts_now && $ts <= $ts_then) { 			
 							
 								$nsohtml .= "<li>".\Wbhkit\figure_year_minutes($ts).": <a href='/admin-workshop/view/{$wk['id']}'>{$wk['title']}</a> ({$wk['enrolled']}/{$wk['capacity']})";
 								if ($wk['applied']) { $nso .= " <span class='text-primary'>- {$wk['applied']}</span>"; }
@@ -46,7 +60,7 @@
 					}
 				}
 				if ($nsohtml) {
-					echo "<h4>Not Full, 10 Days Out</h4>
+					echo "<h4>Not Full, 15 Days Out</h4>
 				<ul>
 					$nsohtml
 				</ul>\n";
@@ -73,6 +87,7 @@
 				
 				
 				?>
+			</div>
 			</div>			
 			<p><i>(class # / total classes)</i></p>
 

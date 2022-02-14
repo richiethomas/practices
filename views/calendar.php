@@ -4,9 +4,7 @@
 			
 <?php		
 
-if ($u->logged_in()) {
-	echo "<div>Times shown in ({$u->fields['time_zone_friendly']})</div>";
-}
+echo "<div>Times shown in ({$u->fields['time_zone_friendly']})</div>";
 
 $current_date = null;
 foreach ($workshops as $wk) {

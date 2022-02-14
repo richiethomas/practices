@@ -7,3 +7,9 @@ if (TIMER) {
 	echo "-->\n";
 }
 ?>
+<?php
+echo "<!-- yep:<br>";
+print_r($_COOKIE);
+print_r($_SESSION);
+echo "-->";
+?>

@@ -143,8 +143,10 @@ class User extends WBHObject {
 	function check_for_stored_key() {
 		$key = null;
 		if (isset($_SESSION['s_key']) && $_SESSION['s_key']) {
+			$this->logger->debug("found key in session: {$_SESSION['s_key']}");
 			$key = $_SESSION['s_key'];
 		} elseif (isset($_COOKIE['c_key']) && $_COOKIE['c_key']) {
+			$this->logger->debug("found key in cookie: {$_COOKIE['c_key']}");
 			$key = $_COOKIE['c_key'];
 		}
 		$this->remember_key($key); // sets session variable and cookie
@@ -153,9 +155,19 @@ class User extends WBHObject {
 		return $key;
 	}
 
-	function remember_key($key) {
+	function remember_key(?string $key) {
+		
+		if (!$key) { 
+			$this->logger->debug("tried to remember empty key");
+			return false;
+		}
+		
 		$_SESSION['s_key'] = $key;
-		setcookie('c_key', $key, time() + 31449600); // a year!
+		if (setcookie('c_key', $key, time() + 31449600)) {
+			$this->logger->debug("setcookie '$key' returned true");
+		} else {
+			$this->logger->debug("setcookie '$key' returned false");
+		}; // a year!
 	}
 
 
@@ -190,16 +202,16 @@ class User extends WBHObject {
 				return false;
 			}
 			$trans = URL."home/k/".$this->get_key();
-			$body = "<p>Use this link to log in:</p>
+			$body = "<p>Simple easy link to log into WGIS:</p>
 	<p>{$trans}</p>";
 			
 			//<p>(Sent: ".date('D M n, Y g:ia').")</p>
 			
-			$body .= "<p>SET YOUR TIME ZONE:<br>\n--------------------<br>\nYou can set your time zone (and change other settings like display name, email) at: ".URL."you</p>";
+			$body .= "<p>SET YOUR TIME ZONE:<br>\n--------------------<br>\nSet your time zone (and change display name, email) at: ".URL."you</p>";
 			
 			$body .= \Emails\email_footer();
 
-			return \Emails\centralized_email($this->fields['email'], "Log in to WGIS", $body);
+			return \Emails\centralized_email($this->fields['email'], "Link for logging into WGIS", $body);
 			
 			
 	}
@@ -215,7 +227,7 @@ class User extends WBHObject {
 	function soft_logout() {
 		unset($_SESSION['s_key']);
 	    unset($_COOKIE['c_key']);
-	    setcookie('c_key', null, -1);
+	    setcookie('c_key', null, 1000); // 1000 msecs after jan 1 1970
 		$this->clear_fields(); // clear current user
 		$this->message = 'You are logged out!';
 	}
