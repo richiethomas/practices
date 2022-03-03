@@ -130,7 +130,7 @@ Class info on web site: $trans";
 	\Emails\centralized_email($wk['teacher_info']['email'], $teacher_reminder['subject'], $msg);
 	
 	// if not full -- point it out to Will
-	if ($wk['enrolled'] < $wk['capacity']) {
+	if ($wk['enrolled'] < $wk['capacity'] && !$xtra['id']) { // no $xtra['id'] means first session
 		
 		$alert_msg = "'{$wk['title']}' is not full. {$wk['enrolled']} of {$wk['capacity']} signed up<br>\n".
 			URL."admin-workshop/view/{$wk['id']}<br>\n".

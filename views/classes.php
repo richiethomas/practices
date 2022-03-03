@@ -60,13 +60,13 @@ foreach ($upcoming_workshops as $wk) {
 	
 	
 	// text view
-	$text_html = "{$wk['title']}, {$wk['teacher_info']['nice_name']}, $start, {$wk['total_sessions']} weeks, {$wk['costdisplay']}".($wk['soldout'] ? " - <span class='text-danger'>Sold Out</span>" : '');
+	$text_html = "<p class='m-1 p-0 fs-6 lh-base'><a class='text-decoration-none' href='/workshop/view/{$wk['id']}'>{$wk['title']}</a>, {$wk['teacher_info']['nice_name']}, $start, {$wk['total_sessions']} weeks, {$wk['costdisplay']}".($wk['soldout'] ? " - <span class='text-danger'>Sold Out</span>" : '');
 	
 	if ($u->check_user_level(2)) { 
 		$text_html .= " <span class='text-muted'><small>({$wk['enrolled']} / {$wk['capacity']})</small></span>\n";
 	}
 	
-	$text_html .= "<br>\n";
+	$text_html .= "</p>\n";
 	
 	if ($wk['total_sessions'] == 1) {
 		$wk_html .= $row_html;

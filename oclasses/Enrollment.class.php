@@ -123,9 +123,9 @@ class Enrollment extends WBHObject {
 			'status_id' => $target_status,
 			'status_name' => $this->lookups->statuses[$target_status],
 			'last_modified' => $datestring_now,
-			'paid' => false,
 			'while_soldout' => false));	
-			
+
+		if (!isset($this->fields['paid'])) { $this->fields['paid'] = false; }
 			
 		if ($last_insert_id) { $this->fields['id'] = $last_insert_id; }
 

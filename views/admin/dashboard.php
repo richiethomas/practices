@@ -112,8 +112,6 @@ $(function(){
 $current_date = null;
 foreach ($workshops as $wk) {
 
-	if ($wk['hidden']) { continue; }
-
 	if ($filter_by != 'all' && $filter_by > 0) {
 		if ($wk['teacher_id'] != $filter_by) {
 			continue; // skip this loop
@@ -136,8 +134,9 @@ foreach ($workshops as $wk) {
 	$start = Wbhkit\friendly_time($wk['start']);
 	
 	$xtra = $wk['class_show'] ? ' show' : '';
+	if ($wk['hidden'] == 1) { $xtra = 'text-muted'; }
 		
-	echo "<li class='mt-1 $xtra' data-teacher=\"teacher-{$wk['teacher_id']}\"><a   href='/admin-workshop/view/{$wk['id']}'>{$wk['title']}</a> ({$wk['rank']}/{$wk['total_sessions']}".($wk['class_show'] ? ' - show' : '')."), $start";
+	echo "<li class='mt-1 $xtra' data-teacher=\"teacher-{$wk['teacher_id']}\"><a   href='/admin-workshop/view/{$wk['id']}' class='$xtra'>{$wk['title']}</a> ({$wk['rank']}/{$wk['total_sessions']}".($wk['class_show'] ? ' - show' : '')."), $start";
 	
 	echo " - {$wk['teacher_name']}";
 	if ($wk['co_teacher_id']) {

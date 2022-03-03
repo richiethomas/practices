@@ -1,7 +1,7 @@
 <?php
 namespace Emails;	
 
-define('MUTE_LOCAL_EMAIL', true);
+define('MUTE_LOCAL_EMAIL', false);
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
