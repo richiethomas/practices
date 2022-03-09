@@ -95,7 +95,7 @@ function class_row(array $wk) {
         <p class="lead">WGIS is a mostly online improv grad school, for people who have learned the basics and want more. Below is a list of <b class='text-primary'>multi-week courses</b> and <b class='text-success'>one-time workshops</b> you can join. </p>
         <div class="d-grid gap-2 d-md-flex justify-content-md-start">
 			
-			<a class="btn btn-primary btn-lg px-4 me-md-2" href="#allclasses" role="button">See Classes</a>
+			<a class="btn btn-primary btn-lg px-4 me-md-2" href="/classes" role="button">See Classes</a>
 			
           <a class="btn btn-outline-secondary btn-lg px-4" href="/about-works" role="button">How It Works</a>
         </div>

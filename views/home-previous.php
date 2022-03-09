@@ -69,7 +69,7 @@ function teacher_link($tinfo) {
   
   <div id="classes">
 	<div class="container-fluid classes-header container-header-banner"><h3 class="container-lg container-fluid">Current & Upcoming Classes</h3></div>
-	<!--<h4 class="text-center class-time-announcement mt-5 mb-5 col-12">All Class Dates and Times are California Time (<?php echo TIMEZONE; ?>)</h4>-->
+	<!--<h4 class="text-center class-time-announcement mt-5 mb-5 col-12">All Class Dates and Times are California Time (<?php echo TIME_ZONE; ?>)</h4>-->
 	
 <?php
 	include 'unavailable_workshops.php';	

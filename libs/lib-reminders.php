@@ -13,20 +13,62 @@ function get_reminders(int $how_many = 100) {
 	
 }
 
+function check_tasks(bool $force = false) {
+	
+	// get tasks for the next 24 hours where reminder has not been sent
+	$stmt = \DB\pdo_query("
+		select t.*, u.display_name, u.email, u.time_zone, re.slug, re.subject, re.body 
+	from tasks t, users u, reminder_emails re 
+	where t.reminder_sent = 0 
+	and t.user_id = u.id
+	and t.reminder_email_id = re.id
+	and t.event_when > now() 
+	and t.event_when < DATE_ADD(now(), INTERVAL 1 DAY)"); 
+	
+	while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
+		$nice_name = $row['display_name'] ? $row['display_name'] : $row['email'];
+		
+		if ($row['time_zone'] != DEFAULT_TIME_ZONE) { 
+			$row['event_when'] = \Wbhkit\convert_tz($row['event_when'], $row['time_zone']);
+			
+			// just to get short time zone
+			$datetime = new \DateTime($row['event_when']);
+			$datetime->setTimezone(new \DateTimeZone($row['time_zone']));
+			$short_time_zone = $datetime->format('T');
+			
+		} else {
+			$row['time_zone'] = DEFAULT_TIME_ZONE; 
+			$short_time_zone = TIME_ZONE;
+		}
+		
+		$row['event_when'] = \Wbhkit\figure_year_minutes(strtotime($row['event_when']))." ($short_time_zone)";
+		
+		$row['body'] = preg_replace('/USERNAME/', $nice_name, $row['body']);
+		$row['body'] = preg_replace('/USEREMAIL/', $row['email'], $row['body']);
+		$row['body'] = preg_replace('/EVENTWHEN/', $row['event_when'], $row['body']);
+		$row['body'] = preg_replace('/\R/', "<br>", $row['body']);
+		
+		
+		\Emails\centralized_email($row['email'], $row['subject'], $row['body'], $row['display_name'] );
+
+		$stmt= \DB\pdo_query("update tasks set reminder_sent = 1 where id = :id", array(':id' => $row['id']));
+		
+	}
+	
+}
+
+
 function check_reminders(bool $force = false) {
 	
-	/*
-delete from reminder_checks;
-update workshops set reminder_sent = 0;
-update xtra_sessions set reminder_sent = 0;
-	*/
 
-	// check reminder database -- has it been 6 hours?
+	// check reminder database -- has it been 4 hours?
 	$stmt = \DB\pdo_query("select * from reminder_checks order by id desc limit 1"); // most recent check
 	while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
 		if ((time() - strtotime($row['time_checked'])) / 3600 <= 4 && ($force !== true)) { return false; } // checked less than four hours ago
 		 
 	}
+	
+	check_tasks($force); 
 	
 	// if yes, get a list of all workshops that have yet to start within REMINDER_HOURS
 	$classes_to_remind = array();
@@ -174,7 +216,7 @@ function get_reminder_message_data(array $wk, array $xtra, bool $teacher = false
 		$note = "<p>Greetings. ".($teacher ? "You are teaching" :  "You are enrolled in")." a class that starts soonish, ";
 	}
 
-	$note .= "specifically at $start (".TIMEZONE.").</p>\n";
+	$note .= "specifically at $start (".TIME_ZONE.").</p>\n";
 	
 	if ($wk['location_id'] == ONLINE_LOCATION_ID) {
 		

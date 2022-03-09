@@ -33,7 +33,7 @@ define('DEFAULT_TIME_ZONE', 'America/Los_Angeles');
 date_default_timezone_set ( DEFAULT_TIME_ZONE );
 $dateTime = new DateTime();
 $dateTime->setTimeZone(new DateTimeZone(DEFAULT_TIME_ZONE));
-define('TIMEZONE', $dateTime->format('T'));
+define('TIME_ZONE', $dateTime->format('T'));
 
 
 define('MYSQL_FORMAT', 'Y-m-d H:i:s');

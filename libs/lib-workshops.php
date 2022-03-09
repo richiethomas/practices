@@ -154,7 +154,7 @@ function format_workshop_startend(array $row) {
 	$row['showstart'] .= $tzadd;
 	$row['showend'] .= $tzadd;	
 
-	$tzcali = " (".TIMEZONE.")";
+	$tzcali = " (".TIME_ZONE.")";
 	$row['showstart_cali'] = \Wbhkit\friendly_date($row['start']).' '.\Wbhkit\friendly_time($row['start']);
 	$row['showend_cali'] = \Wbhkit\friendly_time($row['end']);
 	$row['when_cali'] = "{$row['showstart_cali']}-{$row['showend_cali']}".$tzcali;

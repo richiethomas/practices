@@ -46,7 +46,7 @@ class PayrollsHelper extends WBHObject {
 	
 		// only need workshops table since we only need first sesssion
 		$stmt = \DB\pdo_query("
-	(select 'workshop' as task, w.id as table_id, w.title, w.start, w.teacher_id, 1 as rank, w.id as workshop_id, w.id, w.cost
+	(select 'workshop' as task, w.id as table_id, w.title, w.start, w.teacher_id, 1 as rank, w.id as workshop_id, w.id, w.cost, w.capacity
 	from workshops w
 	where w.start >= :start1 and w.start <= :end1)
 	order by teacher_id, task, start asc",
