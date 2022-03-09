@@ -63,7 +63,7 @@ class WBHObject
 
 		while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
 			$this->set_into_fields($row);
-			$this->format_row();
+			$this->finish_setup();
 			return true;
 		}
 		$this->error = "No {$this->tablename} found for id '{$id}'";
@@ -71,14 +71,18 @@ class WBHObject
 
 	}
 	
-	function format_row() {
+	function finish_setup() {
+		return true;
+	}
+	
+	function finish_delete() {
 		return true;
 	}
 
 
 	function save_data() {
 		// make sure datetime fields are formatted for mysql
-		$this->format_row();
+		$this->finish_setup();
 		
 		$params = $this->make_params();
 		
@@ -145,12 +149,13 @@ class WBHObject
 	
 	function delete_row() {
 		if (!$this->fields['id']) {
-			$this->error = "No id set!";
+			$this->error = "No id set for '{$this->tablename}'!";
 			return false;
 		}
 		$params = array(':id' => $this->fields['id']);
 		$stmt = \DB\pdo_query("delete from {$this->tablename} where id = :id", $params);
 		$this->message = "Deleted from {$this->tablename} {$this->fields['id']}";
+		$this->finish_delete();
 		$this->fields = array();
 		return true;
 	}

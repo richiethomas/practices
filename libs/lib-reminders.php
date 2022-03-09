@@ -15,43 +15,18 @@ function get_reminders(int $how_many = 100) {
 
 function check_tasks(bool $force = false) {
 	
-	// get tasks for the next 24 hours where reminder has not been sent
-	$stmt = \DB\pdo_query("
-		select t.*, u.display_name, u.email, u.time_zone, re.slug, re.subject, re.body 
-	from tasks t, users u, reminder_emails re 
-	where t.reminder_sent = 0 
-	and t.user_id = u.id
-	and t.reminder_email_id = re.id
-	and t.event_when > now() 
-	and t.event_when < DATE_ADD(now(), INTERVAL 1 DAY)"); 
-	
-	while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
-		$nice_name = $row['display_name'] ? $row['display_name'] : $row['email'];
-		
-		if ($row['time_zone'] != DEFAULT_TIME_ZONE) { 
-			$row['event_when'] = \Wbhkit\convert_tz($row['event_when'], $row['time_zone']);
-			
-			// just to get short time zone
-			$datetime = new \DateTime($row['event_when']);
-			$datetime->setTimezone(new \DateTimeZone($row['time_zone']));
-			$short_time_zone = $datetime->format('T');
-			
-		} else {
-			$row['time_zone'] = DEFAULT_TIME_ZONE; 
-			$short_time_zone = TIME_ZONE;
-		}
-		
-		$row['event_when'] = \Wbhkit\figure_year_minutes(strtotime($row['event_when']))." ($short_time_zone)";
-		
-		$row['body'] = preg_replace('/USERNAME/', $nice_name, $row['body']);
-		$row['body'] = preg_replace('/USEREMAIL/', $row['email'], $row['body']);
-		$row['body'] = preg_replace('/EVENTWHEN/', $row['event_when'], $row['body']);
-		$row['body'] = preg_replace('/\R/', "<br>", $row['body']);
-		
-		
-		\Emails\centralized_email($row['email'], $row['subject'], $row['body'], $row['display_name'] );
 
-		$stmt= \DB\pdo_query("update tasks set reminder_sent = 1 where id = :id", array(':id' => $row['id']));
+	$th = new \TasksHelper();
+	$th->get_upcoming_tasks();
+	
+	foreach ($th->tasks as $t) {
+		\Emails\centralized_email(
+			$t->user->fields['email'], 
+			$t->reminder_email->fields['subject'],
+			$t->reminder_email->fields['body'],
+			$t->user->fields['display_name'] );
+			
+		$t->update_reminder_sent(true);
 		
 	}
 	

@@ -5,7 +5,7 @@ $u->reject_user_below(3); // group 3 or higher
 
 $ph = new PayrollsHelper();
 
-$vars = array('searchstart', 'searchend', 'lastweekstart', 'lastweekend', 'nextweekstart', 'nextweekend', 'pid', 'singleadd', 'task', 'table_id', 'teacher_id', 'amount', 'when_paid', 'when_happened');
+$vars = array('searchstart', 'searchend', 'lastweekstart', 'lastweekend', 'nextweekstart', 'nextweekend', 'pid', 'singleadd', 'task', 'table_id', 'user_id', 'amount', 'when_paid', 'when_happened');
 Wbhkit\set_vars($vars);
 
 switch ($ac) {
@@ -17,9 +17,9 @@ switch ($ac) {
 		break;
 	case 'singleadd':
 		$table_id = (int) $table_id;
-		$teacher_id = (int) $teacher_id;
+		$user_id = (int) $user_id;
 		$amount = (int) $amount;
-		$ph->add_claim($task, $table_id, $teacher_id, $amount, $when_paid, $when_happened);
+		$ph->add_payroll($task, $table_id, $user_id, $amount, $when_paid, $when_happened);
 		break;
 	case 'add':
 
@@ -35,7 +35,7 @@ switch ($ac) {
 		}
 		//print_r($payroll_data);
 		foreach ($payroll_data as $id => $item) {
-			$ph->add_claim($item['task'], $item['tableid'], $item['teacherid'], $item['amount'], $item['whenpaid'], $item['whenhappened']);
+			$ph->add_payroll($item['task'], $item['tableid'], $item['userid'], $item['amount'], $item['whenpaid'], $item['whenhappened']);
 		}
 		break;
 		
@@ -65,7 +65,6 @@ $view->data['claims'] = $ph->get_claims($searchstart, $searchend);
 $view->data['searchstart'] = $searchstart;
 $view->data['searchend'] = $searchend;
 
-
 $view->renderPage('admin/payroll');
 
 
@@ -75,22 +74,4 @@ function change_date_string($timestring, $change) {
 	return date_format($lastweek, 'Y-m-d');
 }
 
-function get_table_id(array $ps) {
-	
-	$table = '';
-	$id = '';
-	
-	if ($ps[3]) {
-		$table = 'shows';
-		$id = $ps[3];
-	} elseif ($ps[2]) {
-		$table = 'xtra_sessions';
-		$id = $ps[2];
-	} else {
-		$table = 'workshops';
-		$id = $ps[1];
-	}
-	return array($table, $id);
-	
-}
 

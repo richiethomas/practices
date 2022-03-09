@@ -1,6 +1,11 @@
 <?php
 
 class Payroll extends WBHObject {
+		
+	public array $wk;
+	public User $u;
+	public Task $task;
+	
 	
 	function __construct() {		
 		parent::__construct(); // load logger, lookups
@@ -9,7 +14,7 @@ class Payroll extends WBHObject {
 
 		$this->fields = array(
 				'id' => null,
-				'teacher_id' => null,
+				'user_id' => null,
 				'amount' => null,
 				'when_happened' => null,
 				'when_paid' => null,
@@ -17,30 +22,32 @@ class Payroll extends WBHObject {
 				'table_id' => null);	
 				
 		$this->cols= $this->fields;
-		
-		$this->fields['title'] = null;		
+		$this->u = new User();
+		$this->wk = array();
+		$this->task = new Task();
+			
 	}
 
-	function format_row() {
+	function finish_setup() {
 		$this->set_mysql_datetime_field('when_paid', $this->fields['when_paid']);
 		if (!$this->fields['amount']) { $this->fields['amount'] = 0; }
 		if (!$this->fields['table_id']) { $this->fields['table_id'] = 0; }
 		
 		
-		if ($this->fields['teacher_id']) {
-			$t = \Teachers\get_teacher_by_id($this->fields['teacher_id']);
-			$this->fields['teacher_name'] = $t['nice_name'];
+		if ($this->fields['user_id']) {
+			$this->u->set_by_id($this->fields['user_id']);
+			$this->fields['user_name'] = $this->u->fields['nice_name'];
 		}
 		
+		
 		if ($this->fields['task'] && $this->fields['table_id']) {
+			
+			
 			if ($this->fields['task'] == 'workshop') {
-				$stmt = \DB\pdo_query("select w.title, w.start, 1 as rank, w.id as workshop_id
-					from workshops w
-				where w.id = :id",
-				 array(':id' => $this->fields['table_id']));
-				while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
-					$this->set_into_fields($row);
-				}
+				
+				$this->wk = \Workshops\get_workshop_info($this->fields['table_id']);
+				$this->wk['rank'] = 1;
+				
 			}
 
 			if ($this->fields['task'] == 'class') {
@@ -50,8 +57,12 @@ class Payroll extends WBHObject {
 				and w.id = x.workshop_id ",
 				array(':id' => $this->fields['table_id']));
 				while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
-					$this->set_into_fields($row);
+					$this->wk = \Workshops\fill_out_workshop_row($row);
 				}
+			}
+			
+			if ($this->fields['task'] == 'task') {
+				$this->task->set_by_id($this->fields['table_id']);
 			}
 
 		}

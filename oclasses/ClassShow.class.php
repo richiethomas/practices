@@ -26,7 +26,7 @@ class ClassShow extends WBHObject {
 
 	}
 
-	function format_row() {
+	function finish_setup() {
 		$this->set_mysql_datetime_field('start', $this->fields['start']);
 		$this->set_mysql_datetime_field('end', $this->fields['end']);
 		if (!$this->fields['reminder_sent']) { $this->fields['reminder_sent'] = 0; }

@@ -21,10 +21,10 @@ function single_claim(task, tableid) {
 	var amt = document.getElementById(id+'amount').value;
 	var wp = document.getElementById(id+'whenpaid').value;
 	var wh = document.getElementById(id+'whenhappened').value;
-	var tid = document.getElementById(id+'teacherid').value;
+	var uid = document.getElementById(id+'userid').value;
 	var ss = document.getElementById('searchstart').value;
 	var se = document.getElementById('searchend').value;
-	var link =encodeURI( '/admin-payroll/singleadd/?task='+task+'&table_id='+tableid+'&amount='+amt+'&teacher_id='+tid+'&when_paid='+wp+'&when_happened='+wh+'&searchstart='+ss+'&searchend='+se);
+	var link =encodeURI( '/admin-payroll/singleadd/?task='+task+'&table_id='+tableid+'&amount='+amt+'&user_id='+uid+'&when_paid='+wp+'&when_happened='+wh+'&searchstart='+ss+'&searchend='+se);
 	//console.log(link);
 	window.location.href = link;
 	return false;
@@ -52,8 +52,8 @@ if (count($payrolls) ==0) {
 }
 
 $last_when_paid = null;
-$last_teacher_name = null;
-$pay_teacher_total = null;
+$last_user_name = null;
+$pay_user_total = null;
 $pay_date_total = null;
 $pay_grand_total = null;
 	
@@ -67,7 +67,7 @@ function total_row($name, $total, &$guts) {
 	$guts = null;
 	
 }
-function teacher_header($name) {
+function user_header($name) {
 	echo "<h4 class='mt-3'>{$name}</h4>\n";
 	
 }
@@ -75,49 +75,58 @@ function teacher_header($name) {
 $guts = null; // cut and paste version of teacher pay items
 foreach ($payrolls as $p) {
 	
-	//break it down by date
-	//within date, break it down by teacher
-	//show it in a way that doesn't take a ton of room
-	// show session number (which means you have to get it from db)
-	// are we getting primary id from payrolls?
-	
 	
 	if ($p->fields['when_paid'] != $last_when_paid) {
 		if ($last_when_paid != 0) {
-			total_row($last_teacher_name, $pay_teacher_total, $guts);
-			$pay_teacher_total = 0;
+			total_row($last_user_name, $pay_user_total, $guts);
+			$pay_user_total = 0;
 			total_row(date('j-M-Y', strtotime($last_when_paid)), $pay_date_total, $guts);
 			$pay_date_total = 0;
 		}
 		echo "<h3 class='mt-2'>".date('j-M-Y', strtotime($p->fields['when_paid']))."</h3>";
-		echo teacher_header($p->fields['teacher_name']);
+		echo user_header($p->fields['user_name']);
 		
-	} elseif ($p->fields['teacher_name'] != $last_teacher_name) {
-		if ($last_teacher_name) {
-			total_row($last_teacher_name, $pay_teacher_total, $guts);
-			$pay_teacher_total = 0;
+	} elseif ($p->fields['user_name'] != $last_user_name) {
+		if ($last_user_name) {
+			total_row($last_user_name, $pay_user_total, $guts);
+			$pay_user_total = 0;
 		}
-		echo teacher_header($p->fields['teacher_name']);
+		echo user_header($p->fields['user_name']);
 	}
 	echo "<div class='row'>\n";
 	
-	$guts .= "{$p->fields['title']} (".date('D M j ga', strtotime($p->fields['start'])).' #'.($p->fields['rank'] ? $p->fields['rank'] : 'show').") {$p->fields['amount']}\n";
 	
-	echo "<div class='col-6'>{$p->fields['title']} <small>({$p->fields['workshop_id']}) (".date('D M j ga', strtotime($p->fields['start'])).' #'.($p->fields['rank'] ? $p->fields['rank'] : 'show').")</small></div>";
+	if ($p->fields['task'] == 'workshop' || $p->fields['task'] == 'class') {
+				
+		$guts .= "{$p->wk['title']} (".date('D M j ga', strtotime($p->fields['when_happened'])).' #'.($p->wk['rank'] ? $p->wk['rank'] : 'show').") {$p->fields['amount']}\n";
+	
+		echo "<div class='col-6'>{$p->wk['title']} <small>({$p->wk['id']}) (".date('D M j ga', strtotime($p->wk['start'])).' #'.($p->wk['rank'] ? $p->wk['rank'] : 'show').")</small></div>";
+		
+	} elseif ($p->fields['task'] == 'task') {
+		
+		$guts .= "{$p->task->fields['title']} (".date('D M j ga', strtotime($p->fields['when_happened'])). ") {$p->fields['amount']}\n";
+	
+		echo "<div class='col-6'>{$p->task->fields['title']} <small>(".date('D M j ga', strtotime($p->fields['when_happened'])).")</small></div>";
+	}
+	
 	echo "<div class='col'>{$p->fields['amount']} <span class='ml-3'><small>(<a href='/admin-payroll/del/?pid={$p->fields['id']}&searchstart=$searchstart&searchend=$searchend'>delete</a>)</small></span></div>";
 	echo "</div>\n";
 
-	$pay_teacher_total += $p->fields['amount'];
+
+	$pay_user_total += $p->fields['amount'];
 	$pay_date_total += $p->fields['amount'];
 	$pay_grand_total += $p->fields['amount'];
-	$last_teacher_name = $p->fields['teacher_name'];
+	$last_user_name = $p->fields['user_name'];
 	$last_when_paid = $p->fields['when_paid'];
 	
 }
 
-total_row($last_teacher_name, $pay_teacher_total, $guts);
+total_row($last_user_name, $pay_user_total, $guts);
 total_row(date('j-M-Y', strtotime($last_when_paid)), $pay_date_total, $guts);
 total_row('Grand Total', $pay_grand_total, $guts);
+
+
+
 
 // list unclaimed items
 
@@ -135,51 +144,59 @@ echo "<table class='table table-striped my-3'>
 	<thead><tr>
 		<th>who</th>
 		<th>what</th>
-		<th>rev / pay</th>
+		<th>how much</th>
 		<th>when</th>
 		<th>action</th>
 	</thead><tbody>";
-
+	
+// claims are formatted as payroll objects 
 foreach ($claims as $c) {
-	
-	
+		
 	foreach ($payrolls as $p) {
-		if ($p->fields['task'] == $c['task'] && $p->fields['table_id'] == $c['table_id']) {
+		if ($p->fields['task'] == $c->fields['task'] && $p->fields['table_id'] == $c->fields['table_id']) {
 			continue(2); // already claimed
 		}
 	}
 	
-	// ONLY SHOW FIRST SESSIONS 
-	if ($c['rank'] != 1) {
-		continue(1); 
-	}
 	
-	$t = \Teachers\find_teacher_in_teacher_array($c['teacher_id'], $faculty);
-	
-	
-	// if class is nearly sold out, bonus rate
-	if ($c['cost'] != 1 && $c['enrolled'] / $c['capacity'] > .75) {
-		$rate = $t['default_rate'] + 50;
-	} else {
-		$rate = $t['default_rate'];
-	}
-	
-	
-	
-	$c['amount'] = 
-		$c['total_class_sessions']*$rate + 
-		$c['total_show_sessions']*($rate / 2);
+	if ($c->fields['task'] == 'workshop' || $c->fields['task'] == 'class') {
 		
-	$id = "pd_{$c['task']}_{$c['table_id']}_";
+		// if class is nearly sold out, bonus rate
+		// (rate should have been stored as 'amount' on this claim)
+		if ($c->wk['cost'] != 1 && $c->wk['enrolled'] / $c->wk['capacity'] > .75) {
+			$rate = $c->fields['amount'] + 50;
+		} else {
+			$rate = $c->fields['amount'];
+		}
+		
+		$what = "<a href='/admin-workshop/view/{$c->wk['id']}'>{$c->wk['title']}</a> <small>({$c->wk['id']}) (".date('D M j ga', strtotime($c->wk['start'])).' #'.($c->wk['rank'] ? $c->wk['rank'] : 'show').")</small><br>
+<small class='mx-3'>{$c->wk['actual_revenue']} ($rate)";
+		
+		
+		$c->fields['amount'] = 
+			$c->wk['total_class_sessions']*$rate + 
+			$c->wk['total_show_sessions']*($rate / 2);
+		
+		
+	} else {
+		
+		$what = $c->task->fields['title'];
+		
+	}
+	
+	
+	
+
+		
+	$id = "pd_{$c->fields['task']}_{$c->fields['table_id']}_";
 	
 	echo "<tr>\n";
-	echo "<td>".\Wbhkit\drop("{$id}teacherid", $teacher_opts, $c['teacher_id'], 
-	0)."</td>\n";
-	echo "<td><a href='/admin-workshop/view/{$c['id']}'>{$c['title']}</a> <small>({$c['workshop_id']}) (".date('D M j ga', strtotime($c['start'])).' #'.($c['rank'] ? $c['rank'] : 'show').")</small></td>\n";
-	echo "<td><small class='mx-3'>{$c['actual_revenue']} ($rate)<br>".\Wbhkit\texty("{$id}amount", $c['amount'], 0)."</td>\n";
+	echo "<td>{$c->fields['user_name']}".\Wbhkit\hidden("{$id}userid", $c->fields['user_id'])."</td>\n";
+	echo "<td>$what</td>\n";
+	echo "<td>".\Wbhkit\texty("{$id}amount", $c->fields['amount'], 0)."</td>\n";
 	echo "<td>".\Wbhkit\texty("{$id}whenpaid", date("j-M-Y"), 0)."</td>\n";
-	echo "<td><button class='btn btn-success btn-sm' onClick=\"return single_claim('".$c['task']."', '".$c['table_id']."')\">Claim</button></td>\n";
-	echo \Wbhkit\hidden("{$id}whenhappened", $c['start'], true);
+	echo "<td><button class='btn btn-success btn-sm' onClick=\"return single_claim('".$c->fields['task']."', '".$c->fields['table_id']."')\">Claim</button></td>\n";
+	echo \Wbhkit\hidden("{$id}whenhappened", $c->fields['when_happened'], true);
 	echo "</tr>\n";
 
 }

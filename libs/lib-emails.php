@@ -28,6 +28,7 @@ function centralized_email($to, $sub, $body, $realname = null) {
 	$mail->msgHTML($body);
 
 	//send the message, check for errors
+	$sent = false;
 	if (LOCAL && MUTE_LOCAL_EMAIL) {
 		$sent = true;
 	} else {
