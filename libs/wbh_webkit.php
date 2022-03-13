@@ -377,6 +377,8 @@ function plural( $amount, $singular = '', $plural = 's' ) {
 
 function convert_tz(string $ts, string $tz = DEFAULT_TIME_ZONE, $fmt = MYSQL_FORMAT ) {
 	
+	if (!$tz) { $tz = DEFAULT_TIME_ZONE; }
+	
 	date_default_timezone_set(DEFAULT_TIME_ZONE);
 	$datetime = new \DateTime($ts);
 	$datetime->setTimezone(new \DateTimeZone($tz));
@@ -411,8 +413,22 @@ function figure_minutes_df(?string $ts) {
 	}
 }
 
+// $ts is Unix time, the result of a strtotime() operation
 function figure_year_minutes(?string $ts) {
 	if (!$ts) { return ''; }
 	$df = 'D M j'.figure_year_df($ts).figure_minutes_df($ts);
 	return date($df, $ts);
+}
+
+
+function get_time_zones() {
+	$tzs = \DateTimeZone::listIdentifiers(\DateTimeZone::ALL);
+	$dateTime = new \DateTime();
+	$time_zone_list = array();
+	foreach ($tzs as $tz) {
+		
+		$dateTime->setTimeZone(new \DateTimeZone($tz));
+		$time_zone_list[$tz] = $tz." ({$dateTime->format('T')})";
+	}
+	return $time_zone_list;
 }

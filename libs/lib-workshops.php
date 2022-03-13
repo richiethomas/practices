@@ -715,7 +715,9 @@ function get_cut_and_paste_roster(array $wk, ?array $enrolled = null) {
 		preg_replace("/\n\n+/", 
 					"\n\n", 
 					"{$wk['title']} - {$wk['showstart']}\n\n".
-					"Main zoom link:\n".($wk['location_id'] == ONLINE_LOCATION_ID ? "{$wk['online_url']}\n" : '').
+					
+						($wk['location_id'] == ONLINE_LOCATION_ID ? "Main zoom link: {$wk['online_url']}" :
+							"Location: {$wk['lwhere']}").
 						$class_dates.
 					"\nNames and Emails\n---------------\n".implode("\n", $names)."\n\nJust the emails\n---------------\n".implode(",\n", $just_emails));
 	

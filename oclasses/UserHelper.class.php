@@ -40,7 +40,7 @@ class UserHelper extends WBHObject {
 		$stds = array();
 		while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
 			$this->u->replace_fields($row);
-			$this->u->set_nice_name();
+			$this->u->finish_setup();
 			$stds[$row['id']] = $this->u->fields;
 		}
 		return $stds;
@@ -62,7 +62,7 @@ class UserHelper extends WBHObject {
 		if (!$u->fields['time_zone']) { $u->fields['time_zone'] = DEFAULT_TIME_ZONE; }
 		$body = '';
 		$body .= "<form action='{$this->sc}/updatetz/{$u->fields['id']}' method='post'>\n";
-		$body .= \Wbhkit\drop('time_zone', $this->lookups->tzs, $u->fields['time_zone']);
+		$body .= \Wbhkit\drop('time_zone', \Wbhkit\get_time_zones(), $u->fields['time_zone']);
 		$body .= \Wbhkit\submit('Set Time Zone');
 		$body .= "</form>\n";
 		return $body;

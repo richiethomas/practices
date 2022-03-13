@@ -98,9 +98,9 @@ function find_registration_conflicts() {
 				$start2 = strtotime($r2[0]['start']);
 				$end2 = strtotime($r2[0]['end']);
 				
-				if ($start1 >= $start2 && $start1 <= $end2 || 
-				$end1 >= $start2 && $end1 <= $end2 || 
-				$start1 <= $start2 && $end1 >= $end2) {
+				if ($start1 > $start2 && $start1 < $end2 || 
+				$end1 > $start2 && $end1 < $end2 || 
+				$start1 < $start2 && $end1 > $end2) {
 					
 					$conflicts[] = array($r1, $r2);
 				}

@@ -17,6 +17,19 @@ class ReminderEmail extends WBHObject {
 		
 
 	}
+	
+	function get_reminder_emails_dropdown() {
+		
+		// get tasks for the next 24 hours where reminder has not been sent
+		$stmt = \DB\pdo_query("
+			select * from reminder_emails order by id desc"); 
+
+		$res = array();
+		while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
+			$res[$row['id']] = $row['slug'];
+		}
+		return $res;
+	}
 
 }
 	

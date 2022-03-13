@@ -112,6 +112,7 @@ class WBHObject
 			$this->fields['id'] = $db->lastInsertId();
 			return true;	
 		}
+		return false;
 	}
 
 	function make_params() {
@@ -160,6 +161,5 @@ class WBHObject
 		return true;
 	}
 	
-
 }
 	

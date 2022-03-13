@@ -101,12 +101,12 @@ $(function(){
 </script>
 
 
-			<div class='col-3'>
-			<?php
-			echo \Wbhkit\drop('filter_by', \Teachers\teachers_dropdown_array(true), $filter_by, 'Teacher');
-			?>
-			</div>
-			
+	<div class='col-3'>
+	<?php
+	echo \Wbhkit\drop('filter_by', \Teachers\teachers_dropdown_array(true), $filter_by, 'Teacher');
+	?>
+	</div>
+
 
 <?php		
 $current_date = null;

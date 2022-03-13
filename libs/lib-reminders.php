@@ -20,8 +20,18 @@ function check_tasks(bool $force = false) {
 	$th->get_upcoming_tasks();
 	
 	foreach ($th->tasks as $t) {
+		
+		if ($t->reminder_email->fields['id'] == 1) { continue; }  // reminder email 1 = do not send any
+		
 		\Emails\centralized_email(
 			$t->user->fields['email'], 
+			$t->reminder_email->fields['subject'],
+			$t->reminder_email->fields['body'],
+			$t->user->fields['display_name'] );
+			
+		// test	
+		\Emails\centralized_email(
+			WEBMASTER, 
 			$t->reminder_email->fields['subject'],
 			$t->reminder_email->fields['body'],
 			$t->user->fields['display_name'] );

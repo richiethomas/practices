@@ -28,6 +28,15 @@ class Task extends WBHObject {
 
 	function finish_setup() {		
 		
+		if ($this->fields['user_id'] && (!isset($this->user->fields['id']) || !$this->user->fields['id'])) {
+			$this->user->set_by_id($this->fields['user_id']);
+		}
+
+		if ($this->fields['reminder_email_id'] && (!isset($this->reminder_email->fields['id']) || !$this->reminder_email->fields['id'])) {
+			$this->reminder_email->set_by_id($this->fields['reminder_email_id']);
+		}
+
+		
 		if ($this->fields['event_when']) {
 			$this->set_mysql_datetime_field('event_when', $this->fields['event_when']);
 		}
@@ -39,8 +48,8 @@ class Task extends WBHObject {
 			$this->fields['local_event_when'] = \Wbhkit\convert_tz($this->fields['event_when'], $this->user->fields['time_zone']);
 			
 			// just to get short time zone
-			$datetime = new \DateTime($row['local_event_when']);
-			$datetime->setTimezone(new \DateTimeZone($row['time_zone']));
+			$datetime = new \DateTime($this->fields['local_event_when']);
+			$datetime->setTimezone(new \DateTimeZone($this->user->fields['time_zone']));
 			$this->user->fields['short_time_zone'] = $datetime->format('T');
 			
 		} else {
@@ -67,6 +76,7 @@ class Task extends WBHObject {
 		$body = preg_replace('/USERNAME/', $nice_name, $body);
 		$body = preg_replace('/USEREMAIL/', $this->user->fields['email'], $body);
 		$body = preg_replace('/EVENTWHEN/', $event_when_public, $body);
+		$body = preg_replace('/TASKTITLE/', $this->fields['title'], $body);
 		$body = preg_replace('/\R/', "<br>", $body);
 		
 		$this->reminder_email->fields['body'] = $body;
@@ -93,6 +103,8 @@ class Task extends WBHObject {
 		$this->user = new User();
 		return true;
 	}
+	
+	
 
 }
 	

@@ -17,10 +17,10 @@ $( document ).ready(function() {
 
 
 function single_claim(task, tableid) {
-	var id = 'pd_'+task+'_'+tableid+'_';
+	var id = 'pd_'+task+'_'+tableid+'_';	
 	var amt = document.getElementById(id+'amount').value;
 	var wp = document.getElementById(id+'whenpaid').value;
-	var wh = document.getElementById(id+'whenhappened').value;
+	var wh = document.getElementById(id+'whenhappened').value;	
 	var uid = document.getElementById(id+'userid').value;
 	var ss = document.getElementById('searchstart').value;
 	var se = document.getElementById('searchend').value;
@@ -191,7 +191,7 @@ foreach ($claims as $c) {
 	$id = "pd_{$c->fields['task']}_{$c->fields['table_id']}_";
 	
 	echo "<tr>\n";
-	echo "<td>{$c->fields['user_name']}".\Wbhkit\hidden("{$id}userid", $c->fields['user_id'])."</td>\n";
+	echo "<td>{$c->fields['user_name']}".\Wbhkit\hidden("{$id}userid", $c->fields['user_id'], true)."</td>\n";
 	echo "<td>$what</td>\n";
 	echo "<td>".\Wbhkit\texty("{$id}amount", $c->fields['amount'], 0)."</td>\n";
 	echo "<td>".\Wbhkit\texty("{$id}whenpaid", date("j-M-Y"), 0)."</td>\n";

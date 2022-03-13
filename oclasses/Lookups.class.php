@@ -5,7 +5,6 @@ class Lookups extends WBHObject {
 	public array $statuses;
 	public array $locations;
 	public array $groups;
-	public array $tzs;
 	
     function __construct() {
 		
@@ -25,13 +24,7 @@ class Lookups extends WBHObject {
 			$this->groups[$row['id']] = $row['name'];
 		}
 		
-		$tzs = DateTimeZone::listIdentifiers(DateTimeZone::ALL);
-		$dateTime = new DateTime();
-		foreach ($tzs as $tz) {
-			
-			$dateTime->setTimeZone(new DateTimeZone($tz));
-			$this->tzs[$tz] = $tz." ({$dateTime->format('T')})";
-		}
+
     }
 	
 	public function find_status_by_name(string $stname) {

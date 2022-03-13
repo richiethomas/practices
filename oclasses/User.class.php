@@ -51,7 +51,7 @@ class User extends WBHObject {
 		$stmt = \DB\pdo_query("select u.* from users u where email = :email", array(':email' => $email));
 		while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
 			$this->set_into_fields($row);
-			$this->set_nice_name();
+			$this->finish_setup();
 			return true;
 		}
 	
@@ -59,7 +59,7 @@ class User extends WBHObject {
 		if ($this->validate_email($email)) {
 			$stmt = \DB\pdo_query("insert into users (email, joined) VALUES (:email, '".date(MYSQL_FORMAT)."')", array(':email' => $email));
 			$this->set_by_id($last_insert_id); // fast way to get all fields in this object
-			$this->set_nice_name();
+			$this->finish_setup();
 			$this->get_key();
 			return true;
 		} else {
@@ -81,7 +81,7 @@ class User extends WBHObject {
 		$stmt = \DB\pdo_query("select u.* from users u where u.id = :id", array(":id" => $id));
 		while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
 			$this->set_into_fields($row);
-			$this->set_nice_name(); // nice name, confirm key
+			$this->finish_setup(); // nice name, confirm key
 			return true;
 		}
 		$this->error = "Could not find a user for '{$id}'";
@@ -92,7 +92,7 @@ class User extends WBHObject {
 		$stmt = \DB\pdo_query("select * from users where ukey = :key", array(':key' => $key));
 		while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
 			$this->set_into_fields($row);
-			$this->set_nice_name();
+			$this->finish_setup();
 			$this->remember_key($key);			
 			return $this->fields['id'];
 		}
@@ -102,7 +102,7 @@ class User extends WBHObject {
 
 
 	// needs display_name, email
-	function set_nice_name() {	
+	function finish_setup() {	
 		if (isset($this->fields['display_name']) && $this->fields['display_name']) {
 			$this->fields['nice_name'] = $this->fields['display_name']; 	
 			$this->fields['fullest_name'] = "{$this->fields['display_name']} ({$this->fields['email']})";	
@@ -280,7 +280,7 @@ class User extends WBHObject {
 				':uid' => $this->fields['id'])
 		);
 		$this->fields['display_name'] = $display_name;
-		$this->set_nice_name();
+		$this->finish_setup();
 		return true;
 
 	}
@@ -318,7 +318,7 @@ class User extends WBHObject {
 			// now we can update email
 			$stmt = \DB\pdo_query("update users set email = :email where id = :uid", array(':email' => $this->fields['new_email'], ':uid' => $this->fields['id']));	
 			$this->fields['email'] = $this->fields['new_email'];
-			$this->set_nice_name();
+			$this->finish_setup();
 			$this->logger->info("change email phase two: update email for user '{$this->fields['id']}' to new email '{$this->fields['email']}'");
 			return true;
 		} else {

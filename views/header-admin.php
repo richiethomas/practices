@@ -63,6 +63,7 @@
 			<li class="nav-item"><a class="nav-link" href="/admin-bulk-workshops">Bulk</a> </li>
 			<li class="nav-item"><a class="nav-link" href="/admin-conflicts">Conflicts</a> </li>
 			<li class="nav-item"><a class="nav-link" href="/admin-reminders">Reminders</a></li>
+			<li class="nav-item"><a class="nav-link" href="/admin-tasks">Tasks</a></li>
 		    <li class="nav-item dropdown">
 		      <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Logs</a>
 		      <div class="dropdown-menu nav-item">
