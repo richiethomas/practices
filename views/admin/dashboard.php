@@ -21,7 +21,7 @@ $( document ).ready(function() {
 
 			<div class="issues float-end border border-4 p-2 m-2">				
 				<button id="dashalertsbutton" type="button" class="btn-close float-end" aria-label="Close"></button>
-				<div id="dashalerts">
+				<div id="dashalerts" <?php if ($filter_by) { echo "style='display:none'"; } ?>>
 				<?php
 				// unpaid students
 				$last_wk = null;
@@ -96,6 +96,7 @@ $( document ).ready(function() {
 $(function(){
   $("#filter_by").change(function(){
     window.location='/admin/view/' + this.value
+	return true;
   });
 });
 </script>
@@ -136,7 +137,7 @@ foreach ($workshops as $wk) {
 	$xtra = $wk['class_show'] ? ' show' : '';
 	if ($wk['hidden'] == 1) { $xtra = 'text-muted'; }
 		
-	echo "<li class='mt-1 $xtra' data-teacher=\"teacher-{$wk['teacher_id']}\"><a   href='/admin-workshop/view/{$wk['id']}' class='$xtra'>{$wk['title']}</a> ({$wk['rank']}/{$wk['total_sessions']}".($wk['class_show'] ? ' - show' : '')."), $start";
+	echo "<li class='mt-1 $xtra class-session' data-teacher=\"teacher-{$wk['teacher_id']}\"><a   href='/admin-workshop/view/{$wk['id']}' class='$xtra'>{$wk['title']}</a> ({$wk['rank']}/{$wk['total_sessions']}".($wk['class_show'] ? ' - show' : '')."), $start";
 	
 	echo " - {$wk['teacher_name']}";
 	if ($wk['co_teacher_id']) {

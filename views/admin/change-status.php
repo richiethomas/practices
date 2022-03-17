@@ -6,7 +6,7 @@
 
 		echo  "<form class='my-4' action ='/admin-change-status/cs/{$wk['id']}/{$guest->fields['id']}' method='post'>".
 		Wbhkit\drop('st', $statuses, $e->fields['status_id'], 'to status').
-		Wbhkit\drop('con', array('1' => 'confirm', '0' => 'don\'t'), 0, 'confirm').
+		Wbhkit\radio('con', array('1' => 'confirm', '0' => 'don\'t'), 0)."<br>\n".
 		Wbhkit\submit('update').
 		"<a class='btn btn-warning' href='/admin-workshops/view/{$wk['id']}'>cancel</a>".
 		"</form>\n";

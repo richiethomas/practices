@@ -42,7 +42,14 @@ function centralized_email($to, $sub, $body, $realname = null) {
 	}
 	
 	if ($sent) {
-		$logger->info("emailed '$to', '$sub'");
+		$logger->debug("emailed '$to', '$sub'");
+		
+		$stmt = \DB\pdo_query(
+		"insert into email_log (to_email, from_email, subject, when_sent) 
+			VALUES (:to_email, :from_email, :subject, :when_sent)", 
+		array(':to_email' => $to, ':from_email' => WEBMASTER, ':subject' => $sub, ':when_sent' => date(MYSQL_FORMAT))); 
+		
+		
 		return true;
 	} else {
 		$logger->error($mail->ErrorInfo);
@@ -64,7 +71,7 @@ function confirm_email($e, $status_id = ENROLLED) {
 		case 'already':
 		case ENROLLED:
 			$sub = "ENROLLED: {$wk['title']}";
-			$body = "<p>You are ENROLLED in the workshop \"{$wk['title']}\".</p>";
+			$body = "<p>You are ENROLLED in the workshop \"{$wk['title']}.\"<br>Starts: ".\Wbhkit\friendly_when($wk['start'])."</p>";
 
 			if ($wk['location_id'] == ONLINE_LOCATION_ID) {
 				$body .= "<p>ZOOM LINK:<br>\n----------<br>\nThe Zoom link to your workshop is: {$wk['online_url_display']}<br>\n";

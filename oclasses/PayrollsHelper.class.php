@@ -13,6 +13,8 @@ class PayrollsHelper extends WBHObject {
 	}
 
 	function get_payrolls($start, $end) {
+		
+		
 		if (!$start) { $start = "Jan 1 1000"; }
 		if (!$end) { $end = "Dec 31 3000"; }
 
@@ -20,10 +22,12 @@ class PayrollsHelper extends WBHObject {
 		$mysqlstart = date(MYSQL_FORMAT, strtotime($start));
 		$mysqlend = date(MYSQL_FORMAT, strtotime($end));
 
-		$stmt = \DB\pdo_query("select * from payrolls
-			where (when_paid > :start and when_paid < :end) or
-		(when_happened > :start2 and when_happened < :end2)
-		order by when_paid, user_id, task, table_id", 
+		$stmt = \DB\pdo_query("select p.* from payrolls p, users u
+			where (
+				(p.when_paid > :start and p.when_paid < :end) or (p.when_happened > :start2 and p.when_happened < :end2)
+		)
+		and p.user_id = u.id
+		order by p.when_paid, u.display_name, u.email, p.task, p.table_id", 
 		array(':start' => $mysqlstart, ':end' => $mysqlend, ':start2' => $mysqlstart, ':end2' => $mysqlend));
 
 		$this->payrolls = array();
@@ -48,10 +52,11 @@ class PayrollsHelper extends WBHObject {
 		// workshops are potential claims
 		$stmt = \DB\pdo_query("
 	select 'workshop' as task, w.id as table_id, t.user_id, t.default_rate as amount, w.start as when_happened, null as when_paid
-	from workshops w, teachers t
+	from workshops w, teachers t, users u
 	where w.start >= :start1 and w.start <= :end1
 	and w.teacher_id = t.id
-	order by teacher_id, task, start asc",
+	and t.user_id = u.id
+	order by u.display_name, u.email, task, start asc",
 	array(':start1' => $mysqlstart,
 	':end1' => $mysqlend)); 	
 	
@@ -65,9 +70,10 @@ class PayrollsHelper extends WBHObject {
 		// tasks are potential claims
 		$stmt = \DB\pdo_query("
 	select 'task' as task, t.id as table_id, t.user_id, t.payment_amount as amount, t.event_when as when_happened, null as when_paid
-	from tasks t
+	from tasks t, users u
 	where t.event_when >= :start1 and t.event_when <= :end1
-	order by t.event_when asc",
+	and t.user_id = u.id
+	order by u.display_name, u.email, t.event_when asc",
 	array(':start1' => $mysqlstart,
 	':end1' => $mysqlend)); 	
 	

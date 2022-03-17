@@ -150,25 +150,27 @@ function multi_drop($name, $opts, $selected = null, $label = null, $size = 10, $
 }
 
 
-function radio($name, $opts, $selection = null) {
+function radio(string $name, array $opts, ?int $selection = null) {
 	$i = 1;
-	$b = "<div class='form-check form-check-inline'>";
+	
+	$b = "";
 	foreach ($opts as $key => $label) {
+		$b .= "<div class='form-check form-check-inline'>";
 		$ch = ($key == $selection && !is_null($selection) ? 'checked' : '');
-		$b .= '<label class="form-check-label"><input class="form-check-input" type="radio" id="'.$name.$i.'" name="'.$name.'" value="'.$key.'" '.$ch.'> '.$label."</label>\n";
+		$b .= "<label class='form-check-label' for='$name{$i}'>$label</label><input class='form-check-input' type='radio' id=$name$i' name='$name' value='$key' $ch>\n";
+		$b .= "</div>\n";
 		$i++;
 	}
-	$b .= "</div>\n";
 	return $b;
 }
 
 function checkbox($name, $value, $label = null, $checked = false, $multiple = false) {
 	$label = figure_label($label, $name, false);
+	$id = $name.$value;
 	if ($multiple) { $name = "{$name}[]"; }
-	return "<div class='form-check form-check-inline'><label class=\"form-check-label\">
-	  <input class='form-check-input' type=\"checkbox\" name=\"{$name}\" value=\"{$value}\" ".($checked ? 'checked' : '').">
-	  {$label}
-	</label></div>";
+	return "<div class='form-check form-check-inline'><label class=\"form-check-label\" for=\"$id\">{$label}</label>
+		<input id=\"$id\" class='form-check-input' type=\"checkbox\" name=\"{$name}\" value=\"{$value}\" ".($checked ? 'checked' : '').">
+		</div>";
 }
 
 

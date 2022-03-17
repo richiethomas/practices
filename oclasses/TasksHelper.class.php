@@ -19,8 +19,8 @@ class TasksHelper extends WBHObject {
 		and t.reminder_email_id = re.id ".
 		($future_only ? 
 			" and t.event_when > date_sub(now(), interval 1 day)
-				order by t.event_when asc " :
-		" order by t.event_when desc ").
+				order by t.event_when asc, t.title " :
+		" order by t.event_when desc, t.title ").
 			" limit $limit");
 
 		$tasks = array();

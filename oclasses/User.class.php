@@ -178,6 +178,8 @@ class User extends WBHObject {
 		$stmt = \DB\pdo_query("delete from status_change_log where user_id = :uid", array(':uid' => $this->fields['id']));
 		$stmt = \DB\pdo_query("delete from registrations where user_id = :uid", array(':uid' => $this->fields['id']));
 		$stmt = \DB\pdo_query("delete from users where id = :uid", array(':uid' => $this->fields['id']));
+		$stmt = \DB\pdo_query("delete from tasks where user_id = :uid", array(':uid' => $this->fields['id']));
+		$stmt = \DB\pdo_query("delete from payrolls where user_id = :uid", array(':uid' => $this->fields['id']));
 		
 		//$this->fields = array();
 		
@@ -355,11 +357,13 @@ class User extends WBHObject {
 				}
 			}
 						
-			// update records in change log
 			$stmt = \DB\pdo_query("update status_change_log set user_id = :uid where user_id = :uid2", array(':uid' => $oldu->fields['id'], ':uid2' => $newu->fields['id']));
 		
-			//update teacher records
 			$stmt = \DB\pdo_query("update teachers set user_id = :uid where user_id = :uid2", array(':uid' => $oldu->fields['id'], ':uid2' => $newu->fields['id']));
+
+			$stmt = \DB\pdo_query("update tasks set user_id = :uid where user_id = :uid2", array(':uid' => $oldu->fields['id'], ':uid2' => $newu->fields['id']));
+
+			$stmt = \DB\pdo_query("update payrolls set user_id = :uid where user_id = :uid2", array(':uid' => $oldu->fields['id'], ':uid2' => $newu->fields['id']));
 		
 		
 			$newu->delete_user(); // we've absorbed your data, now you may die
