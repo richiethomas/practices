@@ -67,9 +67,10 @@
 		    <li class="nav-item dropdown">
 		      <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Logs</a>
 		      <div class="dropdown-menu nav-item">
-		        <a class="dropdown-item nav-link" href="/admin-debug">Debug Log</a>
-		        <a class="dropdown-item nav-link" href="/admin-error">Error Log</a>
-		        <a class="dropdown-item nav-link" href="/admin-status">Status Log</a>
+		        <a class="dropdown-item nav-link" href="/admin-debug-log">Debug Log</a>
+		        <a class="dropdown-item nav-link" href="/admin-error-log">Error Log</a>
+		        <a class="dropdown-item nav-link" href="/admin-status-log">Status Log</a>
+		        <a class="dropdown-item nav-link" href="/admin-email-log">Email Log</a>
 		      </div>
 		    </li>
 

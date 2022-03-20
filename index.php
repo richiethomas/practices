@@ -120,16 +120,15 @@ if ($u->check_user_level(3)) {
 		'admin-emails' => 'admin/emails',
 		'admin-reminders' => 'admin/reminders',
 		'admin-status' => 'admin/status-log',
-		'admin-error' => 'admin/error-log',
-		'admin-debug' => 'admin/debug-log',
+		'admin-error-log' => 'admin/error-log',
+		'admin-debug-log' => 'admin/debug-log',
+		'admin-email-log' => 'admin/email-log',
 		'admin-revenue' => 'admin/revenue',
 		'admin-payroll' => 'admin/payroll',
 		'admin-bulk' => 'admin/bulk-status',
 		'admin-bulk-workshops' => 'admin/bulk-workshops',
 		'admin-conflicts' => 'admin/conflicts',
-		'admin-tasks' => 'admin/tasks',
-		'admin-reminder-emails' => 'admin/reminder-emails'
-	);
+		'admin-tasks' => 'admin/tasks'	);
 
 	foreach ($admin_controllers as $ci => $cv) {
 		if ($params[0] == $ci) {

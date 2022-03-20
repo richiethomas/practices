@@ -75,8 +75,11 @@ echo "<h2>{$wk['title']}</h2>";
 
 echo \Workshops\print_tags($wk);
 
-echo "<p>{$wk['notes']}</p>
-<p>{$wk['full_when']}<br><br>
+echo "<p>{$wk['notes']}</p>\n";
+
+echo "<p>Location: ".($wk['location_id'] == ONLINE_LOCATION_ID ? "Online" : $wk['lwhere'])."</p>\n";	
+	
+echo "<p>{$wk['full_when']}<br><br>
 {$wk['costdisplay']}, {$wk['enrolled']} (of {$wk['capacity']}) enrolled</p>\n";
 
 if ($wk['cost'] == 1) {

@@ -150,7 +150,7 @@ function multi_drop($name, $opts, $selected = null, $label = null, $size = 10, $
 }
 
 
-function radio(string $name, array $opts, ?int $selection = null) {
+function radio(string $name, array $opts, ?string $selection = null) {
 	$i = 1;
 	
 	$b = "";

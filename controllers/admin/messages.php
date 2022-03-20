@@ -18,8 +18,6 @@ $mess_vars = array('st', 'note', 'subject');
 Wbhkit\set_vars($mess_vars);
 if (!$st) { $st = ENROLLED; }
 
-$long_where = "{$wk['place']} {$wk['lwhere']}";
-
 $eh = new EnrollmentsHelper();
 $guest = new User();
 

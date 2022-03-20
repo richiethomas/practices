@@ -16,7 +16,7 @@ class Lookups extends WBHObject {
 		$stmt = \DB\pdo_query("select * from locations order by id");
 		while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
 			$this->locations[$row['id']] = $row;
-			$this->locations[$row['id']]['lwhere'] = $row['place'].' '.$row['address'].' '.$row['city'].' '.$row['state'].' '.$row['zip'];
+			$this->locations[$row['id']]['lwhere'] = $row['place'].' - '.$row['address'].' '.$row['city'].' '.$row['state'].' '.$row['zip'];
 		}
 		
 		$stmt = \DB\pdo_query("select * from groups order by id");
