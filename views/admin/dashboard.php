@@ -114,7 +114,7 @@ $current_date = null;
 foreach ($workshops as $wk) {
 
 	if ($filter_by != 'all' && $filter_by > 0) {
-		if ($wk['teacher_id'] != $filter_by) {
+		if ($wk['teacher_id'] != $filter_by && $wk['co_teacher_id'] != $filter_by) {
 			continue; // skip this loop
 		}
 	}

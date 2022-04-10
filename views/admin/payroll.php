@@ -180,7 +180,7 @@ foreach ($claims as $c) {
 		
 	} else {
 		
-		$what = $c->task->fields['title'];
+		$what = $c->task->fields['title']." (".date('D M j ga', strtotime($c->task->fields['event_when'])).")";
 		
 	}
 	

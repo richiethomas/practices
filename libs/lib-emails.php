@@ -251,10 +251,10 @@ function payment_text($wk, $reminder = 0) {
 	if ($reminder == 1) {
 		
 		if ($wk['cost'] > 1) {
-			$pt .= "Our records show you have not yet paid. That's fine! This is just a reminder: payment is due by the start of class. ";
+			$pt .= "Our records show you have not yet paid. That's fine! This is just a reminder: payment is due by the start of class. NOTE: if you paid within the last 12 hours or so, then you're all set. We just haven't processed that payment into the system yet. When we do you'll get an email letting you know we've received it. ";
 		}
 		if ($wk['cost'] == 1) {
-			$pt .= "Our records show you have not yet paid. That's fine! This is a PAY WHAT YOU CAN class, so paying is optional. ";
+			$pt .= "Our records show you have not yet paid. That's fine! This is a PAY WHAT YOU CAN class, so paying is optional.  NOTE: if you DID pay soemthing but it was within the last 12 hours or so, we just haven't processed that payment into the system yet. When we do you'll get an email letting you know we've received it.";
 		}
 	}
 	
