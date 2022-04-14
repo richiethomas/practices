@@ -39,8 +39,8 @@ $schedule = array(
 	array ('March 14 2022', "$t2 / $t3", "$t5 / $t6"),
 	array ('March 21 2022', "$t1 / $t2", "$t4 / $t5"),
 	array ('March 28 2022', "$t3 / $t1", "$t6 / $t4"),
-	array ('April 4 2022', "$t1 / $t3", "$t5 / $t6"),
-	array ('April 11 2022', "$t4 / $t5", "$t4 / $t5"),
+	array ('April 4 2022', "$t2 / $t3", "$t5 / $t6"),
+	array ('April 11 2022', "$t1 / $t2", "$t4 / $t5"),
 	array ('April 18 2022', "$t3 / $t1", "$t6 / $t4"),
 	array ('April 25 2022', "Blender Show (all teams welcome)", "Blender Show (all teams welcome)"),
 	

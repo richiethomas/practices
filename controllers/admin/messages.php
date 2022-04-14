@@ -56,10 +56,20 @@ switch ($ac) {
 			$guest->set_by_id($std['id']);
 		
 		}
-		// send a copy to the webmaster
-		Emails\centralized_email(WEBMASTER, $subject, $msg);
-
 		$message = "Email '$subject' sent to $sent";
+		$subject = "WGIS message: $subject";
+
+		// send a copy to the webmaster
+		Emails\centralized_email(WEBMASTER, $subject, "<p>Hi admin -- the below message got sent to this class:</p>".$msg);
+		
+		//send a copy to the teacher(s)
+		$msg = "<p>Hello teacher or co-teacher! The below email was sent by the WGIS admin to the students of this class:<br>
+---------------</p>".$msg;
+		Emails\centralized_email($wk['teacher_info']['email'], $subject, $msg);
+		if ($wk['co_teacher_id']) {
+			Emails\centralized_email($wk['co_teacher_info']['email'], $subject, $msg);
+		}
+
 		break;
 
 	case 'roster':

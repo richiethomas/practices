@@ -124,7 +124,11 @@ class EnrollmentsHelper extends WBHObject {
 	
 		// rank
 		$paginator  = new \Paginator( $sql, $params );
-		$rows = $paginator->getData($page);	
+		if ($admin) {
+			$rows = $paginator->getData($page, 10000); // get all the rows for admin	
+		} else {
+			$rows = $paginator->getData($page);	
+		}
 		if (count($rows->data) == 0) {
 			return "<p>".($admin ? 'This student has '  : 'You have')." not taken any classes! Which is fine, but that's why this list is empty.</p>\n";
 		}

@@ -201,7 +201,7 @@ function get_reminder_message_data(array $wk, array $xtra, bool $teacher = false
 		$note = "<p>Greetings. ".($teacher ? "You are teaching" :  "You are enrolled in")." a class that starts soonish, ";
 	}
 
-	$note .= "specifically at $start (".TIME_ZONE.").</p>\n";
+	$note .= "specifically at $start.</p>\n";
 	
 	if ($wk['location_id'] == ONLINE_LOCATION_ID) {
 		

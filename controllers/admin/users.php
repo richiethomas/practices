@@ -73,34 +73,37 @@ switch ($ac) {
 		
 	case 'at':
 	
-		$pay_overrides = array();
-		foreach ($_REQUEST as $k => $v) {
-			if (substr($k, 0, 12) == 'payoverride_') {
-				$po = explode('_', $k);
-				$pay_overrides[$po[1]] = $v;
-			}
-		}
+		if (!isset($_REQUEST['page'])) { 
 
-		$paids = (isset($_REQUEST['paids']) && is_array($_REQUEST['paids'])) ? $_REQUEST['paids'] : array();
-		$all_enrollments = $eh->get_enrollment_ids_for_user($guest->fields['id']);
-		$msg = null;
-		foreach ($all_enrollments as $eid) {
+			$pay_overrides = array();
+			foreach ($_REQUEST as $k => $v) {
+				if (substr($k, 0, 12) == 'payoverride_') {
+					$po = explode('_', $k);
+					$pay_overrides[$po[1]] = $v;
+				}
+			}
+
+			$paids = (isset($_REQUEST['paids']) && is_array($_REQUEST['paids'])) ? $_REQUEST['paids'] : array();
+			$all_enrollments = $eh->get_enrollment_ids_for_user($guest->fields['id']);
+			$msg = null;
+			foreach ($all_enrollments as $eid) {
 			
-			$po = 0;
-			if (isset($pay_overrides[$eid])) {
-				$po = $pay_overrides[$eid];
-			}
+				$po = 0;
+				if (isset($pay_overrides[$eid])) {
+					$po = $pay_overrides[$eid];
+				}
 			
-			if (in_array($eid, $paids)) {
-				$msg = $e->update_paid_by_enrollment_id($eid, 1, $po, $hideconpay);
-			} else {
-				$msg = $e->update_paid_by_enrollment_id($eid, 0, $po, $hideconpay);
-			}
-			if ($msg) {
-				$message .= $msg."<br>\n";
-				$msg = null;
-			}
-		}		
+				if (in_array($eid, $paids)) {
+					$msg = $e->update_paid_by_enrollment_id($eid, 1, $po, $hideconpay);
+				} else {
+					$msg = $e->update_paid_by_enrollment_id($eid, 0, $po, $hideconpay);
+				}
+				if ($msg) {
+					$message .= $msg."<br>\n";
+					$msg = null;
+				}
+			}		
+		}
 		
 }
 if (!$guest->logged_in()) {
