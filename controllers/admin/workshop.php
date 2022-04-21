@@ -11,7 +11,7 @@ if ($ac != 'ad') {
 	$wk = \Workshops\get_workshop_info($wid);
 }
 
-$wk_vars = array('title', 'notes', 'start', 'end', 'lid', 'online_url', 'cost', 'capacity', 'notes', 'when_public', 'email', 'con', 'guest_id', 'reminder_sent', 'sold_out_late', 'teacher_id', 'co_teacher_id', 'application',  'hidden', 'start_xtra', 'end_xtra', 'online_url_xtra', 'hideconpay', 'class_show', 'tags');
+$wk_vars = array('title', 'notes', 'start', 'end', 'lid', 'online_url', 'cost', 'capacity', 'notes', 'when_public', 'email', 'con', 'guest_id', 'reminder_sent', 'teacher_id', 'co_teacher_id', 'application',  'hidden', 'start_xtra', 'end_xtra', 'online_url_xtra', 'hideconpay', 'class_show', 'tags');
 Wbhkit\set_vars($wk_vars);
 
 
@@ -120,29 +120,43 @@ switch ($ac) {
 		
 	case 'at':
 		
-		$pay_overrides = array();
+		$amounts = array();
+		$whens = array();
+		$channels = array();
 		foreach ($_REQUEST as $k => $v) {
-			if (substr($k, 0, 12) == 'payoverride_') {
-				$po = explode('_', $k);
-				$pay_overrides[$po[1]][$po[2]] = $v;
+			
+			if (substr($k, 0, 7) == 'amount_') {
+				$pa = explode('_', $k);
+				$amounts[$pa[1]] = $v;
+			}
+			if (substr($k, 0, 5) == 'when_') {
+				$pw = explode('_', $k);
+				$whens[$pw[1]] = $v;
+			}
+			if (substr($k, 0, 8) == 'channel_') {
+				$pc = explode('_', $k);
+				$channels[$pc[1]] = $v;
 			}
 		}
 	
-		$users = (isset($_REQUEST['users']) && is_array($_REQUEST['users'])) ? $_REQUEST['users'] : array();
+		$paids = (isset($_REQUEST['paids']) && is_array($_REQUEST['paids'])) ? $_REQUEST['paids'] : array();
 		$msg = null;
 		if ($wid) {
 			foreach ($lookups->statuses as $sid => $sts) {
 				$stds = $eh->get_students($wid, $sid);
 				foreach ($stds as $as) {
-					$po = 0;
-					if (isset($pay_overrides[$as['id']][$wid])) {
-						$po = $pay_overrides[$as['id']][$wid];
-					}
-						
-					if (in_array($as['id'], $users)) {
-						$msg = $e->update_paid_by_uid_wid($as['id'], $wid, 1, $po, $hideconpay);
+					
+					$eid = $as['enrollment_id'];
+					$uid = $as['user_id'];
+					
+					$pa = isset($amounts[$uid]) ? $amounts[$uid] : 0;
+					$pw = isset($whens[$uid]) ? $whens[$uid] : null;
+					$pc = isset($channels[$uid]) ? $channels[$uid] : null;
+
+					if (in_array($as['id'], $paids)) {
+						$msg = $e->update_paid_by_enrollment_id($eid, 1, $pa, $pw, $pc, $hideconpay);
 					} else {
-						$msg = $e->update_paid_by_uid_wid($as['id'], $wid,  0, $po, $hideconpay);
+						$msg = $e->update_paid_by_enrollment_id($eid,  0, $pa, $pw, $pc, $hideconpay);
 					}
 					if ($msg) {
 						$message .= $msg."<br>\n";

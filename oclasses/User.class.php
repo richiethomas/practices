@@ -36,9 +36,7 @@ class User extends WBHObject {
 	}
 
 	private function set_time_zone_friendly() {
-		$dateTime = new DateTime();
-		$dateTime->setTimeZone(new DateTimeZone($this->fields['time_zone']));
-		$this->fields['time_zone_friendly'] = $dateTime->format('T');
+		$this->fields['time_zone_friendly'] = \Wbhkit\get_time_zone_friendly($this->fields['time_zone']);
 	}
 
 
@@ -57,13 +55,23 @@ class User extends WBHObject {
 	
 		// didn't find one? make one
 		if ($this->validate_email($email)) {
-			$stmt = \DB\pdo_query("insert into users (email, joined) VALUES (:email, '".date(MYSQL_FORMAT)."')", array(':email' => $email));
-			$this->set_by_id($last_insert_id); // fast way to get all fields in this object
-			$this->finish_setup();
-			$this->get_key();
-			return true;
+			echo "about to create user $email<br>";
+			$stmt = \DB\pdo_query("insert into users (email, joined, time_zone) VALUES (:email, :joined, :tz)", array(':email' => $email, ':joined' => date(MYSQL_FORMAT), ':tz' => DEFAULT_TIME_ZONE));
+			
+			$stmt = \DB\pdo_query("select id from users where email = :email", array(":email" => $email));
+			while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
+				$last_insert_id = $row['id'];
+				$this->set_into_fields($row);
+				$this->get_key();
+				$this->finish_setup();
+				return true;
+			}
+			$this->error = "user not created; not sure of why";
+			return false;
+			
 		} else {
 			$this->error = "Invalid email: '{$email}'";
+			return false;
 		}
 		return false; // invalid email
 	}
@@ -85,6 +93,7 @@ class User extends WBHObject {
 			return true;
 		}
 		$this->error = "Could not find a user for '{$id}'";
+		return false;
 	}
 
 	function set_by_key(string $key) {
@@ -270,6 +279,7 @@ class User extends WBHObject {
 				':uid' => $this->fields['id'])
 		);
 		$this->fields['time_zone'] = $time_zone;
+		$this->set_time_zone_friendly();
 		return true;
 	}
 

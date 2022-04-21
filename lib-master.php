@@ -45,7 +45,7 @@ define('ERROR_LOG', 'error_log.txt');
 
 define('URL', (LOCAL ? "http://{$_SERVER['HTTP_HOST']}/" : "https://{$_SERVER['HTTP_HOST']}/"));
 define('ONLINE_LOCATION_ID', 8);
-define('LATE_HOURS', 24);
+define('LATE_HOURS', 12);
 define('REMINDER_HOURS', 24);
 define('USER_PHOTO_MAX_BYTES', 5000000);
 define('WEBMASTER', (LOCAL ? "will@willhines.net" : "classes@wgimprovschool.com"));
@@ -81,7 +81,10 @@ $view = new View();
 //
 $key = $u->check_for_stored_key(); 
 if ($key) {
-	$u->set_by_key($key);
+	if ($u->set_by_key($key)) {
+		$logger->debug("{$u->fields['email']} logged in via cookie/session."); // this will happen every page
+	}
+	
 } 
 
 // check to see if we should send reminders every time anyone loads a page

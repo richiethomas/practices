@@ -5,7 +5,7 @@ namespace Teachers;
 $teacher_attic = array();
 
 function is_teacher($uid) {
-	$stmt = \DB\pdo_query("select t.*, u.email, u.display_name, u.ukey from teachers t, users u where u.id = t.user_id and t.user_id = :id", array(':id' => $uid));
+	$stmt = \DB\pdo_query("select t.*, u.email, u.display_name, u.ukey, u.time_zone from teachers t, users u where u.id = t.user_id and t.user_id = :id", array(':id' => $uid));
 	while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
 		$row = fill_out_teacher_row($row); 
 		return $row;
@@ -21,7 +21,7 @@ function get_teacher_by_id($tid) {
 		if ($tattic_id == $tid) { return $tattic_row; }
 	}
 	
-	$stmt = \DB\pdo_query("select t.*, u.email, u.display_name, u.ukey from teachers t, users u where u.id = t.user_id and t.id = :id", array(':id' => $tid));
+	$stmt = \DB\pdo_query("select t.*, u.email, u.display_name, u.ukey, u.time_zone from teachers t, users u where u.id = t.user_id and t.id = :id", array(':id' => $tid));
 	while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
 		$row = fill_out_teacher_row($row); 
 		$teacher_attic[$row['id']] = $row; // save teacher data in global variable
@@ -69,7 +69,7 @@ function get_teacher_fields($t) {
 
 
 function get_all_teachers($only_active = false) {
-	$stmt = \DB\pdo_query("select t.*, u.email, u.display_name, u.ukey from teachers t, users u where t.user_id = u.id".($only_active ? ' and t.active = 1' : ''));
+	$stmt = \DB\pdo_query("select t.*, u.email, u.display_name, u.ukey, u.time_zone from teachers t, users u where t.user_id = u.id".($only_active ? ' and t.active = 1' : ''));
 	$teachers = array();
 	while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
 		$row = fill_out_teacher_row($row); 

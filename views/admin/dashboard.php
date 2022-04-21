@@ -13,9 +13,6 @@ $( document ).ready(function() {
 		function() { $("#dashalerts").toggle(200); }
 	);
 });	
-
-
-
 </script>
 		
 
@@ -53,7 +50,7 @@ $( document ).ready(function() {
 							if ($ts >= $ts_now && $ts <= $ts_then) { 			
 							
 								$nsohtml .= "<li>".\Wbhkit\figure_year_minutes($ts).": <a href='/admin-workshop/view/{$wk['id']}'>{$wk['title']}</a> ({$wk['enrolled']}/{$wk['capacity']})";
-								if ($wk['applied']) { $nso .= " <span class='text-primary'>- {$wk['applied']}</span>"; }
+								if ($wk['applied']) { $nsohtml .= " <span class='text-primary'>- {$wk['applied']}</span>"; }
 								$nsohtml .= "</li>\n";
 							}
 						}

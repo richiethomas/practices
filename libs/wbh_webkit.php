@@ -157,19 +157,19 @@ function radio(string $name, array $opts, ?string $selection = null) {
 	foreach ($opts as $key => $label) {
 		$b .= "<div class='form-check form-check-inline'>";
 		$ch = ($key == $selection && !is_null($selection) ? 'checked' : '');
-		$b .= "<label class='form-check-label' for='$name{$i}'>$label</label><input class='form-check-input' type='radio' id=$name$i' name='$name' value='$key' $ch>\n";
+		$b .= "<label class='form-check-label' for='$name{$i}'>$label</label><input class='form-check-input' type='radio' id='$name$i' name='$name' value='$key' $ch>\n";
 		$b .= "</div>\n";
 		$i++;
 	}
 	return $b;
 }
 
-function checkbox($name, $value, $label = null, $checked = false, $multiple = false) {
+function checkbox($name, $value, $label = null, $checked = false, $multiple = false, $xtra_class = null) {
 	$label = figure_label($label, $name, false);
-	$id = $name.$value;
+	$id = $name.'_'.$value;
 	if ($multiple) { $name = "{$name}[]"; }
-	return "<div class='form-check form-check-inline'><label class=\"form-check-label\" for=\"$id\">{$label}</label>
-		<input id=\"$id\" class='form-check-input' type=\"checkbox\" name=\"{$name}\" value=\"{$value}\" ".($checked ? 'checked' : '').">
+	return "<div class='form-check form-check-inline '><label class=\"form-check-label\" for=\"$id\">{$label}</label>
+		<input id=\"$id\" class='form-check-input ".($xtra_class ? $xtra_class : '')."' type=\"checkbox\" name=\"{$name}\" value=\"{$value}\" ".($checked ? 'checked' : '').">
 		</div>";
 }
 
@@ -434,3 +434,10 @@ function get_time_zones() {
 	}
 	return $time_zone_list;
 }
+
+function get_time_zone_friendly($tz = DEFAULT_TIME_ZONE) {
+	$dateTime = new \DateTime();
+	$dateTime->setTimeZone(new \DateTimeZone($tz));
+	return $dateTime->format('T');
+}
+

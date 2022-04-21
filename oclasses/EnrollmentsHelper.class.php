@@ -55,7 +55,7 @@ class EnrollmentsHelper extends WBHObject {
 		$u = new \User(); // need its methods
 		$e = new \Enrollment();
 		while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
-			$row = \Workshops\format_workshop_startend($row);
+			$row = \Workshops\format_times($row);
 			$row = $u->set_nice_name_in_row($row);
 			$log[] = $row;
 		}
@@ -87,17 +87,24 @@ class EnrollmentsHelper extends WBHObject {
 	
 	// returns student basic registration info
 	function get_students(int $wid, int $status_id = ENROLLED) {
-		$sql = "select u.*, r.id as enrollment_id, r.status_id,  r.paid, r.registered, r.last_modified, r.pay_override from registrations r, users u where r.workshop_id = :wid and r.user_id = u.id";
+		$sql = "
+		select u.*, r.id as enrollment_id, r.status_id,  r.paid, r.registered, r.last_modified, r.pay_amount, r.pay_when, r.pay_channel, r.pay_override, u.id as user_id
+		from registrations r, users u 
+		where r.workshop_id = :wid and r.user_id = u.id";
+		
 		if ($status_id) { 
-			$sql .= " and status_id = :sid order by last_modified"; 
-			$stmt = \DB\pdo_query($sql, array(':wid' => $wid, ':sid' => $status_id));
+			$sql .= " and status_id = :sid "; 
+			$params = array(':wid' => $wid, ':sid' => $status_id);
 		} else {
-			$sql .= " order by last_modified"; 
-			$stmt = \DB\pdo_query($sql, array(':wid' => $wid));
+			$params = array(':wid' => $wid);
 		}
+		$sql .= " order by last_modified";
+		$stmt = \DB\pdo_query($sql, $params);
+		
 		$stds = array();
 		$u = new \User(); // need its methods!
 		while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
+			if ($row['pay_when'] == '0000-00-00') { $row['pay_when'] = null; }
 			$stds[$row['id']] = $u->set_nice_name_in_row($row);
 		}
 		return $stds;
@@ -110,7 +117,7 @@ class EnrollmentsHelper extends WBHObject {
 		}
 		$mysqlnow = date(MYSQL_FORMAT);
 	
-		$sql = "select *, r.id as enrollment_id, r.paid, r.pay_override 
+		$sql = "select *, r.id as enrollment_id, r.paid, r.pay_amount, r.pay_when, r.pay_channel 
 		from registrations r, workshops w, locations l
 		where r.workshop_id = w.id 
 		and w.location_id = l.id 
@@ -139,6 +146,8 @@ class EnrollmentsHelper extends WBHObject {
 		$e = new Enrollment();
 		foreach ($rows->data as $d) {
 			$d = \Workshops\fill_out_workshop_row($d, false);
+			if ($d['pay_when'] == '0000-00-00') { $d['pay_when'] = null; }
+			
 			
 //			print_r($d);
 			

@@ -76,7 +76,7 @@ class UserHelper extends WBHObject {
 	function edit_change_email(User $u) {
 
 		$body = '';
-		$body .= \Wbhkit\form_validation_javascript('changeEmail');
+		//$body .= \Wbhkit\form_validation_javascript('changeEmail');
 		$body .= "<form id='changeEmail' action='{$this->sc}/cemail/{$u->fields['id']}' method='post' novalidate>\n";
 		$body .= \Wbhkit\texty('newemail', $u->fields['email'], 'New email', null, 'We will email a login link to this address', 'Must be a valid email', ' required ', 'email');
 		$body .= \Wbhkit\submit('Change Email');
@@ -97,7 +97,6 @@ class UserHelper extends WBHObject {
 		$ud->set_by_id($uid);
 		$ud->delete_user();
 	}
-	
 	
 }
 ?>

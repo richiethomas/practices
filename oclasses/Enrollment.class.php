@@ -10,14 +10,17 @@ class Enrollment extends WBHObject {
 		parent::__construct(); // load logger, lookups
 
 		$this->fields = array(
-				'id' => false,
-				'user_id' => false,
-				'workshop_id' => false,
-				'status_id' => false,
-				'paid' => false,
-				'registered' => false, 	
-				'last_modified' => false,
-				'while_soldout' => false);	
+				'id' => null,
+				'user_id' => null,
+				'workshop_id' => null,
+				'status_id' => null,
+				'paid' => null,
+				'pay_amount' => null,
+				'pay_when' => null,
+				'pay_channel' => null,
+				'registered' => null, 	
+				'last_modified' => null,
+				'while_soldout' => null);	
 			
 		$this->u = new User();
 		$this->wk = array();			
@@ -192,23 +195,60 @@ class Enrollment extends WBHObject {
 		
 	}
 	
-	function update_paid_by_enrollment_id(int $eid, int $new_paid, string $pay_override = '0', bool $block_email = false) {
+	function update_paid_by_enrollment_id(
+		int $eid, 
+		int $new_paid, 
+		string $pay_amount = '0',
+		?string $pay_when = null,
+		?string $pay_channel = null,
+		bool $block_email = false) {
 		$this->set_by_id($eid);
-		return $this->update_paid($new_paid, $pay_override, $block_email);
+		return $this->update_paid($new_paid, $pay_amount, $pay_when, $pay_channel, $block_email);
 	}
 	
-	function update_paid_by_uid_wid(int $uid, int $wid, int $new_paid, string $pay_override = '0', bool $block_email = false) {
+	function update_paid_by_uid_wid(
+		int $uid, 
+		int $wid, 
+		int $new_paid, 
+		string $pay_amount = '0',
+		?string $pay_when = null,
+		?string $pay_channel = null,
+		bool $block_email = false) {
 		$this->set_by_uid_wid($uid, $wid);
-		return $this->update_paid($new_paid, $pay_override, $block_email);
+		return $this->update_paid($new_paid, $pay_amount, $pay_when, $pay_channel, $block_email);
 	}
 	
-	private function update_paid(int $new_paid, string $pay_override = '0', bool $block_email = false) {
+	private function update_paid (
+		int $new_paid, 
+		string $pay_amount = '0',
+		?string $pay_when = null,
+		?string $pay_channel = null,
+		bool $block_email = false) {
 		
 		
-		if ($pay_override == '') { $pay_override = 0; }
+		if ($pay_amount == '') { $pay_amount = 0; }
+		
+		if ($pay_when) { $pay_when = date('Y-m-d', strtotime($pay_when)); }
+		
+		
+		//echo "$new_paid, $pay_amount, $pay_when, $pay_channel<br>\n";
+		//die;
 		
 		// update database even if there is no change -- sometimes pay_override changes even if "paid" does not
-		$stmt = \DB\pdo_query("update registrations set paid = :paid, pay_override = :po where id = :rid", array(':paid' => $new_paid, ':rid' => $this->fields['id'], ':po' => $pay_override));
+		$stmt = \DB\pdo_query("
+			update registrations 
+			set paid = :paid, 
+			pay_amount = :pa,
+			pay_when = :pw,
+			pay_channel = :pc 
+			where id = :rid", 
+			array(
+			':paid' => $new_paid, 
+			':rid' => $this->fields['id'], 
+			':pa' => $pay_amount,
+			':pw' => $pay_when,
+			':pc' => $pay_channel
+		));
 
 
 		// send message only if there was a change
@@ -220,13 +260,9 @@ class Enrollment extends WBHObject {
 			if ($new_paid == 1) {
 		
 				$body = "<p>This is automated email to confirm that I've received your payment for class.</p>";
-				$body .= "<p>Class: {$this->wk['title']} {$this->wk['showstart']} (California time, ".TIME_ZONE.")</p>\n";
+				$body .= "<p>Class: {$this->wk['title']} {$this->wk['showstart']}</p>\n";
 				$body .= "<p>Student: {$this->u->fields['nice_name']}</p>";
-				$body .= "<p>Amount: ".($this->wk['cost'] == 1 ? 'Pay what you can' : "\${$this->wk['cost']} (USD)")."</p>\n";
-				
-				if ($pay_override) {
-					$body .= "<p>You paid: \${$pay_override} (USD)</p>\n";
-				}
+				$body .= "<p>Amount: $pay_amount</p>\n";
 				
 				if ($this->wk['online_url']) {
 					$body .= "<p>Zoom link for this classs: {$this->wk['online_url']}</p>\n";
@@ -236,10 +272,10 @@ class Enrollment extends WBHObject {
 				$body .= URL."workshop/view/{$this->wk['id']}</p>\n";
 
 				
-				$body .= "<p>Thanks!<br>-Will</p>\n";
+				$body .= "<p>Thanks!<br>-WGIS confirmation email robot</p>\n";
 				
 				if (!$block_email) {
-					\Emails\centralized_email($this->u->fields['email'], "Payment received for {$this->wk['title']} {$this->wk['showstart']} (PDT)", $body); 
+					\Emails\centralized_email($this->u->fields['email'], "Payment received for '{$this->wk['title']}' {$this->wk['showstart']}", $body); 
 				}
 			
 				return $this->message = "Set user '{$this->u->fields['nice_name']}' to 'paid' for workshop '{$this->wk['title']}'";

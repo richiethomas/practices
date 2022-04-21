@@ -60,7 +60,7 @@ switch ($ac) {
 	
 		$t = new Task();
 		$t->set_by_id($tid);
-		$message = "Deleted task '{$t->fields['title']}";
+		$message = "Deleted task '{$t->fields['title']}'";
 		$t->delete_row();
 		break;
 		

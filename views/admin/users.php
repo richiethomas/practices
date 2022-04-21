@@ -13,19 +13,37 @@ if ($needle) {
 }
 ?>
 
+<script>
+$( document ).ready(function() {
+	$( "#dashalertsbutton" ).click(
+		function() { $("#dashalerts").toggle(200); }
+	);
+});	
+</script>
+
+<div class="transcript border p-2">				
+<button id="dashalertsbutton" type="button" class="btn-close float-end" aria-label="Close"></button>
 <h3 class="my-3">Transcripts</h3>
+<div id="dashalerts" <?php if ($close_transcript) { echo "style='display:none'"; } ?>>
 <?php echo $transcripts; ?>
+</div>
+</div>
 
 <div class='row'><div class='col-sm-6'>
 
 <div class='card my-5 bg-light'><div class='card-body'>
+<h3>Change Time Zone</h3>
+<?php echo $userhelper->edit_time_zone($guest); ?>
+</div></div> <!-- end of card -->
+
+<div class='card my-5 bg-light'><div class='card-body'>
 <h3 class="my-3">Change Email</h3>
-<?php echo $userhelper->edit_change_email($guest, "/admin-users/cemail/{$guest->fields['id']}"); ?>
+<?php echo $userhelper->edit_change_email($guest); ?>
 </div></div> <!-- end of card -->
 
 <div class='card my-5 bg-light'><div class='card-body'>
 <h3 class="my-3">Display Name</h3>
-<?php echo $userhelper->edit_display_name($guest, "/admin-users/updatedn/{$guest->fields['id']}"); ?>
+<?php echo $userhelper->edit_display_name($guest); ?>
 </div></div> <!-- end of card -->
 
 <?php if ($u->check_user_level(3)) { ?>

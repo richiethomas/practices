@@ -8,7 +8,7 @@ switch ($ac) {
 	
 		if ($u->set_by_key($params[2])) {
 			$message = "Welcome, {$u->fields['nice_name']}!";
-			$logger->debug("{$u->fields['nice_name']} logged in.");
+			$logger->info("{$u->fields['email']} logged in via URL.");
 		} else {
 			$error = "Tried to log someone in, but the key was, as we say in the computer business, malformed.";
 		}
@@ -20,6 +20,16 @@ switch ($ac) {
 	
 		if (!$fax_only) {
 			
+			
+			if (!$email) {
+				$logger->error("Login link requested but no email submitted.");
+				break;
+			}
+			if (!$when_login) {
+				$logger->error("Login link requested but time of submission (when_login) missing.");
+				break;
+			}
+			
 			// already logged in with this email? do nothing
 			if ($u->logged_in() && $u->fields['email'] == $email) {
 				$logger->error("LOGIN PROTECT: {$u->fields['email']} already logged in!");
@@ -28,8 +38,8 @@ switch ($ac) {
 			
 			// if it's 30 minutes after the login form was generated, do nothing
 			$passed = strtotime('now') - strtotime($when_login);
-			if ($passed / 60 > 30) {
-				$logger->error("LOGIN PROTECT: {$email} requested a login $passed mins later");
+			if (($passed / 60) > 30) {
+				$logger->error("LOGIN PROTECT: {$email} requested a login ".($passed / 60)." mins later");
 				break;
 			}
 			

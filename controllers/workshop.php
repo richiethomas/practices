@@ -71,7 +71,8 @@ if (Workshops\is_public($wk)) {
 			
 			$show_other_action = false;
 		
-			if ($e->fields['while_soldout']) { 
+			$hours_left = (strtotime($wk['start']) - strtotime('now')) / 3600;
+			if ($hours_left > 0 && $hours_left < LATE_HOURS) {
 				$message .= '<br><br>'.Emails\get_dropping_late_warning();
 			}
 			break;

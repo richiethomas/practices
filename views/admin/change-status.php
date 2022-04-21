@@ -1,6 +1,7 @@
 <?php
-		echo  "<div class='row'><div class='col-md-5'><h2><a href='/admin-workshop/view/{$wk['id']}'>{$wk['title']}</a></h2>".
-		"<p>Email: {$guest->fields['email']}</p>
+		echo  "<div class='row'><div class='col-md-8'><h2><a href='/admin-workshop/view/{$wk['id']}'>{$wk['title']}</a></h2>".
+		"<h4 class='my-4'>Change status of: {$guest->fields['nice_name']} (<a href='/admin-users/view/{$guest->fields['id']}'>see user page</a>)</h4>
+		<p>Email: {$guest->fields['email']}</p>
 		<p>Display Name: {$guest->fields['display_name']}</p>
 		<p>Status: {$e->fields['status_name']}</p>";
 
@@ -21,7 +22,10 @@
 		echo "<form class='my-4' action='/admin-change-status/xfer/{$wk['id']}/{$guest->fields['id']}' method='post'>".
 		\Wbhkit\drop('wid_new', \Workshops\get_recent_workshops_dropdown(), null, 'Xfer To Workshop').
 		\Wbhkit\submit('transfer to').
-		"</form></div></div>\n";		
+		"</form></div></div>\n";	
+		
+		
+		echo "<p>Remove student from class entirely: <a class='btn btn-outline-secondary btn-sm' href='/admin-workshop/conrem/{$wk['id']}/{$guest->fields['id']}'>remove</a></p>";	
 				
 		
 ?>

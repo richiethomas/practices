@@ -40,19 +40,12 @@ switch ($ac) {
 		$note = preg_replace('/\R/', "<br>", $note);
 		
 
-		$base_msg = $note.Emails\get_workshop_summary($wk);
-
-
-		
+		$note = $note.Emails\get_workshop_summary($wk);
 		
 		foreach ($stds as $std) {
-			
-			$trans = URL."workshop/view/{$wk['id']}";
-			$msg = $base_msg."<p>Drop/re-enroll/see more info here:<br>$trans</p>\n";
-			
-			Emails\centralized_email($std['email'], $subject, $msg);
+						
+			Emails\centralized_email($std['email'], $subject, $note);
 			$sent .= "{$std['email']}, ";
-		
 			$guest->set_by_id($std['id']);
 		
 		}
@@ -60,14 +53,14 @@ switch ($ac) {
 		$subject = "WGIS message: $subject";
 
 		// send a copy to the webmaster
-		Emails\centralized_email(WEBMASTER, $subject, "<p>Hi admin -- the below message got sent to this class:</p>".$msg);
+		Emails\centralized_email(WEBMASTER, $subject, "<p>Hi admin -- the below message got sent to this class:</p>".$note);
 		
 		//send a copy to the teacher(s)
-		$msg = "<p>Hello teacher or co-teacher! The below email was sent by the WGIS admin to the students of this class:<br>
----------------</p>".$msg;
-		Emails\centralized_email($wk['teacher_info']['email'], $subject, $msg);
+		$note = "<p>Hello teacher or co-teacher! The below email was sent by the WGIS admin to the students of this class:<br>
+---------------</p>".$note;
+		Emails\centralized_email($wk['teacher_info']['email'], $subject, $note);
 		if ($wk['co_teacher_id']) {
-			Emails\centralized_email($wk['co_teacher_info']['email'], $subject, $msg);
+			Emails\centralized_email($wk['co_teacher_info']['email'], $subject, $note);
 		}
 
 		break;

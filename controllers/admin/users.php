@@ -17,23 +17,35 @@ $guest->set_by_id($guest_id);
 $needle = (string) ($params[3] ?? null); // URL $needle takes precedence over $_POST $needle
 $needle = trim($needle);
 
-
-
 $e = new Enrollment();
 $eh = new EnrollmentsHelper();
 
 
+$close_transcript = false;
+
 switch ($ac) {
+	
+	
+	case 'updatetz':
+		Wbhkit\set_vars(array('time_zone'));
+		$guest->update_time_zone($time_zone);
+		$message = "Changing time zone to '$time_zone' for '{$guest->fields['email']}'";
+		$close_transcript = true;
+		break;
+		
 
 	case 'updategroup':
 		if ($u->check_user_level(3)) {	
 			$guest->update_group_level($group_id);
+			$message = "Updated group level to '$group_id' for '{$guest->fields['email']}'";
+			$close_transcript = true;
 		}
 		break;
 	
 
  	case 'delstudent':
 		$message = "Really delete '{$guest->fields['email']}'? <a class='btn btn-danger' href='/admin-users/delstudentconfirm/{$guest->fields['id']}'>yes delete</a> or <a class='btn btn-primary' href='/admin-users/view/{$guest->fields['id']}'>cancel</a>";
+		$close_transcript = true;
 		break;
 
 	case 'delstudentconfirm':
@@ -52,6 +64,8 @@ switch ($ac) {
 		// update display name
 	case 'updatedn':
 		$guest->update_display_name($display_name);
+		$message = "Changing display name to '$display_name' for '{$guest->fields['email']}'";
+		$close_transcript = true;
 		break;	
 		
  	case 'cemail':
@@ -63,6 +77,8 @@ switch ($ac) {
 				$message = "Email changed from '{$guest->fields['email']}' to '$newemail'";
 				$guest->set_by_email($newemail);
 			}
+			$close_transcript = true;
+			
 		} else {
 			$error = "Can't change email because I, the computer, have lost track of the user we are trying to change. Meaning the variable where I stored the info is now empty.";
 		}
@@ -75,11 +91,23 @@ switch ($ac) {
 	
 		if (!isset($_REQUEST['page'])) { 
 
-			$pay_overrides = array();
+
+			$amounts = array();
+			$whens = array();
+			$channels = array();
 			foreach ($_REQUEST as $k => $v) {
-				if (substr($k, 0, 12) == 'payoverride_') {
-					$po = explode('_', $k);
-					$pay_overrides[$po[1]] = $v;
+			
+				if (substr($k, 0, 7) == 'amount_') {
+					$pa = explode('_', $k);
+					$amounts[$pa[1]] = $v;
+				}
+				if (substr($k, 0, 5) == 'when_') {
+					$pw = explode('_', $k);
+					$whens[$pw[1]] = $v;
+				}
+				if (substr($k, 0, 8) == 'channel_') {
+					$pc = explode('_', $k);
+					$channels[$pc[1]] = $v;
 				}
 			}
 
@@ -87,16 +115,15 @@ switch ($ac) {
 			$all_enrollments = $eh->get_enrollment_ids_for_user($guest->fields['id']);
 			$msg = null;
 			foreach ($all_enrollments as $eid) {
-			
-				$po = 0;
-				if (isset($pay_overrides[$eid])) {
-					$po = $pay_overrides[$eid];
-				}
-			
+
+				$pa = isset($amounts[$eid]) ? $amounts[$eid] : 0;
+				$pw = isset($whens[$eid]) ? $whens[$eid] : null;
+				$pc = isset($channels[$eid]) ? $channels[$eid] : null;
+							
 				if (in_array($eid, $paids)) {
-					$msg = $e->update_paid_by_enrollment_id($eid, 1, $po, $hideconpay);
+					$msg = $e->update_paid_by_enrollment_id($eid, 1,  $pa, $pw, $pc, $hideconpay);
 				} else {
-					$msg = $e->update_paid_by_enrollment_id($eid, 0, $po, $hideconpay);
+					$msg = $e->update_paid_by_enrollment_id($eid, 0,  $pa, $pw, $pc, $hideconpay);
 				}
 				if ($msg) {
 					$message .= $msg."<br>\n";
@@ -116,6 +143,7 @@ if (!$guest->logged_in()) {
 	$view->data['transcripts'] = $eh->get_transcript_tabled($guest, true, 1, $hideconpay);
 	$view->data['userhelper'] = new UserHelper('/admin-users');
 	$view->data['lookups'] = $lookups;
+	$view->data['close_transcript'] = $close_transcript;
 	$view->renderPage('admin/users');
 }
 

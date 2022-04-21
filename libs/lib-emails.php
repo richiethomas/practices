@@ -108,9 +108,10 @@ If you no longer want to be notified of open spots, you can drop out here: <br>
 			break;
 		case DROPPED:
 			$sub = "DROPPED: {$wk['title']}";
-			$body = "<p>You have DROPPED out of {$wk['title']}</p>";
+			$body = "<p>You have DROPPED out of {$wk['title']}</p>";			
 			
-			if ($e->fields['while_soldout'] == 1) {
+			$hours_left = (strtotime($wk['start']) - strtotime('now')) / 3600;
+			if ($hours_left > 0 && $hours_left < LATE_HOURS) {
 				$body .= "<br><i>".get_dropping_late_warning()."</i>";
 			}
 			$body .= "If you change your mind, re-enroll here:\n{$trans}";
@@ -196,7 +197,10 @@ function get_workshop_summary($wk) {
 		$summary .= "<br>
 <b>Where:</b> {$wk['lwhere']}";
 	}
-
+	
+	$summary .= "<br>
+<b>Drop / re-enroll / more info: ".URL."workshop/view/{$wk['id']}</p>";
+	
 	return $summary;
 }
 

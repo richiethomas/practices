@@ -61,7 +61,7 @@ function check_reminders(bool $force = false) {
 	
 	
 	// set up $workshops_to_remind
-	// first number id, second number xtra_session row id (0 if not an xtra session)
+	// first number id, second number xtra_session row id (0 for first session)
 	
 	// first do workshops table - these are session 1s
 	$stmt = \DB\pdo_query("select id as workshop_id, start, w.title from workshops w where start > :now and reminder_sent = 0", array(':now' => $mysqlnow)); // workshops in the future
@@ -99,16 +99,8 @@ function remind_enrolled(array $class) {
 	
 	global $logger;
 	
-	$guest = new \User();
-	
 	$wk = \Workshops\get_workshop_info($class[0]);
-	$xtra = \XtraSessions\get_xtra_session($class[1]);
-	
-	$reminder = get_reminder_message_data($wk, $xtra);
-	
-	$subject = $reminder['subject'];
-	$note = $reminder['note'];
-	
+	$xtra = \XtraSessions\get_xtra_session($class[1]);	
 	$eh = new \EnrollmentsHelper();
 	$stds = $eh->get_students($class[0], ENROLLED);
 
@@ -116,94 +108,102 @@ function remind_enrolled(array $class) {
 
 	foreach ($stds as $std) {
 		
-		$note = $reminder['note'];
+		$wk = \Workshops\format_times($wk, $std['time_zone']);
+		$wk = \Workshops\set_full_when($wk, $std['time_zone']);
+		$xtra = \Workshops\format_times($xtra, $std['time_zone']);
+		
+		$subject = get_subject($wk, $xtra);
+		$note = get_note($wk, $xtra, $std['nice_name']);
+		$trans = URL."workshop/view/{$wk['id']}";
 
 		// add note if student has to pay
 		if (!$std['paid']) {
 			$note .= \Emails\payment_text($wk, 1);
 		}
-		
-		$trans = URL."workshop/view/{$wk['id']}";
 
 		$note .= \Workshops\email_teacher_info($wk);
 
-		if (!$class[1]) { // if this not an xtra session or a show
+		if (!$class[1]) { // if this not an xtra session, then it's class 1
 			$note .= "<p>DROPPING OUT<br>\n
 	---------------------------------<br>\n
-	If you need to drop the class (and it's before the first week), you can do so on this web site at this link. That way if someone is on the waiting list, we can notify them right away they have a chance to join.<br>
+	If you need to drop the class, you can do so on this web site at this link. That way if someone is on the waiting list, we can notify them right away so they have a chance to join.<br>
 	{$trans}</p>\n";
 		}
 
 		$note .= \Emails\email_boilerplate();
 
-		$base_msg =	$note.\Emails\get_workshop_summary($wk)."<br>
-Class info on web site: $trans";
+		$note =	$note.\Emails\get_workshop_summary($wk);
 				
-		//\Emails\centralized_email('whines@gmail.com', $subject, $base_msg); // for testing, i get everything
+		//\Emails\centralized_email('whines@gmail.com', $subject, $note); // for testing, i get everything
 
-		\Emails\centralized_email($std['email'], $subject, $base_msg);
-		$guest->set_by_id($std['id']);
+		\Emails\centralized_email($std['email'], $subject, $note);
 	}
+	
 	//remind teacher
-	$trans = URL."workshop/view/{$wk['id']}";
-	$teacher_reminder = get_reminder_message_data($wk, $xtra, true);
-	$msg = $teacher_reminder['note']."<p>Class info online:<br>$trans</p>\n";
-	
-	if (!$xtra['id']) { // is it first session? send teacher the roster
-		$msg .= "<h3>Full info for class</h3>\n".
-			preg_replace('/\n/', "<br>\n", \Workshops\get_cut_and_paste_roster($wk));
+	remind_teacher($wk, $xtra, $wk['teacher_info']);
+	if ($wk['co_teacher_id']) {
+		remind_teacher($wk, $xtra, $wk['co_teacher_info']);
 	}
-	
-	\Emails\centralized_email($wk['teacher_info']['email'], $teacher_reminder['subject'], $msg);
 	
 	// if not full -- point it out to Will
 	if ($wk['enrolled'] < $wk['capacity'] && !$xtra['id']) { // no $xtra['id'] means first session
+		$guest = new \User();
+		$guest->set_by_id(1); // that's right, hard-coded
+		
+		$wk = \Workshops\format_times($wk, $guest->fields['time_zone']);
+		$wk = \Workshops\set_full_when($wk, $guest->fields['time_zone']);
 		
 		$alert_msg = "'{$wk['title']}' is not full. {$wk['enrolled']} of {$wk['capacity']} signed up<br>\n".
 			URL."admin-workshop/view/{$wk['id']}<br>\n".
 				\Emails\get_workshop_summary($wk);
 		
-		\Emails\centralized_email(WEBMASTER, "'{$wk['title']}' is not full.", $alert_msg);
+		\Emails\centralized_email($guest->fields['email'], "'{$wk['title']}' is not full.", $alert_msg);
 	}
-	
-	//\Emails\centralized_email('whines@gmail.com', $subject, $msg);
+
+
+	// done!
 	$logger->info("Reminders sent for: {$class[2]}");
 	
 	
 }
 
-function get_reminder_message_data(array $wk, array $xtra, bool $teacher = false) {
-	
-	if ($xtra['id']) {
-		$start = $xtra['friendly_when'];
-		if ($xtra['online_url_display']) {
-			$link = $xtra['online_url_display'];
-		} else {
-			$link = $wk['online_url_display'];
-		}
-		$subject = "WGIS class reminder: {$wk['title']} {$start}";
-	} else {
-		$start = $wk['when'];
-		$link = $wk['online_url_display'];
-		$subject = "WGIS class reminder: {$wk['title']} {$start}";
-	}
-	
-	
+function get_subject(array $wk, array $xtra) {
+
+	$subject = "WGIS class reminder: {$wk['title']} ".($xtra['id'] ? $xtra['when'] : $wk['when']);
+
 	if ($wk['location_id'] != ONLINE_LOCATION_ID) {
 		$subject .= " at {$wk['place']}";	
 	}
 	
-	if ($xtra['class_show']) {
-		$note = "<p>Greetings. ".($teacher ? "You are teaching" :  "You have")." a class show soonish, ";
-	} elseif ($xtra['id']) {
-		$note = "<p>Greetings. ".($teacher ? "You are teaching" :  "You have")." another session of this class soonish, ";
-	} else {
-		$note = "<p>Greetings. ".($teacher ? "You are teaching" :  "You are enrolled in")." a class that starts soonish, ";
-	}
+	return $subject;
+	
+}
 
-	$note .= "specifically at $start.</p>\n";
+
+function get_note(array $wk, array $xtra, $name = 'dear human', bool $teacher = false) {
+	
+	$note = null;
+	if ($xtra['class_show']) {
+		$note = "<p>Greetings, $name! ".($teacher ? "You are teaching" :  "You have")." a class show soonish, ";
+	} elseif ($xtra['id']) {
+		$note = "<p>Greetings, $name! ".($teacher ? "You are teaching" :  "You have")." another session of this class soonish, ";
+	} else {
+		$note = "<p>Greetings, $name! ".($teacher ? "You are teaching" :  "You are enrolled in")." a class that starts soonish, ";
+	}
+	
+	$note .= "specifically at ".($xtra['id'] ? $xtra['when'] : $wk['when']).".</p>\n";
 	
 	if ($wk['location_id'] == ONLINE_LOCATION_ID) {
+		
+		//echo "{$wk['online_url']}, {$wk['online_url_display']}<br>";
+		//echo "{$xtra['online_url']}, {$xtra['online_url_display']}<br>";
+		
+		
+		if (isset($xtra['id']) && $xtra['id']) {
+			$link = $xtra['online_url_display'] ? $xtra['online_url_display'] : $wk['online_url_display'];
+		} else {
+			$link = $wk['online_url_display'];
+		}
 		
 		$note .= "<p>ZOOM LINK:<br>
 Here's the zoom link. Try to sign in a few minutes early if you can.<br>
@@ -223,12 +223,24 @@ https://www.twitch.tv/wgimprovschool</p>\n";
 		
 	}	
 
+	return $note;
+}
 
+function remind_teacher($wk, $xtra, $teacher_info) {
 	
-	return array(
-	 'subject' => $subject,
-	 'note' => $note
-	);
-
+	$wk = \Workshops\format_times($wk, $teacher_info['time_zone']);
+	$wk = \Workshops\set_full_when($wk, $teacher_info['time_zone']);
+	$xtra = \Workshops\format_times($xtra, $teacher_info['time_zone']);
+	
+	$subject = get_subject($wk, $xtra);
+	$note = get_note($wk, $xtra, $teacher_info['nice_name'], true);
+	
+	if (!$xtra['id']) { // is it first session? send teacher the roster
+		$note .= "<h3>Full info for class</h3>\n".
+			preg_replace('/\n/', "<br>\n", \Workshops\get_cut_and_paste_roster($wk));
+	} else {
+		$note .= \Emails\get_workshop_summary($wk);
+	}
+	\Emails\centralized_email($teacher_info['email'], $subject, $note);
 	
 }

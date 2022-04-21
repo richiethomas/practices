@@ -26,7 +26,7 @@ function get_workshop_info(int $id = 0) {
 
 	$stmt = \DB\pdo_query("select w.* from workshops w where w.id = :id", array(':id' => $id));
 	while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
-		$row = fill_out_workshop_row($row);
+		$row = fill_out_workshop_row($row, true);
 		return $row;
 
 	}
@@ -45,7 +45,7 @@ function fill_out_workshop_row(array $row, bool $get_enrollment_stats = true) {
 	}
 	$row['soldout'] = 0; // so many places in the code refer to this
 	
-	$row = format_workshop_startend($row);
+	$row = format_times($row);
 	$row['tags_array'] = get_tags($row['tags']);	
 	
 	// create short title if it's more then 2 words
@@ -79,43 +79,20 @@ function fill_out_workshop_row(array $row, bool $get_enrollment_stats = true) {
 
 	// xtra session stuff
 	$row = fill_out_xtra_sessions($row);
-	
-	// set full when
-	$row['full_when'] = $row['when'];
-	if (!empty($row['sessions'])) {
-		$row['full_when'] .= "<br>\n";
-		foreach ($row['sessions'] as $s) {
-			$row['full_when'] .= 
-				($s['class_show'] == 1 ? 'Show: ' : '').
-				"{$s['friendly_when']}<br>\n";
-		}
-	}
-
-	// set full when - cali time
-	$row['full_when_cali'] = $row['when_cali'];
-	if (!empty($row['sessions'])) {
-		$row['full_when_cali'] .= "<br>\n";
-		foreach ($row['sessions'] as $s) {
-			$row['full_when_cali'] .= 
-				($s['class_show'] == 1 ? 'Show: ' : '').
-				"{$s['friendly_when_cali']}<br>\n";
-		}
-	}
+	$row = set_full_when($row);
 		
 	if (strtotime($row['end']) >= strtotime('now')) { 
 		$row['upcoming'] = 1; 
 	} else {
 		$row['upcoming'] = 0;
 	}
-	$row = check_last_minuteness($row);
-		
+
 	if ($get_enrollment_stats) {
 
 		// set teacher pay
 	
 		$row['teacher_pay'] = get_teacher_pay($row);
-		
-		$row = set_actual_revenue($row);
+		$row['actual_revenue'] = get_actual_revenue($row);
 		$row = set_enrollment_stats($row);
 
 	}
@@ -135,41 +112,86 @@ function figure_costdisplay(int $cost) {
 }
 
 
-// pass in the workshop row as it comes from the database table
-// add some columns with date / time stuff figured out
-function format_workshop_startend(array $row) {
+// format times for a flat row of data -- workshop or xtra session
+// formerly format_workshop_startend
+function format_times(array $row, $tz = null) {
 	
-	global $u; // $u->fields['time_zone'] is set in User class
-		
-	$tz = $u->fields['time_zone'];
-	$tzadd = " ({$u->fields['time_zone_friendly']})";
+	if (!isset($row['start']) || !isset($row['end'])) {
+		return $row; // do nothing without start and end 
+	}
 	
+	if (!$tz) {
+		global $u;
+		$tz = $u->fields['time_zone'];
+	}
+	$tzadd = " (".\Wbhkit\get_time_zone_friendly($tz).")";
+	
+	// never touch 'start' or 'end', make new time zone versions
+	$row['time_zone_used'] = $tz;
 	$row['start_tz'] = \Wbhkit\convert_tz($row['start'], $tz);
 	$row['end_tz'] = \Wbhkit\convert_tz($row['end'], $tz);
 	$row['when_public_tz'] = ((isset($row['when_public']) && $row['when_public']) ? \Wbhkit\convert_tz($row['when_public'], $tz) : null);
 	
+	// nicer formatted starts and ends
 	$row['showstart'] = \Wbhkit\friendly_date($row['start_tz']).' '.\Wbhkit\friendly_time($row['start_tz']);
 	$row['showend'] = \Wbhkit\friendly_time($row['end_tz']);
 	$row['when'] = "{$row['showstart']}-{$row['showend']}".$tzadd;
+	$row['when_no_tz'] = "{$row['showstart']}-{$row['showend']}";
 	$row['showstart'] .= $tzadd;
 	$row['showend'] .= $tzadd;	
 
+	// nicer formatted default time zones
 	$tzcali = " (".TIME_ZONE.")";
 	$row['showstart_cali'] = \Wbhkit\friendly_date($row['start']).' '.\Wbhkit\friendly_time($row['start']);
 	$row['showend_cali'] = \Wbhkit\friendly_time($row['end']);
 	$row['when_cali'] = "{$row['showstart_cali']}-{$row['showend_cali']}".$tzcali;
+	$row['when_cali_no_tz'] = "{$row['showstart_cali']}-{$row['showend_cali']}";
 	$row['showstart_cali'] .= $tzcali;
-	$row['showend_cali'] .= $tzcali;	
+	$row['showend_cali'] .= $tzcali;
 	
-	
-	
+	// nicer formatted start, end, when_public (times not changed) 
 	foreach (array('start', 'end', 'when_public') as $tv) {
 		if (isset($row[$tv])) {
 			$row[$tv] = \Wbhkit\present_ts($row[$tv]);
 		}
 	}
-	
 	return $row;
+}
+
+// make 2 lists of all dates for a workshop
+// one for a particular time zone and another for DEFAULT_TIME_ZONE
+function set_full_when($row, $tz = null) {
+
+	if (!$tz) {
+		global $u;
+		$tz = $u->fields['time_zone'];
+	}
+	$tzadd = " (".\Wbhkit\get_time_zone_friendly($tz).")";
+	
+	// update time zones if needed
+	if (!isset($row['time_zone_used']) || $row['time_zone_used'] != $tz) {
+		$row = format_times($row, $tz);
+	}
+	$row['full_when'] = $row['when'];
+	$row['full_when_cali'] = $row['when_cali'];
+	
+	// drill down into xtra_sessions
+	if (!empty($row['sessions'])) {
+		foreach ($row['sessions'] as $id => $s) {
+			if (!isset($s['time_zone_used']) || $s['time_zone_used'] != $tz) {
+				$row['sessions'][$id] = $s = format_times($s, $tz); // change row array
+			}
+			$row['full_when'] .= "<br>\n".
+				($s['class_show'] == 1 ? 'Show: ' : '').
+				"{$s['when_no_tz']}\n";
+			
+			$row['full_when_cali'] .= "<br>\n".
+				($s['class_show'] == 1 ? 'Show: ' : '').
+				"{$s['when_cali_no_tz']}\n";
+		}
+	}	
+	return $row;	
+	
 }
 
 
@@ -223,52 +245,20 @@ function set_enrollment_stats(array $row) {
 }
 
 
-function set_actual_revenue(array $row) {
+function get_actual_revenue(array $row) {
 	
-	$stmt = \DB\pdo_query("select paid, pay_override from registrations r where r.workshop_id = :wid", array(':wid' => $row['id']));
+	$stmt = \DB\pdo_query("select paid, pay_amount, pay_channel, pay_when from registrations r where r.workshop_id = :wid", array(':wid' => $row['id']));
 	$total = 0;
 	while ($reg = $stmt->fetch(\PDO::FETCH_ASSOC)) {
-		if ($reg['paid']) {
-			$total += ($reg['pay_override'] ? $reg['pay_override'] : $row['cost']);
+		if ($reg['paid'] && $reg['pay_amount']) {
+			$total += $reg['pay_amount'];
 		}
 	}
-	$row['actual_revenue'] = $total;
-	return $row;
+	return $total;
 }
 
 
 
-
-function check_last_minuteness(array $wk) {
-	
-	/* 
-		there's two flags:
-			1) workshops have "sold_out_late" meaning the workshop was sold out within LATE_HOURS of the start. We update this to 1 or 0 everytime the web site selects the workshop info from the db.
-			2) registrations have a "while_sold_out" flag. if it is set to 1, then you were enrolled in this workshop while it was sold_out_late (i.e. sold out within $late_hours of its start). we also check this every time we select the workshop info. but this never gets set back to zero. 
-			If a "while sold out" person drops, that's not cool. They held a spot during a sold out time close to the start of the workshop.
-	*/ 
-			
-	$hours_left = (strtotime($wk['start']) - strtotime('now')) / 3600;
-	if ($hours_left > 0 && $hours_left < LATE_HOURS) {
-		// have we never checked if it's sold out
-		if ($wk['sold_out_late'] == -1) {
-			if ($wk['soldout'] == 1) {
-				
-				$stmt = \DB\pdo_query("update workshops set sold_out_late = 1 where id = :wid", array(':wid' => $wk['id']));				
-
-				$stmt = \DB\pdo_query("update registrations set while_soldout = 1 where workshop_id = :wid and status_id = '".ENROLLED."'", array(':wid' => $wk['id']));
-				
-				$wk['sold_out_late'] = 1;
-			} else {
-
-				$stmt = \DB\pdo_query("update workshops set sold_out_late = 0 where id = :wid", array(':wid' => $wk['id']));
-
-				$wk['sold_out_late'] = 0;
-			}
-		}
-	}
-	return $wk;
-}
 
 
 function get_unavailable_workshops() {
@@ -307,7 +297,7 @@ function get_workshops_dropdown(?string $start = null, ?string $end = null) {
 	$stmt = \DB\pdo_query("select w.* from workshops w order by start desc");
 	$workshops = array();
 	while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
-		$row = format_workshop_startend($row);
+		$row = format_times($row);
 		$workshops[$row['id']] = $row['title'].' ('.date('Y-M-d', strtotime($row['start'])).')';
 	}
 	return $workshops;
@@ -447,7 +437,7 @@ order by start asc");
 		$row['costdisplay'] = figure_costdisplay($row['cost']);
 		
 		$row = parse_online_url($row);
-		$row = format_workshop_startend($row);
+		$row = format_times($row);
 		
 		if ($get_enrollments) {
 			foreach ($enrollments as $e_wid => $e_row) {
@@ -567,7 +557,6 @@ function get_empty_workshop() {
 		'capacity' => null,
 		'notes' => null,
 		'when_public' => null,
-		'sold_out_late' => null,
 		'teacher_id' => 1,
 		'co_teacher_id' => null,
 		'reminder_sent' => 0,
@@ -701,7 +690,7 @@ function get_cut_and_paste_roster(array $wk, ?array $enrolled = null) {
 		foreach ($wk['sessions'] as $s) {
 			$class_dates .= 
 			($s['class_show'] ? 'Show: ' : '').	
-			"{$s['friendly_when']}".
+			"{$s['when']}".
 			($s['online_url'] ? " - {$s['online_url']}" : '')."\n";
 		}
 	}

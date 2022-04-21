@@ -24,11 +24,6 @@ if (is_array($workshops)) {
 					$student_emails[] = $as['email'];
 					$student_names[] = "{$as['nice_name']}, {$as['email']}";
 					
-					// also tally who paid
-					if ($as['status_id'] == ENROLLED and $as['paid'] == 0) {
-						$unpaid[] = $as['email'];
-					}
-
 				}
 			}
 		}
@@ -40,15 +35,11 @@ if (is_array($workshops)) {
 		$student_names = array_unique($student_names);
 		natcasesort($student_names);
 		$results[$stid]['nice_names'] = $student_names; // attach list of students
-		
-		// also unpaid
-		$unpaid = array_unique($unpaid);
-		natcasesort($unpaid);
-		
+				
 	}
 }
 
-$view->add_globals(array('all_workshops', 'workshops', 'statuses', 'results', 'unpaid'));
+$view->add_globals(array('all_workshops', 'workshops', 'statuses', 'results'));
 $view->renderPage('admin/gemail');
 
 
