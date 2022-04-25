@@ -11,6 +11,17 @@ $th = new TasksHelper();
 
 switch ($ac) {
 	
+	case 'clone':
+		$t = new Task();
+		$t->set_by_id($tid);
+		foreach ($vars as $v) {
+			$$v = isset($t->fields[$v]) ? $t->fields[$v] : null;
+		}
+		$guest = new User();
+		$guest->set_by_id($t->fields['user_id']);
+		$email = $guest->fields['email'];
+		$id = null;
+		break;
 
 	case 'edit':
 		$t = new Task();
@@ -29,7 +40,7 @@ switch ($ac) {
 	case 'add':
 	case 'update':
 		
-		if ($title && $event_when && $email && $payment_amount && $reminder_email_id) {
+		if ($title && $event_when && $email && $reminder_email_id) {
 		
 			$guest = new User();
 			if ($guest->set_by_email($email)) {

@@ -86,8 +86,6 @@ $( document ).ready(function() {
 				?>
 			</div>
 			</div>			
-			<p><i>(class # / total classes)</i></p>
-
 
 <script type="text/javascript">
 $(function(){
@@ -134,7 +132,7 @@ foreach ($workshops as $wk) {
 	$xtra = $wk['class_show'] ? ' show' : '';
 	if ($wk['hidden'] == 1) { $xtra = 'text-muted'; }
 		
-	echo "<li class='mt-1 $xtra class-session' data-teacher=\"teacher-{$wk['teacher_id']}\"><a   href='/admin-workshop/view/{$wk['id']}' class='$xtra'>{$wk['title']}</a> ({$wk['rank']}/{$wk['total_sessions']}".($wk['class_show'] ? ' - show' : '')."), $start";
+	echo "<li class='mt-1 $xtra class-session' data-teacher=\"teacher-{$wk['teacher_id']}\"><a   href='/admin-workshop/view/{$wk['id']}' class='$xtra'>{$wk['title']}</a> {$wk['rank']} of {$wk['total_sessions']} <span class='text-muted'>({$wk['enrolled']}/{$wk['capacity']})</span>".($wk['class_show'] ? ' - show' : '').", $start";
 	
 	echo " - {$wk['teacher_name']}";
 	if ($wk['co_teacher_id']) {

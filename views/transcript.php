@@ -24,7 +24,7 @@ if ($admin) {
 	      let costInput = document.querySelector(`#amount_\${userID}`);
 	      // Update input elements
 	      if (whenInput.value === '') {
-	        whenInput.value = `\${date.getFullYear()}-\${date.getMonth()}-\${date.getDay()}`;
+	        whenInput.value = `\${date.getFullYear()}-\${date.getMonth()}-\${date.getDate()}`;
 	      }
 	      if (costInput.value === '') {
 	        costInput.value = cost;

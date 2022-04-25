@@ -45,7 +45,6 @@ function fill_out_workshop_row(array $row, bool $get_enrollment_stats = true) {
 	}
 	$row['soldout'] = 0; // so many places in the code refer to this
 	
-	$row = format_times($row);
 	$row['tags_array'] = get_tags($row['tags']);	
 	
 	// create short title if it's more then 2 words
@@ -79,7 +78,7 @@ function fill_out_workshop_row(array $row, bool $get_enrollment_stats = true) {
 
 	// xtra session stuff
 	$row = fill_out_xtra_sessions($row);
-	$row = set_full_when($row);
+	$row = format_times($row);
 		
 	if (strtotime($row['end']) >= strtotime('now')) { 
 		$row['upcoming'] = 1; 
@@ -114,7 +113,7 @@ function figure_costdisplay(int $cost) {
 
 // format times for a flat row of data -- workshop or xtra session
 // formerly format_workshop_startend
-function format_times(array $row, $tz = null) {
+function format_times_one_level(array $row, $tz = null) {
 	
 	if (!isset($row['start']) || !isset($row['end'])) {
 		return $row; // do nothing without start and end 
@@ -160,18 +159,17 @@ function format_times(array $row, $tz = null) {
 
 // make 2 lists of all dates for a workshop
 // one for a particular time zone and another for DEFAULT_TIME_ZONE
-function set_full_when($row, $tz = null) {
+
+function format_times($row, $tz = null) {
 
 	if (!$tz) {
 		global $u;
 		$tz = $u->fields['time_zone'];
+		if (!$tz) { $tz = DEFAULT_TIME_ZONE; }
 	}
 	$tzadd = " (".\Wbhkit\get_time_zone_friendly($tz).")";
 	
-	// update time zones if needed
-	if (!isset($row['time_zone_used']) || $row['time_zone_used'] != $tz) {
-		$row = format_times($row, $tz);
-	}
+	$row = format_times_one_level($row, $tz);
 	$row['full_when'] = $row['when'];
 	$row['full_when_cali'] = $row['when_cali'];
 	
@@ -179,7 +177,7 @@ function set_full_when($row, $tz = null) {
 	if (!empty($row['sessions'])) {
 		foreach ($row['sessions'] as $id => $s) {
 			if (!isset($s['time_zone_used']) || $s['time_zone_used'] != $tz) {
-				$row['sessions'][$id] = $s = format_times($s, $tz); // change row array
+				$row['sessions'][$id] = $s = format_times_one_level($s, $tz); // change row array
 			}
 			$row['full_when'] .= "<br>\n".
 				($s['class_show'] == 1 ? 'Show: ' : '').
@@ -309,7 +307,7 @@ function get_search_results(string $page = "1", ?string $needle = null) {
 	global $view;
 	
 	// get IDs of workshops
-	$sql = "select w.* from workshops w ";
+	$sql = "select distinct w.* from workshops w ";
 	if ($needle) { 
 		$sql .= " , teachers t, users u 
 		where (w.teacher_id = t.id or w.co_teacher_id = t.id) 

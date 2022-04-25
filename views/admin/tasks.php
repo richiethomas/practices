@@ -52,12 +52,12 @@ echo "</fieldset></form>
 
 // list tasks	
 echo "<div class='row my-2 fw-bold'>		
-	<div class='col'>When</div>
-	<div class='col'>What</div>
-	<div class='col'>Who</div>
-	<div class='col'>Pay</div>
-	<div class='col'><a href='/admin-reminder-emails'>Email To Send</a></div>
-	<div class='col'>Actions</div>
+	<div class='col-2'>When</div>
+	<div class='col-2'>What</div>
+	<div class='col-2'>Who</div>
+	<div class='col-1'>Pay</div>
+	<div class='col-2'><a href='/admin-reminder-emails'>Email To Send</a></div>
+	<div class='col-3'>Actions</div>
 </div>\n";
 
 	
@@ -68,12 +68,12 @@ foreach ($tasks as $t) {
 	
 	echo "
 		<div class='row my-2'>		
-			<div class='col'>{$when}</div>
-			<div class='col'>{$t->fields['title']}</div>
-			<div class='col'>{$t->user->fields['display_name']}</div>
-			<div class='col'>{$t->fields['payment_amount']}</div>
-			<div class='col'>{$t->reminder_email->fields['slug']}</div>
-			<div class='col'><a href='/admin-tasks/edit/{$t->fields['id']}'>edit</a> | <a href='/admin-tasks/delete/{$t->fields['id']}'>delete</a></div>
+			<div class='col-2'>{$when}</div>
+			<div class='col-2'>{$t->fields['title']}</div>
+			<div class='col-2'>{$t->user->fields['display_name']}</div>
+			<div class='col-1'>{$t->fields['payment_amount']}</div>
+			<div class='col-2'>{$t->reminder_email->fields['slug']}</div>
+			<div class='col-3'><a href='/admin-tasks/edit/{$t->fields['id']}'>edit</a> | <a href='/admin-tasks/clone/{$t->fields['id']}'>clone</a> | <a href='/admin-tasks/delete/{$t->fields['id']}'>delete</a></div>
 		</div>		
 ";
 	

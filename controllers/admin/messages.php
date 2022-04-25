@@ -35,35 +35,42 @@ switch ($ac) {
 		}
 		$stds = $eh->get_students($wk['id'], $st);
 		$sent = '';
-		$subject = preg_replace('/TITLE/', $wk['title'], $subject);
-		$note = preg_replace('/TITLE/', $wk['title'], $note);
-		$note = preg_replace('/\R/', "<br>", $note);
-		
-
-		$note = $note.Emails\get_workshop_summary($wk);
 		
 		foreach ($stds as $std) {
+
+			list($wk, $this_subject, $this_note) = set_message_properties($wk, $std['time_zone'], $subject, $note);
 						
-			Emails\centralized_email($std['email'], $subject, $note);
+			Emails\centralized_email($std['email'], $this_subject, $this_note);
 			$sent .= "{$std['email']}, ";
 			$guest->set_by_id($std['id']);
 		
 		}
-		$message = "Email '$subject' sent to $sent";
-		$subject = "WGIS message: $subject";
+		
+		$guest = new User();
+		$guest->set_by_id(1);
+		list($wk, $this_subject, $this_note) = set_message_properties($wk, $guest->fields['time_zone'], $subject, $note);
+		
+		$message = "Email '$this_subject' sent to $sent";
+		$this_subject = "WGIS message: $this_subject";
 
 		// send a copy to the webmaster
-		Emails\centralized_email(WEBMASTER, $subject, "<p>Hi admin -- the below message got sent to this class:</p>".$note);
+		Emails\centralized_email(WEBMASTER, $this_subject, "<p>Hi admin -- the below message got sent to this class:</p>".$this_note);
 		
 		//send a copy to the teacher(s)
 		$note = "<p>Hello teacher or co-teacher! The below email was sent by the WGIS admin to the students of this class:<br>
 ---------------</p>".$note;
-		Emails\centralized_email($wk['teacher_info']['email'], $subject, $note);
+		list($wk, $this_subject, $this_note) = set_message_properties($wk, $wk['teacher_info']['time_zone'], $subject, $note);
+		Emails\centralized_email($wk['teacher_info']['email'], $this_subject, $this_note);
 		if ($wk['co_teacher_id']) {
-			Emails\centralized_email($wk['co_teacher_info']['email'], $subject, $note);
+			list($wk, $this_subject, $this_note) = set_message_properties($wk, $wk['co_teacher_info']['time_zone'], $subject, $note);
+			Emails\centralized_email($wk['co_teacher_info']['email'], $this_subject, $this_note);
 		}
 
+		$subject = $_REQUEST['subject'];
+		$note = $_REQUEST['note'];
 		break;
+
+
 
 	case 'roster':
 
@@ -102,6 +109,14 @@ if (!$wk['id']) {
 
 
 
+function set_message_properties($wk, $tz, $subject, $note) {
+	$wk = \Workshops\format_times($wk, ($tz ?? DEFAULT_TIME_ZONE));
+	$this_subject = preg_replace('/TITLE/', $wk['title'], $subject);
+	$this_note = preg_replace('/TITLE/', $wk['title'], $note);
+	$this_note = preg_replace('/\R/', "<br>", $this_note);
+	$this_note = $this_note.Emails\get_workshop_summary($wk);
+	return array($wk, $this_subject, $this_note);
+}
 
 
 

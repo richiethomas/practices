@@ -108,8 +108,10 @@ function remind_enrolled(array $class) {
 
 	foreach ($stds as $std) {
 		
+		
+		if (!$std['time_zone']) { $std['time_zone'] = DEFAULT_TIME_ZONE; }
+		
 		$wk = \Workshops\format_times($wk, $std['time_zone']);
-		$wk = \Workshops\set_full_when($wk, $std['time_zone']);
 		$xtra = \Workshops\format_times($xtra, $std['time_zone']);
 		
 		$subject = get_subject($wk, $xtra);
@@ -151,7 +153,6 @@ function remind_enrolled(array $class) {
 		$guest->set_by_id(1); // that's right, hard-coded
 		
 		$wk = \Workshops\format_times($wk, $guest->fields['time_zone']);
-		$wk = \Workshops\set_full_when($wk, $guest->fields['time_zone']);
 		
 		$alert_msg = "'{$wk['title']}' is not full. {$wk['enrolled']} of {$wk['capacity']} signed up<br>\n".
 			URL."admin-workshop/view/{$wk['id']}<br>\n".
@@ -229,7 +230,6 @@ https://www.twitch.tv/wgimprovschool</p>\n";
 function remind_teacher($wk, $xtra, $teacher_info) {
 	
 	$wk = \Workshops\format_times($wk, $teacher_info['time_zone']);
-	$wk = \Workshops\set_full_when($wk, $teacher_info['time_zone']);
 	$xtra = \Workshops\format_times($xtra, $teacher_info['time_zone']);
 	
 	$subject = get_subject($wk, $xtra);
