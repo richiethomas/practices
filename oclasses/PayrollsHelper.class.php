@@ -18,13 +18,13 @@ class PayrollsHelper extends WBHObject {
 		if (!$start) { $start = "Jan 1 1000"; }
 		if (!$end) { $end = "Dec 31 3000"; }
 
-		// get IDs of workshops
-		$mysqlstart = date(MYSQL_FORMAT, strtotime($start));
-		$mysqlend = date(MYSQL_FORMAT, strtotime($end));
+		// get IDs of workshops Y-m-d H:i:s
+		$mysqlstart = date("Y-m-d 00:00:00", strtotime($start));
+		$mysqlend = date("Y-m-d 23:59:59", strtotime($end));
 
 		$stmt = \DB\pdo_query("select p.* from payrolls p, users u
 			where (
-				(p.when_paid > :start and p.when_paid < :end) or (p.when_happened > :start2 and p.when_happened < :end2)
+				(p.when_paid > :start and p.when_paid < :end) or (p.when_happened >= :start2 and p.when_happened <= :end2)
 		)
 		and p.user_id = u.id
 		order by p.when_paid, u.display_name, u.email, p.task, p.table_id", 
@@ -43,9 +43,8 @@ class PayrollsHelper extends WBHObject {
 	// proposed payroll objects
 	function get_claims(string $start = "Jan 1 1000", string $end = "Dec 31 3000") {
 
-		$mysqlstart = date(MYSQL_FORMAT, strtotime($start));
-		$mysqlend = date(MYSQL_FORMAT, strtotime($end));
-
+		$mysqlstart = date("Y-m-d 00:00:00", strtotime($start));
+		$mysqlend = date("Y-m-d 23:59:59", strtotime($end));
 
 		$this->claims = array();
 	
