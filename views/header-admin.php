@@ -78,6 +78,7 @@
 			<li><hr/></li>
 			<li class="nav-item"><a class="nav-link" href="/admin-revenue">Revenue</a></li>
 			<li class="nav-item"><a class="nav-link" href="/admin-payroll">Payroll</a></li>
+			<li class="nav-item"><a class="nav-link" href="/admin-registrations">Registrations</a></li>
 <?php } ?>
 			<li><hr/></li>
 
