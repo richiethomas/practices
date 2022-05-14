@@ -68,29 +68,6 @@
 </div>
 
 
-<div class="showrow row">
-	<div class="col-md-6">
-		
-		<h2 class="my-4">WGIS Teams</h2>
-		<p>We have house teams that do online shows at <?php
-		$ts1 = \Wbhkit\convert_tz("January 3 2022 11am", $u->fields['time_zone'], 'l ga');
-		$ts2 = \Wbhkit\convert_tz("January 3 2022 5pm", $u->fields['time_zone'], 'l ga');
-		echo "$ts1 and $ts2 ({$u->fields['time_zone_friendly']})";
-		?> (two teams at teach time). For a list of teams and who performs on them and the schedule, see the <a href="/teams">teams page</a>.</p>
-		
-	</div>
-	<div class="col-md-6">
-		<figure class="figure float-end">
-		  <a href="/teams"><img src="/images/teams.png" class="figure-img img-fluid rounded" alt="WGIS Teams"></a>
-		  <figcaption class="figure-caption text-end">art by Gareth O'Connor</figcaption>
-		</figure>
-		
-					
-	</div>
-
-</div>
-
-
 <a id="jams"></a>
 <div class="showrow row align-items-center">
 	<div class="col-md-6">

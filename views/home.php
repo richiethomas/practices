@@ -86,8 +86,8 @@ function class_row(array $wk) {
     <div class="row flex-lg-row-reverse align-items-center g-5 py-5">
       <div class="col-lg-6">
 		<figure class="figure">
-		  <a href="/teams"><img src="/images/teams.png" class="figure-img img-fluid rounded" alt="2021 Winter Teams"></a>
-		  <figcaption class="figure-caption text-end">art by Gareth O'Connor</figcaption>
+		  <a href="/teams"><img src="/images/wgis_chaircircle.png" class="figure-img img-fluid rounded" alt="Improv Chair"></a>
+		  <figcaption class="figure-caption text-end">art by Nikki Rodriguez</figcaption>
 		</figure>
       </div>
       <div class="col-lg-6">

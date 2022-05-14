@@ -219,20 +219,24 @@ class Enrollment extends WBHObject {
 	}
 	
 	private function update_paid (
+	
 		int $new_paid, 
 		string $pay_amount = '0',
 		?string $pay_when = null,
 		?string $pay_channel = null,
 		bool $block_email = false) {
 		
-		
 		if ($pay_amount == '') { $pay_amount = 0; }
 		
-		if ($pay_when) { $pay_when = date('Y-m-d', strtotime($pay_when)); }
-		
+		if ($pay_when && $pay_when != '0000-00-00' && date('Y', strtotime($pay_when)) != '1969') { 
+			$pay_when = date('Y-m-d', strtotime($pay_when)); 
+		} else {
+			$pay_when = null;
+		}
 		
 		//echo "$new_paid, $pay_amount, $pay_when, $pay_channel<br>\n";
 		//die;
+		
 		
 		// update database even if there is no change -- sometimes pay_override changes even if "paid" does not
 		$stmt = \DB\pdo_query("

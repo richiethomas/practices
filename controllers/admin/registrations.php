@@ -1,50 +1,45 @@
 <?php
 $view->data['heading'] = "registrations";
 
-$vars = array('searchstart', 'searchend', 'sortby');
+$vars = array('searchstart', 'searchend', 'sortby', 'payamount', 'paywhen', 'paychannel', 'nextstart', 'nextend', 'laststart', 'lastend');
 Wbhkit\set_vars($vars);
 
 // search defaults to last week
 if (!$searchstart && !$searchend) {
-	$searchend = 'last Friday';
-	$searchstart = '-6 days '.date('Y-m-d', strtotime($searchend));
+	$searchstart = date('Y-m-1');
+	$searchend = date('Y-m-t');
 }
 
-if ($searchstart) { $searchstart = date('Y-m-d 00:00:00', strtotime($searchstart)); }
-if ($searchend) { $searchend = date('Y-m-d 23:59:59', strtotime($searchend)); }
+$day_one = date('Y-m-1', strtotime($searchstart));
+$day_end = date('Y-m-t', strtotime($searchstart));
+$laststart = date('Y-m-1', change_date_string($day_one, "-1 day"));
+$lastend = date('Y-m-t', change_date_string($day_one, "-1 day"));
+$nextstart = date('Y-m-1', change_date_string($day_end, "+1 day"));
+$nextend = date('Y-m-t', change_date_string($day_end, "+1 day"));
+
+if ($searchstart) { $searchstart = date('Y-m-d', strtotime($searchstart)); }
+if ($searchend) { $searchend = date('Y-m-d', strtotime($searchend)); }
 
 switch ($ac) {
 
 	case 'update':
+
+		$rid =  (int) ($params[2] ?? 0);
+		//echo "update: $rid, $payamount, $paywhen, $paychannel<br>";
 		
-		foreach ($_REQUEST as $k => $v) {
-			if (substr($k, 0, 10) == 'payamount_') {
-				$ps = explode('_', $k);
-				if ($v != $_REQUEST["hiddenamount_{$ps[1]}"]) {
-					$message .= "update reg {$ps[1]} amount to $v<br>\n";
-					\DB\pdo_query("update registrations set pay_amount = :pa where id = :id",
-					array(':pa' => $v, ':id' => $ps[1]));
+		if (is_numeric($rid)) {
+			$stmt = \DB\pdo_query("update registrations set pay_amount = :pa, pay_when = :pw, pay_channel = :pc where id = :id", array(
+				':pa' => $payamount, 
+				':pw' => date(MYSQL_FORMAT, strtotime($paywhen)),
+				':pc' => $paychannel, 
+				':id' => $rid));
+				if ($stmt) {
+					$message = "Update reg '$rid' to: $payamount, $paywhen, $paychannel";
+					break;
 				}
-			}
-
-			if (substr($k, 0, 8) == 'paywhen_') {
-				$ps = explode('_', $k);
-				if ($v && $v != '0000-00-00' && strtotime($v) != $_REQUEST["hiddenwhen_{$ps[1]}"]) {
-					$message .= "update reg {$ps[1]} when to $v<br>\n";
-					\DB\pdo_query("update registrations set pay_when = :pw where id = :id",
-					array(':pw' => date(MYSQL_FORMAT, strtotime($v)), ':id' => $ps[1]));
-				}
-			}
-
-			if (substr($k, 0, 11) == 'paychannel_') {
-				$ps = explode('_', $k);
-				if ($v != $_REQUEST["hiddenchannel_{$ps[1]}"]) {
-					$message .= "update reg {$ps[1]} channel to $v<br>\n";
-					\DB\pdo_query("update registrations set pay_channel = :pc where id = :id",
-					array(':pc' => $v, ':id' => $ps[1]));
-				}
-			}
 		}
+		$error = "Failed to update reg '$rid' to: $payamount, $paywhen, $paychannel";
+		
 		break;
 }
 
@@ -68,6 +63,7 @@ where r.workshop_id = w.id
 and r.user_id = u.id
 and w.teacher_id = t.id
 and t.user_id = tu.id
+and (r.status_id = 1 or r.pay_amount > 0)
 and r.registered >= :start and r.registered <= :end
 order by {$orderby[$sortby]}",
 array(':start' => date(MYSQL_FORMAT, strtotime($searchstart)), ':end' => date(MYSQL_FORMAT, strtotime($searchend))));
@@ -82,6 +78,12 @@ while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
 
 $view->data['registrations'] = $registrations;
 $view->renderPage('admin/registrations');
+
+function change_date_string($timestring, $change) {
+	$new = new DateTime($timestring);
+	$new->modify($change);
+	return strtotime($new->format('Y-m-d'));
+}
 
 
 

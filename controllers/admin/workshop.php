@@ -153,6 +153,7 @@ switch ($ac) {
 					$pw = isset($whens[$uid]) ? $whens[$uid] : null;
 					$pc = isset($channels[$uid]) ? $channels[$uid] : null;
 
+					
 					if (in_array($as['id'], $paids)) {
 						$msg = $e->update_paid_by_enrollment_id($eid, 1, $pa, $pw, $pc, $hideconpay);
 					} else {

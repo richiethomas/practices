@@ -42,10 +42,10 @@ if ($admin) {
 		
 	foreach ($rows as $t) {
 		$cl = '';
-		if ($t['upcoming'] == 0) {
-			$cl .= 'light';
-		} elseif ($t['status_id'] == ENROLLED) {
+		if ($t['status_id'] == ENROLLED) {
 			$cl .= 'success';
+		} elseif ($t['upcoming'] == 0) {
+			$cl .= 'light';
 		} else {
 			$cl .= 'warning';
 		}	
