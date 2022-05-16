@@ -1,5 +1,5 @@
-<div class='row'><div class='col-md-10'><h2>Revenues</h2>
-<form action='/admin-revenue/view/' method='get'>
+<div class='row'><div class='col-md-10'><h2>Revenues By Class</h2>
+<form action='/admin-revbyclass/view/' method='get'>
 <?php echo \Wbhkit\texty('searchstart', $searchstart, 'Search Start'); ?>
 <?php echo \Wbhkit\texty('searchend', $searchend, 'Search End'); ?>
 <?php echo \Wbhkit\radio('mode', array('0' => 'by teacher', '1' => 'by class'), $mode);  ?>
@@ -7,8 +7,10 @@
 </form>
 
 <?php
-$weeknav = "<p><a href='/admin-revenue/view/?searchstart=$lastweekstart&searchend=$lastweekend&mode=$mode'>last week</a> | <a href='/admin-revenue/view/'>this week</a> | <a href='/admin-revenue/view/?searchstart=$nextweekstart&searchend=$nextweekend&mode=$mode'>next week</a></p>\n";
-echo $weeknav;
+
+$nav = "<p><a href='/admin-revbyclass/view/?searchstart=$laststart&searchend=$lastend&mode=$mode'>last month</a> | <a href='/admin-revbyclass/view/&mode=$mode'>this month</a> | <a href='/admin-revbyclass/view/?searchstart=$nextstart&searchend=$nextend&mode=$mode'>next month</a></p>\n";
+echo $nav;
+
 
 if (count($workshops_list) == 0) {
 	echo "<h2>No workshops offered in this time period!</h2>\n";
@@ -110,7 +112,7 @@ $table_open = "<table class='table table-striped my-3'>
 		<td>".number_format($totals['suggested_paid'] - $totals['teacher_pay'])."</td>
 		</tr></table>\n";
 
-		echo $weeknav; 
+		echo $nav; 
 		
 		
 		echo "</div></div>\n";

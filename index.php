@@ -123,7 +123,7 @@ if ($u->check_user_level(3)) {
 		'admin-error-log' => 'admin/error-log',
 		'admin-debug-log' => 'admin/debug-log',
 		'admin-email-log' => 'admin/email-log',
-		'admin-revenue' => 'admin/revenue',
+		'admin-revbyclass' => 'admin/revenue_byclass',
 		'admin-revbydate' => 'admin/revenue_bydate',
 		'admin-payroll' => 'admin/payroll',
 		'admin-bulk' => 'admin/bulk-status',

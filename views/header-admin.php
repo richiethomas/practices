@@ -78,7 +78,7 @@
 			<li class="nav-item"><a class="nav-link" href="/admin-registrations">Registrations</a></li>
 			<li class="nav-item"><a class="nav-link" href="/admin-tasks">Task Costs</a></li>
 			<li class="nav-item"><a class="nav-link" href="/admin-payroll">Payroll</a></li>
-			<li class="nav-item"><a class="nav-link" href="/admin-revenue">Rev By Class</a></li>
+			<li class="nav-item"><a class="nav-link" href="/admin-revbyclass">Rev By Class</a></li>
 			<li class="nav-item"><a class="nav-link" href="/admin-revbydate">Rev By Date</a></li>
 <?php } ?>
 			<li><hr/></li>
