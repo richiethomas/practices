@@ -1,5 +1,5 @@
 <?php
-$view->data['heading'] = "revenue";
+$view->data['heading'] = "revenue by date";
 
 $u->reject_user_below(3); // group 3 or higher
 
@@ -19,8 +19,6 @@ $laststart = date('Y-m-1', change_date_string($day_one, "-1 day"));
 $lastend = date('Y-m-t', change_date_string($day_one, "-1 day"));
 $nextstart = date('Y-m-1', change_date_string($day_end, "+1 day"));
 $nextend = date('Y-m-t', change_date_string($day_end, "+1 day"));
-
-$params = 
 
 $classes = array();
 $tasks = array();
