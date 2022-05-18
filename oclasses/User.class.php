@@ -22,12 +22,17 @@ class User extends WBHObject {
 			'time_zone_friendly' => null
 			);
 			
-		$this->default_time_zone = DEFAULT_TIME_ZONE;
 		$this->set_into_fields($fields);
-		$this->fields['time_zone'] = $this->default_time_zone;
-		$this->set_time_zone_friendly();
+		$this->set_time_zone();
 	}
 
+	private function set_time_zone() {
+		$this->default_time_zone = DEFAULT_TIME_ZONE;
+		if (!isset($this->fields['time_zone']) || !$this->fields['time_zone']) {
+			$this->fields['time_zone'] = $this->default_time_zone;
+		}
+		$this->set_time_zone_friendly();
+	}
 
 	private function clear_fields() {
 		$this->fields = array();
@@ -55,7 +60,7 @@ class User extends WBHObject {
 	
 		// didn't find one? make one
 		if ($this->validate_email($email)) {
-			echo "about to create user $email<br>";
+			//echo "about to create user $email<br>";
 			$stmt = \DB\pdo_query("insert into users (email, joined, time_zone) VALUES (:email, :joined, :tz)", array(':email' => $email, ':joined' => date(MYSQL_FORMAT), ':tz' => DEFAULT_TIME_ZONE));
 			
 			$stmt = \DB\pdo_query("select id from users where email = :email", array(":email" => $email));
@@ -119,10 +124,7 @@ class User extends WBHObject {
 			$this->fields['nice_name'] = $this->fields['fullest_name'] = $this->fields['email'];
 		}
 		
-		if (!isset($this->fields['time_zone']) || !$this->fields['time_zone']) {
-			$this->fields['time_zone'] = $this->default_time_zone;
-		}
-		$this->set_time_zone_friendly();
+		$this->set_time_zone();
 		return true;
 	}
 

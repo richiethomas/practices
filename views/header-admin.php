@@ -60,9 +60,17 @@
 			<li class="nav-item"><a class="nav-link" href="/admin-teachers">Teachers</a></li>
 			<li class="nav-item"><a class="nav-link" href="/admin-search">Students</a> </li>
 			<li class="nav-item"><a class="nav-link" href="/admin-emails">Emails</a> </li>
-			<li class="nav-item"><a class="nav-link" href="/admin-bulk-workshops">Bulk</a> </li>
-			<li class="nav-item"><a class="nav-link" href="/admin-conflicts">Conflicts</a> </li>
+			<li class="nav-item"><a class="nav-link" href="/admin-bulk-workshops">Bulk Edit</a> </li>
+			<li class="nav-item"><a class="nav-link" href="/admin-tasks">Tasks</a></li>
+
+<?php if ($u->check_user_level(3)) { ?>
+			<li><hr/></li>
+			<li class="nav-item"><a class="nav-link" href="/admin-registrations">Registrations</a></li>
+			<li class="nav-item"><a class="nav-link" href="/admin-payroll">Payroll</a></li>
+			<li class="nav-item"><a class="nav-link" href="/admin-revbyclass">Rev By Class</a></li>
+			<li class="nav-item"><a class="nav-link" href="/admin-revbydate">Rev By Date</a></li>
 			<li class="nav-item"><a class="nav-link" href="/admin-reminders">Reminders</a></li>
+			<li class="nav-item"><a class="nav-link" href="/admin-conflicts">Conflicts</a> </li>
 		    <li class="nav-item dropdown">
 		      <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Logs</a>
 		      <div class="dropdown-menu nav-item">
@@ -73,13 +81,7 @@
 		      </div>
 		    </li>
 
-<?php if ($u->check_user_level(3)) { ?>
-			<li><hr/></li>
-			<li class="nav-item"><a class="nav-link" href="/admin-registrations">Registrations</a></li>
-			<li class="nav-item"><a class="nav-link" href="/admin-tasks">Task Costs</a></li>
-			<li class="nav-item"><a class="nav-link" href="/admin-payroll">Payroll</a></li>
-			<li class="nav-item"><a class="nav-link" href="/admin-revbyclass">Rev By Class</a></li>
-			<li class="nav-item"><a class="nav-link" href="/admin-revbydate">Rev By Date</a></li>
+
 <?php } ?>
 			<li><hr/></li>
 

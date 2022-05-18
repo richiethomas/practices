@@ -1,7 +1,7 @@
 <?php
 function teacher_link($tinfo) {
   return "
-	  <a href='/teachers/view/{$tinfo['id']}'><img style='width: 50px; height: 50px' class='float-start mx-2 teacher-image align-self-center' src='".\Teachers\get_teacher_photo_src($tinfo['user_id'])."' alt='Teacher Name'></a>
+	  <a href='/teachers/view/{$tinfo['id']}'><img style='width: 50px; height: 50px' class='clearfix float-start mx-2 teacher-image align-self-center' src='".\Teachers\get_teacher_photo_src($tinfo['user_id'])."' alt='Teacher Name'></a>
 		<p class='mt-2 mb-0 teacher-name'><a class='text-decoration-none text-muted' href='/teachers/view/{$tinfo['id']}'> {$tinfo['nice_name']}</a></p>";	
 }	
 	

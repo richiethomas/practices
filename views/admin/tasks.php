@@ -24,20 +24,20 @@ echo "<fieldset name='task_add'><legend>".($id ? "Update" : "Add")." Task</legen
 
 $event_when = \Wbhkit\friendly_when($event_when, true);
 
-echo \Wbhkit\texty('event_when', $event_when, 'When', null, null, 'Required', ' required ').
-\Wbhkit\texty('title', $title, 'Title of Task', null, null, 'Required', ' required ');
+echo \Wbhkit\texty('event_when', $event_when, 'When', null, 'Jan 1 2022 5pm', 'Required', ' required ', 'text' , 'mt-2').
+\Wbhkit\texty('title', $title, 'Title of Task', null, 'jam host', 'Required', ' required ', 'text' , 'mt-2');
 
-echo "<label for='search-box' class='form-label'>Who (email):</label>
+echo "<div class='form-group mt-2'><label for='search-box' class='form-label'>Who (email):</label>
 <input type='text' class='form-control' id='search-box' name='email' autocomplete='off' value='$email'>
-<div id='suggesstion-box'></div>";
+<div id='suggesstion-box'></div></div>";
 
-echo \Wbhkit\texty('payment_amount', $payment_amount, null, null, null, 'Required', ' required ').
-\Wbhkit\drop('reminder_email_id', $re->get_reminder_emails_dropdown(), $reminder_email_id, 'Reminder Email');
+echo \Wbhkit\texty('payment_amount', $payment_amount, null, null, null, 'Required', ' required ', 'text' , 'mt-2').
+\Wbhkit\drop('reminder_email_id', $re->get_reminder_emails_dropdown(), $reminder_email_id, 'Reminder Email', null, null, null, 'mt-2');
 	
 if ($id) {
-	echo \Wbhkit\submit('Update'); 	
+	echo \Wbhkit\submit('Update', 'mt-2'); 	
 } else {
-	echo \Wbhkit\submit('Add');
+	echo \Wbhkit\submit('Add', 'mt-2');
 }
 
 
@@ -56,7 +56,7 @@ echo "<div class='row my-2 fw-bold'>
 	<div class='col-2'>What</div>
 	<div class='col-2'>Who</div>
 	<div class='col-1'>Pay</div>
-	<div class='col-2'><a href='/admin-reminder-emails'>Email To Send</a></div>
+	<div class='col-2'><a href='/admin-reminder-emails'>Email To Send</a><br><span class='fw-lighter fst-italic'>italic = sent</span></div>
 	<div class='col-3'>Actions</div>
 </div>\n";
 
@@ -72,7 +72,7 @@ foreach ($tasks as $t) {
 			<div class='col-2'>{$t->fields['title']}</div>
 			<div class='col-2'>{$t->user->fields['display_name']}</div>
 			<div class='col-1'>{$t->fields['payment_amount']}</div>
-			<div class='col-2'>{$t->reminder_email->fields['slug']}</div>
+			<div class='col-2 ".($t->fields['reminder_sent'] ? 'fw-lighter fst-italic' : null)."'>{$t->reminder_email->fields['slug']}</div>
 			<div class='col-3'><a href='/admin-tasks/edit/{$t->fields['id']}'>edit</a> | <a href='/admin-tasks/clone/{$t->fields['id']}'>clone</a> | <a href='/admin-tasks/delete/{$t->fields['id']}'>delete</a></div>
 		</div>		
 ";

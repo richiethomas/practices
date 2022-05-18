@@ -1,21 +1,9 @@
 <?php
 namespace Wbhkit;
 
-// version 1.1 - added checkbox, option to remove colon from label
-// 1.2 - added blank option to the top of all drop-downs
-// 1.3 - adapted for bootstrap 3RC1
-// 1.31 - minor fixes 4/2/14
-// 1.4 - adding smart urls functions
-// 1.5 - error messages for texty, drop 5/2015
-// 1.5.1 - tweaking radio 1/2016
-// 1.6 - removed 'mres', renamed file, added namespace - 11/2017
-// 2.0 - upgraded to bootstrap v4.0 - 11/2017
-// 2.1 - added html5 form validation, modal sub - 11/2017
-
-
 // next four subs deal with error messages
-function form_element_start() {
-	return "<div class='form-group'>";
+function form_element_start($xtra_class = null) {
+	return "<div class='form-group $xtra_class'>";
 } 
 
 function form_help_block($id, $help = null, $error = null) {
@@ -59,11 +47,11 @@ function figure_label($label, $key, $colon = false) {
 }
 
 
-function texty($key, $value = '', $label = null, $placeholder = null, $help = null, $error = null, $validation = null, $ttype = null) {
+function texty($key, $value = '', $label = null, $placeholder = null, $help = null, $error = null, $validation = null, $ttype = null, $xtra_class = null) {
 	
 	if (!$ttype) { $ttype = 'text'; }
 	$l = label($label, $key);
-	$texty = form_element_start();		
+	$texty = form_element_start($xtra_class);		
 	$texty .= "{$l}<input class='form-control mx-md-1' type=\"{$ttype}\" id=\"$key\" name=\"$key\" value=\"$value\" ".($placeholder ? "placeholder='$placeholder'" : '');
 
 	if ($validation) { $texty .= $validation; }
@@ -101,13 +89,13 @@ function hidden($key, $value = '', $showid = false) {
 	return "<input type='hidden' ".($showid ? "id='$key'" : '')." name='$key' value='$value'>\n";
 }
 
-function submit($value = 'Submit') {
-	return "<button type=\"submit\" class=\"btn btn-primary\">{$value}</button>\n";
+function submit($value = 'Submit', $xtra_class = null) {
+	return "<button type=\"submit\" class=\"btn btn-primary $xtra_class\">{$value}</button>\n";
 }
 
-function drop($name, $opts, $selected = null, $label = null, $help = null, $error = null, $validation = null) {
+function drop($name, $opts, $selected = null, $label = null, $help = null, $error = null, $validation = null, $xtra_class = null) {
 	$l = label($label, $name);	
-	$select = form_element_start();	
+	$select = form_element_start($xtra_class);	
 	$select .= "{$l} <select class='form-select' name='$name' id='$name'";
 	if ($validation) { $select .= $validation; }
 	$select .= figure_aria_attribute($name, $help, $error);

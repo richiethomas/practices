@@ -24,8 +24,6 @@ if (preg_match('/index\.php\?key=(\w+)/', $params[0], $matches)) {
 }
 
 
-
-
 //
 // check "pages" first
 //
@@ -89,25 +87,18 @@ foreach ($synonyms as $sk => $sv) {
 // then check controllers
 //
 $controllers = array(
-	'home',
-	'workshop',
-	'you',
-	'calendar',
-	'teachers',
-	'workshop',
-	'payment',
-	'classes');
-
-$controller = 'home'; // default
-foreach ($controllers as $c) {
-	if ($params[0] == $c) {
-		$controller = $c;
-	}
-}
-
-// then check admin controllers (if user is above level 3)
-if ($u->check_user_level(3)) {
-	$admin_controllers = array (
+	0 => array(
+		'home' => 'home',
+		'workshop' => 'workshop',
+		'you' => 'you',
+		'calendar' => 'calendar',
+		'teachers' => 'teachers',
+		'workshop' => 'workshop',
+		'payment' => 'payment',
+		'classes' => 'classes'		
+	),
+	
+	2 => array (
 		'admin' => 'admin/dashboard',
 		'admin-workshop' => 'admin/workshop',
 		'admin-messages' => 'admin/messages',
@@ -118,36 +109,42 @@ if ($u->check_user_level(3)) {
 		'admin-shows' => 'admin/shows',
 		'admin-teachers' => 'admin/teachers',
 		'admin-emails' => 'admin/emails',
-		'admin-reminders' => 'admin/reminders',
-		'admin-status' => 'admin/status-log',
-		'admin-error-log' => 'admin/error-log',
-		'admin-debug-log' => 'admin/debug-log',
-		'admin-email-log' => 'admin/email-log',
+		'admin-bulk-status' => 'admin/bulk-status',
+		'admin-bulk-workshops' => 'admin/bulk-workshops',
+		'admin-tasks' => 'admin/tasks',
+		'admin-reminder-emails' => 'admin/reminder-emails'
+		),	
+	3 => array (
 		'admin-revbyclass' => 'admin/revenue_byclass',
 		'admin-revbydate' => 'admin/revenue_bydate',
 		'admin-payroll' => 'admin/payroll',
-		'admin-bulk' => 'admin/bulk-status',
-		'admin-bulk-workshops' => 'admin/bulk-workshops',
-		'admin-conflicts' => 'admin/conflicts',
-		'admin-tasks' => 'admin/tasks',
-		'admin-reminder-emails' => 'admin/reminder-emails',
 		'admin-registrations' => 'admin/registrations',
-		
-		);
+		'admin-reminders' => 'admin/reminders',
+		'admin-conflicts' => 'admin/conflicts',
+		'admin-status-log' => 'admin/status-log',
+		'admin-error-log' => 'admin/error-log',
+		'admin-debug-log' => 'admin/debug-log',
+		'admin-email-log' => 'admin/email-log'
+			)
+);
 
-	foreach ($admin_controllers as $ci => $cv) {
-		if ($params[0] == $ci) {
-			$controller = $cv;
+$controller = 'home'; // default
+//print_r($controllers);
+//die;
+
+foreach ($controllers as $level => $files) {
+	if ($u->check_user_level($level) || $level == 0) {
+		foreach ($files as $k => $f) {
+			if ($params[0] == $k) {
+				$controller = $f;
+			}
 		}
 	}
 }
-
-
 include "controllers/{$controller}.php";
 
-//print_r($lookups->tzs);
-//echo \Wbhkit\drop('time_zone', $lookups->tzs);
 
+// for the no-controller pages
 function set_page($pinfo) {
 	global $view;
 	$view->data['heading'] = $pinfo[1];

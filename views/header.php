@@ -6,9 +6,7 @@ $heading = isset($heading) ? "wgis: $heading" : "World's Greatest Improv School"
   <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-	<title><?php 
-		echo $heading; 
-		?></title>
+	<title><?php echo $heading; ?></title>
 	
 	<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 
@@ -53,9 +51,9 @@ if (isset($fb_description)) {
 		  <div class="collapse navbar-collapse" id="navbarsExampleDefault">
 			<ul class="navbar-nav ml-auto justify-content-end">
 			    <?php 
-				if ($u->check_user_level(3)) { 
+				if ($u->check_user_level(2)) { 
 						echo "<li class=\"nav-item\"> <a class=\"btn btn-outline-primary nav-link\" href=\"/admin\">Admin</a> </li>\n";
-			    } // end of check user level 3 
+			    } // end of check user level  
 				foreach( get_nav_items() as $nav_item ) {
 					$i = 01;					
 					if (isset($nav_item['children'])) {

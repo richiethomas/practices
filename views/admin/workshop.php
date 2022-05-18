@@ -1,6 +1,6 @@
 <?php
 echo "<h2><a href='/admin-workshop/view/{$wk['id']}'>{$wk['title']}</a></h2>\n
-<p class='small'><a href='/admin-archives/clone/{$wk['id']}#addworkshop'>clone this workshop</a> - <a href='/workshop/view/{$wk['id']}'>student view</a> - <a href='/admin-bulk/view/{$wk['id']}'>bulk edit</a></p>";
+<p class='small'><a href='/admin-archives/clone/{$wk['id']}#addworkshop'>clone this workshop</a> - <a href='/workshop/view/{$wk['id']}'>student view</a> - <a href='/admin-bulk-status/view/{$wk['id']}'>bulk edit</a></p>";
 echo "<div class='row mt-md-3 admin-edit-workshop'>\n";
 
 		// enrollment column
