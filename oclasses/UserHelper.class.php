@@ -51,7 +51,7 @@ class UserHelper extends WBHObject {
 	function edit_display_name(User $u) {
 		$body = '';
 		$body .= "<form action='{$this->sc}/updatedn/{$u->fields['id']}' method='post'>\n";
-		$body .= \Wbhkit\texty('display_name', $u->fields['display_name'], 'Real name', 'Jane Doe', 'acutal human being name.');
+		$body .= \Wbhkit\texty('display_name', $u->fields['display_name'], 'Real name', 'Jane Doe', 'first and last human being name');
 		$body .= \Wbhkit\submit('Update Real Name');
 		$body .= "</form>\n";
 	

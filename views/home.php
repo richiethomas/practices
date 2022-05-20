@@ -24,7 +24,7 @@ function class_row(array $wk) {
 
 			// teacher
 			$html .= "<div class='col-sm-3'>".teacher_link($wk['teacher_info']);
-			if ($wk['co_teacher_id']) { $html .= teacher_link($wk['co_teacher_info']); } 
+			if ($wk['co_teacher_id']) { $html .= "<br>".teacher_link($wk['co_teacher_info']); } 
 			$html .= "</div>";
 	
 			
