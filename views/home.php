@@ -118,6 +118,24 @@ function class_row(array $wk) {
 	
 <?php
 	include 'unavailable_workshops.php';	
+	
+	
+	$mwhtml = '';
+	$wkhtml = '';
+	foreach ($upcoming_workshops as $wk) {
+		
+		if (!Wbhkit\is_future($wk['start'])) {
+			continue; // skip ones that already started
+		}
+
+		if ($wk['total_sessions'] == 1) {
+			$wkhtml .= class_row($wk);
+		} else {
+			$mwhtml .= class_row($wk);
+		}
+	}	
+	
+	
 ?>
 
 		<div class="container-fluid classes-header container-header-banner"><h3 class="container-lg container-fluid">Multi-Week Classes</h3></div>
@@ -133,20 +151,7 @@ function class_row(array $wk) {
 		</div>
 		
 		<?php
-		$mwhtml = '';
-		$wkhtml = '';
-		foreach ($upcoming_workshops as $wk) {
-			
-			if (!Wbhkit\is_future($wk['start'])) {
-				continue; // skip ones that already started
-			}
 
-			if ($wk['total_sessions'] == 1) {
-				$wkhtml .= class_row($wk);
-			} else {
-				$mwhtml .= class_row($wk);
-			}
-		}
 		echo $mwhtml ? $mwhtml : "<h3 class='m-5'>No upcoming multi-week classes right now!</h3>\n";
 
 

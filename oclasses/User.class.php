@@ -333,7 +333,7 @@ class User extends WBHObject {
 			$stmt = \DB\pdo_query("update users set email = :email where id = :uid", array(':email' => $this->fields['new_email'], ':uid' => $this->fields['id']));	
 			$this->fields['email'] = $this->fields['new_email'];
 			$this->finish_setup();
-			$this->logger->info("change email phase two: update email for user '{$this->fields['id']}' to new email '{$this->fields['email']}'");
+			$this->logger->debug("change email phase two: update email for user '{$this->fields['id']}' to new email '{$this->fields['email']}'");
 			return true;
 		} else {
 			$this->error = "The email '{$this->fields['new_email']}' is already being used! Pick a different email or email ".WEBMASTER." for help.";
@@ -349,7 +349,7 @@ class User extends WBHObject {
 		$newu = new User();
 		$newu->set_by_email($new_email);
 	
-		$this->logger->info("admin change email: '$old_email' to '$new_email' (start)");
+		$this->logger->debug("admin change email: '$old_email' to '$new_email' (start)");
 		
 		//print_r($oldu->fields);
 		//print_r($newu->fields);
@@ -365,7 +365,7 @@ class User extends WBHObject {
 				$rows2 = $stmt2->fetchAll();
 				if (count($rows2) == 0) {
 					$stmt3 = \DB\pdo_query("update registrations set user_id = :uid where workshop_id = :wid and user_id = :uid2", array(':uid' => $oldu->fields['id'], ':wid' => $row['workshop_id'], ':uid2' => $newu->fields['id']));
-					$this->logger->info("admin change email: update registration uid for workshop {$row['workshop_id']} from uid '{$newu->fields['id']}' to uid {$oldu->fields['id']}");
+					$this->logger->debug("admin change email: update registration uid for workshop {$row['workshop_id']} from uid '{$newu->fields['id']}' to uid {$oldu->fields['id']}");
 				}
 			}
 						
@@ -383,7 +383,7 @@ class User extends WBHObject {
 		}
 		// now we can update email
 		$stmt = \DB\pdo_query("update users set email = :email where id = :uid", array(':email' => $new_email, ':uid' => $oldu->fields['id']));	
-		$this->logger->info("admin change email: update email for uid '{$oldu->fields['id']}' to new email '$new_email'");
+		$this->logger->debug("admin change email: update email for uid '{$oldu->fields['id']}' to new email '$new_email'");
 		return true;
 	}
 

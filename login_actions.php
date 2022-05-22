@@ -8,7 +8,7 @@ switch ($ac) {
 	
 		if ($u->set_by_key($params[2])) {
 			$message = "Welcome, {$u->fields['nice_name']}!";
-			$logger->info("{$u->fields['email']} logged in via URL.");
+			$logger->debug("{$u->fields['email']} logged in via URL.");
 		} else {
 			$error = "Tried to log someone in, but the key was, as we say in the computer business, malformed.";
 		}
