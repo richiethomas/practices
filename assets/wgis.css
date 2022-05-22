@@ -295,3 +295,7 @@ footer .footer-colophon {
 	padding: 1em;
 }
 
+.dangerlight {
+  color: #dc3545;
+  background-color: #ffccda;
+}

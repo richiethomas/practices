@@ -16,11 +16,11 @@ if ($mode == 'text') {
 
 echo "<div>Times shown in ({$u->fields['time_zone_friendly']})</div>";
 
-$mw_html = '';
-$wk_html = '';
+$ip_html = '';
+$ol_html = '';
 
-$mw_text = '';
-$wk_text = '';
+$ip_text = '';
+$ol_text = '';
 
 foreach ($upcoming_workshops as $wk) {
 
@@ -68,31 +68,25 @@ foreach ($upcoming_workshops as $wk) {
 	
 	$text_html .= "</p>\n";
 	
-	if ($wk['total_sessions'] == 1) {
-		$wk_html .= $row_html;
-		$wk_text .= $text_html;
+	if (in_array('inperson', $wk['tags_array'])) {
+		$ip_html .= $row_html;
+		$ip_text .= $text_html;
 	} else {
-		$mw_html .= $row_html;
-		$mw_text .= $text_html;
+		$ol_html .= $row_html;
+		$ol_text .= $text_html;
 	}
 }	
 
-if ($mode == 'text') {
+echo "<h2 class='my-3'>Online Classes</h2>\n";
+echo $mode == 'text' ?
+	($ol_text ? $ol_text : '<p>No multi-week courses coming up!</p>') :
+	($ol_html ? $ol_html : '<p>No multi-week courses coming up!</p>');
 	
-	echo "<h2 class='my-3'>Multi-Week Courses</h2>\n";
-	echo $mw_text ? $mw_text : '<p>No multi-week courses coming up!</p>';
 
-	echo "<h2 class='my-3'>One-Session Workshops</h2>\n";
-	echo $wk_text ? $wk_text : '<p>No workshops coming up!</p>';
-	
-} else {
-	echo "<h2 class='my-3'>Multi-Week Courses</h2>\n";
-	echo $mw_html ? $mw_html : '<p>No multi-week courses coming up!</p>';
-
-	echo "<h2 class='my-3'>One-Session Workshops</h2>\n";
-	echo $wk_html ? $wk_html : '<p>No workshops coming up!</p>';
-}
-
+echo "<h2 class='my-3'>In Person Los Angeles Classes</h2>\n";
+echo $mode == 'text' ?
+	($ip_text ? $ip_text : '<p>No multi-week courses coming up!</p>') :
+	($ip_html ? $ip_html : '<p>No multi-week courses coming up!</p>');
 
 
 

@@ -4,7 +4,7 @@
 	<div class="row justify-content-center">
 		<div class="col-md-10 col-12">
 
-		<p><b>The World's Greatest Improv School</b> is a boutique online school with mostly improv classes and a few sketch classes. We focus on <I>game of the scene</i> and <i>small class sizes</i>. The name is ridiculous on purpose.</p>
+		<p><b>The World's Greatest Improv School</b> is a boutique improv school with classes both online and in person in Los Angeles. We focus on <I>game of the scene</i> and <i>small class sizes</i>. The name is ridiculous on purpose.</p>
 
 		<p>Will Hines, a longtime teacher and performer who trained at the Upright Citizens Brigade Theatre in both New York and Los Angeles, founded the school in April 2020.</p>
 

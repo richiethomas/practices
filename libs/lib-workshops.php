@@ -733,33 +733,43 @@ function parse_online_url($row) {
 
 function get_tags(string $tags_string = null) {
 	
-	$tags_array = array();
+	$tags = array();
 	if ($tags_string) {
-		$tags_array = explode(',', $tags_string);
-		foreach ($tags_array as $k =>$v) {
-			$tags_array[$k] = strtolower(trim($v));
+		$tags = explode(',', $tags_string);
+		foreach ($tags as $k =>$v) {
+			$tags[$k] = strtolower(trim($v));
 		}
-		sort($tags_array);
+		sort($tags);
 	}
-	return $tags_array;
+	return $tags;
 	
 }
 function print_tags($wk) {
 	
 	$output = null;
-		
-	if (count($wk['tags_array']) > 0) {
-		foreach ($wk['tags_array'] as $tag) {
-			$output .= "\t\t<span data-tag='{$tag}' class='classtag badge bg-light text-dark rounded-pill me-1 border'>".strtoupper($tag)."</span>\n";
-		}
+
+	if ($wk['total_sessions'] == 1 && !strpos($wk['title'], 'Bitness')) {
+		$wk['tags_array'][] ='workshop';
+	} else {
+		$wk['tags_array'][] ='multiweek';
+	}
+	sort($wk['tags_array']);
+	
+	foreach ($wk['tags_array'] as $tag) {
+		$output .= print_a_tag($tag, $tag);
 	}
 
 	if ($wk['open'] <= 2 && $wk['open'] > 0) {
-		$output .= "\t\t<span data-tag='few spots left' class='classtag badge rounded-pill me-3 border dangerlight'>{$wk['open']} SPOT".strtoupper(\Wbhkit\plural($wk['open']))." LEFT</span>\n";
+		$output .= print_a_tag("{$wk['open']} SPOT".\Wbhkit\plural($wk['open'])." LEFT", 'few spots left', 'dangerlight');
 	}
 	
 	return $output;
+}
 
+function print_a_tag(string $label, string $value, ?string $xtra = "bg-light text-dark") {
+
+	return "<span data-tag='{$value}' class='classtag badge rounded-pill me-1 border $xtra'>".strtoupper($label)."</span>";
+	
 }
 
 function update_tags(int $id, string $tags) {

@@ -70,7 +70,7 @@ function class_row(array $wk) {
 
 <?php if ($u->logged_in() && !$u->fields['display_name']) { ?>	
 		<div class="alert alert-info" role="alert">
-		<p>What's your name? Something like 'Jane Smith' or 'Jane S'.</p>
+		<p>First and last name, as you like to be called</p>
 	<?php echo $userhelper->edit_display_name($u); ?>
 		</div>
 <?php 		}  ?>	
@@ -79,8 +79,6 @@ function class_row(array $wk) {
 <!--<div class="container-fluid classes-header container-header-banner"><h3 class="container-lg container-fluid">Latest News</h3></div>-->
 	
 	<div class="container-lg container-fluid mt-3" id="news">
-
-
 
   <div class="container col-xxl-12 px-4 py-5 bg-light">
     <div class="row flex-lg-row-reverse align-items-center g-5 py-5">
@@ -91,8 +89,8 @@ function class_row(array $wk) {
 		</figure>
       </div>
       <div class="col-lg-6">
-        <h1 class="display-5 fw-bold lh-1 mb-3">Welcome to WGIS</h1>
-        <p class="lead">WGIS is a mostly online improv grad school, for people who have learned the basics and want more. Below is a list of <b class='text-primary'>multi-week courses</b> and <b class='text-success'>one-time workshops</b> you can join. </p>
+        <h1 class="display-5 fw-bold lh-1 mb-3">Improv Classes,<br>Online and In Person</h1>
+        <p class="lead">WGIS is an improv grad school, for people who have learned the basics and want more. It was <a href='/about-school'>founded by Will Hines</a> and teaches "game of the scene" style improv.<br><br>We have both <b class='text-primary'>online</b> and <b class='text-success'>in person</b> (Los Angeles) classes you can join. </p>
         <div class="d-grid gap-2 d-md-flex justify-content-md-start">
 			
 			<a class="btn btn-primary btn-lg px-4 me-md-2" href="/classes" role="button">See Classes</a>
@@ -112,37 +110,38 @@ function class_row(array $wk) {
  <a id="allclasses"></a>
   <div id="classes">
 
-	  
-	<!--<div class="container-fluid classes-header container-header-banner"><h3 class="container-lg container-fluid">Current & Upcoming Classes</h3></div>-->
-
 	
 <?php
 	include 'unavailable_workshops.php';	
 	
 	
-	$mwhtml = '';
-	$wkhtml = '';
+	$inperson_html = '';
+	$online_html = '';
 	foreach ($upcoming_workshops as $wk) {
 		
 		if (!Wbhkit\is_future($wk['start'])) {
 			continue; // skip ones that already started
 		}
 
-		if ($wk['total_sessions'] == 1) {
-			$wkhtml .= class_row($wk);
+		if (in_array('inperson', $wk['tags_array'])) {
+			$inperson_html .= class_row($wk);
 		} else {
-			$mwhtml .= class_row($wk);
+			$online_html .= class_row($wk);
 		}
 	}	
 	
 	
 ?>
+	<div class="container-fluid classes-header container-header-banner"><h3 class="container-lg container-fluid">All Upcoming Classes</h3></div>
 
-		<div class="container-fluid classes-header container-header-banner"><h3 class="container-lg container-fluid">Multi-Week Classes</h3></div>
+		<p class="mt-3 mx-auto col-6">Below is a list of all upcoming classes. We have both online classes and also in person classes that happen in Los Angeles. Click on a class for exact locations and more details, plus bios of the teachers.</p>
+
+		<p class='mx-auto mt-3 col-6'>For future reference, here's a <a class='text-muted' href='/classes'>compact list</a> of upcoming classes.</p>
+
+
+		<div class="container-fluid classes-header container-header-banner"><h3 class="container-lg container-fluid">Online Classes</h3></div>
 
 	<div class="container-lg container-fluid" id="classes-listings">
-		
-		<p class='my-5'>Here's a <a class='text-muted' href='/classes'>compact list</a> of upcoming classes.</p>
 		
 		
 		<div class="my-3 py-3" id="filter-by-container" style="display:none;"> 
@@ -152,7 +151,7 @@ function class_row(array $wk) {
 		
 		<?php
 
-		echo $mwhtml ? $mwhtml : "<h3 class='m-5'>No upcoming multi-week classes right now!</h3>\n";
+		echo $online_html ? $online_html : "<h3 class='m-5'>No upcoming online classes right now!</h3>\n";
 
 
 
@@ -160,10 +159,10 @@ function class_row(array $wk) {
 		?>
 	</div> <!-- end of 'classes listings' div-->
 
-		<div class="container-fluid classes-header container-header-banner"><h3 class="container-lg container-fluid">One-Session Workshops</h3></div>
+		<div class="container-fluid classes-header container-header-banner"><h3 class="container-lg container-fluid">In Person Los Angeles Classes</h3></div>
 		<div class="container-lg container-fluid" id="classes-listings">
 
-		<?php echo $wkhtml ? $wkhtml : "<h3 class='m-5'>No upcoming workshops right now!</h3>\n"; ?>
+		<?php echo $inperson_html ? $inperson_html : "<h3 class='m-5'>No upcoming in person Los Angeles classes right now!</h3>\n"; ?>
 		
 		</div>
 
@@ -207,11 +206,11 @@ function class_row(array $wk) {
 	</div>
 
 
-<div id="buy-the-book" class="container mb-5">
+<!-- <div id="buy-the-book" class="container mb-5">
 	<h3 class="mb-3">Buy the Book</h3>
 <div class="row"><img src="/images/htbtgioe_cover.jpg" class="col-sm-12 col-md-3 align-self-start mb-2" alt="How To Be The Greatest Improviser On Earth" />
 	<p class="col-sm-12 col-md-9">If the workshops are sold out, you could buy "How to Be the Greatest Improviser on Earth" written by Will Hines, the founder of this school. Print and digital versions <a href="https://www.amazon.com/dp/0982625723">on Amazon</a>.</p></div>
-  </div>
+  </div> -->
  
   
   
