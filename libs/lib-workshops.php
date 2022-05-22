@@ -45,7 +45,6 @@ function fill_out_workshop_row(array $row, bool $get_enrollment_stats = true) {
 	}
 	$row['soldout'] = 0; // so many places in the code refer to this
 	
-	$row['tags_array'] = get_tags($row['tags']);	
 	
 	// create short title if it's more then 2 words
 	$row['short_title'] = $row['title'];
@@ -85,6 +84,9 @@ function fill_out_workshop_row(array $row, bool $get_enrollment_stats = true) {
 	} else {
 		$row['upcoming'] = 0;
 	}
+	
+	$row = set_tags_array($row);
+	
 
 	if ($get_enrollment_stats) {
 
@@ -731,30 +733,30 @@ function parse_online_url($row) {
 	
 }
 
-function get_tags(string $tags_string = null) {
+function set_tags_array(array $row) {
 	
 	$tags = array();
-	if ($tags_string) {
-		$tags = explode(',', $tags_string);
+	if ($row['tags']) {
+		$tags = explode(',', $row['tags']);
 		foreach ($tags as $k =>$v) {
 			$tags[$k] = strtolower(trim($v));
 		}
-		sort($tags);
 	}
-	return $tags;
-	
+
+	if ($row['total_sessions'] == 1 && !strpos($row['title'], 'Bitness')) {
+		$tags[] ='workshop';
+	} else {
+		$tags[] ='multiweek';
+	}
+
+	sort($tags);
+	$row['tags_array'] = $tags;
+	return $row;
 }
+
 function print_tags($wk) {
 	
-	$output = null;
-
-	if ($wk['total_sessions'] == 1 && !strpos($wk['title'], 'Bitness')) {
-		$wk['tags_array'][] ='workshop';
-	} else {
-		$wk['tags_array'][] ='multiweek';
-	}
-	sort($wk['tags_array']);
-	
+	$output = null;	
 	foreach ($wk['tags_array'] as $tag) {
 		$output .= print_a_tag($tag, $tag);
 	}
@@ -766,7 +768,7 @@ function print_tags($wk) {
 	return $output;
 }
 
-function print_a_tag(string $label, string $value, ?string $xtra = "bg-light text-dark") {
+function print_a_tag(string $label, string $value, ?string $xtra = "bg-light text-muted") {
 
 	return "<span data-tag='{$value}' class='classtag badge rounded-pill me-1 border $xtra'>".strtoupper($label)."</span>";
 	

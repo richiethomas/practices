@@ -206,11 +206,11 @@ function class_row(array $wk) {
 	</div>
 
 
-<!-- <div id="buy-the-book" class="container mb-5">
+ <div id="buy-the-book" class="container mb-5">
 	<h3 class="mb-3">Buy the Book</h3>
 <div class="row"><img src="/images/htbtgioe_cover.jpg" class="col-sm-12 col-md-3 align-self-start mb-2" alt="How To Be The Greatest Improviser On Earth" />
 	<p class="col-sm-12 col-md-9">If the workshops are sold out, you could buy "How to Be the Greatest Improviser on Earth" written by Will Hines, the founder of this school. Print and digital versions <a href="https://www.amazon.com/dp/0982625723">on Amazon</a>.</p></div>
-  </div> -->
+  </div> 
  
   
   
