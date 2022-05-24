@@ -79,12 +79,12 @@ switch ($ac) {
 	case 'lo':
 		$logger->debug("{$u->fields['nice_name']} logging out.");
 		if (LOCAL) {
-			$u->soft_logout();
+			$message = $u->soft_logout();
 		} else {
-			$u->hard_logout();
+			$message = $u->hard_logout();
+			header("Location: ".URL);
+			die();
 		}
-		header("Location: ".URL);
-		die();
 		break;	
 
 	case 'cemail':

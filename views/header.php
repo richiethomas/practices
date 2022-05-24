@@ -8,37 +8,35 @@ $heading = isset($heading) ? "wgis: $heading" : "World's Greatest Improv School"
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 	<title><?php echo $heading; ?></title>
 	
-	<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
-
-	<!-- Bootstrap core CSS -->	
-<!-- 	<link href="/assets/boot.css" rel="stylesheet">
-	<link href="/assets/bootstrap-icons.css" rel="stylesheet"> -->
-
-<link href="/assets/bootstrap-icons.css" rel="stylesheet">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+<link href="/assets/bootstrap-icons.css" rel="stylesheet">
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2" crossorigin="anonymous"></script>
-	
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2" crossorigin="anonymous"></script>	
 	 	
-	<!-- Custom styles for this template -->
-	<link href="/assets/wgis.css" rel="stylesheet">
-		
+<!-- Custom styles for this template -->
+<link href="/assets/wgis.css" rel="stylesheet">
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    addFormFocusEvent();
+});
+
+function addFormFocusEvent() {
+  document.querySelector('#email').addEventListener('focus', () => {
+    document.querySelector('#log_in').setAttribute('action', '/home/link');
+  });
+}	
+</script>
 	
 <?php
-if (!isset($fb_image)) {
-	$fb_image = "http://wgimprovschool.com/images/logo_square_small.jpg";
-}
+// facebook meta stuff
+if (!isset($fb_image)) { $fb_image = "http://wgimprovschool.com/images/logo_square_small.jpg"; }
 echo "	<meta property=\"og:image\" content=\"{$fb_image}\">\n";
 
-
-if (!isset($fb_title)) {
-	$fb_title = $heading;
-}
+if (!isset($fb_title)) { $fb_title = $heading; }
 echo "	<meta property=\"og:title\" content=\"{$fb_title}\">\n";
 
-if (isset($fb_description)) {
-	echo "	<meta property=\"og:description\" content=\"{$fb_description}\">\n";
-}
+if (isset($fb_description)) { echo "	<meta property=\"og:description\" content=\"{$fb_description}\">\n"; }
 
 ?>	
 	

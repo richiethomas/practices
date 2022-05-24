@@ -243,6 +243,7 @@ class User extends WBHObject {
 	    setcookie('c_key', null, 1000); // 1000 msecs after jan 1 1970
 		$this->clear_fields(); // clear current user
 		$this->message = 'You are logged out!';
+		return $this->message;
 	}
 
 	function hard_logout() {
@@ -250,8 +251,7 @@ class User extends WBHObject {
 		if ($this->logged_in()) {
 			$this->get_key(true); // force change the key
 		}
-		$this->soft_logout();
-	
+		return $this->soft_logout();
 	}
 
 	function check_user_level(int $level) {

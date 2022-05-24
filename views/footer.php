@@ -26,14 +26,6 @@
 
 <!-- Login Modal -->
 <div class="modal fade" id="login-modal" tabindex="-1" role="dialog" aria-labelledby="login_title" aria-hidden="true">
-
-<script>
-$( document ).ready(function(){
-		$( "#email" ).on("focus", function() {
-			$("#log_in").attr("action", "/home/link");
-		});
-});
-</script>
 	
   <div class="modal-dialog modal-dialog-centered" role="document">
 	<div class="modal-content">

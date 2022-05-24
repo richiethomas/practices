@@ -62,9 +62,12 @@ function class_row(array $wk) {
 
 <?php if ($link_email_sent_flag) { ?>	
 <script type="text/javascript">
-    $(window).on('load',function(){
-        $('#checkYourEmail').modal('show');
-    });
+	
+document.addEventListener('DOMContentLoaded', () => {
+	const em = new bootstrap.Modal('#checkYourEmail');
+	em.show();
+});
+
 </script>	
 <?php } ?>
 
