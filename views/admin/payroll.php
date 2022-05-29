@@ -153,7 +153,11 @@ echo "<table class='table table-striped my-3'>
 foreach ($claims as $c) {
 		
 	foreach ($payrolls as $p) {
-		if ($p->fields['task'] == $c->fields['task'] && $p->fields['table_id'] == $c->fields['table_id']) {
+		if (
+			$p->fields['task'] == $c->fields['task'] && 
+			$p->fields['table_id'] == $c->fields['table_id'] &&
+			$p->fields['user_id'] == $c->fields['user_id']
+			) {
 			continue(2); // already claimed
 		}
 	}

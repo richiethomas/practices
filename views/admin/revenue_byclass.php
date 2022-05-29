@@ -29,13 +29,15 @@ if (count($workshops_list) == 0) {
 		foreach ($workshops_list as $wid => $wk) {
 			
 			$wk['title'] = preg_replace('/,/', ' - ', $wk['title']);
-						
+			
+			$teacher_name = get_teacher_name($wk);
+
 			echo date('Y-m-d g:ia',strtotime($wk['start'])).', '.
 				date('l',strtotime($wk['start'])).', '.
 				date('g:ia',strtotime($wk['start'])).
-				", {$wid}, {$wk['title']},  {$wk['teacher_info']['nice_name']}, {$wk['enrolled']}, {$wk['actual_revenue']}, {$wk['teacher_pay']}, {$wk['total_class_sessions']}, {$wk['total_show_sessions']}\n";
+				", {$wid}, {$wk['title']},  {$teacher_name}, {$wk['enrolled']}, {$wk['actual_revenue']}, {$wk['total_pay']}, {$wk['total_class_sessions']}, {$wk['total_show_sessions']}\n";
 			$total_revenue += $wk['actual_revenue'];
-			$total_pay += $wk['teacher_pay'];
+			$total_pay += $wk['total_pay'];
 			$total_classes += $wk['total_class_sessions'];
 			$total_shows += $wk['total_show_sessions'];
 		}
@@ -50,7 +52,7 @@ $table_open = "<table class='table table-striped my-3'>
 		<th>paid / enrolled / capacity</th>
 		<th>cost</th>
 		<th>revenue</th>
-		<th>teacher pay</th>
+		<th>teachers pay</th>
 		<th>net (paid - teacher pay)</th>
 		</tr>
 	</thead><tbody>";
@@ -61,42 +63,47 @@ $table_open = "<table class='table table-striped my-3'>
 			'suggested_paid' => 0,
 			'suggested_enrolled' => 0,
 			'suggested_capacity' => 0,
-			'teacher_pay' => 0
+			'total_pay' => 0
 		);
 
 		$totals = $teacher_totals = $empty_totals;
-		$teacher_id = 0;
+		$previous_teacher_key = null; 
 		$previous_wk = null;
 		
 		foreach ($workshops_list as $wid => $wk) {
 			
-			if ($wk['teacher_id'] != $teacher_id) { // new teacher
-				if ($teacher_id != 0) {
+			$teacher_key = $wk['teacher_id'];
+			if ($wk['co_teacher_id']) {
+				$teacher_key .= "co".$wk['co_teacher_id'];
+			}
+			
+			if (strcmp($teacher_key, $previous_teacher_key) !== 0) { // new teacher
+				if ($previous_teacher_key) {
 					show_teacher_totals($previous_wk, $teacher_totals);
 					echo "</tbody></table>\n";
 				}
 				//start new teacher revenue
-				$teacher_id = $wk['teacher_id'];
+				$previous_teacher_key = $teacher_key;
 				$teacher_totals = $empty_totals;
+				$teacher_name = get_teacher_name($wk);
 				
-				echo "<h2 class='my-3'>{$wk['teacher_info']['nice_name']}</h2>\n";
+				echo "<h2 class='my-3'>{$teacher_name}</h2>\n";
 				echo $table_open;
-				$teacher_id = $wk['teacher_id'];
 			}
 						
 			echo "<tr><td width='300'>({$wk['id']}) <a href='/admin-workshop/view/{$wk['id']}'>{$wk['title']}</a> <small>({$wk['showstart']})</small></td>
 			<td>{$wk['paid']} / {$wk['enrolled']} / {$wk['capacity']}</td>
 			<td>{$wk['cost']}</td>
 			<td>{$wk['actual_revenue']}</td>
-			<td>".number_format($wk['teacher_pay'])."</td>
-			<td>".number_format($wk['actual_revenue'] - $wk['teacher_pay'])."</td>
+			<td>".number_format($wk['total_pay'])."</td>
+			<td>".number_format($wk['actual_revenue'] - $wk['total_pay'])."</td>
 			</tr>\n";
 						
 			$totals['suggested_paid'] += $wk['actual_revenue'];
-			$totals['teacher_pay'] += $wk['teacher_pay'];
+			$totals['total_pay'] += $wk['total_pay'];
 			
 			$teacher_totals['suggested_paid'] += $wk['actual_revenue'];
-			$teacher_totals['teacher_pay'] += $wk['teacher_pay'];
+			$teacher_totals['total_pay'] += $wk['total_pay'];
 
 			$previous_wk = $wk;
 			
@@ -108,8 +115,8 @@ $table_open = "<table class='table table-striped my-3'>
 		echo "<tr><td>Totals:</td>
 		<td colspan=2>&nbsp;</td>
 		<td>{$totals['suggested_paid']}</td>
-		<td>".number_format($totals['teacher_pay'])."</td>
-		<td>".number_format($totals['suggested_paid'] - $totals['teacher_pay'])."</td>
+		<td>".number_format($totals['total_pay'])."</td>
+		<td>".number_format($totals['suggested_paid'] - $totals['total_pay'])."</td>
 		</tr></table>\n";
 
 		echo $nav; 
@@ -122,15 +129,26 @@ $table_open = "<table class='table table-striped my-3'>
 } // end of "if count of workshops is zero" if/then
 		
 function show_teacher_totals($wk, $teacher_totals) {
+	
+	$teacher_name = get_teacher_name($wk);
+	
 	// wrap up previous teacher revenue
 	echo "<tr class=\"table-info\">
-		<td>{$wk['teacher_info']['nice_name']} sub totals:</td>
+		<td>{$teacher_name} sub totals:</td>
 	<td colspan=2>&nbsp;</td>
 	<td>{$teacher_totals['suggested_paid']}</td>
-	<td>".number_format($teacher_totals['teacher_pay'])."</td>
-	<td>".number_format($teacher_totals['suggested_paid'] - $teacher_totals['teacher_pay'])."</td>
+	<td>".number_format($teacher_totals['total_pay'])."</td>
+	<td>".number_format($teacher_totals['suggested_paid'] - $teacher_totals['total_pay'])."</td>
 	
 	</tr>\n";	
+}
+
+function get_teacher_name($wk) {
+	$teacher_name = $wk['teacher_info']['nice_name'];
+	if ($wk['co_teacher_id']) {
+		$teacher_name .= " and ".$wk['co_teacher_info']['nice_name'];
+	}
+	return $teacher_name;
 }
 		
 ?>

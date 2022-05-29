@@ -35,24 +35,24 @@ if (count($classes) == 0) {
 	foreach ($classes as $wid => $c) {
 		if (!isset($c['dated'])) { $c['dated'] = 0; }
 		if (!isset($c['undated'])) { $c['undated'] = 0; }
-		if (!isset($c['teacher_pay'])) { $c['teacher_pay'] = 0; }
+		if (!isset($c['total_pay'])) { $c['total_pay'] = 0; }
 		
 		$workshop_revenue = $c['dated'] + $c['undated'];
 		$formatted_start = \Wbhkit\figure_year_minutes(strtotime($c['start']));
 		echo "
 			<div class='row'><br>\n".
 			"<div class='col-md-6'>({$c['workshop_id']}) <a href='/admin-workshop/view/{$c['workshop_id']}'>{$c['title']}</a> ($formatted_start)</div>\n".
-			"<div class='col-md-1'>{$c['teacher_pay']}</div>\n".
+			"<div class='col-md-1'>{$c['total_pay']}</div>\n".
 			"<div class='col-md-1'>$workshop_revenue</div>\n".
 			"<div class='col-md-1'>{$c['undated']}</div>\n".
 			"</div>\n";
 
-		$c_totals['cost'] += $c['teacher_pay'];
+		$c_totals['cost'] += $c['total_pay'];
 		$c_totals['revenue'] += $workshop_revenue;
 		$c_totals['dated'] += $c['dated'];
 		$c_totals['undated'] += $c['undated'];
 		
-		$csv .= "{$c['workshop_id']}, 'class', ".date('M j Y g:ia', strtotime($c['start'])).", {$c['title']}, {$c['teacher_pay']}, $workshop_revenue\n";
+		$csv .= "{$c['workshop_id']}, 'class', ".date('M j Y g:ia', strtotime($c['start'])).", {$c['title']}, {$c['total_pay']}, $workshop_revenue\n";
 
 	}
 	echo totals_row($c_totals, 'class subtotals');

@@ -27,7 +27,7 @@ function get_teacher_by_id($tid) {
 		$teacher_attic[$row['id']] = $row; // save teacher data in global variable
 		return $row;
 	}
-	return false;
+	return empty_teacher();
 }
 
 function fill_out_teacher_row($row) {

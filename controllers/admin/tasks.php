@@ -26,15 +26,21 @@ switch ($ac) {
 	case 'edit':
 		$t = new Task();
 		$t->set_by_id($tid);
-		$id = $tid;
-		foreach ($vars as $v) {
-			if (isset($t->fields[$v])) {
-				$$v = $t->fields[$v];
+		if (isset($t->fields['id'])) {
+			$id = $tid;
+			foreach ($vars as $v) {
+				if (isset($t->fields[$v])) {
+					$$v = $t->fields[$v];
+				}
+			}
+			$guest = new User();
+			if (isset($t->fields['user_id']) && $t->fields['user_id']) {
+				$guest->set_by_id($t->fields['user_id']);
+				$email = $guest->fields['email'];
+			} else {
+				$email = null;
 			}
 		}
-		$guest = new User();
-		$guest->set_by_id($t->fields['user_id']);
-		$email = $guest->fields['email'];
 		break;
 
 	case 'add':

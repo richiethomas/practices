@@ -215,7 +215,7 @@ function get_phpmailer_object() {
 	} else {
 		
 		$mail = new PHPMailer(true);
-		$mail->WordWrap = 100; 
+		$mail->WordWrap = 80; 
 		
 		if (LOCAL) {
 			$mail->isSMTP();

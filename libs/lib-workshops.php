@@ -91,8 +91,7 @@ function fill_out_workshop_row(array $row, bool $get_enrollment_stats = true) {
 	if ($get_enrollment_stats) {
 
 		// set teacher pay
-	
-		$row['teacher_pay'] = get_teacher_pay($row);
+		$row = set_teacher_pay($row);
 		$row['actual_revenue'] = get_actual_revenue($row);
 		$row = set_enrollment_stats($row);
 
@@ -482,7 +481,12 @@ function get_workshops_list_bydate(?string $start = null, ?string $end = null, b
 	if (!$start) { $start = "Jan 1 1000"; }
 	if (!$end) { $end = "Dec 31 3000"; }
 	
-	$stmt = \DB\pdo_query("select w.* from workshops w WHERE w.start >= :start and w.start <= :end order by ".($byclass ? '' : ' teacher_id, ')." start desc", array(':start' => date(MYSQL_FORMAT, strtotime($start)), ':end' => date(MYSQL_FORMAT, strtotime($end))));
+	$stmt = \DB\pdo_query("
+select w.* 
+from workshops w 
+where w.start >= :start and w.start <= :end
+order by ".($byclass ? '' : ' teacher_id, ')." start desc", 
+	array(':start' => date(MYSQL_FORMAT, strtotime($start)), ':end' => date(MYSQL_FORMAT, strtotime($end))));
 	
 	$workshops = array();
 	while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
@@ -491,16 +495,57 @@ function get_workshops_list_bydate(?string $start = null, ?string $end = null, b
 	return $workshops;
 }	
 
-function get_teacher_pay(array $wk) {
+function set_teacher_pay(array $wk) {
 	
-	$ph = new \PayrollsHelper();
-	$pay = $ph->get_recorded_teacher_pay($wk['id']);
+	$wk['teacher_pay'] = get_teacher_pay_by_index($wk, 'teacher_info');
+	$wk['co_teacher_pay'] = get_teacher_pay_by_index($wk, 'co_teacher_info');
+	$wk['total_pay'] = $wk['teacher_pay'] + $wk['co_teacher_pay'];
 
-	
-	// send back recorded pay or estimated pay
-	return $pay ? $pay : ($wk['total_class_sessions'] * $wk['teacher_info']['default_rate']) +
+	//echo "pay for ({$wk['id']}) {$wk['title']}: {$wk['teacher_pay']} {$wk['co_teacher_pay']} {$wk['total_pay']}<br>\n";
+
+	if (!$wk['total_pay']) {
+		$wk['total_pay'] = ($wk['total_class_sessions'] * $wk['teacher_info']['default_rate']) +
 		($wk['total_show_sessions'] * ($wk['teacher_info']['default_rate'] / 2));
+	}
+	
+	return $wk;
 
+}
+
+function get_teacher_pay_by_index($wk, string $index = 'teacher_info') {
+	if (isset($wk[$index]['user_id'])) {
+		return get_recorded_teacher_pay($wk['id'], $wk[$index]['user_id']);
+	} else {
+		return 0;
+	}
+}
+
+// workshop id, teacher's user id
+function get_recorded_teacher_pay(int $wid = 0 , ?int $uid = 0) {
+	
+	if (!$wid || !$uid) {
+		return 0;
+	}
+	
+	$sql = "select p.* 
+		from payrolls p
+		where p.task = 'workshop' and p.table_id = :id and p.user_id = :uid
+		UNION
+		select p.*
+		from payrolls p, xtra_sessions x
+		where p.task = 'class'
+		and p.table_id = x.id
+		and x.workshop_id = :id2 and p.user_id = :uid2";
+
+	$stmt = \DB\pdo_query($sql, array(':id' => $wid, ':id2' => $wid, ':uid' => $uid, ':uid2' => $uid));
+	
+	$pay = 0;
+	while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
+		$pay += $row['amount'];
+	}
+	
+	return $pay;
+	
 }
 
 

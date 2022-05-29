@@ -44,7 +44,7 @@ $stmt = \DB\pdo_query("
 
 while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
 	$key = "{$row['start']}-{$row['workshop_id']}";
-	$classes = add_money($classes, $key, 'teacher_pay', $row['amount']);
+	$classes = add_money($classes, $key, 'total_pay', $row['amount']);
 	$classes[$key]['title'] = $row['title'];
 	$classes[$key]['start'] = $row['start'];
 	$classes[$key]['workshop_id'] = $row['workshop_id'];
@@ -94,7 +94,7 @@ while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
 	$tasks = add_money($tasks, $key, 'cost', $row['amount']);
 	$tasks[$key]['title'] = $row['title'];
 	$tasks[$key]['when_paid'] = $row['when_paid'];
-	$tasks[$key]['task_id'] = $row['id'];
+	$tasks[$key]['task_id'] = $row['table_id'];
 }
 
 
