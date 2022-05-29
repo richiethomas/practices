@@ -28,9 +28,10 @@ switch ($ac) {
 		foreach ($_REQUEST as $k => $v) {
 			if (substr($k, 0, 3) == 'pd_') {
 				$ps = explode('_', $k);
-				$payroll_data["{$ps[1]}-{$ps[2]}"]['task'] = $ps[1];
-				$payroll_data["{$ps[1]}-{$ps[2]}"]['tableid'] = $ps[2];
-				$payroll_data["{$ps[1]}-{$ps[2]}"][$ps[3]] = $v;
+				$payroll_data["{$ps[1]}-{$ps[2]}-{$ps[3]}"]['task'] = $ps[1];
+				$payroll_data["{$ps[1]}-{$ps[2]}-{$ps[3]}"]['tableid'] = $ps[2];
+				$payroll_data["{$ps[1]}-{$ps[2]}-{$ps[3]}"]['userid'] = $ps[3];
+				$payroll_data["{$ps[1]}-{$ps[2]}-{$ps[3]}"][$ps[4]] = $v;
 			}
 		}
 		//print_r($payroll_data);
