@@ -20,23 +20,21 @@ $( document ).ready(function() {
 				<button id="dashalertsbutton" type="button" class="btn-close float-end" aria-label="Close"></button>
 				<div id="dashalerts" <?php if ($filter_by) { echo "style='display:none'"; } ?>>
 				<?php
-				// unpaid students
-				$last_wk = null;
-				$uphtml = '';
-				foreach ($unpaid as $up) {
-					if ($last_wk != $up['workshop_id']) {
-						$uphtml .= "<p class='m-0'><b><a href='/admin-workshop/view/{$up['workshop_id']}'>{$up['title']}</a> - ".date('D M j', strtotime($up['start']))." - {$up['cost']}</b></p>\n";
-						$last_wk = $up['workshop_id'];
-					}
-					$uphtml .= "<p class='m-0 ps-4'>{$up['nice_name']} - {$up['email']}</p>\n";
-				}
 				
-				if ($uphtml) {
-					echo "<h4>Unpaid</h4>
-				<ul>
-					$uphtml
-				</ul>\n";
+				// unpaid students
+				if (count($unpaid) > 0) {
+					echo "<h4>Unpaid</h4>\n<ul>\n";
+					$last_wk = null;
+					foreach ($unpaid as $up) {
+						if ($last_wk != $up['workshop_id']) {
+							echo "<p class='m-0'><b><a href='/admin-workshop/view/{$up['workshop_id']}'>{$up['title']}</a> - ".date('D M j', strtotime($up['start']))." - {$up['cost']}</b></p>\n";
+							$last_wk = $up['workshop_id'];
+						}
+						echo "<p class='m-0 ps-4'>{$up['nice_name']} - {$up['email']}</p>\n";
+					}
+					echo "</ul>\n";
 				}
+
 
 				// not full, 15 days out
 				$ts_now = strtotime('now');
@@ -44,13 +42,13 @@ $( document ).ready(function() {
 				$nsohtml = '';
 				foreach ($workshops as $wk) {
 					if (!$wk['hidden'] && $wk['xtra'] == 0) {
-						if ($wk['enrolled'] < $wk['capacity']) {
+						if ($wk['enrollments']['enrolled'] < $wk['capacity']) {
 							$ts = strtotime($wk['course_start']);
 							
-							if ($ts >= $ts_now && $ts <= $ts_then) { 			
+							if ($ts >= $ts_now && $ts <= $ts_then) {
 							
-								$nsohtml .= "<li>".\Wbhkit\figure_year_minutes($ts).": <a href='/admin-workshop/view/{$wk['id']}'>{$wk['title']}</a> ({$wk['enrolled']}/{$wk['capacity']})";
-								if ($wk['applied']) { $nsohtml .= " <span class='text-primary'>- {$wk['applied']}</span>"; }
+								$nsohtml .= "<li>".\Wbhkit\figure_year_minutes($ts).": <a href='/admin-workshop/view/{$wk['id']}'>{$wk['title']}</a> ({$wk['enrollments']['enrolled']}/{$wk['capacity']})";
+								if ($wk['enrollments']['applied']) { $nsohtml .= " <span class='text-primary'>- {$wk['enrollments']['applied']}</span>"; }
 								$nsohtml .= "</li>\n";
 							}
 						}
@@ -58,9 +56,7 @@ $( document ).ready(function() {
 				}
 				if ($nsohtml) {
 					echo "<h4>Not Full, 15 Days Out</h4>
-				<ul>
-					$nsohtml
-				</ul>\n";
+				<ul>$nsohtml</ul>\n";
 				}	
 				
 				
@@ -69,18 +65,23 @@ $( document ).ready(function() {
 				foreach ($workshops as $wk) {
 					if ($wk['hidden'] == 1 && $wk['xtra'] == 0) {
 						$ts = strtotime($wk['course_start']);
+						
 						$hiddenhtml .= "<li>".\Wbhkit\figure_year_minutes($ts).": <a href='/admin-workshop/view/{$wk['id']}'>{$wk['title']}</a>, {$wk['teacher_name']}</li>\n";
 						
 					}
 				}
 				if ($hiddenhtml) {
 					echo "<h4>Hidden</h4>\n
-						<ul>
-							$hiddenhtml
-						</ul>";
+						<ul>$hiddenhtml</ul>";
 				}
 				
-				
+				//bitness
+				if (count($bitnesses) > 0) {
+					echo "<h4>Recent Bitnesses</h4>\n<ul>\n";
+					foreach ($bitnesses as $bid => $b) {
+						echo "<li><a href='/admin-workshop/view/{$bid}'>{$b['title']}</a></li>\n";
+					}
+				}
 				
 				
 				?>
@@ -132,13 +133,7 @@ foreach ($workshops as $wk) {
 	$xtra = $wk['class_show'] ? ' show' : '';
 	if ($wk['hidden'] == 1) { $xtra = 'text-muted'; }
 		
-	echo "<li class='mt-1 $xtra class-session' data-teacher=\"teacher-{$wk['teacher_id']}\"><a   href='/admin-workshop/view/{$wk['id']}' class='$xtra'>{$wk['title']}</a> {$wk['rank']} of {$wk['total_sessions']} <span class='text-muted'>({$wk['enrolled']}/{$wk['capacity']})</span>".($wk['class_show'] ? ' - show' : '').", $start";
-	
-	echo " - {$wk['teacher_name']}";
-	if ($wk['co_teacher_id']) {
-		echo ", {$wk['co_teacher_name']}";
-	}
-	echo "</li>\n";
+	echo "<li class='mt-1 $xtra class-session' data-teacher=\"teacher-{$wk['teacher_id']}\"><a   href='/admin-workshop/view/{$wk['id']}' class='$xtra'>{$wk['title']}</a> {$wk['rank']} of {$wk['total_sessions']} <span class='text-muted'>({$wk['enrollments']['enrolled']}/{$wk['capacity']})</span>".($wk['class_show'] ? ' - show' : '').", $start - {$wk['teacher_name']}</li>\n";
 	
 }	
 

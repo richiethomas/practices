@@ -3,7 +3,9 @@ $view->data['heading'] = "get emails";
 
 Wbhkit\set_vars(array('workshops'));
 $results = null;
-$all_workshops = Workshops\get_workshops_dropdown();
+
+$wh = new WorkshopsHelper();
+$all_workshops = $wh->get_workshops_dropdown();
 
 $eh = new EnrollmentsHelper();
 

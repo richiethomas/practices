@@ -57,7 +57,7 @@ include 'libs/lib-logger.php';
 include 'libs/db_pdo.php';
 include 'libs/wbh_webkit.php';
 include 'libs/wbh_webkit_pagination.php';
-include 'libs/lib-workshops.php';
+//include 'libs/lib-workshops.php';
 include 'libs/lib-emails.php';
 include 'libs/lib-xtra-sessions.php';
 include 'libs/lib-teachers.php';
@@ -72,7 +72,7 @@ define('SMARTENROLL', 100); // special status ENROLL or WAIT pending capacity --
 
 $smtp = null; // global smtp object for sending mail, keeping connection open
 
-$wk = \Workshops\get_empty_workshop();
+$wk = new Workshop();
 $u = new User(); // set empty user
 $view = new View();
 

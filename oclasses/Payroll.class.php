@@ -2,7 +2,7 @@
 
 class Payroll extends WBHObject {
 		
-	public array $wk;
+	public Workshop $wk;
 	public User $u;
 	public Task $task;
 	
@@ -23,7 +23,7 @@ class Payroll extends WBHObject {
 				
 		$this->cols= $this->fields;
 		$this->u = new User();
-		$this->wk = array();
+		$this->wk = new Workshop();
 		$this->task = new Task();
 			
 	}
@@ -45,8 +45,8 @@ class Payroll extends WBHObject {
 			
 			if ($this->fields['task'] == 'workshop') {
 				
-				$this->wk = \Workshops\get_workshop_info($this->fields['table_id']);
-				$this->wk['rank'] = 1;
+				$this->wk->set_by_id($this->fields['table_id']);
+				$this->wk->fields['rank'] = 1;
 				
 			}
 
@@ -57,7 +57,7 @@ class Payroll extends WBHObject {
 				and w.id = x.workshop_id ",
 				array(':id' => $this->fields['table_id']));
 				while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
-					$this->wk = \Workshops\fill_out_workshop_row($row);
+					$this->wk->set_by_id($row['workshop_id']);
 				}
 			}
 			

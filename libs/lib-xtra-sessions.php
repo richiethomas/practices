@@ -5,6 +5,8 @@ namespace XtraSessions;
 
 function get_xtra_sessions(int $workshop_id) {
 	
+	global $wk;
+	
 	$stmt = \DB\pdo_query("
 select *
 from xtra_sessions x
@@ -13,9 +15,8 @@ order by start", array(':id' => $workshop_id));
 	$sessions = array();
 	while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
 		
-		$row = \Workshops\format_times($row);
-		$row = \Workshops\parse_online_url($row);
-		
+		$row = $wk->format_times_one_level($row);
+		$row['url'] = $wk->parse_online_url($row['online_url']);
 		$sessions[] = $row;
 	}
 	return $sessions;
@@ -25,12 +26,13 @@ order by start", array(':id' => $workshop_id));
 function get_xtra_session(int $xtra_id = 0) {
 	
 	if (!$xtra_id) { return empty_xtra_session(); }
+	global $wk;
 	
 	$stmt = \DB\pdo_query("select * from xtra_sessions where id = :id", array(':id' => $xtra_id));
 	$sessions = array();
 	while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
 		$row = \Workshops\format_times($row);
-		$row = \Workshops\parse_online_url($row);
+		$row['url'] = $wk->parse_online_url($row['online_url']);
 		return $row;
 	}
 	return empty_xtra_session();
@@ -49,7 +51,7 @@ function empty_xtra_session() {
 	);
 }
 
-function xtra_session_fields(array $wk) {
+function xtra_session_fields() {
 	
 	return
 	\Wbhkit\texty('start_xtra', null, null, null, null, 'Required', ' required ').
@@ -106,12 +108,12 @@ function delete_xtra_session(int $xtra_session_id) {
 	
 }
 
-function add_a_week(array $wk, ?int $class_show = 0) {
+function add_a_week(\Workshop $wk, ?int $class_show = 0) {
 	//function add_xtra_session($workshop_id, $start, $end, $online_url = null) {
 
-	$start = $wk['start'];
-	$end = $wk['end'];
-	foreach ($wk['sessions'] as $s) {
+	$start = $wk->fields['start'];
+	$end = $wk->fields['end'];
+	foreach ($wk->sessions as $s) {
 		$start = $s['start'];
 		$end = $s['end'];
 	}
@@ -119,8 +121,9 @@ function add_a_week(array $wk, ?int $class_show = 0) {
 	$start = date(MYSQL_FORMAT, strtotime("+1 week", strtotime($start)));
 	$end = date(MYSQL_FORMAT, strtotime("+1 week", strtotime($end)));
 	
-	add_xtra_session($wk['id'], $start, $end, $class_show);
-	return \Workshops\fill_out_workshop_row($wk); 
+	add_xtra_session($wk->fields['id'], $start, $end, $class_show);
+	$wk->finish_setup();
+	return $wk;
 
 }
 

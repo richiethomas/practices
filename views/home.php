@@ -1,4 +1,14 @@
 <?php
+function format_cost_display(string $cd) {
+	if (substr($cd, 0 ,1) == '$') {
+		$cd = substr($cd,1); // remove leading $
+	}
+	if ($cd == 'Pay what you can') {
+		$cd = 'donation';
+	}
+	return $cd;
+}
+
 function teacher_link($tinfo) {
   return "
 	  <a href='/teachers/view/{$tinfo['id']}'><img style='width: 50px; height: 50px' class='clearfix float-start mx-2 teacher-image align-self-center' src='".\Teachers\get_teacher_photo_src($tinfo['user_id'])."' alt='Teacher Name'></a>
@@ -6,41 +16,41 @@ function teacher_link($tinfo) {
 }	
 	
 
-function class_row(array $wk) {
+function class_row(Workshop $wk) {
 
 	global $u;
 	
 	$html = '';
 	
 	$html .= '<div class="row justify-content-between my-2 py-2 border-bottom">';
-	$html .= '<div data-classid="'.$wk['id'].'" class="col-md-11 classes-listings-class">';
+	$html .= '<div data-classid="'.$wk->fields['id'].'" class="col-md-11 classes-listings-class">';
 		
-		$html .= \Workshops\print_tags($wk);
+		$html .= $wk->print_tags();
 
-		$html .= '<h2 class="mt-3"><a class="text-decoration-none text-dark" href="/workshop/view/'. $wk['id'] .'">'. $wk['title'] . '</a></h2>';
+		$html .= '<h2 class="mt-3"><a class="text-decoration-none text-dark" href="/workshop/view/'. $wk->fields['id'] .'">'. $wk->fields['title'] . '</a></h2>';
 			
 		// class meta info
 		$html .= "<div class='d-flex row mb-2 text-muted'>";
 
 			// teacher
-			$html .= "<div class='col-sm-3'>".teacher_link($wk['teacher_info']);
-			if ($wk['co_teacher_id']) { $html .= "<br>".teacher_link($wk['co_teacher_info']); } 
+			$html .= "<div class='col-sm-3'>".teacher_link($wk->teacher);
+			if ($wk->fields['co_teacher_id']) { $html .= "<br>".teacher_link($wk->coteacher); } 
 			$html .= "</div>";
 	
 			
 			//time, sessions, money
-			$html .= "<div class='col-sm-3'><i class='bi-calendar text-primary'></i> ".date('D M j', strtotime($wk['start_tz'])).', '.\Wbhkit\friendly_time($wk['start_tz'])." ({$u->fields['time_zone_friendly']})</div>
-			<div class='col-sm-2'><i class='bi-calendar-range text-primary'></i> {$wk['total_sessions']} ".(($wk['total_sessions'] == 1) ? 'session ': 'sessions')."</div>
-			<div class='col-sm-2'><i class='bi-cash text-primary'></i> ".\Workshops\format_cost_display($wk['costdisplay'])."</div>";
+			$html .= "<div class='col-sm-3'><i class='bi-calendar text-primary'></i> ".date('D M j', strtotime($wk->fields['start_tz'])).', '.\Wbhkit\friendly_time($wk->fields['start_tz'])." ({$u->fields['time_zone_friendly']})</div>
+			<div class='col-sm-2'><i class='bi-calendar-range text-primary'></i> {$wk->fields['total_sessions']} ".(($wk->fields['total_sessions'] == 1) ? 'session ': 'sessions')."</div>
+			<div class='col-sm-2'><i class='bi-cash text-primary'></i> ".format_cost_display($wk->fields['costdisplay'])."</div>";
 			
 			// enroll button
 			$html .= "<div class='col-sm-2'>";
-			if ($wk['soldout']) { 
-				$html .= '<span class="text-danger">Sold Out!</span> <a class="btn btn-outline-primary" href="/workshop/view/'.$wk['id'].'" role="button">Wait List</a>';
-			} elseif ($wk['application']) { 
-				$html .= '<a class="btn btn-primary" href="/workshop/view/'.$wk['id'].'" role="button">Apply</a>';
+			if ($wk->fields['soldout']) { 
+				$html .= '<span class="text-danger">Sold Out!</span> <a class="btn btn-outline-primary" href="/workshop/view/'.$wk->fields['id'].'" role="button">Wait List</a>';
+			} elseif ($wk->fields['application']) { 
+				$html .= '<a class="btn btn-primary" href="/workshop/view/'.$wk->fields['id'].'" role="button">Apply</a>';
 			} else { 
-				$html .= '<a class="btn btn-primary" href="/workshop/view/'.$wk['id'].'" role="button">Enroll</a>';
+				$html .= '<a class="btn btn-primary" href="/workshop/view/'.$wk->fields['id'].'" role="button">Enroll</a>';
 			}
 			$html .= '</div>'; // end of enroll button
 			
@@ -122,11 +132,11 @@ document.addEventListener('DOMContentLoaded', () => {
 	$online_html = '';
 	foreach ($upcoming_workshops as $wk) {
 		
-		if (!Wbhkit\is_future($wk['start'])) {
+		if (!Wbhkit\is_future($wk->fields['start'])) {
 			continue; // skip ones that already started
 		}
 
-		if (in_array('inperson', $wk['tags_array'])) {
+		if (in_array('inperson', $wk->fields['tags_array'])) {
 			$inperson_html .= class_row($wk);
 		} else {
 			$online_html .= class_row($wk);

@@ -8,17 +8,16 @@ if (!$wid) {
 	$view->renderPage('error');
 	exit();
 }
-$wk = \Workshops\get_workshop_info($wid);
-
+$wk->set_by_id($wid);
 
 $show_other_action = true;
 $e = new Enrollment();
-if ($u->logged_in() && isset($wk['id']) && $wk['id'] > 0) {
+if ($u->logged_in() && isset($wk->fields['id']) && $wk->fields['id'] > 0) {
 	$e->set_by_u_wk($u, $wk);
 }
 
 
-if (Workshops\is_public($wk)) {
+if ($wk->is_public()) {
 
 	switch ($ac) {
 
@@ -27,7 +26,7 @@ if (Workshops\is_public($wk)) {
 				$error = "You must be logged in to enroll.";
 				break;
 			}
-			if (isset($wk['upcoming']) && $wk['upcoming'] == 0) {
+			if (strtotime($wk->fields['start']) < strtotime("now")) {
 				$error = "That workshop already started.";
 				break;
 			}	
@@ -35,7 +34,7 @@ if (Workshops\is_public($wk)) {
 			if ($e->change_status(SMARTENROLL)) {
 				// finicky confirmation message
 				if ($e->fields['status_id'] == ENROLLED) {
-					$message = "'{$u->fields['nice_name']}' is now enrolled in '{$wk['title']}'!<ul><li>The zoom link, and other class info, was just emailed to <b>{$u->fields['email']}</b></li>\n";
+					$message = "'{$u->fields['nice_name']}' is now enrolled in '{$wk->fields['title']}'!<ul><li>The zoom link, and other class info, was just emailed to <b>{$u->fields['email']}</b></li>\n";
 					
 					$message .= "<li>Please be ON TIME for class! Classes are short - being even a few minutes late really disrupts things!</li>\n";
 					
@@ -43,18 +42,18 @@ if (Workshops\is_public($wk)) {
 										
 					$message .= "</ul>\n";
 				} elseif ($e->fields['status_id'] == APPLIED) {
-					$message = "'{$u->fields['nice_name']}' has applied for '{$wk['title']}'! You'll be notified soon if you got in or not.\n";
+					$message = "'{$u->fields['nice_name']}' has applied for '{$wk->fields['title']}'! You'll be notified soon if you got in or not.\n";
 
 				} elseif ($e->fields['status_id'] == WAITING) {
 					$message = "This practice is full. '{$u->fields['nice_name']}' is now on the waiting list.";
 				} 
-				$logger->debug("'{$u->fields['nice_name']}' is status '".$lookups->find_status_by_value($e->fields['status_id'])."' for'{$wk['title']}'");
+				$logger->debug("'{$u->fields['nice_name']}' is status '".$lookups->find_status_by_value($e->fields['status_id'])."' for'{$wk->fields['title']}'");
 			
 			} else {
 				$error = $e->error;
 				$logger->info($error);
 			}
-			$wk = Workshops\set_enrollment_stats($wk);
+			$wk->set_enrollment_stats();
 			break;
 		
 		// request a drop (still must be confirmed)
@@ -65,13 +64,13 @@ if (Workshops\is_public($wk)) {
 				break;
 			}
 
-			if (isset($wk['title'])) {
-				$message = "Do you really want to drop '".$wk['title']."'? Then click <a class='btn btn-warning' href='/workshop/condrop/{$wid}'>confirm drop</a>";
+			if (isset($wk->fields['title'])) {
+				$message = "Do you really want to drop '".$wk->fields['title']."'? Then click <a class='btn btn-warning' href='/workshop/condrop/{$wid}'>confirm drop</a>";
 			}
 			
 			$show_other_action = false;
 		
-			$hours_left = (strtotime($wk['start']) - strtotime('now')) / 3600;
+			$hours_left = (strtotime($wk->fields['start']) - strtotime('now')) / 3600;
 			if ($hours_left > 0 && $hours_left < LATE_HOURS) {
 				$message .= '<br><br>'.Emails\get_dropping_late_warning();
 			}
@@ -85,11 +84,11 @@ if (Workshops\is_public($wk)) {
 			}
 				
 			$message = $e->change_status(DROPPED, 1);
-			$wk = Workshops\set_enrollment_stats($wk);
-			if (!$wk['application']) {
+			$wk->set_enrollment_stats();
+			if (!$wk->fields['application']) {
 				$e->notify_waiting($wk);
 			}
-			$message = "Dropped user ({$u->fields['email']}) from '{$wk['title']}.'";
+			$message = "Dropped user ({$u->fields['email']}) from '{$wk->fields['title']}.'";
 			$logger->debug($message);
 			break;	
 			
@@ -100,15 +99,15 @@ if (Workshops\is_public($wk)) {
 	}
 }
 
-if (isset($wk) && isset($wk['id']) && $wk['id']) {
+if (isset($wk->fields['id']) && $wk->fields['id']) {
 		
 	$view->data['e'] = $e;
 	$view->data['show_other_action'] = $show_other_action;
 	$view->data['admin'] = 0;
 	
-	$view->data['heading'] = $view->data['fb_title'] = $wk['title'];
-	$view->data['fb_image'] = "http://{$_SERVER['HTTP_HOST']}".Teachers\get_teacher_photo_src($wk['teacher_info']['user_id']);
-	$view->data['fb_description'] = $wk['notes'];
+	$view->data['heading'] = $view->data['fb_title'] = $wk->fields['title'];
+	$view->data['fb_image'] = "http://{$_SERVER['HTTP_HOST']}".Teachers\get_teacher_photo_src($wk->teacher['user_id']);
+	$view->data['fb_description'] = $wk->fields['notes'];
 	$view->renderPage('winfo');
 } else {
 	$view->data['error_message'] = "<h1>Whoops!</h1><p>You are asking to look at info about a workshop, but I (the computer) cannot tell which workshop you mean. Sorry!</p>\n";

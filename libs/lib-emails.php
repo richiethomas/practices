@@ -58,11 +58,11 @@ function centralized_email($to, $sub, $body, $realname = null) {
 	
 }
 
-function confirm_email($e, $status_id = ENROLLED) {
+function confirm_email(\Enrollment $e, $status_id = ENROLLED) {
 
 	$wk = $e->wk;
 	$u = $e->u;	
-	$trans = URL."workshop/view/{$wk['id']}";
+	$trans = URL."workshop/view/{$wk->fields['id']}";
 	$body = '';
 	$notifications = '';	
 		
@@ -70,14 +70,14 @@ function confirm_email($e, $status_id = ENROLLED) {
 	switch ($status_id) {
 		case 'already':
 		case ENROLLED:
-			$sub = "ENROLLED: {$wk['title']}";
-			$body = "<p>You are ENROLLED in the workshop \"{$wk['title']}.\"<br>Starts: ".\Wbhkit\friendly_when($wk['start'])."</p>";
+			$sub = "ENROLLED: {$wk->fields['title']}";
+			$body = "<p>You are ENROLLED in the workshop \"{$wk->fields['title']}.\"<br>Starts: ".\Wbhkit\friendly_when($wk->fields['start'])."</p>";
 
-			if ($wk['location_id'] == ONLINE_LOCATION_ID) {
-				$body .= "<p>ZOOM LINK:<br>\n----------<br>\nThe Zoom link to your workshop is: {$wk['online_url_display']}<br>\n";
+			if ($wk->fields['location_id'] == ONLINE_LOCATION_ID) {
+				$body .= "<p>ZOOM LINK:<br>\n----------<br>\nThe Zoom link to your workshop is: {$wk->url['online_url_display']}<br>\n";
 				$body .= "<br>\nTry to show up 5 minutes early if you can so we can get started right away.  If your class is multiple sessions, that link should work for all of them. We'll send you an email if the link changes.</p>\n";
 			} else {
-				$body .= "<p>LOCATION:<br>\n---------<br>\n{$wk['place']}<br>\n{$wk['address']}<br>\n{$wk['city']}, {$wk['state']} {$wk['zip']}</p>\n";
+				$body .= "<p>LOCATION:<br>\n---------<br>\n{$wk->location['place']}<br>\n{$wk->location['address']}<br>\n{$wk->location['city']}, {$wk->location['state']} {$wk->location['zip']}</p>\n";
 			}
 			
 			$body .= payment_text($wk);
@@ -85,7 +85,7 @@ function confirm_email($e, $status_id = ENROLLED) {
 			$body .= 
 "<p>CLASS INFO<br>\n----------<br>\nDescription and times/dates are both in this email and also listed here:<br>\n{$trans}</p>\n";
 			
-			$body .= \Workshops\email_teacher_info($wk);
+			$body .= $wk->email_teacher_info();
 
 			$body .= email_boilerplate();
 			
@@ -93,8 +93,8 @@ function confirm_email($e, $status_id = ENROLLED) {
 			$send_faq = false;
 			break;
 		case WAITING:
-			$sub = "WAIT LIST: {$wk['title']}";
-			$body = "<p>You are on the WAITING LIST for \"{$wk['title']}.\" which starts {$wk['showstart']}</p>";
+			$sub = "WAIT LIST: {$wk->fields['title']}";
+			$body = "<p>You are on the WAITING LIST for \"{$wk->fields['title']}.\" which starts {$wk->fields['showstart']}</p>";
 			
 			
 			$body .= "<p>WHAT DOES 'WAIT LIST' MEAN?<br>
@@ -107,10 +107,10 @@ If you no longer want to be notified of open spots, you can drop out here: <br>
 {$trans}</p>";			
 			break;
 		case DROPPED:
-			$sub = "DROPPED: {$wk['title']}";
-			$body = "<p>You have DROPPED out of {$wk['title']}</p>";			
+			$sub = "DROPPED: {$wk->fields['title']}";
+			$body = "<p>You have DROPPED out of {$wk->fields['title']}</p>";			
 			
-			$hours_left = (strtotime($wk['start']) - strtotime('now')) / 3600;
+			$hours_left = (strtotime($wk->fields['start']) - strtotime('now')) / 3600;
 			if ($hours_left > 0 && $hours_left < LATE_HOURS) {
 				$body .= "<br><i>".get_dropping_late_warning()."</i>";
 			}
@@ -118,14 +118,14 @@ If you no longer want to be notified of open spots, you can drop out here: <br>
 			
 			// tell webmaster if this person needs a refund
 			if ($e->fields['paid'] == 1) {
-				centralized_email(WEBMASTER, "refund requested", "<p>{$u->fields['nice_name']} just dropped from the class '{$wk['title']}', and had already paid</p><p>See workshop info: ".URL."admin-workshop/view/{$wk['id']}</p>");
+				centralized_email(WEBMASTER, "refund requested", "<p>{$u->fields['nice_name']} just dropped from the class '{$wk->fields['title']}', and had already paid</p><p>See workshop info: ".URL."admin-workshop/view/{$wk->fields['id']}</p>");
 			}
 			
 			break;
 			
 		case APPLIED:
-			$sub = "APPLIED: {$wk['title']}";
-			$body = "<p>You have APPLIED for '{$wk['title']}' starting on {$wk['showstart']}.</p>\n";
+			$sub = "APPLIED: {$wk->fields['title']}";
+			$body = "<p>You have APPLIED for '{$wk->fields['title']}' starting on {$wk->fields['showstart']}.</p>\n";
 			
 			$body .= "<p>Your email has be added to the list and you'll be notified soon if you got in or not. Generally preference is given to new students unless it says otherwise in the class description.</p>\n";
 			
@@ -135,7 +135,7 @@ If you no longer want to be notified of open spots, you can drop out here: <br>
 			
 		default:
 			$statuses = $lookups->statuses;
-			$sub = "{$statuses[$status_id]}: {$wk['title']}";
+			$sub = "{$statuses[$status_id]}: {$wk->fields['title']}";
 			$body = "<p>$body</p>";
 			
 			break;
@@ -144,22 +144,22 @@ If you no longer want to be notified of open spots, you can drop out here: <br>
 	if ($status_id == ENROLLED) {
 		$body .= "<p>CLASS INFORMATION<br>
 		--------------------------------<br>
-		<b>Title:</b> {$wk['title']}<br>
-		<b>Teacher:</b> {$wk['teacher_info']['nice_name']}".($wk['co_teacher_id'] ?  ", {$wk['co_teacher_info']['nice_name']}" : '')."<br>
-		<b>When:</b> {$wk['full_when']}<br>
-		<b>Cost:</b> {$wk['costdisplay']}<br>";
+		<b>Title:</b> {$wk->fields['title']}<br>
+		<b>Teacher:</b> {$wk->fields['teacher_name']}<br>
+		<b>When:</b> {$wk->fields['full_when']}<br>
+		<b>Cost:</b> {$wk->fields['costdisplay']}<br>";
 		
 		
-		if ($wk['location_id'] == ONLINE_LOCATION_ID) {
+		if ($wk->fields['location_id'] == ONLINE_LOCATION_ID) {
 			if ($status_id == ENROLLED) {
-					$body .= "<b>Zoom link:</b> {$wk['online_url_display']}<br>";
+					$body .= "<b>Zoom link:</b> {$wk->url['online_url_display']}<br>";
 			} else {
 				$body .= "<b>Zoom link</b>: We'll email you the zoom link if/once you are enrolled.<br>";
 			}
 		} else {
-			$body .= "<b>Where:</b> {$wk['lwhere']}<br>";
+			$body .= "<b>Where:</b> {$wk->location['lwhere']}<br>";
 		}
-		$body .= "<b>Description:</b> {$wk['notes']}</p>
+		$body .= "<b>Description:</b> {$wk->fields['notes']}</p>
 		<p>Web page for this class:<br>\n{$trans}</p>";	
 	}
 
@@ -184,22 +184,22 @@ function email_footer() {
 }
 
 
-function get_workshop_summary($wk) {
+function get_workshop_summary(\Workshop $wk) {
 	
 		$summary = "<br>
 <p>-----------------------------<br>
 <b>Class information:</b><br>
-<b>Title:</b> {$wk['title']}<br>
-<b>Teacher:</b> {$wk['teacher_info']['nice_name']}".($wk['co_teacher_id'] ?  ", {$wk['co_teacher_info']['nice_name']}" : '')."<br>
-<b>When:</b> {$wk['full_when']}";
+<b>Title:</b> {$wk->fields['title']}<br>
+<b>Teacher:</b> {$wk->teacher['nice_name']}".($wk->fields['co_teacher_id'] ?  ", {$wk->coteacher['nice_name']}" : '')."<br>
+<b>When:</b> {$wk->fields['full_when']}";
 
-	if ($wk['location_id'] != ONLINE_LOCATION_ID) {
+	if ($wk->fields['location_id'] != ONLINE_LOCATION_ID) {
 		$summary .= "<br>
-<b>Where:</b> {$wk['lwhere']}";
+<b>Where:</b> {$wk->location['lwhere']}";
 	}
 	
 	$summary .= "<br>
-<b>Drop / re-enroll / more info: ".URL."workshop/view/{$wk['id']}</p>";
+<b>Drop / re-enroll / more info: ".URL."workshop/view/{$wk->fields['id']}</p>";
 	
 	return $summary;
 }
@@ -247,34 +247,34 @@ function get_phpmailer_object() {
 }
 
 
-function payment_text($wk, $reminder = 0) {
+function payment_text(\Workshop $wk, $reminder = 0) {
 	
 	$pt = "<p>PAYMENT:<br>\n--------<br>\n"; // payment text
 	
 	
 	if ($reminder == 1) {
 		
-		if ($wk['cost'] > 1) {
+		if ($wk->fields['cost'] > 1) {
 			$pt .= "Our records show you have not yet paid. That's fine! This is just a reminder: payment is due by the start of class. NOTE: if you paid within the last 12 hours or so, then you're all set. We just haven't processed that payment into the system yet. When we do you'll get an email letting you know we've received it. ";
 		}
-		if ($wk['cost'] == 1) {
+		if ($wk->fields['cost'] == 1) {
 			$pt .= "Our records show you have not yet paid. That's fine! This is a PAY WHAT YOU CAN class, so paying is optional.  NOTE: if you DID pay soemthing but it was within the last 12 hours or so, we just haven't processed that payment into the system yet. When we do you'll get an email letting you know we've received it.";
 		}
 	}
 	
-	if ($wk['cost'] > 1) {
-		$pt .= "Class costs \${$wk['cost']} (USD). ";
+	if ($wk->fields['cost'] > 1) {
+		$pt .= "Class costs \${$wk->fields['cost']} (USD). ";
 	}
-	if ($wk['cost'] == 1) {
+	if ($wk->fields['cost'] == 1) {
 		$pt .= "This is a PAY WHAT YOU CAN class. Full price is usually $40USD (or a suggested donation in the description), but pay anything you like including nothing. ";
 	}	
-	if ($wk['cost'] == 0) {
+	if ($wk->fields['cost'] == 0) {
 		$pt .= "This is a free class. ";
 	}	
 	
-	if ($wk['cost'] != 0) {
+	if ($wk->fields['cost'] != 0) {
 		
-		if ($wk['cost'] == 1) {
+		if ($wk->fields['cost'] == 1) {
 			$pt .= "<br><br>\n\nIf you're going to pay something, ";
 		} else {
 			$pt .= "<br><br>\n\nPay via ";
@@ -284,13 +284,13 @@ function payment_text($wk, $reminder = 0) {
 		$pt .= "Venmo @wgimprovschool (business),<br>\n or PayPal payments@wgimprovschool.com<br>\n or https://paypal.me/WGImprovSchool.<br><br>\n\n";
 		
 		// get teacher last name
-		$tnames = explode(' ', $wk['teacher_info']['nice_name']);
+		$tnames = explode(' ', $wk->teacher['nice_name']);
 		$t_last_name = array_pop($tnames);
 
 		// start date
-		$wdate = date('n/j', (strtotime($wk['start'])));		
+		$wdate = date('n/j', (strtotime($wk->fields['start'])));		
 		
-		$pt .= "Put '".strtoupper("{$wdate} {$t_last_name} {$wk['short_title']}")."' in your payment.<br><br>\n\nDue by the start of class. You'll get a confirmation email within 12 hours of paying.<br><br>\n\n";
+		$pt .= "Put '".strtoupper("{$wdate} {$t_last_name} {$wk->fields['short_title']}")."' in your payment.<br><br>\n\nDue by the start of class. You'll get a confirmation email within 12 hours of paying.<br><br>\n\n";
 
 		$pt .= "If you can't do Venmo or Paypal, contact payments@wgimprovschool.com";
 

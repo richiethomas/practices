@@ -86,14 +86,16 @@ class UserHelper extends WBHObject {
 
 
 	function edit_group_level(User $u) {
+		global $lookups;
+		
 		return "<form action='{$this->sc}/updategroup/{$u->fields['id']}' method='post'>\n".
-		\Wbhkit\drop('group_id', $this->lookups->groups, $u->fields['group_id'], 'Group', 'Clearance level').
+		\Wbhkit\drop('group_id', $lookups->groups, $u->fields['group_id'], 'Group', 'Clearance level').
 		\Wbhkit\submit('Update Group Level').
 		"</form>\n";	
 	}
 
 	function delete_user(int $uid) {
-		$ud = new User($this->logger, $this->lookups);
+		$ud = new User();
 		$ud->set_by_id($uid);
 		$ud->delete_user();
 	}

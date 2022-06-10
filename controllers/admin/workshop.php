@@ -8,7 +8,7 @@ if ($ac != 'ad') {
 		$view->renderPage('error');
 		exit();
 	}
-	$wk = \Workshops\get_workshop_info($wid);
+	$wk->set_by_id($wid);
 }
 
 $wk_vars = array('title', 'notes', 'start', 'end', 'lid', 'online_url', 'cost', 'capacity', 'notes', 'when_public', 'email', 'con', 'guest_id', 'reminder_sent', 'teacher_id', 'co_teacher_id', 'application',  'hidden', 'start_xtra', 'end_xtra', 'online_url_xtra', 'hideconpay', 'class_show', 'tags');
@@ -21,7 +21,7 @@ $eh = new EnrollmentsHelper();
 switch ($ac) {
 
 	case 'sar':
-		Reminders\remind_enrolled(array($wk['id'], 0, $wk['title']));
+		Reminders\remind_enrolled(array($wk->fields['id'], 0, $wk->fields['title']));
 		$message = "Reminders sent to enrolled.";
 		break;
 
@@ -37,23 +37,23 @@ switch ($ac) {
 		// build a workshop array from data we have
 		$id = $wid ?? null; // so the next bit can find the id
 		$location_id = $lid;
-		$wk_fields = \Workshops\get_empty_workshop();
+		$wk_fields = $wk->cols; // the db columns
 		foreach ($wk_fields as $field => $fieldvalue) {
-			$wk[$field] = $$field;
+			$wk->fields[$field] = $$field; // set the field array with each db col
 		}
 	
-		$wid = Workshops\add_update_workshop($wk, $ac);
-		$wk = Workshops\get_workshop_info($wid); // re-fetch workshop info from database - inefficient, but only done by admins;
+		$wid = $wk->add_update_workshop($ac);
+		$wk->set_by_id($wid); // re-fetch workshop info from database - inefficient, but only done by admins;
 				
 		if ($ac == 'up') {
-			$message = "Updated practice ({$wid}) - {$wk['title']}";
+			$message = "Updated practice ({$wk->fields['id']}) - {$wk->fields['title']}";
 		} elseif ($ac == 'ad') {
-			$message = "Added practice ({$wk['id']}) - ({$title}) ";
+			$message = "Added practice ({$wk->fields['id']}) - ({$wk->fields['title']}) ";
 		}
 		break;
 		
 	case 'nw':
-		if (!$wk['application']) {
+		if (!$wk->fields['application']) {
 			$message = $e->notify_waiting($wk);
 		} else {
 			$message = "Cannot notify waiting list - this class takes applications.";
@@ -92,7 +92,7 @@ switch ($ac) {
 		break;
 	
 	case 'cdel':
-		$error = "Are you sure you want to delete '{$wk['title']}'? <a class='btn btn-danger' href='/admin/del/{$wk['id']}'>delete</a>";
+		$error = "Are you sure you want to delete '{$wk->fields['title']}'? <a class='btn btn-danger' href='/admin/del/{$wk->fields['id']}'>delete</a>";
 		break;
 
 		
@@ -101,7 +101,7 @@ switch ($ac) {
 		$class_show = (int)$class_show;
 	
 		XtraSessions\add_xtra_session($wid, $start_xtra, $end_xtra, $online_url_xtra, $class_show);
-		$wk = Workshops\fill_out_workshop_row($wk);
+		$wk->finish_setup();
 		$message = "Added xtra session.";
 		break;
 		
@@ -109,8 +109,8 @@ switch ($ac) {
 		$xtraid = (int) ($params[3] ?? 0);
 		if ($xtraid) {
 			XtraSessions\delete_xtra_session($xtraid);
-			XtraSessions\update_ranks($wk['id']);
-			$wk = Workshops\fill_out_workshop_row($wk);
+			XtraSessions\update_ranks($wk->fields['id']);
+			$wk->finish_setup();
 			$message = "Deleted xtra session";
 		} else {
 			$error = "You wanted to delete an extra session but I could not determine which one.";
@@ -189,6 +189,7 @@ foreach ($lookups->statuses as $stid => $status_name) {
 
 $view->add_globals(array('stats', 'lists', 'status_log', 'hideconpay'));	
 $view->data['statuses'] = $lookups->statuses;
+$view->data['wid'] = $wk->fields['id'];
 $view->renderPage('admin/workshop');
 
 

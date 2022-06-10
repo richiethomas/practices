@@ -12,16 +12,18 @@ class EnrollmentsHelper extends WBHObject {
 	// registrations
 	function set_enrollments_for_workshop(int $workshop_id) {
 	
+		global $lookups;
+	
 		// set enrollment data to zero
 		$this->enrollments = array();
-		foreach ($this->lookups->statuses as $sid => $sname) {
+		foreach ($lookups->statuses as $sid => $sname) {
 			$this->enrollments[$sname] = 0;
 		}
 		$this->enrollments['paid'] = 0;
 	
 		$stmt = \DB\pdo_query("select r.status_id, r.paid from registrations r where r.workshop_id = :wid", array(':wid' => $workshop_id));
 		while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
-			$this->enrollments[$this->lookups->statuses[$row['status_id']]]++;
+			$this->enrollments[$lookups->statuses[$row['status_id']]]++;
 			if ($row['paid']) { $this->enrollments['paid']++; }
 		}
 		return $this->enrollments;
@@ -37,25 +39,26 @@ class EnrollmentsHelper extends WBHObject {
 	}	
 	
 	
-	function get_status_change_log(array $wk = null) {
+	function get_status_change_log(?int $wid = null) {
 
 		$sql = "select s.*, u.email, u.display_name, st.status_name, wk.title, wk.start, wk.end  from status_change_log s, users u, statuses st, workshops wk where WORKSHOPMAYBE  s.workshop_id = wk.id and s.user_id = u.id and s.status_id = st.id order by happened desc";
-		if (isset($wk['id']) && $wk['id']) { 
+		if ($wid) { 
 			// if we got a workshop, only show changes for that
 			$sql = preg_replace('/WORKSHOPMAYBE/', " workshop_id = :wid and ", $sql);
-			$stmt = \DB\pdo_query($sql, array(':wid' => $wk['id']));
+			$stmt = \DB\pdo_query($sql, array(':wid' => $wid));
 		} else {
-			// if we are showing all, only show last 3 days
+			// if we are showing all, only show last 7 days
 			$sql = preg_replace('/WORKSHOPMAYBE/', 'wk.start >= "'.date(MYSQL_FORMAT, strtotime("7 days ago")).'" and ', $sql);
 			$stmt = \DB\pdo_query($sql);
 		}
 		
 		$log = array();
 
+		$wk = new \Workshop();
 		$u = new \User(); // need its methods
 		$e = new \Enrollment();
 		while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
-			$row = \Workshops\format_times($row);
+			$row = $wk->format_times_one_level($row);
 			$row = $u->set_nice_name_in_row($row);
 			$log[] = $row;
 		}
@@ -110,8 +113,9 @@ class EnrollmentsHelper extends WBHObject {
 		return $stds;
 	}
 
-	function get_transcript_tabled(User $u, bool $admin = false, int $page = 1, $hideconpay = 0) {
-		global $view;
+	function get_transcript_tabled(User $u, bool $admin = false, $hideconpay = 0) {
+		global $view, $lookups;
+		
 		if (!$u->logged_in() || !isset($u->fields['id'])) {
 			return "<p>Not logged in!</p>\n";
 		}
@@ -123,48 +127,35 @@ class EnrollmentsHelper extends WBHObject {
 		and w.location_id = l.id 
 		and r.user_id = :uid ";
 		if (!$admin) { 
-			$sql .= "		and ( (w.start >= :now) || (r.status_id = ".ENROLLED."))";
+			$sql .= " and ( (w.start >= :now) || (r.status_id = ".ENROLLED."))";
 		} 
 		$sql .= " order by w.start desc";
 		$params = array(':uid' => $u->fields['id']);
 		if (!$admin) { $params[':now'] = $mysqlnow;  }
+		
+		$stmt = \DB\pdo_query($sql, $params);
 	
-		// rank
-		$paginator  = new \Paginator( $sql, $params );
-		if ($admin) {
-			$rows = $paginator->getData($page, 10000); // get all the rows for admin	
-		} else {
-			$rows = $paginator->getData($page);	
+		// prep data
+		$past_classes = array();
+		$wk = new \Workshop();
+		while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
+			$row = $wk->format_times_one_level($row);
+			$row['costdisplay'] = $wk->figure_costdisplay($row['cost']);
+			if ($row['pay_when'] == '0000-00-00') { $row['pay_when'] = null; }
+			
+			if ($row['teacher_id']) { $row['teacher'] = \Teachers\get_teacher_by_id($row['teacher_id']); }
+			if ($row['co_teacher_id']) { $row['co_teacher'] = \Teachers\get_teacher_by_id($row['co_teacher_id']); }
+			
+			$past_classes[] = $row;
 		}
-		if (count($rows->data) == 0) {
+	
+		if (count($past_classes) == 0) {
 			return "<p>".($admin ? 'This student has '  : 'You have')." not taken any classes! Which is fine, but that's why this list is empty.</p>\n";
 		}
 	
-		// prep data
-		$links = $paginator->createLinks();
-		$past_classes = array();
-		$e = new Enrollment();
-		foreach ($rows->data as $d) {
-			$d = \Workshops\fill_out_workshop_row($d, false);
-			if ($d['pay_when'] == '0000-00-00') { $d['pay_when'] = null; }
-			
-			
-//			print_r($d);
-			
-			if ($d['status_id'] == WAITING) {
-				$e->fields['id'] = $d['enrollment_id'];
-				$e->fields['workshops_id'] = $d['id']; 
-				$d['rank'] = null;
-			} else {
-				$d['rank'] = null;
-			}
-			$past_classes[] = $d;
-		}
-	
 		$view->data['guest_id'] = $u->fields['id'];
-		$view->data['statuses'] = $this->lookups->statuses;
+		$view->data['statuses'] = $lookups->statuses;
 		$view->data['admin'] = $admin;
-		$view->data['links'] = $links;
 		$view->data['rows'] = $past_classes;
 		$view->data['hideconpay'] = $hideconpay;
 		return $view->renderSnippet('transcript');

@@ -13,10 +13,10 @@ echo "<div class=\"col-md-6 border border-info\">\n";
 		$current_date = null;
 		foreach ($unavailable_workshops as $wk) {
 			
-			$wk['when_public'] = \Wbhkit\convert_tz($wk['when_public'], $u->fields['time_zone']);
+			$wk->fields['when_public'] = \Wbhkit\convert_tz($wk->fields['when_public'], $u->fields['time_zone']);
 
 			// update date?
-			$next_date = Wbhkit\friendly_date($wk['when_public']).' '.Wbhkit\friendly_time($wk['when_public']);
+			$next_date = Wbhkit\friendly_date($wk->fields['when_public']).' '.Wbhkit\friendly_time($wk->fields['when_public']);
 	
 			if ($next_date != $current_date) {
 		
@@ -27,13 +27,7 @@ echo "<div class=\"col-md-6 border border-info\">\n";
 				echo "<h6>Going live: $next_date</h6>\n<ul>";
 				$current_date = $next_date;
 			}
-	
-			$wkdate = date("l F j", strtotime($wk['start_tz']));
-			$start = Wbhkit\friendly_time($wk['start_tz']);
-			$end = Wbhkit\friendly_time($wk['end_tz']);	
-			echo "<li class='mb-2'>$wkdate: <a href='/workshop/view/{$wk['id']}'>{$wk['title']}</a><br>
-				<small>$start {$wk['costdisplay']}, Instructor: <a href='/teachers/view/{$wk['teacher_id']}'>{$wk['teacher_info']['nice_name']}</a><br>
-			{$wk['time_summary']}<br></small></li>\n";	
+			echo upcoming_class_item($wk);
 			
 		}
 		echo "</ul>\n";
@@ -51,17 +45,22 @@ echo "<div class=\"col-md-6 border border-info\">\n";
 		$current_date = null;
 		echo "<ul>\n";
 		foreach ($application_workshops as $wk) {
-	
-			$wkdate = date("l F j", strtotime($wk['start_tz']));
-			$start = Wbhkit\friendly_time($wk['start_tz']);
-			$end = Wbhkit\friendly_time($wk['end_tz']);	
-			echo "<li class='mb-2'>$wkdate: <a href='/workshop/view/{$wk['id']}'>{$wk['title']}</a><br>
-				<small>$start {$wk['costdisplay']}, Instructor: <a href='/teachers/view/{$wk['teacher_id']}'>{$wk['teacher_info']['nice_name']}</a><br>
-			{$wk['time_summary']}<br></small></li>\n";	
+			echo upcoming_class_item($wk);
 		}	
 		echo "</ul>\n";
 	}
 	echo "</div></div>";
 
 }
+
+function upcoming_class_item($wk) {
+	$wkdate = date("l F j", strtotime($wk->fields['start_tz']));
+	$start = Wbhkit\friendly_time($wk->fields['start_tz']);
+	$end = Wbhkit\friendly_time($wk->fields['end_tz']);	
+	return "<li class='mb-2'>$wkdate: <a href='/workshop/view/{$wk->fields['id']}'>{$wk->fields['title']}</a><br>
+		<small>$start {$wk->fields['costdisplay']}, Instructor: <a href='/teachers/view/{$wk->fields['teacher_id']}'>{$wk->teacher['nice_name']}</a><br>
+	{$wk->fields['time_summary']}<br></small></li>\n";	
+	
+}
+
 

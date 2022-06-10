@@ -45,7 +45,7 @@ function check_tasks(bool $force = false) {
 
 function check_reminders(bool $force = false) {
 	
-
+	return true;
 	// check reminder database -- has it been 4 hours?
 	$stmt = \DB\pdo_query("select * from reminder_checks order by id desc limit 1"); // most recent check
 	while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
@@ -99,7 +99,8 @@ function remind_enrolled(array $class) {
 	
 	global $logger;
 	
-	$wk = \Workshops\get_workshop_info($class[0]);
+	$wk = new \Workshop();
+	$wk->set_by_id($class[0]);
 	$xtra = \XtraSessions\get_xtra_session($class[1]);	
 	$eh = new \EnrollmentsHelper();
 	$stds = $eh->get_students($class[0], ENROLLED);
@@ -108,22 +109,21 @@ function remind_enrolled(array $class) {
 
 	foreach ($stds as $std) {
 		
-		
 		if (!$std['time_zone']) { $std['time_zone'] = DEFAULT_TIME_ZONE; }
 		
-		$wk = \Workshops\format_times($wk, $std['time_zone']);
-		$xtra = \Workshops\format_times($xtra, $std['time_zone']);
+		$wk->format_times($std['time_zone']);
+		$xtra = $wk->format_times_one_level($xtra, $std['time_zone']);
 		
 		$subject = get_subject($wk, $xtra);
 		$note = get_note($wk, $xtra, $std['nice_name']);
-		$trans = URL."workshop/view/{$wk['id']}";
+		$trans = URL."workshop/view/{$wk->fields['id']}";
 
 		// add note if student has to pay
 		if (!$std['paid']) {
 			$note .= \Emails\payment_text($wk, 1);
 		}
 
-		$note .= \Workshops\email_teacher_info($wk);
+		$note .= $wk->email_teacher_info();
 
 		if (!$class[1]) { // if this not an xtra session, then it's class 1
 			$note .= "<p>DROPPING OUT<br>\n
@@ -142,23 +142,23 @@ function remind_enrolled(array $class) {
 	}
 	
 	//remind teacher
-	remind_teacher($wk, $xtra, $wk['teacher_info']);
-	if ($wk['co_teacher_id']) {
-		remind_teacher($wk, $xtra, $wk['co_teacher_info']);
+	remind_teacher($wk, $xtra, $wk->teacher);
+	if ($wk->fields['co_teacher_id']) {
+		remind_teacher($wk, $xtra, $wk->coteacher);
 	}
 	
 	// if not full -- point it out to Will
-	if ($wk['enrolled'] < $wk['capacity'] && !$xtra['id']) { // no $xtra['id'] means first session
+	if ($wk->fields['enrolled'] < $wk->fields['capacity'] && !$xtra['id']) { // no $xtra['id'] means first session
 		$guest = new \User();
 		$guest->set_by_id(1); // that's right, hard-coded
 		
-		$wk = \Workshops\format_times($wk, $guest->fields['time_zone']);
+		$wk->format_times($guest->fields['time_zone']);
 		
-		$alert_msg = "'{$wk['title']}' is not full. {$wk['enrolled']} of {$wk['capacity']} signed up<br>\n".
-			URL."admin-workshop/view/{$wk['id']}<br>\n".
+		$alert_msg = "'{$wk->fields['title']}' is not full. {$wk->fields['enrolled']} of {$wk->fields['capacity']} signed up<br>\n".
+			URL."admin-workshop/view/{$wk->fields['id']}<br>\n".
 				\Emails\get_workshop_summary($wk);
 		
-		\Emails\centralized_email($guest->fields['email'], "'{$wk['title']}' is not full.", $alert_msg);
+		\Emails\centralized_email($guest->fields['email'], "'{$wk->fields['title']}' is not full.", $alert_msg);
 	}
 
 
@@ -168,12 +168,12 @@ function remind_enrolled(array $class) {
 	
 }
 
-function get_subject(array $wk, array $xtra) {
+function get_subject(\Workshop $wk, array $xtra) {
 
-	$subject = "WGIS class reminder: {$wk['title']} ".($xtra['id'] ? $xtra['when'] : $wk['when']);
+	$subject = "WGIS class reminder: {$wk->fields['title']} ".($xtra['id'] ? $xtra['when'] : $wk->fields['when']);
 
-	if ($wk['location_id'] != ONLINE_LOCATION_ID) {
-		$subject .= " at {$wk['place']}";	
+	if ($wk->fields['location_id'] != ONLINE_LOCATION_ID) {
+		$subject .= " at {$wk->location['place']}";	
 	}
 	
 	return $subject;
@@ -181,7 +181,7 @@ function get_subject(array $wk, array $xtra) {
 }
 
 
-function get_note(array $wk, array $xtra, $name = 'dear human', bool $teacher = false) {
+function get_note(\Workshop $wk, array $xtra, $name = 'dear human', bool $teacher = false) {
 	
 	$note = null;
 	if ($xtra['class_show']) {
@@ -192,18 +192,18 @@ function get_note(array $wk, array $xtra, $name = 'dear human', bool $teacher = 
 		$note = "<p>Greetings, $name! ".($teacher ? "You are teaching" :  "You are enrolled in")." a class that starts soonish, ";
 	}
 	
-	$note .= "specifically at ".($xtra['id'] ? $xtra['when'] : $wk['when']).".</p>\n";
+	$note .= "specifically at ".($xtra['id'] ? $xtra['when'] : $wk->fields['when']).".</p>\n";
 	
-	if ($wk['location_id'] == ONLINE_LOCATION_ID) {
+	if ($wk->fields['location_id'] == ONLINE_LOCATION_ID) {
 		
 		//echo "{$wk['online_url']}, {$wk['online_url_display']}<br>";
 		//echo "{$xtra['online_url']}, {$xtra['online_url_display']}<br>";
 		
 		
 		if (isset($xtra['id']) && $xtra['id']) {
-			$link = $xtra['online_url_display'] ? $xtra['online_url_display'] : $wk['online_url_display'];
+			$link = $xtra['online_url_display'] ? $xtra['online_url_display'] : $wk->url['online_url_display'];
 		} else {
-			$link = $wk['online_url_display'];
+			$link = $wk->url['online_url_display'];
 		}
 		
 		$note .= "<p>ZOOM LINK:<br>
@@ -211,7 +211,7 @@ Here's the zoom link. Try to sign in a few minutes early if you can.<br>
 $link</p>\n"; 
 
 		// should be workshop url or xtra_session url, set in lib_workshops.php fill_out_workshop_row
-		if ($link != $wk['online_url_display']) {
+		if ($link != $wk->url['online_url_display']) {
 			$note .= "<p>Please note: this is a DIFFERENT LINK than you usually use for this class!</p>\n";
 		}		
 		
@@ -220,24 +220,24 @@ $link</p>\n";
 https://www.twitch.tv/wgimprovschool</p>\n";
 		}
 	} else {
-		$note .= "<p>LOCATION:<br>\n---------<br>\n{$wk['place']}<br>\n{$wk['address']}<br>\n{$wk['city']}, {$wk['state']} {$wk['zip']}</p>\n";
+		$note .= "<p>LOCATION:<br>\n---------<br>\n{$wk->location['place']}<br>\n{$wk->location['address']}<br>\n{$wk->location['city']}, {$wk->location['state']} {$wk->location['zip']}</p>\n";
 		
 	}	
 
 	return $note;
 }
 
-function remind_teacher($wk, $xtra, $teacher_info) {
+function remind_teacher(\Workshop $wk, $xtra, $teacher_info) {
 	
-	$wk = \Workshops\format_times($wk, $teacher_info['time_zone']);
-	$xtra = \Workshops\format_times($xtra, $teacher_info['time_zone']);
+	$wk->format_times($teacher_info['time_zone']);
+	$xtra = $wk->format_times_one_level($xtra, $teacher_info['time_zone']);
 	
 	$subject = get_subject($wk, $xtra);
 	$note = get_note($wk, $xtra, $teacher_info['nice_name'], true);
 	
 	if (!$xtra['id']) { // is it first session? send teacher the roster
 		$note .= "<h3>Full info for class</h3>\n".
-			preg_replace('/\n/', "<br>\n", \Workshops\get_cut_and_paste_roster($wk));
+			preg_replace('/\n/', "<br>\n", $wk->get_cut_and_paste_roster());
 	} else {
 		$note .= \Emails\get_workshop_summary($wk);
 	}

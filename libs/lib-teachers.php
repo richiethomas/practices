@@ -13,19 +13,21 @@ function is_teacher($uid) {
 	return false;
 }
 
-function get_teacher_by_id($tid) {
+function get_teacher_by_id(?int $tid) {
 	
-	global $teacher_attic;
+	if ($tid) {
+		global $teacher_attic;
 	
-	foreach ($teacher_attic as $tattic_id => $tattic_row) {
-		if ($tattic_id == $tid) { return $tattic_row; }
-	}
+		foreach ($teacher_attic as $tattic_id => $tattic_row) {
+			if ($tattic_id == $tid) { return $tattic_row; }
+		}
 	
-	$stmt = \DB\pdo_query("select t.*, u.email, u.display_name, u.ukey, u.time_zone from teachers t, users u where u.id = t.user_id and t.id = :id", array(':id' => $tid));
-	while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
-		$row = fill_out_teacher_row($row); 
-		$teacher_attic[$row['id']] = $row; // save teacher data in global variable
-		return $row;
+		$stmt = \DB\pdo_query("select t.*, u.email, u.display_name, u.ukey, u.time_zone from teachers t, users u where u.id = t.user_id and t.id = :id", array(':id' => $tid));
+		while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
+			$row = fill_out_teacher_row($row); 
+			$teacher_attic[$row['id']] = $row; // save teacher data in global variable
+			return $row;
+		}
 	}
 	return empty_teacher();
 }
@@ -83,16 +85,6 @@ function get_all_teachers($only_active = false) {
 	return $teachers;
 }
 
-
-function find_teacher_in_teacher_array(int $id, array $teachers) {
-	foreach ($teachers as $tid => $teach) {
-		if ($id == $teach['id']) {
-			return $teach;
-		}
-	}
-	return false;
-}
-
 function get_faculty() {
 	$teachers = get_all_teachers();
 	$faculty = array();
@@ -111,7 +103,9 @@ function get_teacher_upcoming_classes($tid) {
 	// get all active teachers, and also upcoming courses they are teaching	
 	$stmt = \DB\pdo_query("select wk.* from workshops wk where (teacher_id = :tid or co_teacher_id = :ctid) and start > :now and wk.hidden = 0 order by start", array(':now' => date(MYSQL_FORMAT), ':tid' => $tid, ':ctid' => $tid));
 	while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
-		$workshops[] = \Workshops\fill_out_workshop_row($row, false); // don't need enrollment stats 
+		$wk = new \Workshop();
+		$wk->set_by_id($row['id']);
+		$workshops[] = $wk;
 	}
 	return $workshops;
 }
@@ -120,9 +114,11 @@ function get_teacher_all_classes($tid) {
 	
 	$workshops = array();
 	// get all active teachers, and also upcoming courses they are teaching	
-	$stmt = \DB\pdo_query("select wk.* from workshops wk where teacher_id = :tid order by start desc", array(':tid' => $tid));
+	$stmt = \DB\pdo_query("select wk.* from workshops wk where (teacher_id = :tid or co_teacher_id = :ctid)  order by start desc", array(':tid' => $tid, ':ctid' => $tid));
 	while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
-		$workshops[] = \Workshops\fill_out_workshop_row($row, false); // don't need enrollment stats 
+		$wk = new \Workshop();
+		$wk->set_by_id($row['id']);
+		$workshops[] = $wk;
 	}
 	return $workshops;
 }

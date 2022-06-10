@@ -3,6 +3,7 @@ $view->data['heading'] = "revenue by class";
 
 $u->reject_user_below(3); // group 3 or higher
 
+$wh = new WorkshopsHelper();
 
 $vars = array('searchstart', 'searchend', 'nextstart', 'nextend', 'laststart', 'lastend', 'mode');
 Wbhkit\set_vars($vars);
@@ -22,7 +23,7 @@ $nextend = date('Y-m-t', change_date_string($day_end, "+1 day"));
 
 
 $view->add_globals($vars);	
-$view->data['workshops_list'] = Workshops\get_workshops_list_bydate($searchstart, $searchend, $mode);
+$view->data['workshops_list'] = $wh->get_workshops_list_bydate($searchstart, $searchend, $mode);
 
 $view->renderPage('admin/revenue_byclass');
 

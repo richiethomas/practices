@@ -15,9 +15,11 @@ switch ($ac) {
 		
 }
 
+$wh = new WorkshopsHelper();
+
 $view->data['page'] = $page;
 $view->data['needle'] = $needle;
-$view->data['workshops_list'] = Workshops\get_search_results($page, $needle);
+$view->data['workshops_list'] = $wh->get_search_results($page, $needle);
 $view->data['wk'] = $wk; // for add workshop form
 
 $view->renderPage('admin/archives');

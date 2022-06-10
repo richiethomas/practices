@@ -3,7 +3,7 @@
 class Enrollment extends WBHObject {
 	
 	public User $u;
-	public array $wk;
+	public Workshop $wk;
 	
 	
 	function __construct() {		
@@ -23,7 +23,7 @@ class Enrollment extends WBHObject {
 				'while_soldout' => null);	
 			
 		$this->u = new User();
-		$this->wk = array();			
+		$this->wk = new Workshop();			
 
 	}
 
@@ -50,16 +50,17 @@ class Enrollment extends WBHObject {
 		
 	}
 
-	function set_by_u_wk(User $u, array $wk) {
+	function set_by_u_wk(User $u, Workshop $wk) {
 		$this->u = $u;
 		$this->wk =$wk;
-		return $this->set_by_uid_wid($u->fields['id'], $wk['id']);
+		return $this->set_by_uid_wid($u->fields['id'], $wk->fields['id']);
 	}
 
 
 	function finish_fields($row) {
+		global $lookups;
 		$this->replace_fields($row);
-		$this->fields['status_name'] = $this->lookups->statuses[$row['status_id']];
+		$this->fields['status_name'] = $lookups->statuses[$row['status_id']];
 		return $this->fields['id'];
 	}
 	
@@ -68,7 +69,7 @@ class Enrollment extends WBHObject {
 			$this->u->set_by_id($this->fields['user_id']);
 		}
 		if (isset($this->fields['workshop_id']) && $this->fields['workshop_id']) {
-			$this->wk = \Workshops\get_workshop_info($this->fields['workshop_id']);
+			$this->wk->set_by_id($this->fields['workshop_id']);
 		}
 	}
 		
@@ -76,9 +77,10 @@ class Enrollment extends WBHObject {
 	function change_status(int $target_status = ENROLLED, bool $confirm = true) {
 		
 		// just to make the subsequent lines less bulky
+		global $lookups;
 		$wk = $this->wk;
 		$u = $this->u;
-		$statuses = $this->lookups->statuses;
+		$statuses = $lookups->statuses;
 		$before_status = $this->fields['status_id'];
 		$last_insert_id = null;
 		$datestring_now = date(MYSQL_FORMAT);
@@ -90,13 +92,13 @@ class Enrollment extends WBHObject {
 			
 			if ($this->fields['status_id'] == ENROLLED) {
 				$target_status = ENROLLED;
-				return $this->message = "user {$u->fields['email']} ({$u->fields['id']}) was already status $target_status for {$wk['title']} ({$wk['id']})";
+				return $this->message = "user {$u->fields['email']} ({$u->fields['id']}) was already status $target_status for {$wk->fields['title']} ({$wk->fields['id']})";
 				
 			} else {
-				if ($wk['application']) {
+				if ($wk->fields['application']) {
 					$target_status = APPLIED;
 				} else {
-					$target_status = ($wk['enrolled'] < $wk['capacity']) ? ENROLLED : WAITING;
+					$target_status = ($wk->fields['enrolled'] < $wk->fields['capacity']) ? ENROLLED : WAITING;
 				}
 			}
 		
@@ -110,21 +112,21 @@ class Enrollment extends WBHObject {
 				$stmt->execute(array(':status_id' => $target_status, ':eid' => $this->fields['id']));
 								
 			} else {
-				return $this->message = "user {$u->fields['email']} ({$u->fields['id']}) was already status $target_status for {$wk['title']} ({$wk['id']})";
+				return $this->message = "user {$u->fields['email']} ({$u->fields['id']}) was already status $target_status for {$wk->fields['title']} ({$wk->fields['id']})";
 			}
 					
 		} else {
 			$stmt = $db->prepare("INSERT INTO registrations (workshop_id, user_id, status_id, registered, last_modified) VALUES (:wid, :uid, :status_id, '{$datestring_now}', '{$datestring_now}')");
-			$stmt->execute(array(':wid' => $wk['id'], ':uid' => $u->fields['id'], ':status_id' => $target_status));
+			$stmt->execute(array(':wid' => $wk->fields['id'], ':uid' => $u->fields['id'], ':status_id' => $target_status));
 			$last_insert_id = $db->lastInsertId();
 			
 		}
 
 		$this->set_into_fields(
 			array('user_id' => $u->fields['id'],	
-			'workshop_id' => $wk['id'],
+			'workshop_id' => $wk->fields['id'],
 			'status_id' => $target_status,
-			'status_name' => $this->lookups->statuses[$target_status],
+			'status_name' => $lookups->statuses[$target_status],
 			'last_modified' => $datestring_now,
 			'while_soldout' => false));	
 
@@ -140,13 +142,14 @@ class Enrollment extends WBHObject {
 		}
 
 
-		return $this->message = "Updated user ({$this->u->fields['email']}) to '{$statuses[$target_status]}' for workshop {$this->wk['title']}.";
+		return $this->message = "Updated user ({$this->u->fields['email']}) to '{$statuses[$target_status]}' for workshop {$this->wk->fields['title']}.";
 
 	}
 	
 	function update_change_log($status_id) {
 	
-		$statuses = $this->lookups->statuses;
+		global $lookups;
+		$statuses = $lookups->statuses;
 	
 		$stmt = \DB\pdo_query("insert into status_change_log (workshop_id, user_id, status_id, happened) VALUES (:wid, :uid, :status_id, '".date(MYSQL_FORMAT, time())."')", 
 		array(':wid' => $this->fields['workshop_id'],
@@ -159,17 +162,17 @@ class Enrollment extends WBHObject {
 	}
 
 
-	function notify_waiting(array $wk) {
+	function notify_waiting(\Workshop $wk) {
 		
 		
-		if ($wk['enrolled'] >= $wk['capacity']) {
+		if ($wk->fields['enrolled'] >= $wk->fields['capacity']) {
 			return "No open spot available.";
 		}
 		
 		// retrieve waiting list
 		$eh = new EnrollmentsHelper();
-		$stds1 = $eh->get_students($wk['id'], WAITING);
-		$stds2 = $eh->get_students($wk['id'], APPLIED);
+		$stds1 = $eh->get_students($wk->fields['id'], WAITING);
+		$stds2 = $eh->get_students($wk->fields['id'], APPLIED);
 		
 		$stds = $stds1 + $stds2;
 		
@@ -177,16 +180,16 @@ class Enrollment extends WBHObject {
 		// send them an email that says there's a spot open
 		foreach ($stds as $s) {
 			
-				$body = "A spot has opened up in '{$wk['title']}', starting on {$wk['showstart']}.<br><br>
+				$body = "A spot has opened up in '{$wk->fields['title']}', starting on {$wk->fields['showstart']}.<br><br>
 		
 				Go here to enroll.<br>
-				".URL."workshop/view/{$wk['id']}
+				".URL."workshop/view/{$wk->fields['id']}
 				<br><br>
 			
 				Please note: everyone on the waiting list gets this email at the same time. If you want this spot, go there ASAP.";	
 
 
-				\Emails\centralized_email($s['email'], "WGIS: Spot open in '{$wk['title']}'", $body);
+				\Emails\centralized_email($s['email'], "WGIS: Spot open in '{$wk->fields['title']}'", $body);
 				
 				$total_notified++;
 
@@ -264,27 +267,27 @@ class Enrollment extends WBHObject {
 			if ($new_paid == 1) {
 		
 				$body = "<p>This is automated email to confirm that I've received your payment for class.</p>";
-				$body .= "<p>Class: {$this->wk['title']} {$this->wk['showstart']}</p>\n";
+				$body .= "<p>Class: {$this->wk->fields['title']} {$this->wk->fields['showstart']}</p>\n";
 				$body .= "<p>Student: {$this->u->fields['nice_name']}</p>";
 				$body .= "<p>Amount: $pay_amount</p>\n";
 				
-				if ($this->wk['online_url']) {
-					$body .= "<p>Zoom link for this classs: {$this->wk['online_url']}</p>\n";
+				if ($this->wk->fields['online_url']) {
+					$body .= "<p>Zoom link for this classs: {$this->wk->fields['online_url']}</p>\n";
 				}
 				
 				$body .= "<p>To see all other info on the class go here:<br>";
-				$body .= URL."workshop/view/{$this->wk['id']}</p>\n";
+				$body .= URL."workshop/view/{$this->wk->fields['id']}</p>\n";
 
 				
 				$body .= "<p>Thanks!<br>-WGIS confirmation email robot</p>\n";
 				
 				if (!$block_email) {
-					\Emails\centralized_email($this->u->fields['email'], "Payment received for '{$this->wk['title']}' {$this->wk['showstart']}", $body); 
+					\Emails\centralized_email($this->u->fields['email'], "Payment received for '{$this->wk->fields['title']}' {$this->wk->fields['showstart']}", $body); 
 				}
 			
-				return $this->message = "Set user '{$this->u->fields['nice_name']}' to 'paid' for workshop '{$this->wk['title']}'";
+				return $this->message = "Set user '{$this->u->fields['nice_name']}' to 'paid' for workshop '{$this->wk->fields['title']}'";
 			} else {
-				return $this->message = "Set user '{$this->u->fields['nice_name']}' to 'unpaid' for workshop '{$this->wk['title']}'";
+				return $this->message = "Set user '{$this->u->fields['nice_name']}' to 'unpaid' for workshop '{$this->wk->fields['title']}'";
 			}
 		
 		}

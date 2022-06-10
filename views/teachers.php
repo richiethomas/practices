@@ -30,7 +30,7 @@ foreach ($faculty as $f) {
 	if (count($f['classes']) > 0) {
 		echo "<p class='teacher-bio px-3'>Upcoming classes for {$f['nice_name']}:<ul>\n";
 		foreach ($f['classes'] as $c) {
-			echo "	<li class='teacher-bio'><a href=\"/workshop/view/{$c['id']}\">{$c['title']}</a>, {$c['capacity']} people max, {$c['costdisplay']}<br><div class='mx-4'>{$c['full_when']}</div></li>\n";
+			echo "	<li class='teacher-bio'><a href=\"/workshop/view/{$c->fields['id']}\">{$c->fields['title']}</a>, {$c->fields['capacity']} people max, {$c->fields['costdisplay']}<br><div class='mx-4'>{$c->fields['full_when']}</div></li>\n";
 		}
 		echo "</ul></p>\n";
 	}					   

@@ -24,51 +24,51 @@ $ol_text = '';
 
 foreach ($upcoming_workshops as $wk) {
 
-	if ($wk['hidden'] || !Wbhkit\is_future($wk['start'])) {
+	if ($wk->fields['hidden'] || !Wbhkit\is_future($wk->fields['start'])) {
 		continue;
 	}
 	
 
-	$start = date("D M j", strtotime($wk['start_tz'])).' '.Wbhkit\friendly_time($wk['start_tz']).' ('.$u->fields['time_zone_friendly'].')';
-	if ($wk['costdisplay'] == 'Pay what you can') { $wk['costdisplay'] = 'donation'; }
+	$start = date("D M j", strtotime($wk->fields['start_tz'])).' '.Wbhkit\friendly_time($wk->fields['start_tz']).' ('.$u->fields['time_zone_friendly'].')';
+	if ($wk->fields['costdisplay'] == 'Pay what you can') { $wk->fields['costdisplay'] = 'donation'; }
 	
 	$row_html = "<div class='row mt-4'>\n";
 	$row_html .= "<div class='col-md-2'>$start</div>\n";
-	$row_html .= "<div class='col-md-4'><a href='/workshop/view/{$wk['id']}'>{$wk['title']}</a>";
+	$row_html .= "<div class='col-md-4'><a href='/workshop/view/{$wk->fields['id']}'>{$wk->fields['title']}</a>";
 	
-	if ($wk['soldout']) {
+	if ($wk->fields['soldout']) {
 		$row_html .= " - <span class='text-danger'>Sold Out</span>";
 	}
 	
 	
 	if ($u->check_user_level(2)) { 
-		$row_html .= "<br><span class='text-muted'><small>({$wk['enrolled']} / {$wk['capacity']})</small></span>\n";
+		$row_html .= "<br><span class='text-muted'><small>({$wk->fields['enrolled']} / {$wk->fields['capacity']})</small></span>\n";
 	}
 	
 	$row_html .= "</div>\n";
-	$row_html .= "<div class='col-md-3'><a href='/teachers/view/{$wk['teacher_id']}'>{$wk['teacher_info']['nice_name']}</a>";
+	$row_html .= "<div class='col-md-3'><a href='/teachers/view/{$wk->fields['teacher_id']}'>{$wk->teacher['nice_name']}</a>";
 	
-	if ($wk['co_teacher_id']) {
-		$row_html .= ", <a href='/teachers/view/{$wk['co_teacher_id']}'>{$wk['co_teacher_info']['nice_name']}</a>";
+	if ($wk->fields['co_teacher_id']) {
+		$row_html .= ", <a href='/teachers/view/{$wk->fields['co_teacher_id']}'>{$wk->coteacher['nice_name']}</a>";
 	}
 
 	$row_html .= "</div>\n";
 
-	$row_html .= "<div class='col-md-3'>{$wk['total_sessions']} ".($wk['total_sessions'] == 1 ? 'session': 'sessions').", {$wk['costdisplay']}</div>\n";
+	$row_html .= "<div class='col-md-3'>{$wk->fields['total_sessions']} ".($wk->fields['total_sessions'] == 1 ? 'session': 'sessions').", {$wk->fields['costdisplay']}</div>\n";
 	
 	$row_html .= "</div>\n";
 	
 	
 	// text view
-	$text_html = "<p class='m-1 p-0 fs-6 lh-base'><a class='text-decoration-none' href='/workshop/view/{$wk['id']}'>{$wk['title']}</a>, {$wk['teacher_info']['nice_name']}, $start, {$wk['total_sessions']} weeks, {$wk['costdisplay']}".($wk['soldout'] ? " - <span class='text-danger'>Sold Out</span>" : '');
+	$text_html = "<p class='m-1 p-0 fs-6 lh-base'><a class='text-decoration-none' href='/workshop/view/{$wk->fields['id']}'>{$wk->fields['title']}</a>, {$wk->teacher['nice_name']}, $start, {$wk->fields['total_sessions']} weeks, {$wk->fields['costdisplay']}".($wk->fields['soldout'] ? " - <span class='text-danger'>Sold Out</span>" : '');
 	
 	if ($u->check_user_level(2)) { 
-		$text_html .= " <span class='text-muted'><small>({$wk['enrolled']} / {$wk['capacity']})</small></span>\n";
+		$text_html .= " <span class='text-muted'><small>({$wk->fields['enrolled']} / {$wk->fields['capacity']})</small></span>\n";
 	}
 	
 	$text_html .= "</p>\n";
 	
-	if (in_array('inperson', $wk['tags_array'])) {
+	if (in_array('inperson', $wk->fields['tags_array'])) {
 		$ip_html .= $row_html;
 		$ip_text .= $text_html;
 	} else {

@@ -52,11 +52,11 @@
 				<?php
 				foreach ($t_classes as $tc) {
 					echo "<tr>
-								<td><a href=\"/admin-workshop/view/{$tc['id']}\">{$tc['title']}</a></td>
-						 		<td>{$tc['showstart']}</td>
-								<td>{$tc['total_class_sessions']} session".\Wbhkit\plural($tc['total_class_sessions']);
-						if ($tc['total_show_sessions']) {
-							echo ",<br>{$tc['total_show_sessions']} show".\Wbhkit\plural($tc['total_show_sessions']);	
+								<td><a href=\"/admin-workshop/view/{$tc->fields['id']}\">{$tc->fields['title']}</a></td>
+						 		<td>{$tc->fields['showstart']}</td>
+								<td>{$tc->fields['total_class_sessions']} session".\Wbhkit\plural($tc->fields['total_class_sessions']);
+						if ($tc->fields['total_show_sessions']) {
+							echo ",<br>{$tc->fields['total_show_sessions']} show".\Wbhkit\plural($tc->fields['total_show_sessions']);	
 						}
 						echo "</td>
 							</tr>\n";

@@ -97,9 +97,9 @@ foreach ($payrolls as $p) {
 	
 	if ($p->fields['task'] == 'workshop' || $p->fields['task'] == 'class') {
 				
-		$guts .= "{$p->wk['title']} (".date('D M j ga', strtotime($p->fields['when_happened'])).' #'.($p->wk['rank'] ? $p->wk['rank'] : 'show').") {$p->fields['amount']}\n";
+		$guts .= "{$p->wk->fields['title']} (".date('D M j ga', strtotime($p->fields['when_happened'])).' #'.($p->wk->fields['rank'] ? $p->wk->fields['rank'] : 'show').") {$p->fields['amount']}\n";
 	
-		echo "<div class='col-6'>{$p->wk['title']} <small>({$p->wk['id']}) (".date('D M j ga', strtotime($p->wk['start'])).' #'.($p->wk['rank'] ? $p->wk['rank'] : 'show').")</small></div>";
+		echo "<div class='col-6'>{$p->wk->fields['title']} <small>({$p->wk->fields['id']}) (".date('D M j ga', strtotime($p->wk->fields['start'])).' #'.($p->wk->fields['rank'] ? $p->wk->fields['rank'] : 'show').")</small></div>";
 		
 	} elseif ($p->fields['task'] == 'task') {
 		
@@ -169,19 +169,19 @@ foreach ($claims as $c) {
 		
 		// if class is nearly sold out, bonus rate
 		// (rate should have been stored as 'amount' on this claim)
-		if ($c->wk['cost'] != 1 && $c->wk['enrolled'] / $c->wk['capacity'] > .75) {
+		if ($c->wk->fields['cost'] != 1 && $c->wk->fields['enrolled'] / $c->wk->fields['capacity'] > .75) {
 			$rate = $c->fields['amount'] + 50;
 		} else {
 			$rate = $c->fields['amount'];
 		}
 		
-		$what = "<a href='/admin-workshop/view/{$c->wk['id']}'>{$c->wk['title']}</a> <small>({$c->wk['id']}) (".date('D M j ga', strtotime($c->wk['start'])).' #'.($c->wk['rank'] ? $c->wk['rank'] : 'show').")</small><br>
-<small class='mx-3'>{$c->wk['actual_revenue']} ($rate)";
+		$what = "<a href='/admin-workshop/view/{$c->wk->fields['id']}'>{$c->wk->fields['title']}</a> <small>({$c->wk->fields['id']}) (".date('D M j ga', strtotime($c->wk->fields['start'])).' #'.($c->wk->fields['rank'] ? $c->wk->fields['rank'] : 'show').")</small><br>
+<small class='mx-3'>{$c->wk->fields['actual_revenue']} ($rate)";
 		
 		
 		$c->fields['amount'] = 
-			$c->wk['total_class_sessions']*$rate + 
-			$c->wk['total_show_sessions']*($rate / 2);
+			$c->wk->fields['total_class_sessions']*$rate + 
+			$c->wk->fields['total_show_sessions']*($rate / 2);
 		
 		
 	} else {

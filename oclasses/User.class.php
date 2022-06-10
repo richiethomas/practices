@@ -26,14 +26,14 @@ class User extends WBHObject {
 		$this->set_time_zone();
 	}
 
-	private function set_time_zone() {
+	public function set_time_zone() {
 		$this->default_time_zone = DEFAULT_TIME_ZONE;
 		if (!isset($this->fields['time_zone']) || !$this->fields['time_zone']) {
 			$this->fields['time_zone'] = $this->default_time_zone;
 		}
 		$this->set_time_zone_friendly();
 	}
-
+	
 	private function clear_fields() {
 		$this->fields = array();
 		$this->fields['time_zone'] = DEFAULT_TIME_ZONE;
@@ -152,12 +152,13 @@ class User extends WBHObject {
 	}
 
 	function check_for_stored_key() {
+		global $logger;
 		$key = null;
 		if (isset($_SESSION['s_key']) && $_SESSION['s_key']) {
-			$this->logger->debug("found key in session: {$_SESSION['s_key']}");
+			$logger->debug("found key in session: {$_SESSION['s_key']}");
 			$key = $_SESSION['s_key'];
 		} elseif (isset($_COOKIE['c_key']) && $_COOKIE['c_key']) {
-			$this->logger->debug("found key in cookie: {$_COOKIE['c_key']}");
+			$logger->debug("found key in cookie: {$_COOKIE['c_key']}");
 			$key = $_COOKIE['c_key'];
 		}
 		$this->remember_key($key); // sets session variable and cookie
@@ -168,16 +169,18 @@ class User extends WBHObject {
 
 	function remember_key(?string $key) {
 		
+		global $logger;
+		
 		if (!$key) { 
-			$this->logger->debug("tried to remember empty key");
+			$logger->debug("tried to remember empty key");
 			return false;
 		}
 		
 		$_SESSION['s_key'] = $key;
 		if (setcookie('c_key', $key, time() + 31449600)) {
-			$this->logger->debug("setcookie '$key' returned true");
+			$logger->debug("setcookie '$key' returned true");
 		} else {
-			$this->logger->debug("setcookie '$key' returned false");
+			$logger->debug("setcookie '$key' returned false");
 		}; // a year!
 	}
 
@@ -215,7 +218,7 @@ class User extends WBHObject {
 				return false;
 			}
 			$trans = URL."home/k/".$this->get_key();
-			$body = "<p>Simple easy link to log into WGIS:</p>
+			$body = "<p>Click this link to log yourself into WGIS:</p>
 	<p>{$trans}</p>";
 			
 			//<p>(Sent: ".date('D M n, Y g:ia').")</p>
@@ -273,6 +276,7 @@ class User extends WBHObject {
 		return false;		
 	}	
 	
+	
 	function update_time_zone(string $time_zone = "America/Los_Angeles") {
 		// update user info
 		$stmt = \DB\pdo_query("update users set time_zone = :time_zone where id = :uid", 
@@ -311,6 +315,8 @@ class User extends WBHObject {
 
 	function change_email_phase_one(string $new_email) {
 		
+		global $logger;
+		
 		if ($this->is_email_available($new_email)) {
 			$stmt = \DB\pdo_query("update users set new_email = :email where id = :uid", array(':email' => $new_email, ':uid' => $this->fields['id']));
 		
@@ -328,12 +334,14 @@ class User extends WBHObject {
 
 	// assumes email is in 'new email' 
 	function user_finish_change_email() {
+		global $logger;
+		
 		if ($this->is_email_available($this->fields['new_email'])) {
 			// now we can update email
 			$stmt = \DB\pdo_query("update users set email = :email where id = :uid", array(':email' => $this->fields['new_email'], ':uid' => $this->fields['id']));	
 			$this->fields['email'] = $this->fields['new_email'];
 			$this->finish_setup();
-			$this->logger->debug("change email phase two: update email for user '{$this->fields['id']}' to new email '{$this->fields['email']}'");
+			$logger->debug("change email phase two: update email for user '{$this->fields['id']}' to new email '{$this->fields['email']}'");
 			return true;
 		} else {
 			$this->error = "The email '{$this->fields['new_email']}' is already being used! Pick a different email or email ".WEBMASTER." for help.";
@@ -344,12 +352,14 @@ class User extends WBHObject {
 
 	function admin_change_email(string $old_email, string $new_email) {
 
+		global $logger;
+		
 		$oldu = new User();
 		$oldu->set_by_email($old_email);
 		$newu = new User();
 		$newu->set_by_email($new_email);
 	
-		$this->logger->debug("admin change email: '$old_email' to '$new_email' (start)");
+		$logger->debug("admin change email: '$old_email' to '$new_email' (start)");
 		
 		//print_r($oldu->fields);
 		//print_r($newu->fields);
@@ -365,7 +375,7 @@ class User extends WBHObject {
 				$rows2 = $stmt2->fetchAll();
 				if (count($rows2) == 0) {
 					$stmt3 = \DB\pdo_query("update registrations set user_id = :uid where workshop_id = :wid and user_id = :uid2", array(':uid' => $oldu->fields['id'], ':wid' => $row['workshop_id'], ':uid2' => $newu->fields['id']));
-					$this->logger->debug("admin change email: update registration uid for workshop {$row['workshop_id']} from uid '{$newu->fields['id']}' to uid {$oldu->fields['id']}");
+					$logger->debug("admin change email: update registration uid for workshop {$row['workshop_id']} from uid '{$newu->fields['id']}' to uid {$oldu->fields['id']}");
 				}
 			}
 						
@@ -383,7 +393,7 @@ class User extends WBHObject {
 		}
 		// now we can update email
 		$stmt = \DB\pdo_query("update users set email = :email where id = :uid", array(':email' => $new_email, ':uid' => $oldu->fields['id']));	
-		$this->logger->debug("admin change email: update email for uid '{$oldu->fields['id']}' to new email '$new_email'");
+		$logger->debug("admin change email: update email for uid '{$oldu->fields['id']}' to new email '$new_email'");
 		return true;
 	}
 

@@ -1,8 +1,5 @@
 <?php 
-echo $links; 
-
 if ($admin) {
-
 
 	echo "
 	<script type='text/javascript'>
@@ -44,7 +41,7 @@ if ($admin) {
 		$cl = '';
 		if ($t['status_id'] == ENROLLED) {
 			$cl .= 'success';
-		} elseif ($t['upcoming'] == 0) {
+		} elseif (strtotime($t['start']) < strtotime("now") ) {
 			$cl .= 'light';
 		} else {
 			$cl .= 'warning';
@@ -65,13 +62,13 @@ if ($admin) {
 			
 		
 			echo "	<div class='col-sm'>";
-			echo $admin ? $t['full_when_cali'] : $t['full_when'];
+			echo $admin ? $t['showstart_cali'] : $t['showstart'];
 			
 			echo "<br>
-				<small>Instructor: <a href=\"/teachers/view/{$t['teacher_id']}\">{$t['teacher_info']['nice_name']}</a>";
+				<small>Instructor: <a href=\"/teachers/view/{$t['teacher_id']}\">{$t['teacher']['nice_name']}</a>";
 			
 			if ($t['co_teacher_id']) {
-				echo ", <a href=\"/teachers/view/{$t['co_teacher_id']}\">{$t['co_teacher_info']['nice_name']}</a>";
+				echo ", <a href=\"/teachers/view/{$t['co_teacher_id']}\">{$t['co_teacher']['nice_name']}</a>";
 			}
 			
 			if ($admin) {
@@ -103,5 +100,4 @@ if ($admin) {
 if ($admin) {
 	echo "</form>\n";
 }
-echo $links; 
 ?>

@@ -15,7 +15,7 @@ echo \Wbhkit\submit();
 <form id='add_wk' action='/admin-workshop/ad' method='post' novalidate>
 <?php echo \Wbhkit\form_validation_javascript('add_wk'); ?>
 <fieldset name='session_add'><legend>Add Workshop</legend>
-<?php echo \Workshops\workshop_fields($wk).
+<?php echo $wk->get_workshop_fields().
 \Wbhkit\submit('Add'); ?>
 </fieldset></form>
 	

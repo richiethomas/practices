@@ -28,18 +28,16 @@ if (count($workshops_list) == 0) {
 		$total_shows = 0;
 		foreach ($workshops_list as $wid => $wk) {
 			
-			$wk['title'] = preg_replace('/,/', ' - ', $wk['title']);
+			$wk->fields['title'] = preg_replace('/,/', ' - ', $wk->fields['title']);
 			
-			$teacher_name = get_teacher_name($wk);
-
-			echo date('Y-m-d g:ia',strtotime($wk['start'])).', '.
-				date('l',strtotime($wk['start'])).', '.
-				date('g:ia',strtotime($wk['start'])).
-				", {$wid}, {$wk['title']},  {$teacher_name}, {$wk['enrolled']}, {$wk['actual_revenue']}, {$wk['total_pay']}, {$wk['total_class_sessions']}, {$wk['total_show_sessions']}\n";
-			$total_revenue += $wk['actual_revenue'];
-			$total_pay += $wk['total_pay'];
-			$total_classes += $wk['total_class_sessions'];
-			$total_shows += $wk['total_show_sessions'];
+			echo date('Y-m-d g:ia',strtotime($wk->fields['start'])).', '.
+				date('l',strtotime($wk->fields['start'])).', '.
+				date('g:ia',strtotime($wk->fields['start'])).
+				", {$wid}, {$wk->fields['title']},  {$wk->fields['teacher_name']}, {$wk->fields['enrolled']}, {$wk->fields['actual_revenue']}, {$wk->fields['total_pay']}, {$wk->fields['total_class_sessions']}, {$wk->fields['total_show_sessions']}\n";
+			$total_revenue += $wk->fields['actual_revenue'];
+			$total_pay += $wk->fields['total_pay'];
+			$total_classes += $wk->fields['total_class_sessions'];
+			$total_shows += $wk->fields['total_show_sessions'];
 		}
 		echo ",,,,,,,$total_revenue,$total_pay,$total_classes,$total_shows\n";
 		echo "</textarea></form>\n";
@@ -72,9 +70,9 @@ $table_open = "<table class='table table-striped my-3'>
 		
 		foreach ($workshops_list as $wid => $wk) {
 			
-			$teacher_key = $wk['teacher_id'];
-			if ($wk['co_teacher_id']) {
-				$teacher_key .= "co".$wk['co_teacher_id'];
+			$teacher_key = $wk->fields['teacher_id'];
+			if ($wk->fields['co_teacher_id']) {
+				$teacher_key .= "co".$wk->fields['co_teacher_id'];
 			}
 			
 			if (strcmp($teacher_key, $previous_teacher_key) !== 0) { // new teacher
@@ -85,25 +83,25 @@ $table_open = "<table class='table table-striped my-3'>
 				//start new teacher revenue
 				$previous_teacher_key = $teacher_key;
 				$teacher_totals = $empty_totals;
-				$teacher_name = get_teacher_name($wk);
 				
-				echo "<h2 class='my-3'>{$teacher_name}</h2>\n";
+				echo "<h2 class='my-3'>{$wk->fields['teacher_name']}</h2>\n";
 				echo $table_open;
 			}
-						
-			echo "<tr><td width='300'>({$wk['id']}) <a href='/admin-workshop/view/{$wk['id']}'>{$wk['title']}</a> <small>({$wk['showstart']})</small></td>
-			<td>{$wk['paid']} / {$wk['enrolled']} / {$wk['capacity']}</td>
-			<td>{$wk['cost']}</td>
-			<td>{$wk['actual_revenue']}</td>
-			<td>".number_format($wk['total_pay'])."</td>
-			<td>".number_format($wk['actual_revenue'] - $wk['total_pay'])."</td>
+
+
+			echo "<tr><td width='300'>({$wk->fields['id']}) <a href='/admin-workshop/view/{$wk->fields['id']}'>{$wk->fields['title']}</a> <small>({$wk->fields['showstart']})</small></td>
+			<td>{$wk->fields['paid']} / {$wk->fields['enrolled']} / {$wk->fields['capacity']}</td>
+			<td>{$wk->fields['cost']}</td>
+			<td>{$wk->fields['actual_revenue']}</td>
+			<td>".number_format($wk->fields['total_pay'])."</td>
+			<td>".number_format($wk->fields['actual_revenue'] - $wk->fields['total_pay'])."</td>
 			</tr>\n";
 						
-			$totals['suggested_paid'] += $wk['actual_revenue'];
-			$totals['total_pay'] += $wk['total_pay'];
+			$totals['suggested_paid'] += $wk->fields['actual_revenue'];
+			$totals['total_pay'] += $wk->fields['total_pay'];
 			
-			$teacher_totals['suggested_paid'] += $wk['actual_revenue'];
-			$teacher_totals['total_pay'] += $wk['total_pay'];
+			$teacher_totals['suggested_paid'] += $wk->fields['actual_revenue'];
+			$teacher_totals['total_pay'] += $wk->fields['total_pay'];
 
 			$previous_wk = $wk;
 			
@@ -130,11 +128,9 @@ $table_open = "<table class='table table-striped my-3'>
 		
 function show_teacher_totals($wk, $teacher_totals) {
 	
-	$teacher_name = get_teacher_name($wk);
-	
 	// wrap up previous teacher revenue
 	echo "<tr class=\"table-info\">
-		<td>{$teacher_name} sub totals:</td>
+		<td>{$wk->fields['teacher_name']} sub totals:</td>
 	<td colspan=2>&nbsp;</td>
 	<td>{$teacher_totals['suggested_paid']}</td>
 	<td>".number_format($teacher_totals['total_pay'])."</td>
@@ -143,12 +139,6 @@ function show_teacher_totals($wk, $teacher_totals) {
 	</tr>\n";	
 }
 
-function get_teacher_name($wk) {
-	$teacher_name = $wk['teacher_info']['nice_name'];
-	if ($wk['co_teacher_id']) {
-		$teacher_name .= " and ".$wk['co_teacher_info']['nice_name'];
-	}
-	return $teacher_name;
-}
+
 		
 ?>

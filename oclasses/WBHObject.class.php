@@ -16,9 +16,6 @@ class WBHObject
 	public ?string $tablename = null;
 
 	public function __construct() {
-		global $logger, $lookups;
-		$this->logger = &$logger;
-		$this->lookups = &$lookups;
 	}
 	
 	public function setError($error) {
@@ -64,7 +61,7 @@ class WBHObject
 		while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
 			$this->set_into_fields($row);
 			$this->finish_setup();
-			return true;
+			return $this;
 		}
 		$this->error = "No {$this->tablename} found for id '{$id}'";
 		return false;

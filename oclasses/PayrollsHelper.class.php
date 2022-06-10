@@ -114,7 +114,7 @@ class PayrollsHelper extends WBHObject {
 		
 		if ($exists) {
 			$stmt = \DB\pdo_query("update payrolls 
-				set amount = :amount, 
+			set amount = :amount, 
 			when_paid = :when_paid, 
 			when_happened = :when_happened 
 			where task = :task and table_id = :table_id and user_id = :user_id", $params);
@@ -124,8 +124,6 @@ class PayrollsHelper extends WBHObject {
 				VALUES (:task, :table_id, :user_id, :amount, :when_paid, :when_happened)", $params);
 			
 		}
-		
-		
 		return true;
 	}	
 	

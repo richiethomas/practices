@@ -79,7 +79,7 @@
 		echo "$ts1 and $ts2 ({$u->fields['time_zone_friendly']})";
 		?></p>
 
-		<p>To join them, just go to this zoom link at those times. The jams are private - they are NOT streamed or recorded. They're led by some of WGIS top former students.</p>
+		<p>To join them, just go to this zoom link at those times. The jams are private - they are NOT streamed or recorded.</p>
 
 		<p><a href="https://zoom.us/j/94363676979?pwd=aGdtTVA5c216N3AycDRxM1NHYzc2UT09">https://zoom.us/j/94363676979?pwd=aGdtTVA5c216N3AycDRxM1NHYzc2UT09</a><br>
 		Meeting ID: 943 6367 6979<br>
@@ -87,8 +87,8 @@
 	</div>
 	<div class="col-md-6">
 		<figure>
-		  <img src="/images/jam_insta.png" class="figure-img img-fluid rounded" alt="Friday Jams">
-		  <figcaption class="figure-caption text-end">art by Christine Simpson</figcaption>
+		  <img src="/images/jam_insta2.png" class="figure-img img-fluid rounded" alt="Friday Jams">
+		  <figcaption class="figure-caption text-end">art by Amanda Bigford</figcaption>
 		</figure>
 	</div>
 </div>

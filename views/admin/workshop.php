@@ -1,18 +1,18 @@
 <?php
-echo "<h2><a href='/admin-workshop/view/{$wk['id']}'>{$wk['title']}</a></h2>\n
-<p class='small'><a href='/admin-archives/clone/{$wk['id']}#addworkshop'>clone this workshop</a> - <a href='/workshop/view/{$wk['id']}'>student view</a> - <a href='/admin-bulk-status/view/{$wk['id']}'>bulk edit</a></p>";
+echo "<h2><a href='/admin-workshop/view/{$wid}'>{$wk->fields['title']}</a></h2>\n
+<p class='small'><a href='/admin-archives/clone/{$wid}#addworkshop'>clone this workshop</a> - <a href='/workshop/view/{$wid}'>student view</a> - <a href='/admin-bulk-status/view/{$wid}'>bulk edit</a></p>";
 echo "<div class='row mt-md-3 admin-edit-workshop'>\n";
 
 		// enrollment column
 		echo "<div class='col-md-7'><h2>Enrollment Info <small><br>
-			<a class='btn btn-primary' href='/admin-messages/view/{$wk['id']}'><i class='bi-envelope'></i> message</a> 
-			<a class='btn btn-primary'  href='/admin-workshop/nw/{$wk['id']}'><i class='bi-clock'></i> notify waiting</a>
+			<a class='btn btn-primary' href='/admin-messages/view/{$wid}'><i class='bi-envelope'></i> message</a> 
+			<a class='btn btn-primary'  href='/admin-workshop/nw/{$wid}'><i class='bi-clock'></i> notify waiting</a>
 
-			<a class='btn btn-primary'  href='/admin-workshop/sar/{$wk['id']}'><i class='bi-exclamation-circle'></i> send all reminders</a>
+			<a class='btn btn-primary'  href='/admin-workshop/sar/{$wid}'><i class='bi-exclamation-circle'></i> send all reminders</a>
 			</small></h2>\n";
 
 		//show enrollment totals at top
-		echo  "<p>totals: (".implode(" / ", array_values($stats)).") - ({$wk['actual_revenue']})</p>\n";
+		echo  "<p>totals: (".implode(" / ", array_values($stats)).") - ({$wk->fields['actual_revenue']})</p>\n";
 
 
 		echo "
@@ -47,7 +47,7 @@ echo "<div class='row mt-md-3 admin-edit-workshop'>\n";
 
 
 		
-		echo "<form action='/admin-workshop/at/{$wk['id']}' method='post'>\n";
+		echo "<form action='/admin-workshop/at/{$wid}' method='post'>\n";
 		
 		// list students for each status
 		foreach ($statuses as $stid => $status_name) {
@@ -55,7 +55,7 @@ echo "<div class='row mt-md-3 admin-edit-workshop'>\n";
 			foreach ($lists[$stid] as $s) {
 				echo "<div class='row my-3'>
 						<div class='col-md-5'>".
-					Wbhkit\checkbox('paids', $s['id'], "<a href='/admin-change-status/view/{$wk['id']}/{$s['id']}'>{$s['nice_name']}</a> <small>".
+					Wbhkit\checkbox('paids', $s['id'], "<a href='/admin-change-status/view/{$wid}/{$s['id']}'>{$s['nice_name']}</a> <small>".
 					date('M j g:ia', strtotime($s['last_modified']))."</small>", $s['paid'], true, ' paids-check')."</div>".
 						"<div class='col-md-2'>".
 							\Wbhkit\texty("amount_{$s['id']}", $s['pay_amount'], 0, '$').
@@ -71,12 +71,12 @@ echo "<div class='row mt-md-3 admin-edit-workshop'>\n";
 		echo "</form>\n";		
 		
 		
-		$roster = Workshops\get_cut_and_paste_roster($wk, $lists[ENROLLED]);
+		$roster = $wk->get_cut_and_paste_roster($lists[ENROLLED]);
 		echo  "<h3>Cut-and-paste roster</h3>\n";
 		echo  Wbhkit\textarea('roster', $roster, 0);			
 		
 		
-		echo  "<h5>See <a href='/admin-status/view/{$wk['id']}'>status log</a> for this class?</h5>";
+		echo  "<h5>See <a href='/admin-status-log/view/{$wid}'>status log</a> for this class?</h5>";
 
 		echo  "</div>"; // end of column
 		
@@ -84,11 +84,11 @@ echo "<div class='row mt-md-3 admin-edit-workshop'>\n";
 		echo  \Wbhkit\form_validation_javascript('wk_edit');
 		echo  "<div class='col-md-5'>
 		<h2>Session Info</h2>
-		<form id='wk_edit' action='/admin-workshop/up/{$wk['id']}' method='post' novalidate>
+		<form id='wk_edit' action='/admin-workshop/up/{$wid}' method='post' novalidate>
 		<fieldset name=\"workshop_edit\">".
-		Workshops\workshop_fields($wk).
+		$wk->get_workshop_fields().
 		Wbhkit\submit('Update').
-		"<a class='btn btn-outline-primary' href=\"/admin-workshop/cdel/{$wk['id']}\">Delete This Practice</a>".
+		"<a class='btn btn-outline-primary' href=\"/admin-workshop/cdel/{$wid}\">Delete This Practice</a>".
 		"</fieldset></form>\n";
 	
 
@@ -96,8 +96,8 @@ echo "<div class='row mt-md-3 admin-edit-workshop'>\n";
 		//echo  \Wbhkit\form_validation_javascript('xtra_edit');
 		echo  "<h2>Xtra Sessions</h2>";
 		echo "<ul>\n";
-		if (!empty($wk['sessions'])) {
-			foreach ($wk['sessions'] as $s) {
+		if (!empty($wk->sessions)) {
+			foreach ($wk->sessions as $s) {
 				echo "<li>({$s['rank']}) ".
 					($s['class_show'] ? '<b>Show:</b> ' : '');
 				
@@ -107,29 +107,29 @@ echo "<div class='row mt-md-3 admin-edit-workshop'>\n";
 					echo	"{$s['when_cali']}";
 				}
 				
-				echo " <a href='/admin-workshop/delxtra/{$wk['id']}/{$s['id']}'>delete</a>".
+				echo " <a href='/admin-workshop/delxtra/{$wid}/{$s['id']}'>delete</a>".
 				($s['reminder_sent'] ? ' <em>- reminder sent</em>' : '');
 				if ($s['online_url']) {
-					echo "<ul><li><a href='{$s['online_url_just_url']}'>{$s['online_url_just_url']}</a>";
-					if ($s['online_url_the_rest']) {
-						echo "<br>{$s['online_url_the_rest']}";
+					echo "<ul><li><a href='{$s['url']['online_url_just_url']}'>{$s['url']['online_url_just_url']}</a>";
+					if ($s['url']['online_url_the_rest']) {
+						echo "<br>{$s['url']['online_url_the_rest']}";
 					}
 					echo "</li></ul>\n";
 				}
 				echo "</li>\n";
 			}
 		}
-		echo "<li><a href='/admin-workshop/week/{$wk['id']}'>Add a week</a></li>\n";
+		echo "<li><a href='/admin-workshop/week/{$wid}'>Add a week</a></li>\n";
 		echo "</ul>\n";
 		
-		echo "<form id='xtra_edit' action='/admin-workshop/adxtra/{$wk['id']}' method='post' novalidate>
+		echo "<form id='xtra_edit' action='/admin-workshop/adxtra/{$wid}' method='post' novalidate>
 		<fieldset name=\"sessions_edit\">".
-		\XtraSessions\xtra_session_fields($wk).
+		\XtraSessions\xtra_session_fields().
 		Wbhkit\submit('Add Session');
 		echo "</fieldset></form>\n";		
 
 	include 'ajax-jquery-search.php';
-	echo  "<h2>Add Student</h2><form id='add_student' class='form-inline' action='/admin-workshop/enroll/{$wk['id']}' method='post' novalidate><fieldset name='new_student'>";
+	echo  "<h2>Add Student</h2><form id='add_student' class='form-inline' action='/admin-workshop/enroll/{$wid}' method='post' novalidate><fieldset name='new_student'>";
 	echo "<div class='form-group'>
 			<label for='search-box' class='form-label'>Email: </label>
 			<input type='text' class='form-control' id='search-box' name='email' autocomplete='off'>
