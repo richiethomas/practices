@@ -10,7 +10,7 @@ if (!$wid) {
 		$view->renderPage('error');
 		exit();
 }
-$wk = \Workshops\get_workshop_info($wid);
+$wk->set_by_id($wid);
 $e = new Enrollment();
 $eh = new EnrollmentsHelper();
 

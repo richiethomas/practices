@@ -70,7 +70,7 @@ $stmt = \DB\pdo_query("select r.pay_when, r.pay_amount as amount, w.title, w.sta
 from registrations r, workshops w
 where r.pay_amount > 0 
 and r.workshop_id = w.id
-and r.pay_when is null
+and (r.pay_when is null or r.pay_when = 0)
 and w.start >= :start 
 and w.start <= :end", 
 	$params);

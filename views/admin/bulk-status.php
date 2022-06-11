@@ -1,5 +1,5 @@
 <?php
-echo "<h2><a href='/admin-workshop/view/{$wk['id']}'>{$wk['title']}</a></h2>\n";
+echo "<h2><a href='/admin-workshop/view/{$wk->fields['id']}'>{$wk->fields['title']}</a></h2>\n";
 echo "<div class='row mt-md-3 admin-edit-workshop'>\n";
 
 		// enrollment column
@@ -8,7 +8,7 @@ echo "<div class='row mt-md-3 admin-edit-workshop'>\n";
 		//show enrollment totals at top
 		echo  "<p>totals: (".implode(" / ", array_values($stats)).")</p>\n";
 		
-		echo "<form action='/admin-bulk-status/change/{$wk['id']}' method='post'>\n";
+		echo "<form action='/admin-bulk-status/change/{$wk->fields['id']}' method='post'>\n";
 		
 		// list students for each status
 		foreach ($statuses as $stid => $status_name) {

@@ -253,7 +253,7 @@ class Workshop extends WBHObject {
 
 	}
 
-	function get_teacher_pay_by_index(array $teacher) {
+	private function get_teacher_pay_by_index(array $teacher) {
 		if (isset($teacher['user_id'])) {
 			return $this->get_recorded_teacher_pay($teacher['user_id']);
 		} else {
@@ -262,7 +262,7 @@ class Workshop extends WBHObject {
 	}
 
 	// teacher's user id
-	function get_recorded_teacher_pay(?int $uid = 0) {
+	private function get_recorded_teacher_pay(?int $uid = 0) {
 	
 		if (!$this->fields['id'] || !$uid) {
 			return 0;

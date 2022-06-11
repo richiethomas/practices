@@ -12,7 +12,7 @@ echo "<div class='row mt-md-3 admin-edit-workshop'>\n";
 			</small></h2>\n";
 
 		//show enrollment totals at top
-		echo  "<p>totals: (".implode(" / ", array_values($stats)).") - ({$wk->fields['actual_revenue']})</p>\n";
+		echo  "<p>Revenue: {$wk->fields['actual_revenue']}<br>Teacher Pay: {$wk->fields['total_pay']}</p>\n";
 
 
 		echo "
