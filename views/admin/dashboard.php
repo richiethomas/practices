@@ -74,12 +74,12 @@ $( document ).ready(function() {
 					echo "<h4>Hidden</h4>\n
 						<ul>$hiddenhtml</ul>";
 				}
-				
+				 
 				//bitness
 				if (count($bitnesses) > 0) {
 					echo "<h4>Recent Bitnesses</h4>\n<ul>\n";
-					foreach ($bitnesses as $bid => $b) {
-						echo "<li><a href='/admin-workshop/view/{$bid}'>{$b['title']}</a></li>\n";
+					foreach ($bitnesses as $b) {
+						echo "<li><a href='/admin-workshop/view/{$b->fields['id']}'>{$b->fields['title']}</a> ({$b->fields['enrolled']}/{$b->fields['capacity']})</li>\n";
 					}
 				}
 				

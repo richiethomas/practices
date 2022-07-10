@@ -45,7 +45,6 @@ function check_tasks(bool $force = false) {
 
 function check_reminders(bool $force = false) {
 	
-	return true;
 	// check reminder database -- has it been 4 hours?
 	$stmt = \DB\pdo_query("select * from reminder_checks order by id desc limit 1"); // most recent check
 	while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
@@ -201,7 +200,7 @@ function get_note(\Workshop $wk, array $xtra, $name = 'dear human', bool $teache
 		
 		
 		if (isset($xtra['id']) && $xtra['id']) {
-			$link = $xtra['online_url_display'] ? $xtra['online_url_display'] : $wk->url['online_url_display'];
+			$link = $xtra['url']['online_url_display'] ? $xtra['url']['online_url_display'] : $wk->url['online_url_display'];
 		} else {
 			$link = $wk->url['online_url_display'];
 		}

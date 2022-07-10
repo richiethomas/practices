@@ -132,7 +132,9 @@ document.addEventListener('DOMContentLoaded', () => {
 	$online_html = '';
 	foreach ($upcoming_workshops as $wk) {
 		
-		if (!Wbhkit\is_future($wk->fields['start'])) {
+		if (!Wbhkit\is_future($wk->fields['start']) && 
+		(!strpos(strtolower($wk->fields['title']), 'glendale'))
+		) {
 			continue; // skip ones that already started
 		}
 

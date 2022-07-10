@@ -31,7 +31,7 @@ function get_xtra_session(int $xtra_id = 0) {
 	$stmt = \DB\pdo_query("select * from xtra_sessions where id = :id", array(':id' => $xtra_id));
 	$sessions = array();
 	while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
-		$row = \Workshops\format_times($row);
+		$row = $wk->format_times_one_level($row);
 		$row['url'] = $wk->parse_online_url($row['online_url']);
 		return $row;
 	}

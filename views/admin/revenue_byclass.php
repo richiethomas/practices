@@ -20,7 +20,7 @@ if (count($workshops_list) == 0) {
 	if ($mode) {
 	
 		echo "<form id='dummy'><textarea rows='100' cols='300'>";
-		echo "start date, day, time, workshop id, title, teacher, students, revenue, teacher pay,classes,class shows\n";
+		echo "start date, day, time, workshop id, title, teacher, students, revenue, teacher pay,classes,class shows, in person\n";
 		$total_revenue = 0;
 		$total_pay = 0;
 		$total_students = 0;
@@ -28,12 +28,19 @@ if (count($workshops_list) == 0) {
 		$total_shows = 0;
 		foreach ($workshops_list as $wid => $wk) {
 			
+			
+			$wk->fields['in_person'] = strpos($wk->fields['tags'], 'inperson') === false ? 0 : 1;
+			
 			$wk->fields['title'] = preg_replace('/,/', ' - ', $wk->fields['title']);
+			
+			if ($wk->fields['in_person'] && !strpos(strtolower($wk->fields['title']), 'in person')) {
+				$wk->fields['title'] .= ' (in person)';
+			}
 			
 			echo date('Y-m-d g:ia',strtotime($wk->fields['start'])).', '.
 				date('l',strtotime($wk->fields['start'])).', '.
 				date('g:ia',strtotime($wk->fields['start'])).
-				", {$wid}, {$wk->fields['title']},  {$wk->fields['teacher_name']}, {$wk->fields['enrolled']}, {$wk->fields['actual_revenue']}, {$wk->fields['total_pay']}, {$wk->fields['total_class_sessions']}, {$wk->fields['total_show_sessions']}\n";
+				", {$wid}, {$wk->fields['title']},  {$wk->fields['teacher_name']}, {$wk->fields['enrolled']}, {$wk->fields['actual_revenue']}, {$wk->fields['total_pay']}, {$wk->fields['total_class_sessions']}, {$wk->fields['total_show_sessions']}, {$wk->fields['in_person']}\n";
 			$total_revenue += $wk->fields['actual_revenue'];
 			$total_pay += $wk->fields['total_pay'];
 			$total_classes += $wk->fields['total_class_sessions'];

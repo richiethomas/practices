@@ -9,8 +9,8 @@ switch ($ac) {
 		$page = '1';
 		$needle = null;
 		$wid = (int) ($params[2] ?? null); 
-		$wk = Workshops\get_workshop_info($wid);
-		$wk['reminder_sent'] = 0; // don't want to clone that part
+		$wk->set_by_id($wid);
+		$wk->fields['reminder_sent'] = 0; // don't want to clone that part
 		break;		
 		
 }

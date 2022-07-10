@@ -12,7 +12,9 @@ echo "<div class='row mt-md-3 admin-edit-workshop'>\n";
 			</small></h2>\n";
 
 		//show enrollment totals at top
-		echo  "<p>Revenue: {$wk->fields['actual_revenue']}<br>Teacher Pay: {$wk->fields['total_pay']}</p>\n";
+		echo  "<p>Revenue: {$wk->fields['actual_revenue']}
+		 / Teacher Pay: {$wk->fields['total_pay']} 
+		 (".($wk->fields['actual_revenue'] - $wk->fields['total_pay']).")</p>\n";
 
 
 		echo "
@@ -38,7 +40,7 @@ echo "<div class='row mt-md-3 admin-edit-workshop'>\n";
 		        costInput.value = cost;
 		      }
 		      if (whenInput.value === '') {
-		        whenInput.value = `\${date.getFullYear()}-\${date.getMonth()}-\${date.getDate()}`;
+		        whenInput.value = `\${date.getFullYear()}-\${date.getMonth()+1}-\${date.getDate()}`;
 		      }
 		    }
 		  }

@@ -125,7 +125,7 @@ class WorkshopsHelper extends WBHObject {
 		// get IDs of workshops
 		$mysqlnow = date(MYSQL_FORMAT);
 
-		$sql = "select w.* from workshops w where when_public < '$mysqlnow' and start >= '$mysqlnow' and w.hidden = 0 order by start asc";  
+		$sql = "select w.* from workshops w where when_public < '$mysqlnow' and start >= '$mysqlnow' and w.hidden = 0 or (CURRENT_DATE() < '2022-06-27' and w.title like '%glendale%') order by start asc";  
 	
 		$stmt = \DB\pdo_query($sql);
 		$workshops = array();
@@ -275,7 +275,9 @@ class WorkshopsHelper extends WBHObject {
 		$stmt = \DB\pdo_query("select * from workshops where title like '%bitness%' order by id desc limit $limit");
 		$all = array();
 		while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
-			$all[$row['id']] = $row;
+			$wk = new Workshop();
+			$wk->set_by_id($row['id']);
+			$all[$row['id']] = $wk;
 		}
 		return $all;
 	}

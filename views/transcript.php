@@ -24,7 +24,7 @@ if ($admin) {
 	        costInput.value = cost;
 	      }
 	      if (whenInput.value === '') {
-	        whenInput.value = `\${date.getFullYear()}-\${date.getMonth()}-\${date.getDate()}`;
+	        whenInput.value = `\${date.getFullYear()}-\${date.getMonth()+1}-\${date.getDate()}`;
 	      }
 	    }
 	  }

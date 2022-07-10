@@ -75,7 +75,7 @@ function heading_class($col) {
 
 function show_when($timestring) {
 	if ($timestring && $timestring != '0000-00-00' && date('Y', strtotime($timestring)) != '1969') {
-		return date('M j Y', strtotime($timestring));
+		return date('Y-m-d', strtotime($timestring));
 	}
 	return null;
 }
