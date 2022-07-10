@@ -131,11 +131,11 @@ function list_names($lists, $title = 'Enrolled') {
 		echo "<h4 class='mt-2'>{$title}</h4>\n";
 		echo "<div class='mx-4'>\n";
 		echo "<h5>Names</h5>\n";
-		foreach ($lists as $l) {
-			echo "{$l['nice_name']}<br>\n";
+		foreach ($lists as $id=> $l) {
+			echo "<a href='/user/view/{$id}'>{$l['nice_name']}</a><br>\n";
 		}
 		echo "<h5>Emails</h5>\n";
-		foreach ($lists as $l) {
+		foreach ($lists as $id=>$l) {
 			echo "{$l['email']}<br>\n";
 		}
 		echo "</div>\n";

@@ -95,7 +95,7 @@ $controllers = array(
 		'teachers' => 'teachers',
 		'workshop' => 'workshop',
 		'payment' => 'payment',
-		'classes' => 'classes'		
+		'classes' => 'classes'	
 	),
 	
 	2 => array (
@@ -132,10 +132,17 @@ $controller = 'home'; // default
 //print_r($controllers);
 //die;
 
+//special 'user' check
+if ($params[0] == 'user') {
+	if ($u->logged_in() && Teachers\is_teacher($u->fields['id'])) {
+		$controller = 'user';
+	}
+}
+
 foreach ($controllers as $level => $files) {
 	if ($u->check_user_level($level) || $level == 0) {
 		foreach ($files as $k => $f) {
-			if ($params[0] == $k) {
+			if ($params[0] == $k) {				
 				$controller = $f;
 			}
 		}
