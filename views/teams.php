@@ -1,124 +1,86 @@
 <h1 class="page-title mb-5">Teams</h1>
  
-<img class="float-end mx-3" src='images/teams.png' alt='WGIS teams'>
+<!--img class="float-end mx-3" src='images/teams.png' alt='WGIS teams'-->
 
-<p>First of all, we have online shows that are broadcast on our Twitch channel.<br><a href="https://www.twitch.tv/wgimprovschool">https://www.twitch.tv/wgimprovschool</a></p>
+<p>WGIS has four in-person house teams. Every Friday, two house teams do a Harold, followed by a set from Jim Woods and Will Hines and guests. The show where they perform is Clubhouse Fridays, which happens every Friday 7:15pm in Los Angeles at a black box theater called The Clubhouse. Rosters and schedule below.</p>
 
-<p>WGIS has six house teams. Here's how they work. Every three months, we pick a batch of students, assemble them into teams, assign them a coach and schedule them for some shows. The goal is to educate and develop: help improv nerds meet like minded people and get some practice with a coach.</p>
+<p>
 
-<p>Thank you for consulting this bare bones, all-business web page. :)</p>
-
-<h2>Shows</h2>
-
-<p>Every <?php
-		$ts1 = \Wbhkit\convert_tz("January 3 2022 11am", $u->fields['time_zone'], 'l ga');
-		$ts2 = \Wbhkit\convert_tz("January 3 2022 5pm", $u->fields['time_zone'], 'l ga');
-		echo "$ts1 and $ts2 ({$u->fields['time_zone_friendly']})";
-		?> , two of the house teams play (that's two at each time). These shows stream on our <a href="community.php#twitch">twitch channel</a>.</p>
-
-<h2>January - April 2022 Schedule</h2>
+<h2>August - October 2022 Schedule</h2>
 
 
 <?php
 	
-$t1 = 'Voltage';
-$t2 = 'The Officer Dibbler Quintet';
-$t3 = 'Robot';
-$t4 = 'Drama Turkey';
-$t5 = 'Voice of a Dog';
-$t6 = 'Screaming In Supermarkets (Loud)';
+$t1 = 'Adam Jilt';
+$t2 = 'Dearly Beloved';
+$t3 = 'Party People Say Hey';
+$t4 = 'The Funnies';
 $schedule = array(
-	array ('January 17 2022', "$t1 / $t2", "$t4 / $t5"),
-	array ('January 24 2022', "$t3 / $t1", "$t6 / $t4"),
-	array ('January 31 2022', "$t2 / $t3", "$t5 / $t6"),
-	array ('February 7 2022', "$t1 / $t2", "$t4 / $t5"),
-	array ('February 14 2022', "$t3 / $t1", "$t6 / $t4"),
-	array ('February 21 2022', "$t2 / $t3", "$t5 / $t6"),
-	array ('February 28 2022', "$t1 / $t2", "$t1 / $t2"),
-	array ('March 7 2022', "$t3 / $t1", "$t6 / $t4"),
-	array ('March 14 2022', "$t2 / $t3", "$t5 / $t6"),
-	array ('March 21 2022', "$t1 / $t2", "$t4 / $t5"),
-	array ('March 28 2022', "$t3 / $t1", "$t6 / $t4"),
-	array ('April 4 2022', "$t2 / $t3", "$t5 / $t6"),
-	array ('April 11 2022', "$t1 / $t2", "$t4 / $t5"),
-	array ('April 18 2022', "$t3 / $t1", "$t6 / $t4"),
-	array ('April 25 2022', "Blender Show (all teams welcome)", "Blender Show (all teams welcome)"),
-	
+	array ('July 22, 2022', "$t1"),
+	array ('July 29, 2022', "Bitness Class Shows"),
+	array ('August 5, 2022', "$t2 / $t1"),
+	array ('August 12, 2022', "$t4 / $t2"),
+	array ('August 19, 2022', "$t3 / $t1"),
+	array ('August 26, 2022', "Bitness Class Shows"),
+	array ('September 2, 2022', "$t2 / $t4"),
+	array ('September 9, 2022', "$t4 / $t1"),
+	array ('September 16, 2022', "$t3 / $t2"),
+	array ('September 23, 2022', "$t1 / $t3"),
+	array ('September 30, 2022', "Bitness Class Shows"),
+	array ('October 7, 2022', "$t4 / $t3"),
+	array ('October 14, 2022', "$t1 / $t2"),
+	array ('October 21, 2022', "$t1 / $t4 / $t3 / $t1"),
+	array ('October 28, 2022', "Bitness Class Shows")
 );
 	
 foreach ($schedule as $s) {
-	echo "<p><b>".\Wbhkit\convert_tz($s[0].' 11am', $u->fields['time_zone'], 'F j')."</b><br>\n";
-	echo \Wbhkit\convert_tz($s[0].' 11am', $u->fields['time_zone'], 'ga').": ".$s[1]."<br>\n";
-	echo \Wbhkit\convert_tz($s[0].' 5pm', $u->fields['time_zone'], 'ga').": ".$s[2]."</p>\n";	
+	echo "<p><b>".date("M j", strtotime($s[0]))."</b>: {$s[1]}</p>\n";
 }
 
 	
 ?>
 
 
-<h2>Janaury - April 2022 Roster</h2>
+<h2>August - October 2022 Roster</h2>
 
-<h4><?php echo "{$ts1} Teams ({$u->fields['time_zone_friendly']})"; ?> Teams</h4>
+<p><b><?php echo $t1; ?></b>: Anna Bezahler, 
+Artin Sarkisyan, 
+DarylJim Diaz,
+Isabella Escalante, 
+Jessica Dahlgren,
+Lars Midthun, 
+Meredith Haspel-Elliott,
+Ted Asbaghi <br>
+COACH: Jim Woods</p>
 
-<p>VOLTAGE: Alice Wu, 
-Amanda Bigford, 
-Becky Webb, 
-Dan Smith, 
-Gracie Goodhart, 
-Naiema Din, 
-Sam Boles.<br>
-COACH: Erick Acuna</p>
-
-<p>THE OFFICER DIBBLE QUINTET: 
-Brian Cruz,
-Don Colliver,
-Jon Branch,
-Karen Brelsford,
-Keith Estrella,
-Max Bank,
-Taylor Gray<br>
-COACH: Christine Simpson</p>
-
-<p>ROBOT: Andrew Hopper,
-Bob Hsaio, 
-Dmytro Lazar,
-Jordana Mishory,
-Julia Kelly,
-Kristen Drenning,
-Todd Sullivan.<br>
-COACH: Sarah Claspell</p>
-
-<h4><?php echo "{$ts2} Teams ({$u->fields['time_zone_friendly']})"; ?> Teams</h4>
-
-<p>DRAMA TURKEY: Álvaro Méndez,
+<p><b><?php echo $t2; ?></b>: Andrew Sproge,
+Alexia Verbeke,
+Bob Hsiao,
 Cassie Grilley,
-Jessie Catherine Webber,
-Kevin DiLucente,
-Neville Bharucha,
-Rosie Grant,
-Tyler Ross.<br>
-COACH: Jason Perez</p>
+Judith Friedman,
+Matt Rubano,
+Nolan Purvis,
+Russell Carter<br>
+COACH: Will Hines</p>
 
-<p>VOICE OF A DOG: Adam Slager,
-Andy Morrison,
-Jenna Jacobsen,
-John Dardenne,
-Magda Mukthar,
-Michael Brown,
-Stan Ferguson,
-Victoria Koenitzer.<br>
-COACH: Michelle Gilliam</p>
+<p><b><?php echo $t4; ?></b>: Benedikt Sebastian,
+Isabel Galbraith,
+Jessica Sproge,
+Justin Liu,
+Kelly Hannah,
+Miami Barrios,
+Nick Luciano,
+Spencer Kruse<br>
+COACH: Jim Woods</p>
 
-<p>SCREAMING IN SUPERMARKETS (LOUD): Isabel Galbraith,
-Levi Meltzer,
-Oleg,
-Ryan Crowe,
-Sahil Desai,
-Seth Nathan Green,
-Sebastian Hernandez,
-Tim Dunk.<br>
-COACH: Ethan Smith.</p>
-
-
+<p><b><?php echo $t3; ?></b>: Amanda Bonar,
+Cara Popecki,
+BJ Schwartz,
+Erik Kestel,
+Harrison Merkt,
+Phil Gould,
+Sara Keller,
+Sebastian Davis<br>
+COACH: Sarah Claspell</p>
 
 

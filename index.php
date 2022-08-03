@@ -29,11 +29,6 @@ if (preg_match('/index\.php\?key=(\w+)/', $params[0], $matches)) {
 //
 $pages = array(
 	
-	"about-catalog" => array(
-		'about/catalog', 
-		'course catalog',
-		'Types of classes offered at WGIS.'),
-	
 	"about-school" => array(
 		'about/school',
 		'about wgis',
@@ -95,7 +90,8 @@ $controllers = array(
 		'teachers' => 'teachers',
 		'workshop' => 'workshop',
 		'payment' => 'payment',
-		'classes' => 'classes'	
+		'classes' => 'classes',
+		'about-catalog' => 'catalog'
 	),
 	
 	2 => array (

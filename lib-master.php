@@ -101,10 +101,12 @@ function get_nav_items(){
 
 		array('title' => "Teachers", "href" => "/teachers"),
 		array('title' => "School", "href" => "/about-school"),
-		array('title' => "How It Works", "href" => "/about-works")
+		array('title' => "How It Works", "href" => "/about-works"),
+		array('title' => "Course Catalog", "href" => "/about-catalog"),
+		
 	));
 	$nav_items[] = array('title' => "Community", "href" => "/community");
-	$nav_items[] = array('title' => "Classes", "href" => "/classes");
+	$nav_items[] = array('title' => "Teams", "href" => "/teams");
 	return $nav_items;
 }
 

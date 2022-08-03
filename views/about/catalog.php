@@ -2,24 +2,49 @@
 	<div class="row justify-content-center">
 		<div class="col-md-10 col-12">
 
-<small>Updated June 2021</small>
-
-<p>This school is small and always a bit in flux, but here's our main courses right now.</p>
+<small>Updated August 2022</small>
 
 <h2>Levels</h2>
+<p>Starting August 2022, we are offering four levels. There are in person only right now, though we will at some point offer them online too.</p>
 
-<p>We no longer have levels. We're not big enough to have a program you follow. Instead, just take courses you're interested in. Introductory classes will include the word "Intro" in the title -- those are good for people who have never had any improv before. All others are "intermediate" experience level.</p>
+<ul>
+	<li>Level 1: Intro to Improv</li>
+	<li>Level 2: Game of the Scene</li>
+	<li>Level 3: Harold Structure</li>
+	<li>Level 4: Advanced Harold</li>
+</ul>
 
-<p>If you really want a very very very loose program to go through, here is a suggested path.</p>
+<p>See the <a href="/classes">list of classes</a> to see which of these are being offered soon.</p>
+
+<h2>All Past Courses</h2>
+<p>We've done a lot of different classes and workshops since we started in March 2020. Below is a list of everything in reverse chronological order.</p>
+
+<p><a href='#inperson'>In person courses</a> | <a href='#online'>online courses</a></p>
+
+<?php
 	
-	<ul>
-		<li>Start: Any "intro" course or a course that involves getting ideas from a monologue</li>
-		<li>Next: A course on initations or monoscene or pretty flower. These tend to be structured enough to be good for newer improvisers, but have enough freedom to challenge you.</li>
-		<li>After that: Harolds or La Rondes. More challenging and tend to move faster</li>
-	</ul>
+$ip = "";
+$ol = "";
+foreach ($classes as $id => $c) {
 	
-	<p>Again, these are suggestions. Take the class that excites you. If you're itching to learn The Harold, jump in there. Conversely, if you're sick of the Harold, try Monoscene/ Pretty Flower. </p>
+	$html_row = "<div class='row'><div class='col'><a href='/workshop/view/{$id}'>{$c['title']}</a></div><div class='col'>".\Wbhkit\figure_year_minutes(strtotime($c['start']))."</div></div>\n";
+	
+	if (strpos($c['tags'], 'inperson') === false) {
+		$ol .= $html_row;
+	} else {
+		$ip .= $html_row;
+	}
+}	
 
+?>
+
+<a id='inperson'></a>
+<h3>In Person Courses</h3>
+<?php echo $ip; ?>
+
+<a id='online'></a>
+<h3>Online Courses</h3>
+<?php echo $ol; ?>
 
 </div></div>
 

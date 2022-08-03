@@ -169,10 +169,11 @@ foreach ($claims as $c) {
 		
 		// if class is nearly sold out, bonus rate
 		// (rate should have been stored as 'amount' on this claim)
-		if ($c->wk->fields['cost'] != 1 && $c->wk->fields['enrolled'] / $c->wk->fields['capacity'] > .75) {
-			$rate = $c->fields['amount'] + 50;
+		$rate = $c->fields['amount'];
+		if ($c->wk->fields['cost'] / $c->wk->fields['total_sessions'] <= 30) {
+			$rate = $c->wk->fields['enrolled'] / $c->wk->fields['capacity'] > .75 ? 175 : 150;
 		} else {
-			$rate = $c->fields['amount'];
+			$rate = $c->wk->fields['enrolled'] / $c->wk->fields['capacity'] > .75 ? 250 : 200;
 		}
 		
 		$what = "<a href='/admin-workshop/view/{$c->wk->fields['id']}'>{$c->wk->fields['title']}</a> <small>({$c->wk->fields['id']}) (".date('D M j ga', strtotime($c->wk->fields['start'])).' #'.($c->wk->fields['rank'] ? $c->wk->fields['rank'] : 'show').")</small><br>
