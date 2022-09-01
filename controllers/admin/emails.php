@@ -17,6 +17,8 @@ $statuses = $lookups->statuses;
 if (is_array($workshops)) {
 	$statuses[0] = 'all'; // modifying global $statuses
 	foreach ($statuses as $stid => $status_name) { 
+		$student_emails = array();
+		$student_names = array();
 		foreach ($workshops as $workshop_id) {
 			if ($workshop_id) {
 				$stds = $eh->get_students($workshop_id, $stid);

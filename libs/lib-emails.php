@@ -70,8 +70,9 @@ function confirm_email(\Enrollment $e, $status_id = ENROLLED) {
 	switch ($status_id) {
 		case 'already':
 		case ENROLLED:
+		
 			$sub = "ENROLLED: {$wk->fields['title']}";
-			$body = "<p>You are ENROLLED in the workshop \"{$wk->fields['title']}.\"<br>Starts: ".\Wbhkit\friendly_when($wk->fields['start'])."</p>";
+			$body = "<p>You are ENROLLED in the workshop \"{$wk->fields['title']}.\"<br>Starts: {$wk->fields['showstart']}</p>";
 
 			if ($wk->fields['location_id'] == ONLINE_LOCATION_ID) {
 				$body .= "<p>ZOOM LINK:<br>\n----------<br>\nThe Zoom link to your workshop is: {$wk->url['online_url_display']}<br>\n";

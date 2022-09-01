@@ -53,13 +53,23 @@ echo "<div class=\"col-md-6 border border-info\">\n";
 
 }
 
+//if (in_array('inperson', $wk->fields['tags_array'])) {
+
+
 function upcoming_class_item($wk) {
-	$wkdate = date("l F j", strtotime($wk->fields['start_tz']));
+	$wkdate = date("D M j", strtotime($wk->fields['start_tz']));
 	$start = Wbhkit\friendly_time($wk->fields['start_tz']);
 	$end = Wbhkit\friendly_time($wk->fields['end_tz']);	
-	return "<li class='mb-2'>$wkdate: <a href='/workshop/view/{$wk->fields['id']}'>{$wk->fields['title']}</a><br>
-		<small>$start {$wk->fields['costdisplay']}, Instructor: <a href='/teachers/view/{$wk->fields['teacher_id']}'>{$wk->teacher['nice_name']}</a><br>
-	{$wk->fields['time_summary']}<br></small></li>\n";	
+	
+	$xtra_class = $xtra = '';
+	if (in_array('inperson', $wk->fields['tags_array'])) {
+		$xtra_class =  'fw-bold';
+		$xtra = ', in person';
+	}
+	
+	return "<li class='mb-2 $xtra_class'>$wkdate $start: <a href='/workshop/view/{$wk->fields['id']}'>{$wk->fields['title']}</a> - <small>{$wk->teacher['nice_name']}</small><br>
+		<small>{$wk->fields['costdisplay']},
+	{$wk->fields['time_summary']}{$xtra}<br></small></li>\n";	
 	
 }
 

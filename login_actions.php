@@ -22,7 +22,7 @@ switch ($ac) {
 			
 			
 			if (!$email) {
-				$logger->error("Login link requested but no email submitted.");
+				$logger->debug("Login link requested but no email submitted.");
 				break;
 			}
 			if (!$when_login) {
@@ -32,7 +32,7 @@ switch ($ac) {
 			
 			// already logged in with this email? do nothing
 			if ($u->logged_in() && $u->fields['email'] == $email) {
-				$logger->error("LOGIN PROTECT: {$u->fields['email']} already logged in!");
+				$logger->debug("LOGIN PROTECT: {$u->fields['email']} already logged in!");
 				break;
 			}
 			
@@ -49,6 +49,7 @@ switch ($ac) {
 			// if failed, that was a bad email
 			if (!$u->logged_in()) {
 				$error = $u->error;
+				$logger->error($error);
 				break;
 			}
 

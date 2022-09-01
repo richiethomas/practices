@@ -140,7 +140,7 @@ if (!$guest->logged_in()) {
 	$view->data['key'] = $guest->get_key(); 
 	$view->data['guest'] = $guest; // user profile of user we are modifying
 	$view->data['needle'] = trim($needle);
-	$view->data['transcripts'] = $eh->get_transcript_tabled($guest, true, 1, $hideconpay);
+	$view->data['transcripts'] = $eh->get_transcript_tabled($guest, true, $hideconpay);
 	$view->data['userhelper'] = new UserHelper('/admin-users');
 	$view->data['lookups'] = $lookups;
 	$view->data['close_transcript'] = $close_transcript;

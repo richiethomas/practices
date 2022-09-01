@@ -169,9 +169,9 @@ foreach ($claims as $c) {
 		
 		// if class is nearly sold out, bonus rate
 		// (rate should have been stored as 'amount' on this claim)
-		$rate = $c->fields['amount'];
+		$rate = $c->fields['amount']; 
 		if ($c->wk->fields['cost'] / $c->wk->fields['total_sessions'] <= 30) {
-			$rate = $c->wk->fields['enrolled'] / $c->wk->fields['capacity'] > .75 ? 175 : 150;
+			$rate = 170;
 		} else {
 			$rate = $c->wk->fields['enrolled'] / $c->wk->fields['capacity'] > .75 ? 250 : 200;
 		}

@@ -3,7 +3,7 @@ $view->data['heading'] = "catalog";
 
 
 $sql = "select * 
-from workshops w 
+from workshops w
 where start > '2020-03-01'
 order by start desc";
 

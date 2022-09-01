@@ -147,13 +147,6 @@ document.addEventListener('DOMContentLoaded', () => {
 	
 	
 ?>
-	<div class="container-fluid classes-header container-header-banner"><h3 class="container-lg container-fluid">All Upcoming Classes</h3></div>
-
-		<p class="mt-3 mx-auto col-6">Below is a list of all upcoming classes. We have both online classes and also in person classes that happen in Los Angeles. Click on a class for exact locations and more details, plus bios of the teachers.</p>
-
-		<p class='mx-auto mt-3 col-6'>For future reference, here's a <a class='text-muted' href='/classes'>compact list</a> of upcoming classes.</p>
-
-
 		<div class="container-fluid classes-header container-header-banner"><h3 class="container-lg container-fluid">Online Classes</h3></div>
 
 	<div class="container-lg container-fluid" id="classes-listings">

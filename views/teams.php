@@ -13,7 +13,7 @@
 	
 $t1 = 'Adam Jilt';
 $t2 = 'Dearly Beloved';
-$t3 = 'Party People Say Hey';
+$t3 = 'Party Horses Say Hay';
 $t4 = 'The Funnies';
 $schedule = array(
 	array ('July 22, 2022', "$t1"),
@@ -29,8 +29,18 @@ $schedule = array(
 	array ('September 30, 2022', "Bitness Class Shows"),
 	array ('October 7, 2022', "$t4 / $t3"),
 	array ('October 14, 2022', "$t1 / $t2"),
-	array ('October 21, 2022', "$t1 / $t4 / $t3 / $t1"),
-	array ('October 28, 2022', "Bitness Class Shows")
+	array ('October 21, 2022', "$t3 / $t4"),
+	array ('October 28, 2022', "Bitness Class Shows"),
+	array ('November 4, 2022', "$t1 / $t2"),
+	array ('November 11, 2022', "$t4 / $t3"),
+	array ('November 18, 2022', "Bitness Class Shows"),
+	array ('November 25, 2022', "Thanksgiving week - TBA"),
+	array ('December 2, 2022', "$t4 / $t1"),
+	array ('December 9, 2022', "$t3 / $t2"),
+	array ('December 16, 2022', "Bitness Class Shows"),
+	array ('December 23, 2022', "Holiday week - TBA"),
+	array ('December 30, 2022', "Holiday week - TBA")
+	
 );
 	
 foreach ($schedule as $s) {
@@ -41,7 +51,7 @@ foreach ($schedule as $s) {
 ?>
 
 
-<h2>August - October 2022 Roster</h2>
+<h2>August - December 2022 Roster</h2>
 
 <p><b><?php echo $t1; ?></b>: Anna Bezahler, 
 Artin Sarkisyan, 
@@ -68,9 +78,9 @@ Isabel Galbraith,
 Jessica Sproge,
 Justin Liu,
 Kelly Hannah,
-Miami Barrios,
 Nick Luciano,
-Spencer Kruse<br>
+Spencer Kruse,
+Rocky Strobel<br>
 COACH: Jim Woods</p>
 
 <p><b><?php echo $t3; ?></b>: Amanda Bonar,

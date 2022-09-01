@@ -3,7 +3,8 @@
 
 $view->data['heading'] = "conflicts";
 
-$view->data['workshops'] = Workshops\get_sessions_to_come(true, true); // get enrollments, show hidden
+$wh = new WorkshopsHelper();
+$view->data['workshops'] = $wh->get_sessions_to_come(true); // get enrollments, show hidden
 $view->data['teacher_conflicts'] = find_conflicts($view->data['workshops']);
 $view->data['registration_conflicts'] = find_registration_conflicts();
 
