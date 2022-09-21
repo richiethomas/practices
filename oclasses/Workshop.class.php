@@ -364,10 +364,11 @@ class Workshop extends WBHObject {
 		}
 		sort($names);
 		sort($just_emails);
+
 	
 		$class_dates = $this->fields['when']."\n";
-		if (!empty($this->fields['sessions'])) {
-			foreach ($this->fields['sessions'] as $s) {
+		if (!empty($this->sessions)) {
+			foreach ($this->sessions as $s) {
 				$class_dates .= 
 				($s['class_show'] ? 'Show: ' : '').	
 				"{$s['when']}".

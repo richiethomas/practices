@@ -1,6 +1,6 @@
 <div class='row'><div class='col-md-6'><h2>get emails</h2>
 <div class='well'><form action ='/admin-emails/gemail' method='post'>
-<?php echo 	Wbhkit\multi_drop('workshops', $all_workshops, $workshops, 'Workshops', 15); ?>
+<?php echo 	Wbhkit\multi_drop('workshops', $all_workshops, $workshops, 'Workshops  (--- means in person)', 15); ?>
 <?php echo  Wbhkit\submit('get emails'); ?>
 </form></div>
 <?php

@@ -4,8 +4,7 @@ $view->data['heading'] = "get emails";
 Wbhkit\set_vars(array('workshops'));
 $results = null;
 
-$wh = new WorkshopsHelper();
-$all_workshops = $wh->get_workshops_dropdown();
+$all_workshops = get_workshops_dropdown();
 
 $eh = new EnrollmentsHelper();
 
@@ -46,4 +45,18 @@ if (is_array($workshops)) {
 $view->add_globals(array('all_workshops', 'workshops', 'statuses', 'results'));
 $view->renderPage('admin/gemail');
 
+
+function get_workshops_dropdown(?string $start = null, ?string $end = null) {
+
+	$stmt = \DB\pdo_query("select w.* from workshops w order by start desc");
+	$workshops = array();
+	$wk = new Workshop();
+	while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
+		$row = $wk->format_times_one_level($row);
+		$start = '';
+		if (strpos($row['tags'], 'inperson') !== false) { $start = '---'; }
+		$workshops[$row['id']] = $start.$row['title'].' ('.date('Y-M-d', strtotime($row['start'])).')';
+	}
+	return $workshops;
+}
 

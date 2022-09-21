@@ -105,13 +105,13 @@ foreach ($unavailable_workshops as $wk) {
 	
 } 
 
-echo "<h2 class='my-3'>Online Classes</h2>\n";
+echo "<h2 class='my-3'>Open Online Classes</h2>\n";
 echo $mode == 'text' ?
 	($ol_text ? $ol_text : '<p>No multi-week courses coming up!</p>') :
 	($ol_html ? $ol_html : '<p>No multi-week courses coming up!</p>');
 	
 
-echo "<h2 class='my-3'>In Person Los Angeles Classes</h2>\n";
+echo "<h2 class='my-3'>Open In Person Los Angeles Classes</h2>\n";
 echo $mode == 'text' ?
 	($ip_text ? $ip_text : '<p>No multi-week courses coming up!</p>') :
 	($ip_html ? $ip_html : '<p>No multi-week courses coming up!</p>');

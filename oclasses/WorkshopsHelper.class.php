@@ -232,18 +232,6 @@ class WorkshopsHelper extends WBHObject {
 		return $view->renderSnippet('admin/search_workshops');	
 	}
 
-	function get_workshops_dropdown(?string $start = null, ?string $end = null) {
-	
-		$stmt = \DB\pdo_query("select w.* from workshops w order by start desc");
-		$workshops = array();
-		$wk = new Workshop();
-		while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
-			$row = $wk->format_times_one_level($row);
-			$workshops[$row['id']] = $row['title'].' ('.date('Y-M-d', strtotime($row['start'])).')';
-		}
-		return $workshops;
-	}
-
 
 	function get_recent_workshops_simple(?int $limit = 50) {
 	
@@ -265,7 +253,7 @@ class WorkshopsHelper extends WBHObject {
 		$stmt = \DB\pdo_query("select * from workshops order by id desc limit $limit");
 		$all = array();
 		while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
-			$all[$row['id']] = $row['title']. ' ('.	\Wbhkit\friendly_date($row['start']).' '.\Wbhkit\friendly_time($row['start']).')';
+			$all[$row['id']] = $start . $row['title']. ' ('.	\Wbhkit\friendly_date($row['start']).' '.\Wbhkit\friendly_time($row['start']).')';
 		}
 		return $all;
 	}
