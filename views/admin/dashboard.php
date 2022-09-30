@@ -6,16 +6,21 @@
 		</div>
 		<div class="admin-box-content">
 
+<script>		
+function changeHighlightBox() {
+    var box = document.getElementById('dashalerts');
+    box.style.display = (box.style.display == 'none') ? 'block' : 'none';
+}
+function filterByTeacher() {
+	window.location = '/admin/view/' + document.getElementById('filter_by').value;
+	return true;
+}
 
-<script>
-$( document ).ready(function() {
-	$( "#dashalertsbutton" ).click(
-		function() { $("#dashalerts").toggle(200); }
-	);
-});	
+window.onload = function() {
+	document.getElementById('dashalertsbutton').addEventListener('click', changeHighlightBox);
+	document.getElementById("filter_by").addEventListener('change', filterByTeacher);	
+}
 </script>
-		
-
 			<div class="issues float-end border border-4 p-2 m-2">				
 				<button id="dashalertsbutton" type="button" class="btn-close float-end" aria-label="Close"></button>
 				<div id="dashalerts" <?php if ($filter_by) { echo "style='display:none'"; } ?>>
@@ -142,3 +147,4 @@ echo "</ul>\n";
 
 		</div>
 	</div>
+	

@@ -103,7 +103,7 @@ document.addEventListener('DOMContentLoaded', () => {
       </div>
       <div class="col-lg-6">
         <h1 class="display-5 fw-bold lh-1 mb-3">Improv Classes,<br>Online and In Person</h1>
-        <p class="lead">WGIS is an improv grad school, for people who have learned the basics and want more. It was <a href='/about-school'>founded by Will Hines</a> and teaches "game of the scene" style improv.<br><br>We have both <b class='text-primary'>online</b> and <b class='text-success'>in person</b> (Los Angeles) classes you can join. </p>
+        <p class="lead">WGIS is an improv grad school, for people who have learned the basics and want more. We teach "game of the scene" style improv.<br><br>We have both <b class='text-primary'>online</b> and <b class='text-success'>in person</b> (Los Angeles) classes you can join. </p>
         <div class="d-grid gap-2 d-md-flex justify-content-md-start">
 			
 			<a class="btn btn-primary btn-lg px-4 me-md-2" href="/classes" role="button">See Classes</a>
