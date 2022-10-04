@@ -13,13 +13,20 @@ if ($needle) {
 }
 ?>
 
-<script>
-$( document ).ready(function() {
-	$( "#dashalertsbutton" ).click(
-		function() { $("#dashalerts").toggle(200); }
-	);
-});	
+
+
+
+<script>		
+function changeHighlightBox() {
+    var box = document.getElementById('dashalerts');
+    box.style.display = (box.style.display == 'none') ? 'block' : 'none';
+}
+
+window.onload = function() {
+	document.getElementById('dashalertsbutton').addEventListener('click', changeHighlightBox);
+}
 </script>
+
 
 <div class="transcript border p-2">				
 <button id="dashalertsbutton" type="button" class="btn-close float-end" aria-label="Close"></button>

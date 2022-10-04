@@ -213,5 +213,24 @@ echo "</form>\n";
 
 echo "<button id=\"todays_date\" class=\"btn btn-success m-1\"  role=\"button\">Make Paid Dates Today</button> | <button id=\"this_date\" class=\"btn btn-success m-1\"  role=\"button\">Use This Date:</button><input type='text' class='mx-md-1' id='this_date_val' name='this_date_val'  value='".date("j-M-Y")."'>\n";
 
+echo "<h2 class='mt-4'>Add New Claim</h2>\n";
+echo "<h4 class='mt-4'>(create 'task' and claim it)</h4>\n";
+echo "
+<form action='#' method='post'>	
+<table class='table'>
+	<tr>
+		<td>Who</td>
+		<td>What</td>
+		<td>How Much</td>
+		<td>When Paid</td>
+		<td>Class?</td>
+		<td><button id='new_claim' class='btn btn-success' role='button'>Add Claim</button></td>
+	</tr>
+</table>
+</form>
+	
+	
+	
+";
 	
 ?>
