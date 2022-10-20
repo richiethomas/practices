@@ -2,7 +2,7 @@
 <form action ='/admin-search/search' method='post'>
 <?php
 $search = 1;
-include 'ajax-jquery-search.php';
+include 'assets/ajax/search_box.php';
 ?>
 	<div class="form-group">
 	<label for="search-box" class="form-label">Email address</label>

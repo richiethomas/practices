@@ -13,9 +13,15 @@ echo "<div class='row mt-md-3 admin-edit-workshop'>\n";
 
 		//show enrollment totals at top
 		echo  "<p>Revenue: {$wk->fields['actual_revenue']}
-		 / Teacher Pay: {$wk->fields['total_pay']} 
-		 (".($wk->fields['actual_revenue'] - $wk->fields['total_pay']).")</p>\n";
+		 / Costs: {$wk->fields['total_costs']} 
+		 (".($wk->fields['actual_revenue'] - $wk->fields['total_costs']).")";
 
+		 if (count($all_costs) > 0) { echo "<br>"; }
+		 foreach ($all_costs as $ac) {
+			 
+			 echo "&nbsp;&nbsp;{$ac['title']} - {$ac['amount']} <small>(".date('D M j',strtotime($ac['when_paid'])).")</small><br>";
+		 }
+		 echo "</p>\n";
 
 		echo "
 		<script type='text/javascript'>
@@ -130,7 +136,7 @@ echo "<div class='row mt-md-3 admin-edit-workshop'>\n";
 		Wbhkit\submit('Add Session');
 		echo "</fieldset></form>\n";		
 
-	include 'ajax-jquery-search.php';
+	include 'assets/ajax/search_box.php';
 	echo  "<h2>Add Student</h2><form id='add_student' class='form-inline' action='/admin-workshop/enroll/{$wid}' method='post' novalidate><fieldset name='new_student'>";
 	echo "<div class='form-group'>
 			<label for='search-box' class='form-label'>Email: </label>

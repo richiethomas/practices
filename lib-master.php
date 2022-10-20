@@ -37,6 +37,7 @@ define('TIME_ZONE', $dateTime->format('T'));
 
 
 define('MYSQL_FORMAT', 'Y-m-d H:i:s');
+define('MYSQL_DATE', 'Y-m-d');
 define('LOCAL', ($_SERVER['SERVER_NAME'] == 'localhost') ? true : false);
 
 // to control logging levels, see lib-logger.php
@@ -49,6 +50,7 @@ define('LATE_HOURS', 12);
 define('REMINDER_HOURS', 24);
 define('USER_PHOTO_MAX_BYTES', 5000000);
 define('WEBMASTER', (LOCAL ? "will@willhines.net" : "classes@wgimprovschool.com"));
+define('TEACHERPAY', 'teacher pay');
 
 //
 // objects
@@ -57,7 +59,6 @@ include 'libs/lib-logger.php';
 include 'libs/db_pdo.php';
 include 'libs/wbh_webkit.php';
 include 'libs/wbh_webkit_pagination.php';
-//include 'libs/lib-workshops.php';
 include 'libs/lib-emails.php';
 include 'libs/lib-xtra-sessions.php';
 include 'libs/lib-teachers.php';

@@ -93,16 +93,6 @@ window.onload = function() {
 			</div>
 			</div>			
 
-<script type="text/javascript">
-$(function(){
-  $("#filter_by").change(function(){
-    window.location='/admin/view/' + this.value
-	return true;
-  });
-});
-</script>
-
-
 	<div class='col-3'>
 	<?php
 	echo \Wbhkit\drop('filter_by', \Teachers\teachers_dropdown_array(true), $filter_by, 'Teacher');

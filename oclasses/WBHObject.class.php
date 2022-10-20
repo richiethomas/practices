@@ -9,10 +9,7 @@ class WBHObject
 	
 	public array $fields = array();
 	public array $cols = array();
-	
-	public Monolog\Logger $logger;
-	public Lookups $lookups;
-	
+		
 	public ?string $tablename = null;
 
 	public function __construct() {
@@ -44,6 +41,13 @@ class WBHObject
 	function set_mysql_datetime_field(string $fn, ?string $ts = null) {
 		if ($ts) {
 			$this->fields[$fn] = date(MYSQL_FORMAT, strtotime($ts));
+		} else {
+			$this->fields[$fn] = null;
+		}
+	}
+	function set_mysql_date_field(string $fn, ?string $ts = null) {
+		if ($ts) {
+			$this->fields[$fn] = date(MYSQL_DATE, strtotime($ts));
 		} else {
 			$this->fields[$fn] = null;
 		}

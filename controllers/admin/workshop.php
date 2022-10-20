@@ -190,6 +190,10 @@ foreach ($lookups->statuses as $stid => $status_name) {
 $view->add_globals(array('stats', 'lists', 'status_log', 'hideconpay'));	
 $view->data['statuses'] = $lookups->statuses;
 $view->data['wid'] = $wk->fields['id'];
+
+$ph = new PaymentsHelper();
+$view->data['all_costs'] = $ph->get_class_costs_simple($wk->fields['id']);
+
 $view->renderPage('admin/workshop');
 
 

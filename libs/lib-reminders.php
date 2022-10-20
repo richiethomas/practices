@@ -112,6 +112,7 @@ function remind_enrolled(array $class) {
 		
 		$wk->format_times($std['time_zone']);
 		$xtra = $wk->format_times_one_level($xtra, $std['time_zone']);
+		$xtra['url'] = $wk->parse_online_url($xtra['online_url']);
 		
 		$subject = get_subject($wk, $xtra);
 		$note = get_note($wk, $xtra, $std['nice_name']);

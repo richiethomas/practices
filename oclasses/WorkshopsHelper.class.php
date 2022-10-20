@@ -253,7 +253,7 @@ class WorkshopsHelper extends WBHObject {
 		$stmt = \DB\pdo_query("select * from workshops order by id desc limit $limit");
 		$all = array();
 		while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
-			$all[$row['id']] = $start . $row['title']. ' ('.	\Wbhkit\friendly_date($row['start']).' '.\Wbhkit\friendly_time($row['start']).')';
+			$all[$row['id']] = $row['title']. ' ('.	\Wbhkit\friendly_date($row['start']).' '.\Wbhkit\friendly_time($row['start']).')';
 		}
 		return $all;
 	}

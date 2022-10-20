@@ -2,6 +2,13 @@
  
 <!--img class="float-end mx-3" src='images/teams.png' alt='WGIS teams'-->
 
+<table class='table'>
+	<tr>
+		<td><img src='images/wgis_cf.png'></td>
+		<td><img src='images/clubhouselocation.png'><p class='m-2 text-center'>Clubhouse Fridays<br>7pm showtime<br>Door code #0279</p></td>
+	</tr>
+</table>
+
 <p>WGIS has four in-person house teams. Every Friday, two house teams do a Harold, followed by a set from Jim Woods and Will Hines and guests. The show where they perform is Clubhouse Fridays, which happens every Friday 7:15pm in Los Angeles at a black box theater called The Clubhouse. Rosters and schedule below.</p>
 
 <p>
@@ -16,6 +23,7 @@ $t2 = 'Dearly Beloved';
 $t3 = 'Party Horses Say Hay';
 $t4 = 'The Funnies';
 $schedule = array(
+	/*
 	array ('July 22, 2022', "$t1"),
 	array ('July 29, 2022', "Bitness Class Shows"),
 	array ('August 5, 2022', "$t2 / $t1"),
@@ -27,6 +35,7 @@ $schedule = array(
 	array ('September 16, 2022', "$t3 / $t2"),
 	array ('September 23, 2022', "$t1 / $t3"),
 	array ('September 30, 2022', "Bitness Class Shows"),
+	*/
 	array ('October 7, 2022', "$t4 / $t3"),
 	array ('October 14, 2022', "$t1 / $t2"),
 	array ('October 21, 2022', "$t3 / $t4"),
@@ -64,7 +73,7 @@ Ted Asbaghi <br>
 COACH: Jim Woods</p>
 
 <p><b><?php echo $t2; ?></b>: Andrew Sproge,
-Alexia Verbeke,
+Anja Boltz,
 Bob Hsiao,
 Cassie Grilley,
 Judith Friedman,

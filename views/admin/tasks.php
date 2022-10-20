@@ -6,7 +6,7 @@ $re = new ReminderEmail();
 
 // add new task
 
-include 'ajax-jquery-search.php';
+include 'assets/ajax/search_box.php';
 
 
 echo "<div class='row'><div class='col-md-5'>\n";

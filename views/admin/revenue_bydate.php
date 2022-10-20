@@ -13,7 +13,7 @@ echo $nav;
 
 $csv = "id, type, when, title, cost, revenue\n";
 
-$c_totals = $t_totals = 
+$c_totals = $up_totals = 
 	array('cost' => 0, 'revenue' => 0, 'dated' => 0, 'undated' => 0);
 
 $headings = "
@@ -32,66 +32,66 @@ if (count($classes) == 0) {
 
 	echo $headings;
 
-	foreach ($classes as $wid => $c) {
-		if (!isset($c['dated'])) { $c['dated'] = 0; }
-		if (!isset($c['undated'])) { $c['undated'] = 0; }
-		if (!isset($c['total_pay'])) { $c['total_pay'] = 0; }
+	foreach ($classes as $key => $c) {
+		if (!isset($c['dated_revenue'])) { $c['dated_revenue'] = 0; }
+		if (!isset($c['undated_revenue'])) { $c['undated_revenue'] = 0; }
+		if (!isset($c['cost'])) { $c['cost'] = 0; }
 		
-		$workshop_revenue = $c['dated'] + $c['undated'];
+		$workshop_revenue = $c['dated_revenue'] + $c['undated_revenue'];
 		$formatted_start = \Wbhkit\figure_year_minutes(strtotime($c['start']));
 		echo "
 			<div class='row'><br>\n".
-			"<div class='col-md-6'>({$c['workshop_id']}) <a href='/admin-workshop/view/{$c['workshop_id']}'>{$c['title']}</a> ($formatted_start)</div>\n".
-			"<div class='col-md-1'>{$c['total_pay']}</div>\n".
+			"<div class='col-md-6'>({$c['id']}) <a href='/admin-workshop/view/{$c['id']}'>{$c['title']}</a> ($formatted_start)</div>\n".
+			"<div class='col-md-1'>{$c['cost']}</div>\n".
 			"<div class='col-md-1'>$workshop_revenue</div>\n".
-			"<div class='col-md-1'>{$c['undated']}</div>\n".
+			"<div class='col-md-1'>{$c['undated_revenue']}</div>\n".
 			"</div>\n";
 
-		$c_totals['cost'] += $c['total_pay'];
+		$c_totals['cost'] += $c['cost'];
 		$c_totals['revenue'] += $workshop_revenue;
-		$c_totals['dated'] += $c['dated'];
-		$c_totals['undated'] += $c['undated'];
+		$c_totals['dated'] += $c['dated_revenue'];
+		$c_totals['undated'] += $c['undated_revenue'];
 		
-		$csv .= "{$c['workshop_id']}, 'class', ".date('M j Y g:ia', strtotime($c['start'])).", {$c['title']}, {$c['total_pay']}, $workshop_revenue\n";
+		$csv .= "{$c['id']}, 'class', ".date('M j Y g:ia', strtotime($c['start'])).", {$c['title']}, {$c['cost']}, $workshop_revenue\n";
 
 	}
 	echo totals_row($c_totals, 'class subtotals');
 	$csv .= "\n"; // skip a row in downloadable data
 }	
 
-echo "<h3 class='mt-2'>Tasks</h3>\n";
-if (count($tasks) == 0) {
-	echo "<p>No task data in this time period!</p>\n";
+echo "<h3 class='mt-2'>Other Payments</h3>\n";
+if (count($upayments) == 0) {
+	echo "<p>No other payments in this time period!</p>\n";
 } else {
 
 	echo $headings;
 
-	foreach ($tasks as $tid => $t) {
-		if (!isset($t['cost'])) { $t['cost'] = 0; }
+	foreach ($upayments as $pid => $up) {
+		if (!isset($up['cost'])) { $up['cost'] = 0; }
 		
-		$formatted_when = date('M j Y', strtotime($t['when_paid']));
+		$formatted_when = date('M j Y', strtotime($up['when_paid']));
 		
 		echo "
 			<div class='row'>\n".
-			"<div class='col-md-6'><a href='/admin-tasks/edit/{$t['task_id']}'>{$t['title']}</a> ($formatted_when)</div>\n".
-			"<div class='col-md-1'>{$t['cost']}</div>\n".
+			"<div class='col-md-6'>{$up['title']}</a> ($formatted_when)</div>\n".
+			"<div class='col-md-1'>{$up['cost']}</div>\n".
 			"<div class='col-md-1'>&nbsp;</div>\n".
 			"<div class='col-md-1'>&nbsp;</div>\n".
 			"</div>\n";
 
-		$t_totals['cost'] += $t['cost'];
+		$up_totals['cost'] += $up['cost'];
 		
-		$csv .= "{$t['task_id']}, 'task', {$t['title']}, ".date('M j Y', strtotime($t['when_paid'])).", {$t['cost']}, 0\n";
+		$csv .= "{$up['id']}, 'payment', {$up['title']}, ".date('M j Y', strtotime($up['when_paid'])).", {$up['cost']}, 0\n";
 
 	}
-	echo totals_row($t_totals, 'Task subtotals');
+	echo totals_row($up_totals, 'Payments subtotals');
 }	
 
 $g_totals = array(
-	'cost' => $c_totals['cost']+$t_totals['cost'],
-	'revenue' => $c_totals['revenue']+$t_totals['revenue'],
-	'dated' => $c_totals['dated']+$t_totals['dated'],
-	'undated' => $c_totals['undated']+$t_totals['undated']
+	'cost' => $c_totals['cost']+$up_totals['cost'],
+	'revenue' => $c_totals['revenue']+$up_totals['revenue'],
+	'dated' => $c_totals['dated'],
+	'undated' => $c_totals['undated']
 );
 echo totals_row($g_totals, 'Grand Total');
 $csv .= ",,,,{$g_totals['cost']}, {$g_totals['revenue']}\n";

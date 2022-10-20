@@ -76,7 +76,7 @@ class Workshop extends WBHObject {
 		$this->set_tags_array();
 
 		// set teacher pay
-		$this->set_teacher_pay();
+		$this->set_costs();
 		
 		$this->fields['actual_revenue'] = $this->get_actual_revenue();
 		$this->set_enrollment_stats();
@@ -97,7 +97,12 @@ class Workshop extends WBHObject {
 
 	public function parse_online_url(?string $online_url) {
 		
-		if (!$online_url) { return array(); }
+		if (!$online_url) { 
+			return array(
+				'online_url_just_url' => null,
+				'online_url_the_rest' => null,
+				'online_url_display' => null); 
+		}
 	
 		preg_match('/^(\S+)\s*([\S\s]*)/', $online_url, $url_parts);
 		return array(
@@ -236,18 +241,19 @@ class Workshop extends WBHObject {
 	}
 
 
-	function set_teacher_pay() {
+	function set_costs() {
 	
 		$this->fields['teacher_pay'] = $this->get_teacher_pay_by_index($this->teacher);
 		$this->fields['co_teacher_pay'] = $this->get_teacher_pay_by_index($this->coteacher);
 		$this->fields['total_pay'] = $this->fields['teacher_pay'] + $this->fields['co_teacher_pay'];
 
-		//echo "pay for ({$wk['id']}) {$wk['title']}: {$wk['teacher_pay']} {$wk['co_teacher_pay']} {$wk['total_pay']}<br>\n";
-
 		if (!$this->fields['total_pay']) {
 			$this->fields['total_pay'] = ($this->fields['total_class_sessions'] * $this->teacher['default_rate']) +
 			($this->fields['total_show_sessions'] * ($this->teacher['default_rate'] / 2));
 		}
+
+		$ph = new PaymentsHelper();
+		$this->fields['total_costs'] = $ph->get_class_costs_total($this->fields['id']);
 	
 		return true;
 
@@ -270,16 +276,10 @@ class Workshop extends WBHObject {
 		$wid = $this->fields['id'];
 	
 		$sql = "select p.* 
-			from payrolls p
-			where p.task = 'workshop' and p.table_id = :id and p.user_id = :uid
-			UNION
-			select p.*
-			from payrolls p, xtra_sessions x
-			where p.task = 'class'
-			and p.table_id = x.id
-			and x.workshop_id = :id2 and p.user_id = :uid2";
+			from payments p
+			where p.title = '".TEACHERPAY."' and p.workshop_id = :id and p.user_id = :uid";
 
-		$stmt = \DB\pdo_query($sql, array(':id' => $wid, ':id2' => $wid, ':uid' => $uid, ':uid2' => $uid));
+		$stmt = \DB\pdo_query($sql, array(':id' => $wid, ':uid' => $uid));
 	
 		$pay = 0;
 		while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
@@ -459,7 +459,7 @@ class Workshop extends WBHObject {
 	function delete_workshop() {
 		$workshop_id = $this->fields['id'];
 
-		$stmt = \DB\pdo_query("delete from payrolls where table_id = :wid and task='workshop'", array(':wid' => $workshop_id));
+		$stmt = \DB\pdo_query("delete from payments where workshop_id = :wid", array(':wid' => $workshop_id));
 
 		/* $stmt = \DB\pdo_query("delete * 
 		from payrolls p
