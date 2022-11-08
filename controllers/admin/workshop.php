@@ -164,7 +164,9 @@ switch ($ac) {
 						$msg = null;
 					}
 				}
-			}		
+			}
+			$wk->fields['actual_revenue'] = $wk->get_actual_revenue();
+						
 		}
 		break;
 		

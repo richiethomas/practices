@@ -44,10 +44,10 @@ $pages = array(
 		'community',
 		"Being a part of the WGIS community"),
 		
-	"teams" => array(
-		'teams',
-		'teams',
-		'WGIS house teams'),
+	"shows" => array(
+		'shows',
+		'shows',
+		'WGIS in-person shows'),
 		
 	"privacy" => array(
 		'about/privacy',
@@ -65,9 +65,9 @@ foreach ($pages as $p => $pinfo) {
 //
 $synonyms = array(
 	'jams' => 'community',
-	'shows' => 'community',
 	'merch' => 'community',
-	'news' => 'community'
+	'news' => 'community',
+	'teams' => 'shows'
 );
 foreach ($synonyms as $sk => $sv) {
 	if ($params[0] == $sk) {

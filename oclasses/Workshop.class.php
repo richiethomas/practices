@@ -461,16 +461,9 @@ class Workshop extends WBHObject {
 
 		$stmt = \DB\pdo_query("delete from payments where workshop_id = :wid", array(':wid' => $workshop_id));
 
-		/* $stmt = \DB\pdo_query("delete * 
-		from payrolls p
-		INNER JOIN xtra_sessions x on x.id = p.table_id
-		where p.task = 'xtra'
-		and x.workshop id = :wid", array(':wid' => $workshop_id)); */
-
 		$stmt = \DB\pdo_query("delete from registrations where workshop_id = :wid", array(':wid' => $workshop_id));
 		$stmt = \DB\pdo_query("delete from xtra_sessions where workshop_id = :wid", array(':wid' => $workshop_id));
 		$stmt = \DB\pdo_query("delete from workshops where id = :wid", array(':wid' => $workshop_id));
-
 
 	}	
 

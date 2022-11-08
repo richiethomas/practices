@@ -51,10 +51,15 @@ switch ($ac) {
 }
 
 
-// search defaults to last week
-if (!$searchstart && !$searchend) {
-	$searchend = 'last Friday';
-	$searchstart = '-6 days '.date('Y-m-d', strtotime($searchend));
+// search defaults to from last paydate
+if (!$searchend) { $searchend = 'today'; }
+if (!$searchstart) { 
+	$searchstart = $ph->get_most_recent_paydate(); 
+	
+	// a week ago or last paydate, which ever is older
+	if (strtotime($searchstart) > strtotime('7 days ago')) { 
+		$searchstart = '7 days ago';
+	}
 }
 
 if ($searchstart) { $searchstart = date('Y-m-d', strtotime($searchstart)); }

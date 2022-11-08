@@ -109,7 +109,7 @@ function get_nav_items(){
 		array('title' => "Merch", "href" => "/community#merch"),
 		
 	));
-	$nav_items[] = array('title' => "Teams", "href" => "/teams");
+	$nav_items[] = array('title' => "Shows", "href" => "/shows");
 	return $nav_items;
 }
 

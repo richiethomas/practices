@@ -26,7 +26,7 @@
 
 <?php
 
-$weeknav = "<p><a href='/admin-payment/view/?searchstart=$lastweekstart&searchend=$lastweekend'>last week</a> | <a href='/admin-payment/view/'>this week</a> | <a href='/admin-payment/view/?searchstart=$nextweekstart&searchend=$nextweekend'>next week</a></p>\n";
+$weeknav = "<p><a href='/admin-payments/view/?searchstart=$lastweekstart&searchend=$lastweekend'>last week</a> | <a href='/admin-payments/view/'>this week</a> | <a href='/admin-payments/view/?searchstart=$nextweekstart&searchend=$nextweekend'>next week</a></p>\n";
 echo $weeknav;
 
 // list payroll items with delete button
@@ -193,7 +193,7 @@ echo "<h2 class='mt-4'>Add New Payment</h2>\n";
 
 include 'assets/ajax/search_box.php';
 echo "
-<form action='/admin-payment/addsingle' method='post'>	
+<form action='/admin-payments/addsingle' method='post'>	
 <table class='table'>
 	<tr>
 		<td>Who</td>
@@ -219,11 +219,36 @@ echo "
 </table>
 ".\Wbhkit\hidden('searchstart', $searchstart).
 \Wbhkit\hidden('searchend', $searchend)."
-</form>
-	
-";
+</form>";
 	
 echo "\n";	
+
+echo "<h2>Compact List</h2>
+	<table class='table table-sm'>
+	<tr>
+		<th>When Paid</th>
+		<th>Who</th>
+		<th>What</th>
+		<th>How Much</th>
+		<th>Class?</th>
+	</tr>\n";
+
+foreach ($payments as $p) {
+
+	if ($p->fields['workshop_id']) {
+		$class = $p->wk->fields['title'].' ('.\Wbhkit\figure_year_minutes(strtotime($p->wk->fields['start'])).')';
+	} else {
+		$class = '';
+	}	
 	
+	echo "<tr>
+			<td>{$p->fields['when_paid']}</td>
+			<td>{$p->fields['user_name']}</td>
+			<td>{$p->fields['title']}</td>
+			<td>{$p->fields['amount']}</td>
+			<td>$class</td>
+		</tr>\n";
+}
+echo "</table>\n";	
 	
 ?>

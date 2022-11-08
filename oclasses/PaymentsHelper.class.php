@@ -23,7 +23,7 @@ class PaymentsHelper extends WBHObject {
 
 		$stmt = \DB\pdo_query("select p.* from payments p, users u
 			where (
-				(p.when_paid > :start and p.when_paid < :end) or (p.when_happened >= :start2 and p.when_happened <= :end2)
+				(p.when_paid >= :start and p.when_paid <= :end) or (p.when_happened >= :start2 and p.when_happened <= :end2)
 		)
 		and p.user_id = u.id
 		order by p.when_paid, u.display_name, u.email", 
@@ -51,7 +51,7 @@ class PaymentsHelper extends WBHObject {
 		$stmt = \DB\pdo_query("
 	select '".TEACHERPAY."' as title, w.id as workshop_id, t.user_id, t.default_rate as amount, w.start as when_happened, null as when_paid
 	from workshops w, teachers t, users u
-	where w.start >= :start1 and w.start <= :end1
+	where date(w.start) >= :start1 and date(w.start) <= :end1
 	and (w.teacher_id = t.id or w.co_teacher_id = t.id)
 	and t.user_id = u.id
 	order by u.display_name, u.email, start asc",
@@ -123,6 +123,14 @@ class PaymentsHelper extends WBHObject {
 		return $total;
 	}
 
+	function get_most_recent_paydate() {
+		$stmt = \DB\pdo_query("select when_paid from payments order by when_paid desc limit 1"); 	
+	
+		while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
+			return $row['when_paid'];
+		}
+		return false;
+	}
 
 	
 }
