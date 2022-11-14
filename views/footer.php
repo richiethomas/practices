@@ -19,7 +19,7 @@
 		Send questions to - <a href="mailto:classes@wgimprovschool.com">classes@wgimprovschool.com</a> | <a href="/privacy">Privacy Policy</a>
 		</div>
 		<div class="col-lg-5 col-sm-12">
-		Site uses: <a href="http://www.php.net/">PHP</a> / <a href="http://www.mysql.com/">MySQL</a> / <a href="http://www.getbootstrap.com/">Bootstrap</a> / <a href="http://useiconic.com/open">Open Iconic</a>
+		Site uses: <a href="http://www.php.net/">PHP</a> / <a href="http://www.mysql.com/">MySQL</a> / <a href="http://www.getbootstrap.com/">Bootstrap</a> / <a href="https://icons.getbootstrap.com/">Bootstrap Icons</a>
 		</div>
 	</div>
 </div></footer>

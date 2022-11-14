@@ -1,4 +1,5 @@
-<h1 class="page-title mb-5">Shows</h1>
+<h1 class="page-title">Shows</h1>
+<p>Click to jump down to the <a href='#teams'>list of Harold team shows</a></p>
  
 <!--img class="float-end mx-3" src='images/teams.png' alt='WGIS teams'-->
 
@@ -36,10 +37,12 @@
 <h3>Clubhouse Fridays</h3>
 
 <table class='table'>
-	<caption>7pm showtime, door code 0279#</caption>
 	<tr>
 		<td><img src='images/live_cf_jump.jpg' alt='Clubhouse Fridays jump'></td>
-		<td><img src="images/clubhouselocation.png" class="figure-img img-fluid rounded" alt="Clubhouse Location"></td>
+		<td>	
+			<img src="images/clubhouselocation.png" class="figure-img img-fluid rounded" alt="Clubhouse Location">
+			<p class='text-muted small'>7pm showtime, door code 0279#</p></td>
+
 	</tr>
 </table>
 
@@ -48,6 +51,7 @@
 
 <p>The Clubhouse is a community improv black box theater. It's at 1607 N. Vermont Ave in a shopping center. There's a door code required which is 0279#. See above photo for the kinda hidden entrance! We're in the downstairs (main) stage.</p>
 
+<a id='teams'></a>
 <h2>Fall/Winter 2022 Teams Schedule</h2>
 
 

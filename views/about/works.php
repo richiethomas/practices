@@ -4,7 +4,7 @@
 
 <h2>How Does It Work?</h2>
 
-<p>You enroll in classes on this site. You'll get an email with a zoom link. You pay with Venmo or Paypal. At class time, you log on and learn improv (or sometimes sketch).</p>
+<p>You enroll in classes on this site. When you do, you'll get an email with either the physical address if it's an in-person class, or a zoom link if it's an online class.</p>
 
 <h2>How Do I Enroll?</h2>
 
@@ -12,13 +12,13 @@
 
 <p>Once signed in, you click on a class and then "enroll" to enroll. If it's full you can join the waiting list.</p>
 
-<p>All classes happen via Zoom. After you are enrolled, you'll get an email with a link to a Zoom session.</p>
+<p>After you are enrolled, you'll get an email with either a physical address or a link to a Zoom session.</p>
 
 <p>A lot happens over email. That's how you'll get reminders, updates, etc.</p>
 
 <h2>What Classes Do You Offer?</h2>
 
-<p>There is currently no fixed catalog of classes. We have a small roster of great teachers, and they offer classes they think are interesting. It rotates about every 2 months.</p>
+<p>We have a four level program of teaching premise-based, game of the scene long-form improv. We offer those classes online also, and there's also a rotating set of classes for advanced students, kind of like an informal online grad school. </p>
 
 <h2>How Can I Find Out When You Post More Classes?</h2>
 
