@@ -137,7 +137,7 @@ document.addEventListener('DOMContentLoaded', () => {
       <div class="col-lg-6">
 		<figure class="figure">
 		  <a href="/teams"><img src="images/live_cf_jump.jpg" class="figure-img img-fluid rounded" alt="Improv Shenanigans"></a>
-		  <figcaption class="figure-caption text-end">Clubhouse Fridays</figcaption>
+		  <figcaption class="figure-caption text-end">Clubhouse Fridays / photo by Andrew Sproge</figcaption>
 		</figure>
       </div>
       <div class="col-lg-6">
@@ -162,7 +162,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	  
     <div class="row row-cols-1 row-cols-lg-3 align-items-stretch g-4 py-5">
       <div class="col">
-        <div class="card card-cover h-100 overflow-hidden text-bg-dark rounded-4 shadow-lg" style="background-image: url('images/live_aj.jpg');">
+        <div class="card card-cover h-100 overflow-hidden text-bg-dark rounded-4 shadow-lg" style="background-image: url('images/live_aj2.jpg');">
           <div class="d-flex flex-column h-100 p-5 pb-3 text-white text-shadow-1">
             <h3 class="pt-5 mt-5 mb-4 display-6 lh-1 fw-bold"><a href='/shows#fridays' class='link-light text-decoration-none'>Club House Fridays</a></h3>
 			<h4>2 house teams + teacher set</h4>
@@ -181,7 +181,7 @@ document.addEventListener('DOMContentLoaded', () => {
       </div>
 
       <div class="col">
-        <div class="card card-cover h-100 overflow-hidden text-bg-dark rounded-4 shadow-lg" style="background-image: url('images/live_playbyplay.jpg');">
+        <div class="card card-cover h-100 overflow-hidden text-bg-dark rounded-4 shadow-lg" style="background-image: url('images/live_playbyplay2.jpg');">
           <div class="d-flex flex-column h-100 p-5 pb-3 text-white text-shadow-1">
             <h3 class="pt-5 mt-5 mb-4 display-6 lh-1 fw-bold"><a href='/shows#tuesdays' class='link-light text-decoration-none'>Broad Water Tuesdays</a></h3>
 			<h4>Teams, Tourneys, Jams</h4>
