@@ -46,7 +46,7 @@ function class_row(Workshop $wk) {
 			// enroll button
 			$html .= "<div class='col-sm-2'>";
 			if ($wk->fields['soldout']) { 
-				$html .= '<span class="text-danger">Sold Out!</span> <a class="btn btn-outline-primary" href="/workshop/view/'.$wk->fields['id'].'" role="button">Wait List</a>';
+				$html .= '<span class="text-danger">Sold Out!</span> <a class="btn btn-outline-primary" href="/workshop/view/'.$wk->fields['id'].'" role="button">Join Wait List</a>';
 			} elseif ($wk->fields['application']) { 
 				$html .= '<a class="btn btn-primary" href="/workshop/view/'.$wk->fields['id'].'" role="button">Apply</a>';
 			} else { 
@@ -136,7 +136,7 @@ document.addEventListener('DOMContentLoaded', () => {
     <div class="row flex-lg-row-reverse align-items-center g-5 py-5">
       <div class="col-lg-6">
 		<figure class="figure">
-		  <a href="/teams"><img src="images/live_cf_jump.jpg" class="figure-img img-fluid rounded" alt="Improv Shenanigans"></a>
+		  <a href="/teams"><img src="/images/live_cf_jump.jpg" class="figure-img img-fluid rounded" alt="Improv Shenanigans"></a>
 		  <figcaption class="figure-caption text-end">Clubhouse Fridays / photo by Andrew Sproge</figcaption>
 		</figure>
       </div>
@@ -162,7 +162,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	  
     <div class="row row-cols-1 row-cols-lg-3 align-items-stretch g-4 py-5">
       <div class="col">
-        <div class="card card-cover h-100 overflow-hidden text-bg-dark rounded-4 shadow-lg" style="background-image: url('images/live_aj2.jpg');">
+        <div class="card card-cover h-100 overflow-hidden text-bg-dark rounded-4 shadow-lg" style="background-image: url('/images/live_aj2.jpg');">
           <div class="d-flex flex-column h-100 p-5 pb-3 text-white text-shadow-1">
             <h3 class="pt-5 mt-5 mb-4 display-6 lh-1 fw-bold"><a href='/shows#fridays' class='link-light text-decoration-none'>Club House Fridays</a></h3>
 			<h4>2 house teams + teacher set</h4>
@@ -181,7 +181,7 @@ document.addEventListener('DOMContentLoaded', () => {
       </div>
 
       <div class="col">
-        <div class="card card-cover h-100 overflow-hidden text-bg-dark rounded-4 shadow-lg" style="background-image: url('images/live_playbyplay2.jpg');">
+        <div class="card card-cover h-100 overflow-hidden text-bg-dark rounded-4 shadow-lg" style="background-image: url('/images/live_playbyplay2.jpg');">
           <div class="d-flex flex-column h-100 p-5 pb-3 text-white text-shadow-1">
             <h3 class="pt-5 mt-5 mb-4 display-6 lh-1 fw-bold"><a href='/shows#tuesdays' class='link-light text-decoration-none'>Broad Water Tuesdays</a></h3>
 			<h4>Teams, Tourneys, Jams</h4>
@@ -200,7 +200,7 @@ document.addEventListener('DOMContentLoaded', () => {
       </div>
 
       <div class="col">
-        <div class="card card-cover h-100 overflow-hidden text-bg-dark rounded-4 shadow-lg" style="background-image: url('images/cf_partyhorses.png');">
+        <div class="card card-cover h-100 overflow-hidden text-bg-dark rounded-4 shadow-lg" style="background-image: url('/images/cf_partyhorses.png');">
           <div class="d-flex flex-column h-100 p-5 pb-3 text-shadow-1">
             <h3 class="pt-5 mt-5 mb-4 display-6 lh-1 fw-bold"><a href='/shows#teams' class='link-light text-decoration-none'>House Teams</a></h3>
 			<h4>Every Friday</h4>

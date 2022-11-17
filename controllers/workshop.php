@@ -100,15 +100,23 @@ if ($wk->is_public()) {
 }
 
 if (isset($wk->fields['id']) && $wk->fields['id']) {
-		
-	$view->data['e'] = $e;
-	$view->data['show_other_action'] = $show_other_action;
-	$view->data['admin'] = 0;
 	
-	$view->data['heading'] = $view->data['fb_title'] = $wk->fields['title'];
-	$view->data['fb_image'] = "http://{$_SERVER['HTTP_HOST']}".Teachers\get_teacher_photo_src($wk->teacher['user_id']);
-	$view->data['fb_description'] = $wk->fields['notes'];
-	$view->renderPage('winfo');
+	if ($wk->fields['hidden'] && !$u->check_user_level(2)) {
+		$view->data['error_message'] = "<h1>Hidden Class</h1><p>This class exists but is currently HIDDEN. Probably means the schedule is still being confirmed with the teacher.</p>\n";
+		$view->renderPage('error');
+		
+	} else {
+		
+		$view->data['e'] = $e;
+		$view->data['show_other_action'] = $show_other_action;
+		$view->data['admin'] = 0;
+	
+		$view->data['heading'] = $view->data['fb_title'] = $wk->fields['title'];
+		$view->data['fb_image'] = "http://{$_SERVER['HTTP_HOST']}".Teachers\get_teacher_photo_src($wk->teacher['user_id']);
+		$view->data['fb_description'] = $wk->fields['notes'];
+		$view->renderPage('workshop');		
+	}
+
 } else {
 	$view->data['error_message'] = "<h1>Whoops!</h1><p>You are asking to look at info about a workshop, but I (the computer) cannot tell which workshop you mean. Sorry!</p>\n";
 	$view->renderPage('error');

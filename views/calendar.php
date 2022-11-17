@@ -21,7 +21,11 @@ foreach ($workshops as $wk) {
 	$start = Wbhkit\friendly_time($wk['start_tz']);
 	$end = Wbhkit\friendly_time($wk['end_tz']);
 	
-	echo "<div class='row mt-2'><div class='col-md-6'><a href='/workshop/view/{$wk['id']}'>{$wk['title']}</a> ({$wk['rank']} of {$wk['total_sessions']}) ".($wk['class_show'] ? ' - show' : '')."</div>
+	echo "<div class='row mt-2'><div class='col-md-6'>".
+		
+		(strpos($wk['tags'], 'inperson') !== false ? 'In person: ' : '').
+			
+		"<a href='/workshop/view/{$wk['id']}'>{$wk['title']}</a> ({$wk['rank']} of {$wk['total_sessions']}) ".($wk['class_show'] ? ' - show' : '')."</div>
 	<div class='col-md-2'>$start-$end</div>
 	<div class='col-md-4'><a href='/teachers/view/{$wk['teacher_id']}'>{$wk['teacher']['nice_name']}</a>";
 	
