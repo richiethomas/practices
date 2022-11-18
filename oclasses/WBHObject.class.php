@@ -86,12 +86,17 @@ class WBHObject
 		$this->finish_setup();
 		
 		$params = $this->make_params();
+		//print_r($params);
 		
 		//insert or update
 		if ($this->fields['id']) {
 			$params[':id'] = $this->fields['id'];
-			//echo "update {$this->tablename} set ".$this->get_update_sql($this->cols)." where id = :id";
-			$stmt = \DB\pdo_query("update {$this->tablename} set ".$this->get_update_sql($this->cols)." where id = :id", $params);
+			
+			$sql = "update {$this->tablename} set ".$this->get_update_sql($this->cols)." where id = :id";
+			//echo $sql."<br>\n";
+			//echo "query will be: ".\DB\interpolateQuery($sql, $params)."<br>\n";
+			
+			$stmt = \DB\pdo_query($sql, $params);
 			return true;
 		} else {
 			$query = "insert into {$this->tablename} ".$this->get_insert_sql($this->cols);
@@ -109,7 +114,10 @@ class WBHObject
 					$stmt->bindValue(":{$f}", null, PDO::PARAM_INT);
 				}
 			}
-			$stmt->execute();
+			if (!$stmt->execute()) {
+				$this->error = $stmt->error;
+				return false;
+			}
 			$this->fields['id'] = $db->lastInsertId();
 			return true;	
 		}

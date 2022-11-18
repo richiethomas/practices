@@ -39,18 +39,13 @@ window.onload = function() {
 <div class='row'><div class='col-sm-6'>
 
 <div class='card my-5 bg-light'><div class='card-body'>
-<h3>Change Time Zone</h3>
-<?php echo $userhelper->edit_time_zone($guest); ?>
+<h3>Update Public Attributes</h3>
+<?php echo $userhelper->edit_public_attributes($guest); ?>
 </div></div> <!-- end of card -->
 
 <div class='card my-5 bg-light'><div class='card-body'>
 <h3 class="my-3">Change Email</h3>
 <?php echo $userhelper->edit_change_email($guest); ?>
-</div></div> <!-- end of card -->
-
-<div class='card my-5 bg-light'><div class='card-body'>
-<h3 class="my-3">Display Name</h3>
-<?php echo $userhelper->edit_display_name($guest); ?>
 </div></div> <!-- end of card -->
 
 <?php if ($u->check_user_level(3)) { ?>

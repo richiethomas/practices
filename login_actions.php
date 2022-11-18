@@ -110,31 +110,25 @@ switch ($ac) {
 		break;
 
 
-	// update display name
-	case 'updatedn':
-		Wbhkit\set_vars(array('display_name'));
-	
+	case 'updateuser':
 		if (!$u->logged_in()) {
-			$error = 'You are not logged in! You have to be logged in to update your display name.';
+			$error = 'You are not logged in! You have to be logged in to update your user profile.';
 			break;
 		}
-		$message = "Changing display name to '$display_name' from '{$u->fields['display_name']}'";
-		$u->update_display_name($display_name);		
-		break;		
+		Wbhkit\set_vars(array('display_name', 'time_zone', 'opt_out'));
+		if (!$opt_out) { $opt_out = 0; }
+		$u->fields['display_name'] = $display_name;
+		$u->fields['time_zone'] = $time_zone;
+		$u->fields['opt_out'] = $opt_out;
 
-	case 'updatetz':
-		Wbhkit\set_vars(array('time_zone'));
-	
-		if (!$u->logged_in()) {
-			$error = 'You are not logged in! You have to be logged in to update your display name.';
-			break;
+		if ($u->save_data()) {
+			$message = "Updated your user profile! Thank you!";
+		} else {
+			$error = "Could not update user profile. Who knows why? Maybe this: ".$u->error;
 		}
-		$message = "Changing time zone to '$time_zone' for '{$u->fields['email']}'";
-		$u->update_time_zone($time_zone);		
-		break;		
-			
-
-
+		break;
+		
+		
 	case 'concemail':
 		if (!$u->logged_in()) {
 			$error = 'You are not logged in! You have to be logged in to change your email.';

@@ -1,5 +1,7 @@
 <div class='row'><div class='col-md-6'><h2>get emails</h2>
 <div class='well'><form action ='/admin-emails/gemail' method='post'>
+	
+<?php echo 	Wbhkit\checkbox('opt_outs', 1, 'include opt outs (evil)'); ?>
 <?php echo 	Wbhkit\multi_drop('workshops', $all_workshops, $workshops, 'Workshops  (--- means in person)', 15); ?>
 <?php echo  Wbhkit\submit('get emails'); ?>
 </form></div>

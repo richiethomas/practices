@@ -1,7 +1,7 @@
 <?php
 $view->data['heading'] = "get emails";
 
-Wbhkit\set_vars(array('workshops'));
+Wbhkit\set_vars(array('workshops', 'opt_outs'));
 $results = null;
 
 $all_workshops = get_workshops_dropdown();
@@ -22,6 +22,8 @@ if (is_array($workshops)) {
 			if ($workshop_id) {
 				$stds = $eh->get_students($workshop_id, $stid);
 				foreach ($stds as $as) {		
+					
+					if ($as['opt_out'] && !$opt_outs) { continue; } // if they opted out and we're not including opt outs - skip
 					
 					// track students by status		
 					$student_emails[] = $as['email'];
@@ -48,7 +50,7 @@ $view->renderPage('admin/gemail');
 
 function get_workshops_dropdown(?string $start = null, ?string $end = null) {
 
-	$stmt = \DB\pdo_query("select w.* from workshops w order by start desc");
+	$stmt = \DB\pdo_query("select w.* from workshops w where w.start >= '2020-03-01' order by start desc");
 	$workshops = array();
 	$wk = new Workshop();
 	while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {

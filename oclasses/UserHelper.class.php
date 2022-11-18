@@ -50,7 +50,7 @@ class UserHelper extends WBHObject {
 
 	function edit_display_name(User $u) {
 		$body = '';
-		$body .= "<form action='{$this->sc}/updatedn/{$u->fields['id']}' method='post'>\n";
+		$body .= "<form action='{$this->sc}/updateuser/{$u->fields['id']}' method='post'>\n";
 		$body .= \Wbhkit\texty('display_name', $u->fields['display_name'], 'Real name', 'Jane Doe', 'first and last human being name');
 		$body .= \Wbhkit\submit('Update Real Name');
 		$body .= "</form>\n";
@@ -58,18 +58,20 @@ class UserHelper extends WBHObject {
 		return $body;
 	}
 
-	function edit_time_zone(User $u) {
+	function edit_public_attributes(User $u) {
 		if (!$u->fields['time_zone']) { $u->fields['time_zone'] = DEFAULT_TIME_ZONE; }
+		
 		$body = '';
-		$body .= "<form action='{$this->sc}/updatetz/{$u->fields['id']}' method='post'>\n";
+		$body .= "<form action='{$this->sc}/updateuser/{$u->fields['id']}' method='post'>\n";
 		$body .= \Wbhkit\drop('time_zone', \Wbhkit\get_time_zones(), $u->fields['time_zone']);
-		$body .= \Wbhkit\submit('Set Time Zone');
+		$body .= \Wbhkit\texty('display_name', $u->fields['display_name'], 'Real name', 'Jane Doe', 'first and last human being name');
+		$body .= \Wbhkit\checkbox('opt_out', 1, 'Opt out of emails', $u->fields['opt_out'])."<br>\n";
+		$body .= \Wbhkit\submit('Update Profile');
 		$body .= "</form>\n";
 		return $body;
+		
+		
 	}
-
-
-
 
 	// user id is here for admin side 
 	// even though user side does not need it

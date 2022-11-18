@@ -122,7 +122,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 <?php if ($u->logged_in() && !$u->fields['display_name']) { ?>	
 		<div class="alert alert-info" role="alert">
-		<p>First and last name, as you like to be called</p>
+		<p>Please enter your first and last name:</p>
 	<?php echo $userhelper->edit_display_name($u); ?>
 		</div>
 <?php 		}  ?>	

@@ -6,8 +6,10 @@ class User extends WBHObject {
 	
 	function __construct() {		
 		parent::__construct(); // load logger, lookups
+		
+		$this->tablename = 'users';
 						
-		$fields = array(
+		$this->fields = array(
 			'id' => null,
 			'email' => null,
 			'display_name' => null,
@@ -16,14 +18,13 @@ class User extends WBHObject {
 			'temp_ukey' => null,
 			'group_id' => null,
 			'joined' => null,
-			'nice_name' => null,
-			'fullest_name' => null,
 			'time_zone' => null,
-			'time_zone_friendly' => null
+			'opt_out' => 0
 			);
-			
-		$this->set_into_fields($fields);
-		$this->set_time_zone();
+		
+		$this->cols = $this->fields;
+		$this->set_into_fields($this->fields);
+		$this->finish_setup();
 	}
 
 	public function set_time_zone() {
@@ -63,7 +64,7 @@ class User extends WBHObject {
 			//echo "about to create user $email<br>";
 			$stmt = \DB\pdo_query("insert into users (email, joined, time_zone) VALUES (:email, :joined, :tz)", array(':email' => $email, ':joined' => date(MYSQL_FORMAT), ':tz' => DEFAULT_TIME_ZONE));
 			
-			$stmt = \DB\pdo_query("select id from users where email = :email", array(":email" => $email));
+			$stmt = \DB\pdo_query("select * from users where email = :email", array(":email" => $email));
 			while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
 				$last_insert_id = $row['id'];
 				$this->set_into_fields($row);
@@ -275,39 +276,14 @@ class User extends WBHObject {
 		exit();
 		return false;		
 	}	
-	
-	
-	function update_time_zone(string $time_zone = "America/Los_Angeles") {
-		// update user info
-		$stmt = \DB\pdo_query("update users set time_zone = :time_zone where id = :uid", 
-			array(
-				':time_zone' => $time_zone, 
-				':uid' => $this->fields['id'])
-		);
-		$this->fields['time_zone'] = $time_zone;
-		$this->set_time_zone_friendly();
-		return true;
-	}
-
-	function update_display_name(string $display_name) {
 		
-		// update user info
-		$stmt = \DB\pdo_query("update users set display_name = :display_name where id = :uid", 
-			array(
-				':display_name' => $display_name, 
-				':uid' => $this->fields['id'])
-		);
-		$this->fields['display_name'] = $display_name;
-		$this->finish_setup();
-		return true;
-
-	}
 
 	function update_group_level(int $glevel) {
 
 		if ($this->fields['id'] == 1) { return false; } // no changing user 1 (will's) level -- go directly to DB for that
 
 		$this->fields['group_id'] = $glevel;
+		
 		$stmt = \DB\pdo_query("update users set group_id = :gid where id = :uid", array(':gid' => $glevel, ':uid' => $this->fields['id']));
 		return true;
 	}	

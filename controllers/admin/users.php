@@ -26,14 +26,22 @@ $close_transcript = false;
 switch ($ac) {
 	
 	
-	case 'updatetz':
-		Wbhkit\set_vars(array('time_zone'));
-		$guest->update_time_zone($time_zone);
-		$message = "Changing time zone to '$time_zone' for '{$guest->fields['email']}'";
+	case 'updateuser':
+	
+		Wbhkit\set_vars(array('display_name', 'time_zone', 'opt_out'));
+		if (!$opt_out) { $opt_out = 0; }
+		$guest->fields['display_name'] = $display_name;
+		$guest->fields['time_zone'] = $time_zone;
+		$guest->fields['opt_out'] = $opt_out;
+
+		if ($guest->save_data()) {
+			$message = "Updated that user profile! Thank you!";
+		} else {
+			$error = "Could not update user profile. Who knows why? Maybe this: ".$guest->error;
+		}
 		$close_transcript = true;
 		break;
-		
-
+	
 	case 'updategroup':
 		if ($u->check_user_level(3)) {	
 			$guest->update_group_level($group_id);
@@ -59,14 +67,6 @@ switch ($ac) {
 			$error = $guest->error;
 		}
 		break;
-
-
-		// update display name
-	case 'updatedn':
-		$guest->update_display_name($display_name);
-		$message = "Changing display name to '$display_name' for '{$guest->fields['email']}'";
-		$close_transcript = true;
-		break;	
 		
  	case 'cemail':
 		if ($guest->logged_in()) {
