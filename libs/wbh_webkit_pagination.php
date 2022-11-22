@@ -29,7 +29,7 @@ class Paginator {
 
 	}
 
-	public function getData( $page = 1, $limit = 100) {
+	public function getData( $page = 1, $limit = 40) {
 
 		if (!$limit) { $limit = 100; }
 		if (!$page) { $page = 1; }

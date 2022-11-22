@@ -5,8 +5,6 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 	<title>Admin</title>
-	<!-- Bootstrap core CSS -->
-
 
 <!-- Bootstrap core CSS -->	
 <link href="/assets/bootstrap-icons.css" rel="stylesheet">
@@ -17,59 +15,36 @@
 	 	
 
 	<!-- Custom styles for this template -->
-	<link href="/assets/admin.css" rel="stylesheet">
+	<link href="/assets/admin2.css" rel="stylesheet">
 
-<style>	
-	table th.workshop-name {
-		width: 300px;
-	}
-
-
-	.workshop-info { background-color: #bee5eb; }
-	.workshop-danger { background-color: #f5c6cb; }
-	.workshop-success { background-color: #c3e6cb; }
-	.workshop-light { background-color: #fdfdfe; }
-
-
-	div.admin-edit-workshop h2,
-	div.admin-edit-workshop h3,
-	div.admin-edit-workshop h4
-	{
-		margin-top: 2rem;
-	}
-
-
-	li.show {
-		font-weight: bold;
-		font-style: italic;
-	}
-</style>
 	
  </head>
-  <body class="admin d-flex align-content-stretch align-items-stretch">
-	  
-  <header>
-	<nav class="navbar p-0">
-		<a class="navbar-brand" href="/admin"><span>World's Greatest Improv School</span></a>
+  <body class="admin">
+ 
+ <header>
+ <nav class="navbar navbar-expand-md navbar-dark bg-dark" aria-label="WGIS Admin Navbar">
+   <div class="container-fluid">
+	 <a class="navbar-brand" href="/admin"><img src='/images/logo_white_blue_bg.png' alt='WGIS admin navbar' width='75'></a>
+     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#wgis_admin_nav" aria-controls="wgis_admin_nav" aria-expanded="false" aria-label="Toggle navigation">
+       <span class="navbar-toggler-icon"></span>
+     </button>
+     <div class="collapse navbar-collapse" id="wgis_admin_nav">
 		<ul class="nav">
-			<li class="nav-item"><a class="nav-link active" href="/admin">Dashboard</a></li>
-			<li class="nav-item"><hr/></li>
+			<li class="nav-item"><a class="nav-link" href="/admin">Dashboard</a></li>
 			<li class="nav-item"><a class="nav-link" href="/admin-archives">Classes</a></li>
-			<li class="nav-item"><a class="nav-link" href="/admin-shows">Shows</a></li>
-			<li class="nav-item"><a class="nav-link" href="/admin-teachers">Teachers</a></li>
-			<li class="nav-item"><a class="nav-link" href="/admin-search">Students</a> </li>
-			<li class="nav-item"><a class="nav-link" href="/admin-emails">Emails</a> </li>
-			<li class="nav-item"><a class="nav-link" href="/admin-bulk-workshops">Bulk Edit</a> </li>
-			<li class="nav-item"><a class="nav-link" href="/admin-tasks">Tasks</a></li>
-
-<?php if ($u->check_user_level(3)) { ?>
-			<li><hr/></li>
-			<li class="nav-item"><a class="nav-link" href="/admin-registrations">Registrations</a></li>
-			<li class="nav-item"><a class="nav-link" href="/admin-payments">Payments</a></li>
-			<li class="nav-item"><a class="nav-link" href="/admin-revbyclass">Rev By Class</a></li>
-			<li class="nav-item"><a class="nav-link" href="/admin-revbydate">Rev By Date</a></li>
-			<li class="nav-item"><a class="nav-link" href="/admin-reminders">Reminders</a></li>
-			<li class="nav-item"><a class="nav-link" href="/admin-conflicts">Conflicts</a> </li>
+			<li class="nav-item"><a class="nav-link" href="/admin-search">Students</a></li>
+			<li class="nav-item"><a class="nav-link" href="/admin-teachers">Teachers</a></li>			
+		    <li class="nav-item dropdown">
+		      <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Tools</a>
+		      <div class="dropdown-menu nav-item">
+		        <a class="dropdown-item nav-link" href="/admin-emails">Get Emails</a>
+		        <a class="dropdown-item nav-link" href="/admin-reminders">Force Reminders</a>
+		        <a class="dropdown-item nav-link" href="/admin-tasks">Assign Tasks</a>
+		        <a class="dropdown-item nav-link" href="/admin-bulk-workshops">Bulk Edit Classes</a>
+		        <a class="dropdown-item nav-link" href="/admin-conflicts">Check Conflicts</a>
+		        <a class="dropdown-item nav-link" href="/admin-shows">List Shows</a>
+		      </div>
+		    </li>
 		    <li class="nav-item dropdown">
 		      <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Logs</a>
 		      <div class="dropdown-menu nav-item">
@@ -80,18 +55,27 @@
 		      </div>
 		    </li>
 
+<?php if ($u->check_user_level(3)) { ?>
+		    <li class="nav-item dropdown">
+		      <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Money</a>
+		      <div class="dropdown-menu nav-item">
+		        <a class="dropdown-item nav-link" href="/admin-registrations">Registrations</a>
+		        <a class="dropdown-item nav-link" href="/admin-payments">Payments</a>
+		        <a class="dropdown-item nav-link" href="/admin-revbyclass">Rev By Class</a>
+		        <a class="dropdown-item nav-link" href="/admin-revbydate">Rev By Date</a>
+		      </div>
+		    </li>
 
 <?php } ?>
-			<li><hr/></li>
 
-			<li class="nav-item user-item"><a class="nav-link d-flex align-items-center" href="/you"><i class='bi-person'></i> <?php echo $u->fields['nice_name']; ?></a></li>
-			<li><hr/></li>
 			<li class="nav-item back-to-website"><a class="nav-link" href="/" ><i class='bi-chevron-left'></i> To Website</a>
 		  </li>
 		</ul>
-	</nav>
-  </header>
-  
+     </div>
+   </div>
+ </nav>
+</header>
+
  <main class="p-4">
  
  
