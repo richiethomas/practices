@@ -107,31 +107,10 @@ nav li.nav-item .user-logged-in:hover img {
   color: var(--color-black);
 }
 
-.classes-listings-class {
-  line-height: 1.9375rem;
-}
-
-@media (min-width: 768px) {
-  .classes-listings-class {
-  }
-}
-
-.classes-listings-class p {
-  font-weight: 300;
-}
-
-
 /* Teacher  */
 
 .teacher-image {
   border-radius: 50%;
-}
-
-.teacher-label {
-  font-size: 0.7rem;
-  color: var(--color-dark-gray);
-  letter-spacing: 2.25px;
-  text-transform: uppercase;
 }
 
 /*Newsletter Signup*/
@@ -230,12 +209,6 @@ nav li.nav-item .user-logged-in:hover img {
   text-align: center;
 }
 
-.teacher-info .teacher-bio {
-  font-size: 0.81rem;
-  color: var(--color-black);
-  letter-spacing: -0.03px;
-  line-height: 2rem;
-}
 
 /* Single Page or Post */
 
