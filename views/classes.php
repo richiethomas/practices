@@ -1,23 +1,10 @@
 <h1 class="page-title">Classes</h1>
-<h5 class='mb-5'>compact view
-	<span class='text-muted'><small>(see <?php
-if ($mode == 'text') {
-	echo "<a href='/classes'>just regular compact</a>";
-} else {
-	echo "<a href='/classes/view/text'>very compact</a>";
-}
-?>
-)</small></span></h5>
-
 	<div class="row justify-content-center">
 		<div class="col-md-12">
 			
 <?php		
 
 echo "<div>Times shown in ({$u->fields['time_zone_friendly']})</div>";
-
-$ip_html = '';
-$ol_html = '';
 
 $ip_text = '';
 $ol_text = '';
@@ -30,41 +17,21 @@ foreach ($upcoming_workshops as $wk) {
 	
 	$wk = prep_wk($wk);
 	
-	$row_html = "<div class='row mt-4'>\n";
-	$row_html .= "<div class='col-md-4'><a href='/workshop/view/{$wk->fields['id']}'>{$wk->fields['title']}</a>";
-	
-	if ($wk->fields['soldout']) {
-		$row_html .= " - <span class='text-danger'>Sold Out</span>";
-	}
-	
-	
-	if ($u->check_user_level(2)) { 
-		$row_html .= "<br><span class='text-muted'><small>({$wk->fields['enrolled']} / {$wk->fields['capacity']})</small></span>\n";
-	}
-	
-	$row_html .= "</div>\n";
-	$row_html .= "<div class='col-md-3'>{$wk->fields['teacher_name']}</div>\n";
-	$row_html .= "<div class='col-md-2'>{$wk->fields['classpage_start']}</div>\n";
-
-	$row_html .= "<div class='col-md-3'>{$wk->fields['total_sessions']} ".($wk->fields['total_sessions'] == 1 ? 'session': 'sessions').", {$wk->fields['costdisplay']}</div>\n";
-	
-	$row_html .= "</div>\n";
-	
-	
-	// text view
-	$text_html = "<p class='m-1 p-0 fs-6 lh-base'><a class='text-decoration-none' href='/workshop/view/{$wk->fields['id']}'>{$wk->fields['title']}</a>, {$wk->fields['teacher_name']}, {$wk->fields['classpage_start']}, {$wk->fields['total_sessions']} ".($wk->fields['total_sessions'] == 1 ? 'week': 'weeks').", {$wk->fields['costdisplay']}".($wk->fields['soldout'] ? " - <span class='text-danger'>Sold Out</span>" : '');
+	$text_html = "<tr>
+		<td width='200'><a href='/workshop/view/{$wk->fields['id']}'>{$wk->fields['title']}</a></td>
+		<td width='210'>{$wk->fields['teacher_name']}</td>
+		<td width='300'>{$wk->fields['classpage_start']}, {$wk->fields['total_sessions']} ".($wk->fields['total_sessions'] == 1 ? 'week': 'weeks')."</td>
+		<td>{$wk->fields['costdisplay']}".($wk->fields['soldout'] ? " - <span class='text-danger'>Sold Out</span>" : '');
 	
 	if ($u->check_user_level(2)) { 
 		$text_html .= " <span class='text-muted'><small>({$wk->fields['enrolled']} / {$wk->fields['capacity']})</small></span>\n";
 	}
 	
-	$text_html .= "</p>\n";
+	$text_html .= "</td></tr>\n";
 	
 	if (in_array('inperson', $wk->fields['tags_array'])) {
-		$ip_html .= $row_html;
 		$ip_text .= $text_html;
 	} else {
-		$ol_html .= $row_html;
 		$ol_text .= $text_html;
 	}
 }	
@@ -106,15 +73,11 @@ foreach ($unavailable_workshops as $wk) {
 } 
 
 echo "<h2 class='my-3'>Open Online Classes</h2>\n";
-echo $mode == 'text' ?
-	($ol_text ? $ol_text : '<p>No multi-week courses coming up!</p>') :
-	($ol_html ? $ol_html : '<p>No multi-week courses coming up!</p>');
+echo $ol_text ? "<table class='table table-sm table-hover table-borderless'>".$ol_text."</table>" : '<p>No multi-week courses coming up!</p>';
 	
 
 echo "<h2 class='my-3'>Open In Person Los Angeles Classes</h2>\n";
-echo $mode == 'text' ?
-	($ip_text ? $ip_text : '<p>No multi-week courses coming up!</p>') :
-	($ip_html ? $ip_html : '<p>No multi-week courses coming up!</p>');
+echo $ip_text ? "<table class='table table-sm table-hover table-borderless'>".$ip_text."</table>" : '<p>No multi-week courses coming up!</p>';
 
 
 if ($upc_html) {

@@ -36,7 +36,7 @@ window.onload = function() {
 				$last_wk = null;
 				foreach ($unpaid as $up) {
 					if ($last_wk != $up['workshop_id']) {
-						if ($last_week) { echo "</ul></li>"; } // close last workshop list if there was one
+						if ($last_wk) { echo "</ul></li>"; } // close last workshop list if there was one
 						echo "<li><b><a href='/admin-workshop/view/{$up['workshop_id']}'>{$up['title']}</a> - ".date('D M j', strtotime($up['start']))." - {$up['cost']}</b><ul>\n";
 						$last_wk = $up['workshop_id'];
 					}

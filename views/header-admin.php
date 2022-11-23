@@ -22,7 +22,7 @@
   <body class="admin">
  
  <header>
- <nav class="navbar navbar-expand-md navbar-dark bg-dark" aria-label="WGIS Admin Navbar">
+ <nav class="navbar navbar-expand-md navbar-dark" aria-label="WGIS Admin Navbar">
    <div class="container-fluid">
 	 <a class="navbar-brand" href="/admin"><img src='/images/logo_white_blue_bg.png' alt='WGIS admin navbar' width='75'></a>
      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#wgis_admin_nav" aria-controls="wgis_admin_nav" aria-expanded="false" aria-label="Toggle navigation">
@@ -31,9 +31,14 @@
      <div class="collapse navbar-collapse" id="wgis_admin_nav">
 		<ul class="nav">
 			<li class="nav-item"><a class="nav-link" href="/admin">Dashboard</a></li>
-			<li class="nav-item"><a class="nav-link" href="/admin-archives">Classes</a></li>
-			<li class="nav-item"><a class="nav-link" href="/admin-search">Students</a></li>
-			<li class="nav-item"><a class="nav-link" href="/admin-teachers">Teachers</a></li>			
+		    <li class="nav-item dropdown">
+		      <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Things</a>
+		      <div class="dropdown-menu nav-item">
+		        <a class="dropdown-item nav-link" href="/admin-archives">Classes</a>
+		        <a class="dropdown-item nav-link" href="/admin-search">Students</a>
+		        <a class="dropdown-item nav-link" href="/admin-teachers">Teachers</a>
+		      </div>
+		    </li>
 		    <li class="nav-item dropdown">
 		      <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Tools</a>
 		      <div class="dropdown-menu nav-item">

@@ -99,5 +99,6 @@ main article dd {
   width: var(--logo-width-desktop);
   height: var(--logo-height-desktop);
   overflow: hidden;
+  text-indent: -99999px;
   margin-bottom: -50%;
 }

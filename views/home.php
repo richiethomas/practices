@@ -9,61 +9,32 @@ function format_cost_display(string $cd) {
 	return $cd;
 }
 
-function teacher_link($tinfo) {
-  return "
-	  <a href='/teachers/view/{$tinfo['id']}'><img style='width: 50px; height: 50px' class='clearfix float-start mx-2 teacher-image align-self-center' src='".\Teachers\get_teacher_photo_src($tinfo['user_id'])."' alt='Teacher Name'></a>
-		<p class='mt-2 mb-0 teacher-name'><a class='text-decoration-none text-muted' href='/teachers/view/{$tinfo['id']}'> {$tinfo['nice_name']}</a></p>";	
-}	
+function teacher_link_minimal($tinfo) {
+
+    return "<div class='clearfix'><a href='/teachers/view/{$tinfo['id']}'><img style='width: 40px; height: 40px; border-radius: 50%' class='clearfix float-start mx-2 align-self-center' src='".\Teachers\get_teacher_photo_src($tinfo['user_id'])."' alt='{$tinfo['display_name']}'></a> <a class='text-decoration-none text-muted' href='/teachers/view/{$tinfo['id']}'> {$tinfo['nice_name']}</a></div>";	
 	
-
-function class_row(Workshop $wk) {
-
-	global $u;
 	
-	$html = '';
-	
-	$html .= '<div class="row justify-content-between my-2 py-2 border-bottom">';
-	$html .= '<div data-classid="'.$wk->fields['id'].'" class="col-md-11 classes-listings-class">';
-		
-		$html .= $wk->print_tags();
-
-		$html .= '<h2 class="mt-3"><a class="text-decoration-none text-dark" href="/workshop/view/'. $wk->fields['id'] .'">'. $wk->fields['title'] . '</a></h2>';
-			
-		// class meta info
-		$html .= "<div class='d-flex row mb-2 text-muted'>";
-
-			// teacher
-			$html .= "<div class='col-sm-3'>".teacher_link($wk->teacher);
-			if ($wk->fields['co_teacher_id']) { $html .= "<br>".teacher_link($wk->coteacher); } 
-			$html .= "</div>";
-	
-			
-			//time, sessions, money
-			$html .= "<div class='col-sm-3'><i class='bi-calendar text-primary'></i> ".date('D M j', strtotime($wk->fields['start_tz'])).', '.\Wbhkit\friendly_time($wk->fields['start_tz'])." ({$u->fields['time_zone_friendly']})</div>
-			<div class='col-sm-2'><i class='bi-calendar-range text-primary'></i> {$wk->fields['total_sessions']} ".(($wk->fields['total_sessions'] == 1) ? 'session ': 'sessions')."</div>
-			<div class='col-sm-2'><i class='bi-cash text-primary'></i> ".format_cost_display($wk->fields['costdisplay'])."</div>";
-			
-			// enroll button
-			$html .= "<div class='col-sm-2'>";
-			if ($wk->fields['soldout']) { 
-				$html .= '<span class="text-danger">Sold Out!</span> <a class="btn btn-outline-primary" href="/workshop/view/'.$wk->fields['id'].'" role="button">Join Wait List</a>';
-			} elseif ($wk->fields['application']) { 
-				$html .= '<a class="btn btn-primary" href="/workshop/view/'.$wk->fields['id'].'" role="button">Apply</a>';
-			} else { 
-				$html .= '<a class="btn btn-primary" href="/workshop/view/'.$wk->fields['id'].'" role="button">Enroll</a>';
-			}
-			$html .= '</div>'; // end of enroll button
-			
-		$html .= "</div>"; // end of class meta
-
-	$html .= "</div>\n"; // end of classes-listing-class
-	$html .= "</div>\n"; // end of whole class row
-
-	return $html;
-
 }
 	
+function class_row_minimal(Workshop $wk) {
 	
+	global $u;
+	
+	$html = "     <tr data-classid='".$wk->fields['id']."'>\n";
+		
+	//$html .= $wk->print_tags();
+
+	$html .= '          <td width="200"><a href="/workshop/view/'. $wk->fields['id'] .'">'. $wk->fields['title'] . "</a></td>\n";
+		
+	$html .= "          <td width='210'>".teacher_link_minimal($wk->teacher);
+	if ($wk->fields['co_teacher_id']) { $html .= teacher_link_minimal($wk->coteacher); } 
+	$html .= "</td>\n";
+	
+	$html .= "          <td width='320'>{$wk->fields['showstart']}, {$wk->fields['total_sessions']} ".(($wk->fields['total_sessions'] == 1) ? 'session ': 'sessions')."</td>\n";
+	$html .= "          <td>".format_cost_display($wk->fields['costdisplay']).($wk->fields['soldout'] ? " - <span class='text-danger'>Sold Out</span>" : '')."</td>\n";
+	$html .= "     </tr>\n";
+	return $html;
+}
 	
 	
 ?>	
@@ -125,13 +96,9 @@ document.addEventListener('DOMContentLoaded', () => {
 		<p>Please enter your first and last name:</p>
 	<?php echo $userhelper->edit_display_name($u); ?>
 		</div>
-<?php 		}  ?>	
-
-
-<!--<div class="container-fluid classes-header container-header-banner"><h3 class="container-lg container-fluid">Latest News</h3></div>-->
+<?php }  ?>	
 	
-	<div class="container-lg container-fluid mt-3" id="news">
-
+<div class="container-lg container-fluid mt-3" id="news">
   <div class="container col-xxl-12 px-4 py-2">
     <div class="row flex-lg-row-reverse align-items-center g-5 py-5">
       <div class="col-lg-6">
@@ -153,7 +120,7 @@ document.addEventListener('DOMContentLoaded', () => {
       </div>
     </div>
   </div>		
-	</div>
+</div>
 
 
 
@@ -222,7 +189,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 
-  <div class="container px-4 py-5">
+  <div class="container px-4 pt-5">
       <h2 class="pb-2 border-bottom">Core Classes</h2>
 	  
     <div class="row row-cols-1 row-cols-md-2 align-items-md-center g-5 py-5">
@@ -271,19 +238,12 @@ document.addEventListener('DOMContentLoaded', () => {
     </div>
   </div>
 
-
-
-
-
-
   
  <a id="allclasses"></a>
   <div id="classes">
-
 	
 <?php
 	include 'unavailable_workshops.php';	
-	
 	
 	$inperson_html = '';
 	$online_html = '';
@@ -296,43 +256,32 @@ document.addEventListener('DOMContentLoaded', () => {
 		}
 
 		if (in_array('inperson', $wk->fields['tags_array'])) {
-			$inperson_html .= class_row($wk);
+			$inperson_html .= class_row_minimal($wk);
 		} else {
-			$online_html .= class_row($wk);
+			$online_html .= class_row_minimal($wk);
 		}
 	}	
 	
 	
 ?>
-		<div class="container-fluid classes-header container-header-banner"><h3 class="container-lg container-fluid">Upcoming Online Classes</h3></div>
+	<div class="container-fluid classes-header container-header-banner"><h3 class="container-lg container-fluid">Upcoming Online Classes</h3></div>
 
 	<div class="container-lg container-fluid" id="classes-listings">
-		
-		
-		<div class="my-3 py-3" id="filter-by-container" style="display:none;"> 
-		    <h4 class="mt-3" style="display: inline-block;">Filtering By: </h4>
-		    <span data-tag="" class="classtag badge bg-light text-dark rounded-pill me-3 border" id="filter-by"></span>
-		</div>
-		
 		<?php
 
-		echo $online_html ? $online_html : "<h3 class='m-5'>No upcoming online classes right now!</h3>\n";
+		echo $online_html ? "<table class='table table-sm table-hover table-borderless'>\n$online_html</table>" : "<h3 class='m-5'>No upcoming online classes right now!</h3>\n";
 
-
-
-
-		?>
+?>
 	</div> <!-- end of 'classes listings' div-->
 
 		<div class="container-fluid classes-header container-header-banner"><h3 class="container-lg container-fluid">Upcoming In Person Los Angeles Classes</h3></div>
 		<div class="container-lg container-fluid" id="classes-listings">
 
-		<?php echo $inperson_html ? $inperson_html : "<h3 class='m-5'>No upcoming in person Los Angeles classes right now!</h3>\n"; ?>
+		<?php echo $inperson_html ? "<table class='table table-sm table-hover table-borderless'>\n$inperson_html</table>" : "<h3 class='m-5'>No upcoming in person Los Angeles classes right now!</h3>\n"; ?>
 		
 		</div>
 
 </div> <!-- end of 'classes' div -->
-  
 
   <div id="newsletter-signup" class="pt-4 pb-4 mb-5">
 	<div class="container">
@@ -370,14 +319,6 @@ document.addEventListener('DOMContentLoaded', () => {
 		  </div>
 	  </div>
 	</div>
-
- <!-- <div id="buy-the-book" class="container mb-5">
-	<h3 class="mb-3">Buy the Book</h3>
-<div class="row"><img src="/images/htbtgioe_cover.jpg" class="col-sm-12 col-md-3 align-self-start mb-2" alt="How To Be The Greatest Improviser On Earth" />
-	<p class="col-sm-12 col-md-9">If the workshops are sold out, you could buy "How to Be the Greatest Improviser on Earth" written by Will Hines, the founder of this school. Print and digital versions <a href="https://www.amazon.com/dp/0982625723">on Amazon</a>.</p></div>
-  </div> -->
- 
-  
   
 
  <!-- check your email modal -->
@@ -401,44 +342,6 @@ document.addEventListener('DOMContentLoaded', () => {
   
 </main>
 
-<script>
-    function filterByTag(tag) {
-        let classesDivs = document.getElementById('classes-listings').children;
-        classesDivs = Array.from(classesDivs);
-        classesDivs.forEach(classDiv => {
-            // If tag is empty string or classDiv has a span with tag 
-            if (tag === '' || classDiv.querySelector(`span[data-tag="${tag}"]`) !== null) {
-                classDiv.style.display = '';
-            } else {
-                classDiv.style.display = 'none';
-            }
-        });
-    }
-
-
-    let xIcon = `<i class="bi bi-x"></i>`;
-
-    function toggleFilter(tag) {
-        let filterDiv = document.getElementById('filter-by-container');
-        let filterButton = document.getElementById('filter-by');
-
-        filterButton.innerHTML = `${xIcon} ${tag.toUpperCase()}`;
-        if (tag === '') {
-            filterDiv.style.display = 'none';
-            return;
-        }
-        filterDiv.style.display = '';
-    }
-
-
-    document.addEventListener("click", function (e) {
-        if (e.target.classList.contains("classtag")) {
-            let tag = e.target.dataset.tag;
-            filterByTag(tag);
-            toggleFilter(tag);
-        }
-    }); 
-</script>
 
 
 

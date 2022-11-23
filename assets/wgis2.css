@@ -127,13 +127,6 @@ nav li.nav-item .user-logged-in:hover img {
   border-radius: 50%;
 }
 
-.teacher-label {
-  font-size: 0.7rem;
-  color: var(--color-dark-gray);
-  letter-spacing: 2.25px;
-  text-transform: uppercase;
-}
-
 /*Newsletter Signup*/
 
 #newsletter-signup {
@@ -230,12 +223,6 @@ nav li.nav-item .user-logged-in:hover img {
   text-align: center;
 }
 
-.teacher-info .teacher-bio {
-  font-size: 0.81rem;
-  color: var(--color-black);
-  letter-spacing: -0.03px;
-  line-height: 2rem;
-}
 
 /* Single Page or Post */
 
