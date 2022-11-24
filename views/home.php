@@ -95,7 +95,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	<?php echo $userhelper->edit_display_name($u); ?>
 		</div>
 <?php }  ?>	
-	
+
 <!-- heading -->
 <div class="container-lg container-fluid mt-3" id="news">
   <div class="container col-xxl-12 px-4 py-2">
@@ -120,7 +120,6 @@ document.addEventListener('DOMContentLoaded', () => {
     </div>
   </div>		
 </div>
-
 
 <!-- in person show cards -->
   <div class="container px-4 py-2" id="custom-cards">

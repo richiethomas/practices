@@ -20,13 +20,12 @@ foreach ($upcoming_workshops as $wk) {
 		<div class='col-3' >{$wk->fields['teacher_name']}</div>
 		<div class='col-3' >{$wk->fields['classpage_start']}</div>
 		<div class='col-3'>{$wk->fields['costdisplay']}".($wk->fields['soldout'] ? " - <span class='text-danger'>Sold Out</span>" : '');
-	
+
 	if ($u->check_user_level(2)) { 
 		$text_html .= " <span class='text-muted'><small>({$wk->fields['enrolled']} / {$wk->fields['capacity']})</small></span>\n";
 	}
 	
 	$text_html .= "</div></div>\n";
-
 
 	
 	if (in_array('inperson', $wk->fields['tags_array'])) {
@@ -75,20 +74,18 @@ foreach ($unavailable_workshops as $wk) {
 echo "<h2 class='my-3'>Open Online Classes</h2>\n";
 echo "<div class='row mb-2'><div class='col-6'>&nbsp;</div><div class='col-3 fw-bold'>Times in (".$u->fields['time_zone_friendly'].")</div><div class='col-3'>&nbsp;</div></div>";
 
-echo $ol_text ? $ol_text : '<p>No multi-week courses coming up!</p>';
-	
+echo $ol_text ? $ol_text : '<p>No multi-week courses coming up!</p>';	
 
 echo "<h2 class='my-3'>Open In Person Los Angeles Classes</h2>\n";
+
 echo "<div class='row mb-2'><div class='col-6'>&nbsp;</div><div class='col-3 fw-bold'>Times in (".$u->fields['time_zone_friendly'].")</div><div class='col-3'>&nbsp;</div></div>";
 
 echo $ip_text ? $ip_text : '<p>No multi-week courses coming up!</p>';
-
 
 if ($upc_html) {
 	echo "<h2 class='my-3'>Classes Available Soon</h2>\n";
 	echo $upc_html;
 }
-
 
 
 function prep_wk($wk) {
