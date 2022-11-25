@@ -60,7 +60,7 @@ function class_row_minimal(Workshop $wk) {
 	
 	$html = "     <div class='row my-3'>\n";
 		
-	$html .= "          <div class='col-3'><a href='/workshop/view/". $wk->fields['id'] ."'>". $wk->fields['title'] . "</a><br><span class='text-muted'><small>{$wk->fields['total_sessions']} ".(($wk->fields['total_sessions'] == 1) ? 'session ': 'sessions')."</small></span></div>\n";
+	$html .= "          <div class='col-3'><a href='/workshop/view/". $wk->fields['id'] ."'>". $wk->fields['title'] . "</a><br><span class='text-muted'><small>{$wk->fields['time_summary']}</small></span></div>\n";
 		
 	$html .= "          <div class='col-3'>".teacher_link_minimal($wk->teacher);
 	if ($wk->fields['co_teacher_id']) { $html .= teacher_link_minimal($wk->coteacher); } 
@@ -109,7 +109,7 @@ document.addEventListener('DOMContentLoaded', () => {
       <div class="col-lg-6">
         <h1 class="display-5 fw-bold lh-1 mb-3">World's Greatest Improv School</h1>
 		<h2>Come Get Good</h2>
-        <p class="lead">WGIS (the World's Greatest Improv School) loves long-form improv, and wants you to be the best improviser you can be. Get in the flow and find your voice.<br><br>In-person classes are in Los Angeles. Online classes are an improv grad school focusing on advanced subjects.</p>
+        <p class="lead">WGIS (the World's Greatest Improv School) loves long-form improv, and wants you to be the best improviser you can be. Get in the flow and find your voice.<br><br>Now featuring 6-week core courses (in-person and online) to get you to improv mastery fast.</p>
         <div class="d-grid gap-2 d-md-flex justify-content-md-start">
 			
 			<a class="btn btn-primary btn-lg px-4 me-md-2" href="/classes" role="button">See Classes</a>
@@ -189,13 +189,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
 <!-- class stuff -->
   <div class="container px-4 pt-5">
-      <h2 class="pb-2 border-bottom">Core Classes</h2>
+      <h2 class="pb-2 border-bottom">WGIS Core Classes</h2>
 	  
     <div class="row row-cols-1 row-cols-md-2 align-items-md-center g-5 py-5">
       <div class="d-flex flex-column align-items-start gap-2">
-        <h3 class="fw-bold">The WGIS Program</h3>
-        <p class="text-muted">Our four-level program will take you from total beginner to an well-rounded expert in long-form improv comedy. Our focus is on premise, game-of-the-scene improv but you'll also learn the principles of: agreement, playing it real and focusing on the unusual thing.</p>
-        <a href="/classes" class="btn btn-primary btn-lg">New classes announced Thanksgiving</a>
+        <h3 class="fw-bold">6 Weeks, 2+ Shows</h3>
+        <p class="text-muted">Our four level program gets you to improv expertise fast. Each level is now 6 weeks, plus at least 2 shows. Get on your feet and get good. Prices range from $240-300, pending on show number.</p>
+        <a href="/classes" class="btn btn-primary btn-lg">See upcoming classes</a>
       </div>
       <div class="row row-cols-1 row-cols-sm-2 g-4">
         <div class="d-flex flex-column gap-2">
@@ -204,7 +204,7 @@ document.addEventListener('DOMContentLoaded', () => {
 			<i class="bi-emoji-smile"></i>
           </div>
           <h4 class="fw-semibold mb-0">1: Intro to Improv</h4>
-          <p class="text-muted">Learn the basics: saying yes, protecting emotional reality and focusing on the unusual thing.</p>
+          <p class="text-muted">Learn the basics: saying yes, be real, get in the flow.</p>
         </div>
 
         <div class="d-flex flex-column gap-2">
@@ -221,8 +221,8 @@ document.addEventListener('DOMContentLoaded', () => {
             class="feature-icon-small d-inline-flex align-items-center justify-content-center text-bg-primary bg-gradient fs-4 rounded-3">
 			<i class="bi-diagram-3"></i>
           </div>
-          <h4 class="fw-semibold mb-0">3: Harold Structure</h4>
-          <p class="text-muted">Learn the structure of the Harold, a demanding and fun improv form that makes you a complete improviser.</p>
+          <h4 class="fw-semibold mb-0">3: Second Beats</h4>
+          <p class="text-muted">Find the game, do it again. Unlock the power of knowing the game of the scene.</p>
         </div>
 
         <div class="d-flex flex-column gap-2">
@@ -230,9 +230,10 @@ document.addEventListener('DOMContentLoaded', () => {
             class="feature-icon-small d-inline-flex align-items-center justify-content-center text-bg-primary bg-gradient fs-4 rounded-3">
 			<i class="bi-diagram-3-fill"></i>
           </div>
-          <h4 class="fw-semibold mb-0">4: Advanced Harold</h4>
-          <p class="text-muted">Find your own unique voice inside of the Harold structure.</p>
+          <h4 class="fw-semibold mb-0">4: Harold</h4>
+          <p class="text-muted">Learn group games and third beats to complete your knowledge of the Harold.</p>
         </div>
+		
       </div>
     </div>
   </div>

@@ -33,6 +33,20 @@
 
 <p><a href="https://www.thebroadwaterla.com/">Broadwater Theater</a> is at 6322 Santa Monica Blvd. Street parking. $10 optional donation. Our shows are usually in the Black Box Theatre though sometimes on the Second Stage. They're right next to each other.</p>
 
+<a id='classshows'></a>
+<h4>Broadwater Tuesdays 2023 Schedule</h4>
+<p>Starting January 2023, we're moving to a new schedule with two shows a night. A class show at 7:30pm, and WGIS teams at 9pm. Team schedule will be announced in mid-December. Here's the class show schedule.</p>
+<ul>7:30pm schedule
+<li>Jan 3 - play by play</li>
+<li>Jan 10 - Level 5 </li>
+<li>Jan 17 - Level 5</li>
+<li>Jan 24 - Sarah Level 3 / Jim Level 4</li>
+<li>Jan 31 - Julie Level 1 / Will Level 2 </li>
+<li>Feb 7 - Level 5</li>
+<li>Feb 14 - Julie level 1 / Sarah Level 3</li>
+<li>Feb 21 - Will Level 2  / Jim Level 4</li>
+</ul>
+
 <a id="fridays"></a>
 <h3>Clubhouse Fridays</h3>
 

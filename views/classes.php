@@ -15,8 +15,8 @@ foreach ($upcoming_workshops as $wk) {
 	
 	$wk = prep_wk($wk);
 
-	$text_html = "<div class='row mb-3'>
-		<div class='col-3' ><a href='/workshop/view/{$wk->fields['id']}'>{$wk->fields['title']}</a><br><span class='text-muted'><small>{$wk->fields['total_sessions']} ".($wk->fields['total_sessions'] == 1 ? 'week': 'weeks')."</small></span></div>
+	$text_html = "<div class='row mb-1'>
+		<div class='col-3' ><a href='/workshop/view/{$wk->fields['id']}'>{$wk->fields['title']}</a><br><span class='text-muted'><small>{$wk->fields['time_summary']}</small></span></div>
 		<div class='col-3' >{$wk->fields['teacher_name']}</div>
 		<div class='col-3' >{$wk->fields['classpage_start']}</div>
 		<div class='col-3'>{$wk->fields['costdisplay']}".($wk->fields['soldout'] ? " - <span class='text-danger'>Sold Out</span>" : '');
@@ -60,7 +60,7 @@ foreach ($unavailable_workshops as $wk) {
 	}
 	
 	// text view
-	$upc_html .= "<p class='m-1 p-0 fs-6 lh-base'>{$wk->fields['classpage_start']} - <a class='text-decoration-none' href='/workshop/view/{$wk->fields['id']}'>{$wk->fields['title']}</a>, {$wk->fields['teacher_name']}, {$wk->fields['total_sessions']} ".($wk->fields['total_sessions'] == 1 ? 'week': 'weeks').", {$wk->fields['costdisplay']}";
+	$upc_html .= "<p class='m-1 p-0 fs-6 lh-base'>{$wk->fields['classpage_start']} - <a class='text-decoration-none' href='/workshop/view/{$wk->fields['id']}'>{$wk->fields['title']}</a>, {$wk->fields['teacher_name']}, <small>{$wk->fields['time_summary']}</small>, {$wk->fields['costdisplay']}";
 	
 	if (in_array('inperson', $wk->fields['tags_array'])) {
 		$upc_html .= " <b>(in person, Los Angeles)</b>";

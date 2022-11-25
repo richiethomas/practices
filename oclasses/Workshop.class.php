@@ -208,11 +208,11 @@ class Workshop extends WBHObject {
 					$this->sessions[$id] = $s = $this->format_times_one_level($s, $tz); // change row array
 				}
 				$this->fields['full_when'] .= "<br>\n".
-					($s['class_show'] == 1 ? 'Show: ' : '').
+					($s['class_show'] == 1 ? '&nbsp;&nbsp;&nbsp;Show: ' : '').
 					"{$s['when_no_tz']}\n";
 			
 				$this->fields['full_when_cali'] .= "<br>\n".
-					($s['class_show'] == 1 ? 'Show: ' : '').
+					($s['class_show'] == 1 ? '&nbsp;&nbsp;&nbsp;Show: ' : '').
 					"{$s['when_cali_no_tz']}\n";
 			}
 		}	

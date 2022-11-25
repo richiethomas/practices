@@ -61,13 +61,14 @@ function upcoming_class_item($wk) {
 	$start = Wbhkit\friendly_time($wk->fields['start_tz']);
 	$end = Wbhkit\friendly_time($wk->fields['end_tz']);	
 	
-	$xtra_class = $xtra = '';
+	$xtra = '';
 	if (in_array('inperson', $wk->fields['tags_array'])) {
-		$xtra_class =  'fw-bold';
 		$xtra = ', in person';
+	} else {
+		$xtra = ', online';
 	}
 	
-	return "<li class='mb-2 $xtra_class'>$wkdate $start: <a href='/workshop/view/{$wk->fields['id']}'>{$wk->fields['title']}</a> - <small>{$wk->teacher['nice_name']}</small><br>
+	return "<li class='mb-2'>$wkdate $start: <a href='/workshop/view/{$wk->fields['id']}'>{$wk->fields['title']}</a> - <small>{$wk->teacher['nice_name']}</small><br>
 		<small>{$wk->fields['costdisplay']},
 	{$wk->fields['time_summary']}{$xtra}<br></small></li>\n";	
 	
