@@ -2,8 +2,9 @@
 
 if (count($unavailable_workshops) > 0 || count($application_workshops) > 0) {
 
+echo "<div class=\"container-lg container-fluid\">\n";
 echo "<div class=\"row justify-content-center my-3\">\n";
-echo "<div class=\"col-md-6 border border-info\">\n";
+echo "<div class=\"col-md-8 border border-info p-2\">\n";
 
 	if (count($unavailable_workshops) > 0) {
 
@@ -49,7 +50,9 @@ echo "<div class=\"col-md-6 border border-info\">\n";
 		}	
 		echo "</ul>\n";
 	}
-	echo "</div></div>";
+
+echo "</div></div>\n"; // end of col and row
+echo "</div>\n"; // end of container
 
 }
 

@@ -210,7 +210,7 @@ document.addEventListener('DOMContentLoaded', () => {
         <div class="d-flex flex-column gap-2">
           <div
             class="feature-icon-small d-inline-flex align-items-center justify-content-center text-bg-primary bg-gradient fs-4 rounded-3">
-			<i class="bi-dice-3"></i>
+			<i class="bi-controller"></i>
           </div>
           <h4 class="fw-semibold mb-0">2: Game Of The Scene</h4>
           <p class="text-muted">Play the comedy, not the plot. Learn to pull ideas from an opening.</p>
@@ -219,7 +219,7 @@ document.addEventListener('DOMContentLoaded', () => {
         <div class="d-flex flex-column gap-2">
           <div
             class="feature-icon-small d-inline-flex align-items-center justify-content-center text-bg-primary bg-gradient fs-4 rounded-3">
-			<i class="bi-diagram-3"></i>
+			<i class="bi-translate"></i>
           </div>
           <h4 class="fw-semibold mb-0">3: Second Beats</h4>
           <p class="text-muted">Find the game, do it again. Unlock the power of knowing the game of the scene.</p>
@@ -228,7 +228,7 @@ document.addEventListener('DOMContentLoaded', () => {
         <div class="d-flex flex-column gap-2">
           <div
             class="feature-icon-small d-inline-flex align-items-center justify-content-center text-bg-primary bg-gradient fs-4 rounded-3">
-			<i class="bi-diagram-3-fill"></i>
+			<i class="bi-flower2"></i>
           </div>
           <h4 class="fw-semibold mb-0">4: Harold</h4>
           <p class="text-muted">Learn group games and third beats to complete your knowledge of the Harold.</p>
@@ -261,8 +261,7 @@ document.addEventListener('DOMContentLoaded', () => {
 			$online_html .= class_row_minimal($wk);
 		}
 	}	
-	
-	
+
 ?>
 	<div class="container-fluid classes-header container-header-banner"><h3 class="container-lg container-fluid">Upcoming Online Classes</h3></div>
 
