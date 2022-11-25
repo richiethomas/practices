@@ -38,7 +38,7 @@ define('TIME_ZONE', $dateTime->format('T'));
 
 define('MYSQL_FORMAT', 'Y-m-d H:i:s');
 define('MYSQL_DATE', 'Y-m-d');
-define('LOCAL', ($_SERVER['SERVER_NAME'] == 'localhost') ? true : false);
+define('LOCAL', in_array($_SERVER['SERVER_NAME'], array('localhost','127.0.0.1')) ? true : false);
 
 // to control logging levels, see lib-logger.php
 define('DEBUG_LOG', 'info.txt');
@@ -70,6 +70,13 @@ define('WAITING', $lookups->find_status_by_name('waiting'));
 define('DROPPED', $lookups->find_status_by_name('dropped'));
 define('APPLIED', $lookups->find_status_by_name('applied'));
 define('SMARTENROLL', 100); // special status ENROLL or WAIT pending capacity -- see Enrollment.class.php
+
+define('LEVEL1ICON', 'emoji-smile');
+define('LEVEL2ICON', 'controller');
+define('LEVEL3ICON', 'translate');
+define('LEVEL4ICON', 'flower2');
+
+
 
 $smtp = null; // global smtp object for sending mail, keeping connection open
 

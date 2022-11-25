@@ -1,41 +1,4 @@
-<script>
-.feature-icon {
-  width: 4rem;
-  height: 4rem;
-  border-radius: .75rem;
-}
 
-.icon-link > .bi {
-  margin-top: .125rem;
-  margin-left: .125rem;
-  fill: currentcolor;
-  transition: transform .25s ease-in-out;
-}
-.icon-link:hover > .bi {
-  transform: translate(.25rem);
-}
-
-.icon-square {
-  width: 3rem;
-  height: 3rem;
-  border-radius: .75rem;
-}
-
-.text-shadow-1 { text-shadow: 0 .125rem .25rem rgba(0, 0, 0, .25); }
-.text-shadow-2 { text-shadow: 0 .25rem .5rem rgba(0, 0, 0, .25); }
-.text-shadow-3 { text-shadow: 0 .5rem 1.5rem rgba(0, 0, 0, .25); }
-
-.card-cover {
-  background-repeat: no-repeat;
-  background-position: center center;
-  background-size: cover;
-}
-
-.feature-icon-small {
-  width: 3rem;
-  height: 3rem;
-}
-</script>
 <?php
 function format_cost_display(string $cd) {
 	if (substr($cd, 0 ,1) == '$') {
@@ -201,7 +164,7 @@ document.addEventListener('DOMContentLoaded', () => {
         <div class="d-flex flex-column gap-2">
           <div
             class="feature-icon-small d-inline-flex align-items-center justify-content-center text-bg-primary bg-gradient fs-4 rounded-3">
-			<i class="bi-emoji-smile"></i>
+			<i class="bi-<?php echo LEVEL1ICON; ?>"></i>
           </div>
           <h4 class="fw-semibold mb-0">1: Intro to Improv</h4>
           <p class="text-muted">Learn the basics: saying yes, be real, get in the flow.</p>
@@ -210,7 +173,7 @@ document.addEventListener('DOMContentLoaded', () => {
         <div class="d-flex flex-column gap-2">
           <div
             class="feature-icon-small d-inline-flex align-items-center justify-content-center text-bg-primary bg-gradient fs-4 rounded-3">
-			<i class="bi-controller"></i>
+			<i class="bi-<?php echo LEVEL2ICON; ?>"></i>
           </div>
           <h4 class="fw-semibold mb-0">2: Game Of The Scene</h4>
           <p class="text-muted">Play the comedy, not the plot. Learn to pull ideas from an opening.</p>
@@ -219,7 +182,7 @@ document.addEventListener('DOMContentLoaded', () => {
         <div class="d-flex flex-column gap-2">
           <div
             class="feature-icon-small d-inline-flex align-items-center justify-content-center text-bg-primary bg-gradient fs-4 rounded-3">
-			<i class="bi-translate"></i>
+			<i class="bi-<?php echo LEVEL3ICON; ?>"></i>
           </div>
           <h4 class="fw-semibold mb-0">3: Second Beats</h4>
           <p class="text-muted">Find the game, do it again. Unlock the power of knowing the game of the scene.</p>
@@ -228,7 +191,7 @@ document.addEventListener('DOMContentLoaded', () => {
         <div class="d-flex flex-column gap-2">
           <div
             class="feature-icon-small d-inline-flex align-items-center justify-content-center text-bg-primary bg-gradient fs-4 rounded-3">
-			<i class="bi-flower2"></i>
+			<i class="bi-<?php echo LEVEL4ICON; ?>"></i>
           </div>
           <h4 class="fw-semibold mb-0">4: Harold</h4>
           <p class="text-muted">Learn group games and third beats to complete your knowledge of the Harold.</p>

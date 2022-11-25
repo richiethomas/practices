@@ -8,10 +8,14 @@
 <p>Starting January 2023, we've streamlined our core offerings to four six-week courses at competitive prices. In-person courses offer 2+ shows.</p>
 
 <ul>
-	<li>Level 1: Intro to Improv</li>
-	<li>Level 2: Game of the Scene</li>
-	<li>Level 3: Second Beats</li>
-	<li>Level 4: Harold</li>
+	<li class='mb-2'><div
+            class="feature-icon-small d-inline-flex align-items-center justify-content-center text-bg-primary bg-gradient fs-4 rounded-3"><i class="bi-<?php echo LEVEL1ICON; ?>"></i></div> Level 1: Intro to Improv</li>
+	<li class='mb-2'><div
+            class="feature-icon-small d-inline-flex align-items-center justify-content-center text-bg-primary bg-gradient fs-4 rounded-3"><i class="bi-<?php echo LEVEL2ICON; ?>"></i></div> Level 2: Game of the Scene</li>
+	<li class='mb-2'><div
+            class="feature-icon-small d-inline-flex align-items-center justify-content-center text-bg-primary bg-gradient fs-4 rounded-3"><i class="bi-<?php echo LEVEL3ICON; ?>"></i></div> Level 3: Second Beats</li>
+	<li class='mb-2'><div
+            class="feature-icon-small d-inline-flex align-items-center justify-content-center text-bg-primary bg-gradient fs-4 rounded-3"><i class="bi-<?php echo LEVEL4ICON; ?>"></i></div> Level 4: Harold</li>
 </ul>
 
 <p>See the <a href="/classes">list of classes</a> to see which of these are being offered soon.</p>
