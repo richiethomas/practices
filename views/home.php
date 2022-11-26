@@ -157,7 +157,7 @@ document.addEventListener('DOMContentLoaded', () => {
     <div class="row row-cols-1 row-cols-md-2 align-items-md-center g-5 py-5">
       <div class="d-flex flex-column align-items-start gap-2">
         <h3 class="fw-bold">6 Weeks, 2+ Shows</h3>
-        <p class="text-muted">Our four level program gets you to improv expertise fast. Each level is now 6 weeks, plus at least 2 shows. Get on your feet and get good. Prices range from $240-300, pending on show number.</p>
+        <p class="text-muted">Our four level program gets you to improv expertise fast. Each level is now 6 weeks, plus (for in-person classes) at least 2 shows. Get on your feet and get good. Prices range from $240-300, pending on how many class shows.</p>
         <a href="/classes" class="btn btn-primary btn-lg">See upcoming classes</a>
       </div>
       <div class="row row-cols-1 row-cols-sm-2 g-4">
@@ -167,7 +167,7 @@ document.addEventListener('DOMContentLoaded', () => {
 			<i class="bi-<?php echo LEVEL1ICON; ?>"></i>
           </div>
           <h4 class="fw-semibold mb-0">1: Intro to Improv</h4>
-          <p class="text-muted">Learn the basics: saying yes, be real, get in the flow.</p>
+          <p class="text-muted">Learn the basics: say yes, be real, get in the flow.</p>
         </div>
 
         <div class="d-flex flex-column gap-2">
@@ -176,7 +176,7 @@ document.addEventListener('DOMContentLoaded', () => {
 			<i class="bi-<?php echo LEVEL2ICON; ?>"></i>
           </div>
           <h4 class="fw-semibold mb-0">2: Game Of The Scene</h4>
-          <p class="text-muted">Play the comedy, not the plot. Learn to pull ideas from an opening.</p>
+          <p class="text-muted">Play game, not plot. Learn to pull ideas from an opening.</p>
         </div>
 
         <div class="d-flex flex-column gap-2">
@@ -185,7 +185,7 @@ document.addEventListener('DOMContentLoaded', () => {
 			<i class="bi-<?php echo LEVEL3ICON; ?>"></i>
           </div>
           <h4 class="fw-semibold mb-0">3: Second Beats</h4>
-          <p class="text-muted">Find the game, do it again. Unlock the power of knowing the game of the scene.</p>
+          <p class="text-muted">Find the game, do it again, support.</p>
         </div>
 
         <div class="d-flex flex-column gap-2">

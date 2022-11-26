@@ -56,7 +56,7 @@ class WBHObject
 	function set_by_id(int $id) {
 		
 		if (!$id) {
-			$this->error = "No {$this->tablename} found for id '{$id}'";
+			$this->error = "No id set ({$id}), cannot get rows from '{$this->tablename}'";
 			return false;
 		}
 	
@@ -67,7 +67,7 @@ class WBHObject
 			$this->finish_setup();
 			return $this;
 		}
-		$this->error = "No {$this->tablename} found for id '{$id}'";
+		$this->error = "No row in '{$this->tablename}' for id '{$id}'";
 		return false;
 
 	}

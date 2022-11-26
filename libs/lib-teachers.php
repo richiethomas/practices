@@ -100,7 +100,7 @@ function get_faculty() {
 function get_teacher_upcoming_classes($tid) {
 	
 	$workshops = array();
-	// get all active teachers, and also upcoming courses they are teaching	
+	// get an active teacher with only upcoming classes
 	$stmt = \DB\pdo_query("select wk.* from workshops wk where (teacher_id = :tid or co_teacher_id = :ctid) and start > :now and wk.hidden = 0 order by start", array(':now' => date(MYSQL_FORMAT), ':tid' => $tid, ':ctid' => $tid));
 	while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
 		$wk = new \Workshop();
@@ -113,7 +113,7 @@ function get_teacher_upcoming_classes($tid) {
 function get_teacher_all_classes($tid) {
 	
 	$workshops = array();
-	// get all active teachers, and also upcoming courses they are teaching	
+	// get an active teacher and all classes they taught
 	$stmt = \DB\pdo_query("select wk.* from workshops wk where (teacher_id = :tid or co_teacher_id = :ctid)  order by start desc", array(':tid' => $tid, ':ctid' => $tid));
 	while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
 		$wk = new \Workshop();

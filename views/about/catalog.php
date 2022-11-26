@@ -2,21 +2,32 @@
 	<div class="row justify-content-center">
 		<div class="col-md-10 col-12">
 
-<small>Updated August 2022</small>
+<small>Updated December 2022</small>
 
 <h2>Levels</h2>
 <p>Starting January 2023, we've streamlined our core offerings to four six-week courses at competitive prices. In-person courses offer 2+ shows.</p>
 
-<ul>
-	<li class='mb-2'><div
-            class="feature-icon-small d-inline-flex align-items-center justify-content-center text-bg-primary bg-gradient fs-4 rounded-3"><i class="bi-<?php echo LEVEL1ICON; ?>"></i></div> Level 1: Intro to Improv</li>
-	<li class='mb-2'><div
-            class="feature-icon-small d-inline-flex align-items-center justify-content-center text-bg-primary bg-gradient fs-4 rounded-3"><i class="bi-<?php echo LEVEL2ICON; ?>"></i></div> Level 2: Game of the Scene</li>
-	<li class='mb-2'><div
-            class="feature-icon-small d-inline-flex align-items-center justify-content-center text-bg-primary bg-gradient fs-4 rounded-3"><i class="bi-<?php echo LEVEL3ICON; ?>"></i></div> Level 3: Second Beats</li>
-	<li class='mb-2'><div
-            class="feature-icon-small d-inline-flex align-items-center justify-content-center text-bg-primary bg-gradient fs-4 rounded-3"><i class="bi-<?php echo LEVEL4ICON; ?>"></i></div> Level 4: Harold</li>
-</ul>
+
+<div class='row my-2 d-flex align-items-center'>
+	<div class='col'><div
+            class="feature-icon-small d-inline-flex align-items-center justify-content-center text-bg-primary bg-gradient fs-4 rounded-3"><i class="bi-<?php echo LEVEL1ICON; ?>"></i></div> Level 1: Intro to Improv</div>
+	<div class='col'>Learn the basics: say yes, be real, get in the flow.</div>
+</div>
+<div class='row my-2 d-flex align-items-center'>
+	<div class='col'><div
+            class="feature-icon-small d-inline-flex align-items-center justify-content-center text-bg-primary bg-gradient fs-4 rounded-3"><i class="bi-<?php echo LEVEL2ICON; ?>"></i></div> Level 2: Game of the Scene</div>
+	<div class='col'>Play game, not plot. Learn to pull ideas from an opening.</div>
+</div>
+<div class='row my-2 d-flex align-items-center'>
+	<div class='col'><div
+            class="feature-icon-small d-inline-flex align-items-center justify-content-center text-bg-primary bg-gradient fs-4 rounded-3"><i class="bi-<?php echo LEVEL3ICON; ?>"></i></div> Level 3: Second Beats</div>
+	<div class='col'>Find the game, do it again, and support.</div>
+</div>
+<div class='row my-2 d-flex align-items-center'>
+	<div class='col'><div
+            class="feature-icon-small d-inline-flex align-items-center justify-content-center text-bg-primary bg-gradient fs-4 rounded-3"><i class="bi-<?php echo LEVEL4ICON; ?>"></i></div> Level 4: Harold</div>
+	<div class='col'>Learn group games and third beats to complete your knowledge of the Harold.</div>
+</div>
 
 <p>See the <a href="/classes">list of classes</a> to see which of these are being offered soon.</p>
 
