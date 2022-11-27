@@ -9,11 +9,19 @@
 
 <footer class="pt-4 pb-4"><div class="container-lg container-fluid">
 	<h3 class="mb-3">The World's Greatest Improv School</h3>
+	<div class='row'>
+		<div class='col-lg-7 col-sm-12'>
 	<ul class="nav mb-3">
 	   <?php foreach( get_nav_items() as $nav_item ){ ?>
 	   <li class="nav-item"> <a class="nav-link" href="<?php echo $nav_item['href'] ?>"><?php echo $nav_item['title'] ?></a> </li>
 	   <?php } ?>
 	</ul>
+		</div>
+		<div class='col-lg-5 col-sm-12'>
+			<a href='https://www.instagram.com/wgimprovschool/' class='text-decoration-none'><i class="bi-camera fs-4 me-1"></i> @wgimprovschool</a>
+			<a href='https://www.instagram.com/clubhousefridays/' class='text-decoration-none'><i class="bi-camera fs-4 mx-1"></i> @clubhousefridays</a>
+		</div>
+	</div>
 	<div class="footer-colophon row justify-content-between mb-3">
 		<div class="col-lg-7 col-sm-12">
 		Send questions to - <a href="mailto:classes@wgimprovschool.com">classes@wgimprovschool.com</a> | <a href="/privacy">Privacy Policy</a>
@@ -57,10 +65,4 @@
 		show_hrtime();
 		echo "-->\n";
 	}
-?>
-<?php
-echo "<!-- yep:<br>";
-print_r($_COOKIE);
-print_r($_SESSION);
-echo "-->";
 ?>
