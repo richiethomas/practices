@@ -1,20 +1,7 @@
 <div class='row'><div class='col-md-12'><h2>Find Students</h2>
-<form action ='/admin-search/search' method='post'>
 <?php
-$search = 1;
-include 'assets/ajax/search_box.php';
+include 'search_form.php';
 ?>
-	<div class="form-group">
-	<label for="search-box" class="form-label">Email address</label>
-	<input type="text" class="form-control" id="search-box" name="needle" autocomplete="off" value="<?php if ($needle) { echo $needle; } ?>">
-	<div id="suggesstion-box"></div>
-	</div>
-<?php	
-	echo "Sort by: ".Wbhkit\radio('sort', $search_opts, $sort);
-?>
-<div class="clearfix"><?php echo Wbhkit\submit('search'); ?></div>
-</form>
-
 <p>Or click this button to list <a class='btn btn-primary' href='/admin-search/search/everyone'>all students</a>
 <?php
 if ($needle == 'everyone') {

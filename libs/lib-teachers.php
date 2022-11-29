@@ -76,10 +76,12 @@ function get_all_teachers($only_active = false) {
 	while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
 		$row = fill_out_teacher_row($row); 
 		$teachers[$row['id']] = $row;
+		$parts = explode(' ', $row['display_name']);
+		$teachers[$row['id']]['sort_name'] = $parts[1]; // last name
 	}
 	
 	usort($teachers, function($a, $b) {
-	    return $a['nice_name'] <=> $b['nice_name'];
+	    return $a['sort_name'] <=> $b['sort_name'];
 	});
 	
 	return $teachers;

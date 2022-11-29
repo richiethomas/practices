@@ -447,10 +447,11 @@ class Workshop extends WBHObject {
 				$sql = "update workshops set title = :title, start = :start, end = :end, cost = :cost, capacity = :capacity, location_id = :lid, online_url = :online_url,  notes = :notes, when_public = :public, reminder_sent = :reminder_sent, teacher_id = :tid, co_teacher_id = :ctid, application = :application, hidden = :hidden, tags = :tags where id = :wid";			
 				$stmt = \DB\pdo_query($sql, $params);
 				return $this->fields['id'];
-			} elseif ($ac = 'ad') {
-				$stmt = \DB\pdo_query("insert into workshops (title, start, end, cost, capacity, location_id, online_url, notes, when_public, reminder_sent, teacher_id, co_teacher_id, application, hidden, tags)
-				VALUES (:title, :start, :end, :cost, :capacity, :lid, :online_url,  :notes,  :public, :reminder_sent, :tid, :ctid, :application, :hidden, :tags)",
-				$params);
+			} elseif ($ac == 'ad') {
+ 				$sql = "insert into workshops (title, start, end, cost, capacity, location_id, online_url, notes, when_public, reminder_sent, teacher_id, co_teacher_id, application, hidden, tags)
+				VALUES (:title, :start, :end, :cost, :capacity, :lid, :online_url,  :notes,  :public, :reminder_sent, :tid, :ctid, :application, :hidden, :tags)";
+ 
+				$stmt = \DB\pdo_query($sql, $params);
 				return $last_insert_id; // set as a global in db_pdo.php 
 			}
 	

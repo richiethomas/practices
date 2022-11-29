@@ -41,10 +41,10 @@ switch ($ac) {
 		foreach ($wk_fields as $field => $fieldvalue) {
 			$wk->fields[$field] = $$field; // set the field array with each db col
 		}
-	
+		
 		$wid = $wk->add_update_workshop($ac);
 		$wk->set_by_id($wid); // re-fetch workshop info from database - inefficient, but only done by admins;
-				
+		
 		if ($ac == 'up') {
 			$message = "Updated practice ({$wk->fields['id']}) - {$wk->fields['title']}";
 		} elseif ($ac == 'ad') {

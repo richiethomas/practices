@@ -19,7 +19,7 @@
 		</div>
 		<div class='col-lg-5 col-sm-12'>
 			<a href='https://www.instagram.com/wgimprovschool/' class='text-decoration-none'><i class="bi-camera fs-4 me-1"></i> @wgimprovschool</a>
-			<a href='https://www.instagram.com/clubhousefridays/' class='text-decoration-none'><i class="bi-camera fs-4 mx-1"></i> @clubhousefridays</a>
+			<a href='https://www.instagram.com/clubhousefridays/' class='text-decoration-none'><i class="bi-camera fs-4 ms-2 me-1"></i> @clubhousefridays</a>
 		</div>
 	</div>
 	<div class="footer-colophon row justify-content-between mb-3">

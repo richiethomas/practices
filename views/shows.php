@@ -10,7 +10,7 @@
 		<td><a href='#tuesdays'><img src='images/broadwater_small.jpg'></a></td>
 	</tr>
 	<tr>
-		<td><img src="images/live_aj.jpg" alt='Adam Jilt'></td>
+		<td><img src="images/live_aj2.jpg" alt='Adam Jilt'></td>
 		<td><img src='images/live_playbyplay.jpg' alt='Play by Play'></td>
 	</tr>
 </table>

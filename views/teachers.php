@@ -1,4 +1,5 @@
 <?php
+
 $show_all = 1;
 $hd = "Teachers";
 if (isset($tid) && $tid) {
