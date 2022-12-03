@@ -3,9 +3,9 @@
 // from https://phppot.com/jquery/jquery-ajax-autocomplete-country-example/
 
 
-window.onload = function() {
+window.addEventListener('load', function() {
 	document.getElementById('search-box').addEventListener('keyup', handleSearch);
-}
+});
 
 function handleSearch() {
 	const xhttp = new XMLHttpRequest();

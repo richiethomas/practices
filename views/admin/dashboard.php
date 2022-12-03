@@ -4,9 +4,9 @@ function filterByTeacher() {
 	return true;
 }
 
-window.onload = function() {
+window.addEventListener('load', function() {
 	document.getElementById("filter_by").addEventListener('change', filterByTeacher);	
-}
+});
 </script>
 
 	<h2>Dashboard</h2>
@@ -37,7 +37,8 @@ window.onload = function() {
 			<?php echo \Wbhkit\drop('filter_by', \Teachers\teachers_dropdown_array(true), $filter_by, 'Teacher');?>
 		</div>
 		<div class='col-5'>
-			<?php include 'search_form.php'; ?>
+			<?php include 'search_form.php'; 
+			?>
 		</div>
 	</div>
 

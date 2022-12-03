@@ -22,9 +22,9 @@ function changeHighlightBox() {
     box.style.display = (box.style.display == 'none') ? 'block' : 'none';
 }
 
-window.onload = function() {
+window.addEventListener('load', function() {
 	document.getElementById('dashalertsbutton').addEventListener('click', changeHighlightBox);
-}
+});
 </script>
 
 
