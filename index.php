@@ -13,18 +13,6 @@ $params = explode("/", $request);
 $ac = (isset($params[1]) ? $params[1] : 'view'); // action defaults to 'view'
 
 //
-// deal with outdated URLs
-//
-if (preg_match('/workshop\.php\?wid=(\d+)/', $params[0], $matches)) {
-	echo "<meta http-equiv=\"Refresh\" content=\"0; url='/workshop/view/{$matches[1]}'\" />";
-}
-
-if (preg_match('/index\.php\?key=(\w+)/', $params[0], $matches)) {
-	echo "<meta http-equiv=\"Refresh\" content=\"0; url='/home/k/{$matches[1]}'\" />";
-}
-
-
-//
 // check "pages" first
 //
 $pages = array(
