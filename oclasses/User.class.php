@@ -168,6 +168,32 @@ class User extends WBHObject {
 		return $key;
 	}
 
+
+	function logged_in() {
+		if (isset($this->fields['id']) && $this->fields['id'] > 0) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	function soft_logout() {
+		session_unset(); // free all $_SESSION variables
+	    unset($_COOKIE['c_key']);
+	    setcookie('c_key', null, -1, '/'); // make it expired
+		$this->clear_fields(); // clear current user
+		$this->message = 'You are logged out!';
+		return $this->message;
+	}
+
+	function hard_logout() {
+	
+		if ($this->logged_in()) {
+			$this->get_key(true); // force change the key
+		}
+		return $this->soft_logout();
+	}
+
 	function remember_key(?string $key) {
 		
 		global $logger;
@@ -233,30 +259,7 @@ class User extends WBHObject {
 			
 	}
 
-	function logged_in() {
-		if (isset($this->fields['id']) && $this->fields['id'] > 0) {
-			return true;
-		} else {
-			return false;
-		}
-	}
 
-	function soft_logout() {
-		unset($_SESSION['s_key']);
-	    unset($_COOKIE['c_key']);
-	    setcookie('c_key', null, 1000); // 1000 msecs after jan 1 1970
-		$this->clear_fields(); // clear current user
-		$this->message = 'You are logged out!';
-		return $this->message;
-	}
-
-	function hard_logout() {
-	
-		if ($this->logged_in()) {
-			$this->get_key(true); // force change the key
-		}
-		return $this->soft_logout();
-	}
 
 	function check_user_level(int $level) {
 

@@ -12,8 +12,11 @@ $sc = $request = preg_replace('/(.*)\?.*/', "$1", $request); // get rid of trail
 $params = explode("/", $request);
 $ac = (isset($params[1]) ? $params[1] : 'view'); // action defaults to 'view'
 
+
+$requested_controller = $params[0];
+
 //
-// check "pages" first
+// check "pages" first (no controller needed)
 //
 $pages = array(
 	
@@ -42,11 +45,6 @@ $pages = array(
 		'privacy policy',
 		'WGIS Privacy Policy')
 );
-foreach ($pages as $p => $pinfo) {
-	if ($params[0] == $p) {
-		set_page($pinfo);
-	}
-}
 
 //
 // then check synonyms for existing pages
@@ -57,12 +55,13 @@ $synonyms = array(
 	'news' => 'community',
 	'teams' => 'shows'
 );
-foreach ($synonyms as $sk => $sv) {
-	if ($params[0] == $sk) {
-		if (isset($pages[$sv])) {
-			set_page($pages[$sv]);
-		}
-	}
+
+
+if (array_key_exists($requested_controller, $pages)) {
+	set_page($pages[$requested_controller]);
+}
+if (array_key_exists($requested_controller, $synonyms)) {
+	set_page($pages[$synonyms[$requested_controller]]);
 }
 
 
@@ -70,76 +69,69 @@ foreach ($synonyms as $sk => $sv) {
 // then check controllers
 //
 $controllers = array(
-	0 => array(
-		'home' => 'home',
-		'workshop' => 'workshop',
-		'you' => 'you',
-		'calendar' => 'calendar',
-		'teachers' => 'teachers',
-		'workshop' => 'workshop',
-		'payment' => 'payment',
-		'classes' => 'classes',
-		'about-catalog' => 'catalog'
-	),
 	
-	2 => array (
-		'admin' => 'admin/dashboard',
-		'admin-workshop' => 'admin/workshop',
-		'admin-messages' => 'admin/messages',
-		'admin-change-status' => 'admin/change-status',
-		'admin-users' => 'admin/users',
-		'admin-search' => 'admin/search',
-		'admin-archives' => 'admin/archives',
-		'admin-shows' => 'admin/shows',
-		'admin-teachers' => 'admin/teachers',
-		'admin-emails' => 'admin/emails',
-		'admin-bulk-status' => 'admin/bulk-status',
-		'admin-bulk-workshops' => 'admin/bulk-workshops',
-		'admin-tasks' => 'admin/tasks',
-		'admin-reminder-emails' => 'admin/reminder-emails'
-		),	
-	3 => array (
-		'admin-revbyclass' => 'admin/revenue_byclass',
-		'admin-revbydate' => 'admin/revenue_bydate',
-		'admin-payments' => 'admin/payments',
-		'admin-registrations' => 'admin/registrations',
-		'admin-reminders' => 'admin/reminders',
-		'admin-conflicts' => 'admin/conflicts',
-		'admin-status-log' => 'admin/status-log',
-		'admin-error-log' => 'admin/error-log',
-		'admin-debug-log' => 'admin/debug-log',
-		'admin-email-log' => 'admin/email-log'
-			)
-);
+	'home' => array(0, 'home'),
+	'workshop' => array(0, 'workshop'),
+	'you' => array(0,'you'),
+	'calendar' => array(0,'calendar'),
+	'teachers' => array(0,'teachers'),
+	'workshop' => array(0,'workshop'),
+	'payment' => array(0,'payment'),
+	'classes' => array(0,'classes'),
+	'about-catalog' => array(0,'catalog'),
+	
+	'admin' => array(2, 'admin/dashboard'),
+	'admin-workshop' => array(2,'admin/workshop'),
+	'admin-messages' => array(2,'admin/messages'),
+	'admin-change-status' => array(2,'admin/change-status'),
+	'admin-users' => array(2,'admin/users'),
+	'admin-search' => array(2,'admin/search'),
+	'admin-archives' => array(2,'admin/archives'),
+	'admin-shows' => array(2,'admin/shows'),
+	'admin-teachers' => array(2,'admin/teachers'),
+	'admin-emails' => array(2,'admin/emails'),
+	'admin-bulk-status' => array(2,'admin/bulk-status'),
+	'admin-bulk-workshops' => array(2,'admin/bulk-workshops'),
+	'admin-tasks' => array(2,'admin/tasks'),
+	'admin-reminder-emails' => array(2,'admin/reminder-emails'),
+	'admin-registrations' => array(2, 'admin/registrations'),
+	'admin-reminders' => array(2, 'admin/reminders'),
+	'admin-conflicts' => array(2, 'admin/conflicts'),
+	'admin-status-log' => array(2, 'admin/status-log'),
+	'admin-error-log' => array(2, 'admin/error-log'),
+	'admin-debug-log' => array(2, 'admin/debug-log'),
+	'admin-email-log' => array(2, 'admin/email-log'),
 
-$controller = 'home'; // default
-//print_r($controllers);
-//die;
+	'admin-revbyclass' => array(3, 'admin/revenue_byclass'),
+	'admin-revbydate' => array(3, 'admin/revenue_bydate'),
+	'admin-payments' => array(3, 'admin/payments')
+
+);	
+
+$controller_file = 'home'; // default
 
 //special 'user' check
-if ($params[0] == 'user') {
+if ($requested_controller == 'user') {
 	if ($u->logged_in() && Teachers\is_teacher($u->fields['id'])) {
-		$controller = 'user';
+		$controller_file = 'user';
 	}
 }
 
-foreach ($controllers as $level => $files) {
-	if ($u->check_user_level($level) || $level == 0) {
-		foreach ($files as $k => $f) {
-			if ($params[0] == $k) {				
-				$controller = $f;
-			}
-		}
+// all controllers besides user
+if (array_key_exists($requested_controller, $controllers)) {
+	if ($controllers[$requested_controller][0] == 0 || $u->check_user_level($controllers[$requested_controller][0])) {
+		$controller_file = $controllers[$requested_controller][1]; 
 	}
 }
-include "controllers/{$controller}.php";
+
+include "controllers/{$controller_file}.php";
 
 
 // for the no-controller pages
 function set_page($pinfo) {
 	global $view;
 	$view->data['heading'] = $pinfo[1];
-	$view->data['fb_description'] = $pinfo[1];
+	$view->data['fb_description'] = $pinfo[2];
 	$view->renderPage($pinfo[0]);
 	exit;
 }
