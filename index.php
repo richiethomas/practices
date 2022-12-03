@@ -47,7 +47,7 @@ $pages = array(
 );
 
 //
-// then check synonyms for existing pages
+// synonyms for pages
 //
 $synonyms = array(
 	'jams' => 'community',
