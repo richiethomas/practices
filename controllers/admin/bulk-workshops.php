@@ -4,7 +4,7 @@ $view->data['heading'] = "bulk tags edit";
 //$wk_vars = array('st', 'confirm');
 //Wbhkit\set_vars($wk_vars);
 
-switch ($ac) {
+switch ($action) {
 
 	case 'update':
 		

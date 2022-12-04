@@ -19,7 +19,7 @@ if (!$st) { $st = ENROLLED; }
 $eh = new EnrollmentsHelper();
 $guest = new User();
 
-switch ($ac) {
+switch ($action) {
 			
 	case 'sendmsg':
 

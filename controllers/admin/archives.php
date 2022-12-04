@@ -4,7 +4,7 @@ $view->data['heading'] = "list all";
 $vars = array('needle', 'page');
 Wbhkit\set_vars($vars);
 
-switch ($ac) {
+switch ($action) {
 	case 'clone':
 		$page = '1';
 		$needle = null;

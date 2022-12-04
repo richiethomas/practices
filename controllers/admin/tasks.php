@@ -9,7 +9,7 @@ $show = 'future';
 $th = new TasksHelper();
 
 
-switch ($ac) {
+switch ($action) {
 	
 	case 'clone':
 		$t = new Task();

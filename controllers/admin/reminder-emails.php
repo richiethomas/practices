@@ -7,7 +7,7 @@ $reid = (int) ($params[2] ?? 0);
 $reh = new ReminderEmailsHelper();
 
 
-switch ($ac) {
+switch ($action) {
 	
 
 	case 'edit':

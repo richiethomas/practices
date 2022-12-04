@@ -2,7 +2,7 @@
 $view->data['heading'] = "reminders";
 
 
-if ($ac == 'force') {
+if ($action == 'force') {
 	Reminders\check_reminders(true); // force a new reminder check
 	$message = "Reminder check FORCED";
 }

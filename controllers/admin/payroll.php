@@ -8,7 +8,7 @@ $ph = new PayrollsHelper();
 $vars = array('searchstart', 'searchend', 'lastweekstart', 'lastweekend', 'nextweekstart', 'nextweekend', 'pid', 'singleadd', 'task', 'table_id', 'user_id', 'amount', 'when_paid', 'when_happened');
 Wbhkit\set_vars($vars);
 
-switch ($ac) {
+switch ($action) {
 	
 	case 'del':
 		$p = new Payroll();

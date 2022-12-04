@@ -1,4 +1,4 @@
-<?php if ($ac == 'del') { ?>
+<?php if ($action == 'del') { ?>
 <div class='alert alert-danger'><p>Really <a class='btn btn-outline-danger' href='/admin-error-log/condel'>delete the error log</a>?</p></div>
 <?php } ?>
 

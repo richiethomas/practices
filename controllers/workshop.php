@@ -19,7 +19,7 @@ if ($u->logged_in() && isset($wk->fields['id']) && $wk->fields['id'] > 0) {
 
 if ($wk->is_public()) {
 
-	switch ($ac) {
+	switch ($action) {
 
 		case 'enroll':
 			if (!$u->logged_in()) {

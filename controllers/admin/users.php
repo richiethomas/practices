@@ -23,7 +23,7 @@ $eh = new EnrollmentsHelper();
 
 $close_transcript = false;
 
-switch ($ac) {
+switch ($action) {
 	
 	
 	case 'updateuser':

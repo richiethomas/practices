@@ -11,7 +11,7 @@ if ($t = Teachers\is_teacher($u->fields['id'])) {
 }
 
 
-if ($ac=='del') {
+if ($action=='del') {
 	$wid = 	(int) ($params[2] ?? 0);
 	if ($wid) {
 		$wk->set_by_id($wid);
@@ -21,7 +21,7 @@ if ($ac=='del') {
 	}
 }
 
-if ($ac == 'view') {
+if ($action == 'view') {
 	$filter_by = 	(int) ($params[2] ?? 0);
 } else {
 	$filter_by = 0;

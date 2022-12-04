@@ -1,7 +1,7 @@
 <?php
 $view->data['heading'] = "edit workshop";
 
-if ($ac != 'ad') {
+if ($action != 'ad') {
 	$wid =  (int) ($params[2] ?? 0);
 	if (!$wid) {
 		$view->data['error_message'] = "<h1>Whoops!</h1><p>You are asking to look at info about a workshop, but I (the computer) cannot tell which workshop you mean. Sorry!</p>\n";
@@ -18,7 +18,7 @@ Wbhkit\set_vars($wk_vars);
 $e = new Enrollment();
 $eh = new EnrollmentsHelper();
 
-switch ($ac) {
+switch ($action) {
 
 	case 'sar':
 		Reminders\remind_enrolled(array($wk->fields['id'], 0, $wk->fields['title']));
@@ -28,7 +28,7 @@ switch ($ac) {
 	case 'up':
 	case 'ad':
 	
-		if ($ac == 'ad' && !$title) {
+		if ($action == 'ad' && !$title) {
 			$error = 'Must include a title for new workshop.';
 			$view->renderPage('admin/error');
 			exit();
@@ -42,12 +42,12 @@ switch ($ac) {
 			$wk->fields[$field] = $$field; // set the field array with each db col
 		}
 		
-		$wid = $wk->add_update_workshop($ac);
+		$wid = $wk->add_update_workshop($action);
 		$wk->set_by_id($wid); // re-fetch workshop info from database - inefficient, but only done by admins;
 		
-		if ($ac == 'up') {
+		if ($action == 'up') {
 			$message = "Updated practice ({$wk->fields['id']}) - {$wk->fields['title']}";
-		} elseif ($ac == 'ad') {
+		} elseif ($action == 'ad') {
 			$message = "Added practice ({$wk->fields['id']}) - ({$wk->fields['title']}) ";
 		}
 		break;

@@ -5,7 +5,7 @@ Wbhkit\set_vars(array('deldate'));
 
 $log = file(ERROR_LOG);
 
-switch ($ac) {
+switch ($action) {
 	case 'condel':
 		file_put_contents(ERROR_LOG, '');
 		$log = file(ERROR_LOG);
@@ -52,7 +52,7 @@ if (empty($log)) {
 
 $view->data['dates_opts'] = $dates_opts; 
 $view->data['log'] = $log;
-$view->data['ac'] = $ac;
+$view->data['ac'] = $action;
 $view->renderPage('admin/error-log');
 
 

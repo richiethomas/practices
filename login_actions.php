@@ -2,7 +2,7 @@
 
 $link_email_sent_flag = false;
 
-switch ($ac) {
+switch ($action) {
 
 	case 'k':
 	

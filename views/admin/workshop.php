@@ -17,9 +17,9 @@ echo "<div class='row mt-md-3 admin-edit-workshop'>\n";
 		 (".($wk->fields['actual_revenue'] - $wk->fields['total_costs']).")";
 
 		 if (count($all_costs) > 0) { echo "<br>"; }
-		 foreach ($all_costs as $ac) {
+		 foreach ($all_costs as $action) {
 			 
-			 echo "&nbsp;&nbsp;{$ac['title']} - {$ac['amount']} <small>(".date('D M j',strtotime($ac['when_paid'])).")</small><br>";
+			 echo "&nbsp;&nbsp;{$action['title']} - {$action['amount']} <small>(".date('D M j',strtotime($action['when_paid'])).")</small><br>";
 		 }
 		 echo "</p>\n";
 

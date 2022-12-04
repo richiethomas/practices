@@ -20,7 +20,7 @@ $nextend = date('Y-m-t', change_date_string($day_end, "+1 day"));
 if ($searchstart) { $searchstart = date('Y-m-d', strtotime($searchstart)); }
 if ($searchend) { $searchend = date('Y-m-d', strtotime($searchend)); }
 
-switch ($ac) {
+switch ($action) {
 
 	case 'update':
 

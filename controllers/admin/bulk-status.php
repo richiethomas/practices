@@ -14,7 +14,7 @@ $wk->set_by_id($wid);
 $e = new Enrollment();
 $eh = new EnrollmentsHelper();
 
-switch ($ac) {
+switch ($action) {
 
 	case 'change':
 		

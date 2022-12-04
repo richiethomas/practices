@@ -8,7 +8,7 @@ $ph = new PaymentsHelper();
 $vars = array('searchstart', 'searchend', 'lastweekstart', 'lastweekend', 'nextweekstart', 'nextweekend', 'pid',  'title', 'workshop_id', 'user_id', 'amount', 'when_paid', 'when_happened', 'wid', 'uid', 'amt', 'wh', 'wp', 'email');
 Wbhkit\set_vars($vars);
 
-switch ($ac) {
+switch ($action) {
 	
 	case 'del':
 		$p = new Payment();

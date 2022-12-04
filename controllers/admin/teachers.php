@@ -14,7 +14,7 @@ if ($tid) {
 	$t_classes = Teachers\get_teacher_all_classes($tid);
 }
 
-switch ($ac) {
+switch ($action) {
 	
 	case 'make':
 		$guest_id = (int) ($params[2] ?? 0);

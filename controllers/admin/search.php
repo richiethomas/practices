@@ -14,7 +14,7 @@ $needle = trim($needle);
 
 
 
-switch ($ac) {
+switch ($action) {
 	
 	case 'zeroconfirm':
 
@@ -42,7 +42,7 @@ switch ($ac) {
 		break;
 		
 	 case 'zero':
-		if ($ac == 'zero') {
+		if ($action == 'zero') {
 			$message = "Really remove students with zero workshops? <a class='btn btn-danger' href='/admin-search/zeroconfirm'>yes remove</a> or <a class='btn btn-primary' href='/admin-serach/search/everyone'>cancel</a>";			
 		}
 		

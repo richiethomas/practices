@@ -10,7 +10,7 @@ include 'lib-master.php'; // variables, objects, includes, defaults
 $request  = substr($_SERVER['REQUEST_URI'],1); // strip leading slash
 $sc = $request = preg_replace('/(.*)\?.*/', "$1", $request); // get rid of trailing "?akdasfsdhfdskj" type stuff
 $params = explode("/", $request);
-$ac = (isset($params[1]) ? $params[1] : 'view'); // action defaults to 'view'
+$action = (isset($params[1]) ? $params[1] : 'view'); // action defaults to 'view'
 
 
 $requested_controller = $params[0];
