@@ -3,7 +3,7 @@
 
 
 <?php 
-if ($u->check_user_level(3)) {
+if ($u->check_user_level(4)) {
 	echo "<p>Log in as {$guest->fields['email']}: <a href='".URL."home/k/$key'>".URL."home/k/$key</a></p>\n";
 } 
 
@@ -48,7 +48,7 @@ window.addEventListener('load', function() {
 <?php echo $userhelper->edit_change_email($guest); ?>
 </div></div> <!-- end of card -->
 
-<?php if ($u->check_user_level(3)) { ?>
+<?php if ($u->check_user_level(4)) { ?>
 <div class='card my-5 bg-light'><div class='card-body'>
 <h3 class="my-3">Group Level</h3>
 <?php echo $userhelper->edit_group_level($guest); ?>

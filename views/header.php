@@ -53,7 +53,7 @@ if (isset($fb_description)) { echo "	<meta property=\"og:description\" content=\
 		  <div class="collapse navbar-collapse" id="navbarsExampleDefault">
 			<ul class="navbar-nav ml-auto justify-content-end">
 			    <?php 
-				if ($u->check_user_level(2)) { 
+				if ($u->check_user_level(3)) { 
 						echo "<li class=\"nav-item\"> <a class=\"btn btn-outline-primary nav-link\" href=\"/admin\">Admin</a> </li>\n";
 			    } // end of check user level  
 				foreach( get_nav_items() as $nav_item ) {

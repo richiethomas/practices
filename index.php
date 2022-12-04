@@ -12,57 +12,7 @@ $sc = $request = preg_replace('/(.*)\?.*/', "$1", $request); // get rid of trail
 $params = explode("/", $request);
 $action = (isset($params[1]) ? $params[1] : 'view'); // action defaults to 'view'
 
-
 $requested_controller = $params[0];
-
-//
-// check "pages" first (no controller needed)
-//
-$pages = array(
-	
-	"about-school" => array(
-		'about/school',
-		'about wgis',
-		'About WGIS'),
-	
-	"about-works" => array(
-		'about/works',
-		'how it works',
-		"How WGIS works: signups, paying, etc."),
-		
-	"community" => array(
-		'community',
-		'community',
-		"Being a part of the WGIS community"),
-		
-	"shows" => array(
-		'shows',
-		'shows',
-		'WGIS in-person shows'),
-		
-	"privacy" => array(
-		'about/privacy',
-		'privacy policy',
-		'WGIS Privacy Policy')
-);
-
-//
-// synonyms for pages
-//
-$synonyms = array(
-	'jams' => 'community',
-	'merch' => 'community',
-	'news' => 'community',
-	'teams' => 'shows'
-);
-
-
-if (array_key_exists($requested_controller, $pages)) {
-	set_page($pages[$requested_controller]);
-}
-if (array_key_exists($requested_controller, $synonyms)) {
-	set_page($pages[$synonyms[$requested_controller]]);
-}
 
 
 //
@@ -70,6 +20,15 @@ if (array_key_exists($requested_controller, $synonyms)) {
 //
 $controllers = array(
 	
+
+	// pages = views with no controller, set title/description here
+	"about-school" => array(0, 'about/school', 'about wgis', 'About WGIS'),
+	"about-works" => array(0, 'about/works', 'how it works', "How WGIS works: signups, paying, etc."),
+	"community" => array(0, 'community', 'community', "Being a part of the WGIS community"),
+	"shows" => array(0, 'shows', 'shows', 'WGIS in-person shows'),
+	"privacy" => array(0, 'about/privacy', 'privacy policy', 'WGIS Privacy Policy'),
+
+
 	'home' => array(0, 'home'),
 	'workshop' => array(0, 'workshop'),
 	'you' => array(0,'you'),
@@ -80,61 +39,78 @@ $controllers = array(
 	'classes' => array(0,'classes'),
 	'about-catalog' => array(0,'catalog'),
 	
-	'admin' => array(2, 'admin/dashboard'),
-	'admin-workshop' => array(2,'admin/workshop'),
-	'admin-messages' => array(2,'admin/messages'),
-	'admin-change-status' => array(2,'admin/change-status'),
-	'admin-users' => array(2,'admin/users'),
-	'admin-search' => array(2,'admin/search'),
-	'admin-archives' => array(2,'admin/archives'),
-	'admin-shows' => array(2,'admin/shows'),
-	'admin-teachers' => array(2,'admin/teachers'),
-	'admin-emails' => array(2,'admin/emails'),
-	'admin-bulk-status' => array(2,'admin/bulk-status'),
-	'admin-bulk-workshops' => array(2,'admin/bulk-workshops'),
+	'user' => array(2, 'user'),
+	
+	'admin' => array(3, 'admin/dashboard'),
+	'admin-workshop' => array(3,'admin/workshop'),
+	'admin-messages' => array(3,'admin/messages'),
+	'admin-change-status' => array(3,'admin/change-status'),
+	'admin-users' => array(3,'admin/users'),
+	'admin-search' => array(3,'admin/search'),
+	'admin-archives' => array(3,'admin/archives'),
+	'admin-shows' => array(3,'admin/shows'),
+	'admin-teachers' => array(3,'admin/teachers'),
+	'admin-emails' => array(3,'admin/emails'),
+	'admin-bulk-status' => array(3,'admin/bulk-status'),
+	'admin-bulk-workshops' => array(3,'admin/bulk-workshops'),
 	'admin-tasks' => array(2,'admin/tasks'),
-	'admin-reminder-emails' => array(2,'admin/reminder-emails'),
-	'admin-registrations' => array(2, 'admin/registrations'),
-	'admin-reminders' => array(2, 'admin/reminders'),
-	'admin-conflicts' => array(2, 'admin/conflicts'),
-	'admin-status-log' => array(2, 'admin/status-log'),
-	'admin-error-log' => array(2, 'admin/error-log'),
-	'admin-debug-log' => array(2, 'admin/debug-log'),
-	'admin-email-log' => array(2, 'admin/email-log'),
+	'admin-reminder-emails' => array(3,'admin/reminder-emails'),
+	'admin-registrations' => array(3, 'admin/registrations'),
+	'admin-reminders' => array(3, 'admin/reminders'),
+	'admin-conflicts' => array(3, 'admin/conflicts'),
+	'admin-status-log' => array(3, 'admin/status-log'),
+	'admin-error-log' => array(3, 'admin/error-log'),
+	'admin-debug-log' => array(3, 'admin/debug-log'),
+	'admin-email-log' => array(3, 'admin/email-log'),
 
-	'admin-revbyclass' => array(3, 'admin/revenue_byclass'),
-	'admin-revbydate' => array(3, 'admin/revenue_bydate'),
-	'admin-payments' => array(3, 'admin/payments')
+	'admin-revbyclass' => array(4, 'admin/revenue_byclass'),
+	'admin-revbydate' => array(4, 'admin/revenue_bydate'),
+	'admin-payments' => array(4, 'admin/payments')
 
 );	
 
-$controller_file = 'home'; // default
+// synonyms for controllers
+$synonyms = array(
+	'jams' => 'community',
+	'merch' => 'community',
+	'news' => 'community',
+	'teams' => 'shows'
+);
 
-//special 'user' check
-if ($requested_controller == 'user') {
-	if ($u->logged_in() && Teachers\is_teacher($u->fields['id'])) {
-		$controller_file = 'user';
-	}
+$controller_file = 'home';
+
+// check controllers
+if (array_key_exists($requested_controller, $controllers)) {	
+	$controller_file = set_controller($controllers[$requested_controller]);
 }
 
-// all controllers besides user
-if (array_key_exists($requested_controller, $controllers)) {
-	if ($controllers[$requested_controller][0] == 0 || $u->check_user_level($controllers[$requested_controller][0])) {
-		$controller_file = $controllers[$requested_controller][1]; 
-	}
+//check synonyms
+if (array_key_exists($requested_controller, $synonyms)) {
+	$controller_file = set_controller($controllers[$synonyms[$requested_controller]]);
 }
 
 include "controllers/{$controller_file}.php";
 
 
-// for the no-controller pages
-function set_page($pinfo) {
-	global $view;
-	$view->data['heading'] = $pinfo[1];
-	$view->data['fb_description'] = $pinfo[2];
-	$view->renderPage($pinfo[0]);
-	exit;
+function set_controller($controller_info) {
+
+	global $u, $view;
+	$controller_file = 'home'; // default
+	
+	if ($controller_info[0] == 0 || $u->check_user_level($controller_info[0])) {
+		if (isset($controller_info[2]) && isset($controller_info[3])) { // view with no controller
+			$view->data['heading'] = $controller_info[2];
+			$view->data['fb_description'] = $controller_info[3];
+			$view->renderPage($controller_info[1]);
+			exit;			
+		} else {
+			$controller_file = $controller_info[1]; 
+		}
+	}
+	return $controller_file;
+	
 }
 
+	
 
 

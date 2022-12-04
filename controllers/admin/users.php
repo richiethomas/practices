@@ -43,7 +43,7 @@ switch ($action) {
 		break;
 	
 	case 'updategroup':
-		if ($u->check_user_level(3)) {	
+		if ($u->check_user_level(4)) {	
 			$guest->update_group_level($group_id);
 			$message = "Updated group level to '$group_id' for '{$guest->fields['email']}'";
 			$close_transcript = true;

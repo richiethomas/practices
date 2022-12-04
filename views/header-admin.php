@@ -59,7 +59,7 @@
 		      </div>
 		    </li>
 
-<?php if ($u->check_user_level(3)) { ?>
+<?php if ($u->check_user_level(4)) { ?>
 		    <li class="nav-item dropdown">
 		      <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Money</a>
 		      <div class="dropdown-menu nav-item">
