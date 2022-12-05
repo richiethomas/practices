@@ -94,7 +94,6 @@ class Workshop extends WBHObject {
 		}
 	}
 
-
 	public function parse_online_url(?string $online_url) {
 		
 		if (!$online_url) { 

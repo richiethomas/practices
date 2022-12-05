@@ -78,7 +78,12 @@ function confirm_email(\Enrollment $e, $status_id = ENROLLED) {
 				$body .= "<p>ZOOM LINK:<br>\n----------<br>\nThe Zoom link to your workshop is: {$wk->url['online_url_display']}<br>\n";
 				$body .= "<br>\nTry to show up 5 minutes early if you can so we can get started right away.  If your class is multiple sessions, that link should work for all of them. We'll send you an email if the link changes.</p>\n";
 			} else {
-				$body .= "<p>LOCATION:<br>\n---------<br>\n{$wk->location['place']}<br>\n{$wk->location['address']}<br>\n{$wk->location['city']}, {$wk->location['state']} {$wk->location['zip']}</p>\n";
+				$body .= "<p>LOCATION:<br>\n---------<br>\n{$wk->location['place']}<br>\n{$wk->location['address']}<br>\n{$wk->location['city']}, {$wk->location['state']} {$wk->location['zip']}";
+
+				if ($wk->location['notes']) { $body.= "<br>{$wk->location['notes']}"; }
+				
+				$body .= "</p>\n";
+
 			}
 			
 			$body .= payment_text($wk);
@@ -305,17 +310,17 @@ function payment_text(\Workshop $wk, $reminder = 0) {
 
 function email_boilerplate() {
 	
-	return "<p>BE ON TIME<br> \n-----------<br> \nWe know sometimes lateness can't be helped but please do your best to be on time! Log into zoom five minutes before class starts! These classes are short so being even a few minutes late really disrupts things!</p>\n
-<p>DROPPING THE CLASS<br> \n------------------<br> \nYou can drop out by going to class's web page (the link is just above this paragraph). If you're dropping within ".LATE_HOURS." of the start, please pay anyway.</p>\n\n
+	return "<p>BE ON TIME<br> \n-----------<br> \nDo your best to be on time! Classes are short so being even a few minutes late really disrupts things!</p>\n
+<p>DROPPING THE CLASS<br> \n------------------<br> \nYou can drop out by going to class's web page (the link is just above this paragraph). If you're dropping within ".LATE_HOURS." of the start, we may ask you to still pay.</p>\n\n
 <p>SHOWS AND JAMS<br>\n
 ------------------<br>\n
-There are online shows and jams that you can play in, if you wish! See the shows/jams page on the web site for more info:<br>\n
-http://www.wgimprovschool.com/community</p>\n\n
+There are shows and jams, if you wish!<br>\n
+http://www.wgimprovschool.com/shows</p>\n\n
 <p>FACEBOOK AND CHAT<br>\n
 ---------------------<br>\n
 If you want to meet other students, check out:\n
 Facebook group: http://www.facebook.com/groups/wgimprovschool<br>\n
-Discord chat server: https://discord.gg/GXbP3wgbrc</p>";
+Discord chat: https://discord.gg/GXbP3wgbrc</p>";
 	
 }
 

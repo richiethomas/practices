@@ -28,14 +28,7 @@ function check_tasks(bool $force = false) {
 			$t->reminder_email->fields['subject'],
 			$t->reminder_email->fields['body'],
 			$t->user->fields['display_name'] );
-			
-		// test	
-		\Emails\centralized_email(
-			WEBMASTER, 
-			$t->reminder_email->fields['subject'],
-			$t->reminder_email->fields['body'],
-			$t->user->fields['display_name'] );
-			
+
 		$t->update_reminder_sent(true);
 		
 	}
@@ -220,7 +213,12 @@ $link</p>\n";
 https://www.twitch.tv/wgimprovschool</p>\n";
 		}
 	} else {
-		$note .= "<p>LOCATION:<br>\n---------<br>\n{$wk->location['place']}<br>\n{$wk->location['address']}<br>\n{$wk->location['city']}, {$wk->location['state']} {$wk->location['zip']}</p>\n";
+		$note .= "<p>LOCATION:<br>\n---------<br>\n{$wk->location['place']}<br>\n{$wk->location['address']}<br>\n{$wk->location['city']}, {$wk->location['state']} {$wk->location['zip']}";
+		
+		if ($wk->location['notes']) { $note.= "<br>{$wk->location['notes']}"; }
+		
+		
+		$note .= "</p>\n";
 		
 	}	
 
