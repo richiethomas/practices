@@ -6,11 +6,17 @@
 		<h2>All Teachers</h2>
 		<ul>
 			<?php
+			$emails = '';
 			foreach ($teachers as $teach) {
 				echo "<li><a href=\"/admin-teachers/view/{$teach['id']}\">{$teach['nice_name']}</a>".($teach['active'] ? '' : ' (inactive)')."</li>\n";
+				if ($teach['active']) { $emails .= "{$teach['email']},\n"; }
 			}
 			?>
 		</ul>
+		
+		<?php echo Wbhkit\textarea('emails', $emails, 'Cut and paste emails', 10, 80); ?>
+		
+		
 	</div>
 	<div class="col-sm-9">
 		
