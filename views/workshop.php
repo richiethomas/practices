@@ -119,7 +119,7 @@ echo "<div class=\"row m-3 p-3 justify-content-center\"><div class=\"col-md-8 bo
 <h2>How This Works</h2>
 <ul>
 	<li>Pay via Venmo (@wgimprovschool - a business) or Paypal (payments@wgimprovschool.com)</li>
-	<li>Classes are online, on <a href=\"http://www.zoom.us/\">Zoom</a> unless the title or description says \"in person\"</li>
+	<li>You'll get an address in your enrollment email. Online classes are on Zoom.</li>
 	<li><b>LATE DROP POLICY: If drop less than ".LATE_HOURS." hours before start of class, we will ask that you still pay for the class.</b></li>
 </ul>
 </div></div>\n";

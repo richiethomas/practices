@@ -69,7 +69,7 @@ switch ($action) {
 			$e = new Enrollment();
 			$e->set_by_u_wk($guest, $wk);
 			if ($e->drop_session()) {
-				$message = "Removed user ({$guest->fields['email']}) from practice '{$wk['title']}'";
+				$message = "Removed user ({$guest->fields['email']}) from practice '{$wk->fields['title']}'";
 			} else {
 				$error = $e->error;
 			}
