@@ -11,7 +11,7 @@ use PHPMailer\PHPMailer\Exception;
 //require_once 'Mail/mime.php';	 // Mail_mime did weird things to encoding of mail
 
 
-function centralized_email($to, $sub, $body, $realname = null) {
+function centralized_email($to, $sub, $body, $realname = null, $cc_email = null) {
 		
 	global $logger, $lookups;	
 	
@@ -26,6 +26,10 @@ function centralized_email($to, $sub, $body, $realname = null) {
 	$mail->Subject = $sub;
 	
 	$mail->msgHTML($body);
+	if ($cc_email) {
+		if (LOCAL) { $cc_email = WEBMASTER; } // all local mail to WEBASTER
+		$mail->addCC($cc_email);
+	}
 
 	//send the message, check for errors
 	$sent = false;

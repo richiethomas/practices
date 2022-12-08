@@ -37,8 +37,9 @@ switch ($action) {
 		foreach ($stds as $std) {
 
 			list($wk, $this_subject, $this_note) = set_message_properties($wk, $std['time_zone'], $subject, $note);
-						
-			Emails\centralized_email($std['email'], $this_subject, $this_note);
+			$real_name = $std['display_name'] ? $std['display_name'] : null;	
+			$cc_email = $u->fields['email'];
+			Emails\centralized_email($std['email'], $this_subject, $this_note, $real_name, $cc_email);
 			$sent .= "{$std['email']}, ";
 			$guest->set_by_id($std['id']);
 		

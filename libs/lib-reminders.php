@@ -131,7 +131,8 @@ function remind_enrolled(array $class) {
 				
 		//\Emails\centralized_email('whines@gmail.com', $subject, $note); // for testing, i get everything
 
-		\Emails\centralized_email($std['email'], $subject, $note);
+		$real_name = $std['display_name'] ? $std['display_name'] : null;
+		\Emails\centralized_email($std['email'], $subject, $note, $real_name);
 	}
 	
 	//remind teacher
