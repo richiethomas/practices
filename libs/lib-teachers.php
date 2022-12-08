@@ -70,7 +70,7 @@ function get_teacher_fields($t) {
 }
 
 
-function get_all_teachers($only_active = false) {
+function get_all_teachers($only_active = false, $sort_by_last = false) {
 	$stmt = \DB\pdo_query("select t.*, u.email, u.display_name, u.ukey, u.time_zone from teachers t, users u where t.user_id = u.id".($only_active ? ' and t.active = 1' : ''));
 	$teachers = array();
 	while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
@@ -80,15 +80,17 @@ function get_all_teachers($only_active = false) {
 		$teachers[$row['id']]['sort_name'] = $parts[1]; // last name
 	}
 	
-	usort($teachers, function($a, $b) {
-	    return $a['sort_name'] <=> $b['sort_name'];
-	});
+	if ($sort_by_last) {
+		usort($teachers, function($a, $b) { return $a['sort_name'] <=> $b['sort_name']; });
+	} else {
+		usort($teachers, function($a, $b) { return $a['nice_name'] <=> $b['nice_name']; });
+	}
 	
 	return $teachers;
 }
 
 function get_faculty() {
-	$teachers = get_all_teachers();
+	$teachers = get_all_teachers(false, true);
 	$faculty = array();
 	foreach ($teachers as $id => $t) {
 		if ($t['active'] == 1) {
