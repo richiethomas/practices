@@ -92,11 +92,11 @@ $schedule = array(
 	array ('October 14, 2022', "$t1 / $t2"),
 	array ('October 21, 2022', "$t3 / $t4"),
 	array ('October 28, 2022', "Bitness Class Shows"),
-	*/
 	array ('November 4, 2022', "$t1 / $t2"),
 	array ('November 11, 2022', "$t4 / $t3"),
 	array ('November 18, 2022', "Bitness Class Shows"),
 	array ('November 25, 2022', "Thanksgiving week - TBA"),
+	*/
 	array ('December 2, 2022', "$t4 / $t1"),
 	array ('December 9, 2022', "$t3 / $t2"),
 	array ('December 16, 2022', "Bitness Class Shows"),

@@ -19,6 +19,11 @@ $e = new Enrollment();
 $eh = new EnrollmentsHelper();
 
 switch ($action) {
+	
+	case 'delallxtra':
+		$wk->delete_xtra_sessions();
+		$message = "Deleted all xtra sessions.";
+		break;
 
 	case 'sar':
 		Reminders\remind_enrolled(array($wk->fields['id'], 0, $wk->fields['title']));

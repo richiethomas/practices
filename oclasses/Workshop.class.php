@@ -530,6 +530,13 @@ class Workshop extends WBHObject {
 	}
 
 
+	function delete_xtra_sessions() {
+		if ($this->fields['id']) {
+			$stmt = \DB\pdo_query("delete from xtra_sessions where workshop_id = :id", array(':id' => $this->fields['id']));
+			$this->set_xtra_sessions();
+		}
+	}
+
 
 }
 

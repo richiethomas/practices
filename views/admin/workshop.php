@@ -103,6 +103,7 @@ echo "<div class='row mt-md-3 admin-edit-workshop'>\n";
 		//xtra sessions 
 		//echo  \Wbhkit\form_validation_javascript('xtra_edit');
 		echo  "<h2>Xtra Sessions</h2>";
+		echo "<p class='mt-0'><small><a class='' href='/admin-workshop/delallxtra/{$wid}'>(delete all)</a></small></p>\n";
 		echo "<ul>\n";
 		if (!empty($wk->sessions)) {
 			foreach ($wk->sessions as $s) {
