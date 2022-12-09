@@ -6,7 +6,7 @@
     'aliases' => 
     array (
     ),
-    'reference' => '18df909af79f6be720ba042be28472e51ca02f08',
+    'reference' => 'a87b1ca14daeb1b87ac6b7c96d675be9c1144881',
     'name' => '__root__',
   ),
   'versions' => 
@@ -18,40 +18,40 @@
       'aliases' => 
       array (
       ),
-      'reference' => '18df909af79f6be720ba042be28472e51ca02f08',
+      'reference' => 'a87b1ca14daeb1b87ac6b7c96d675be9c1144881',
     ),
     'monolog/monolog' => 
     array (
-      'pretty_version' => '2.2.0',
-      'version' => '2.2.0.0',
+      'pretty_version' => '2.8.0',
+      'version' => '2.8.0.0',
       'aliases' => 
       array (
       ),
-      'reference' => '1cb1cde8e8dd0f70cc0fe51354a59acad9302084',
+      'reference' => '720488632c590286b88b80e62aa3d3d551ad4a50',
     ),
     'phpmailer/phpmailer' => 
     array (
-      'pretty_version' => 'v6.5.3',
-      'version' => '6.5.3.0',
+      'pretty_version' => 'v6.7.1',
+      'version' => '6.7.1.0',
       'aliases' => 
       array (
       ),
-      'reference' => 'baeb7cde6b60b1286912690ab0693c7789a31e71',
+      'reference' => '49cd7ea3d2563f028d7811f06864a53b1f15ff55',
     ),
     'psr/log' => 
     array (
-      'pretty_version' => '1.1.3',
-      'version' => '1.1.3.0',
+      'pretty_version' => '3.0.0',
+      'version' => '3.0.0.0',
       'aliases' => 
       array (
       ),
-      'reference' => '0f73288fd15629204f9d42b7055f72dacbe811fc',
+      'reference' => 'fe5ea303b0887d5caefd3d431c3e61ad47037001',
     ),
     'psr/log-implementation' => 
     array (
       'provided' => 
       array (
-        0 => '1.0.0',
+        0 => '1.0.0 || 2.0.0 || 3.0.0',
       ),
     ),
   ),

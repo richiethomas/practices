@@ -35,7 +35,7 @@ class SMTP
      *
      * @var string
      */
-    const VERSION = '6.5.3';
+    const VERSION = '6.7.1';
 
     /**
      * SMTP line break constant.
@@ -187,6 +187,7 @@ class SMTP
         'SendGrid' => '/[\d]{3} Ok: queued as (.*)/',
         'CampaignMonitor' => '/[\d]{3} 2.0.0 OK:([a-zA-Z\d]{48})/',
         'Haraka' => '/[\d]{3} Message Queued \((.*)\)/',
+        'Mailjet' => '/[\d]{3} OK queued as (.*)/',
     ];
 
     /**
@@ -276,7 +277,7 @@ class SMTP
                 break;
             case 'html':
                 //Cleans up output a bit for a better looking, HTML-safe output
-                echo gmdate(MYSQL_FORMAT), ' ', htmlentities(
+                echo gmdate('Y-m-d H:i:s'), ' ', htmlentities(
                     preg_replace('/[\r\n]+/', '', $str),
                     ENT_QUOTES,
                     'UTF-8'
@@ -286,7 +287,7 @@ class SMTP
             default:
                 //Normalize line breaks
                 $str = preg_replace('/\r\n|\r/m', "\n", $str);
-                echo gmdate(MYSQL_FORMAT),
+                echo gmdate('Y-m-d H:i:s'),
                 "\t",
                     //Trim trailing space
                 trim(
@@ -482,7 +483,7 @@ class SMTP
      * @param string $username The user name
      * @param string $password The password
      * @param string $authtype The auth type (CRAM-MD5, PLAIN, LOGIN, XOAUTH2)
-     * @param OAuth  $OAuth    An optional OAuth instance for XOAUTH2 authentication
+     * @param OAuthTokenProvider $OAuth An optional OAuthTokenProvider instance for XOAUTH2 authentication
      *
      * @return bool True if successfully authenticated
      */
@@ -681,7 +682,6 @@ class SMTP
      */
     public function close()
     {
-        $this->setError('');
         $this->server_caps = null;
         $this->helo_rply = null;
         if (is_resource($this->smtp_conn)) {
@@ -1036,7 +1036,10 @@ class SMTP
             return false;
         }
 
-        $this->setError('');
+        //Don't clear the error store when using keepalive
+        if ($command !== 'RSET') {
+            $this->setError('');
+        }
 
         return true;
     }

@@ -16,8 +16,9 @@ zschema.txt
 info.txt
 photos/*
 error_log
-composer.lock
 *.txt
+vendor/*
+
 
 # Compiled source #
 ###################
