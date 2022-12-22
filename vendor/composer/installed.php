@@ -6,7 +6,7 @@
     'aliases' => 
     array (
     ),
-    'reference' => 'a87b1ca14daeb1b87ac6b7c96d675be9c1144881',
+    'reference' => 'ce40ebe4315e2d772b251807008103afe2fdc987',
     'name' => '__root__',
   ),
   'versions' => 
@@ -18,7 +18,7 @@
       'aliases' => 
       array (
       ),
-      'reference' => 'a87b1ca14daeb1b87ac6b7c96d675be9c1144881',
+      'reference' => 'ce40ebe4315e2d772b251807008103afe2fdc987',
     ),
     'monolog/monolog' => 
     array (

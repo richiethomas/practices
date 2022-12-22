@@ -93,7 +93,6 @@ $table_open = "<table class='table table-striped my-3'>
 	<thead><tr>
 		<th>workshop</th>
 		<th>enrolled</th>
-		<th>tuition</th>
 		<th>revenue</th>
 		<th>teachers pay</th>
 		<th>other costs</th>
@@ -117,7 +116,8 @@ $table_open = "<table class='table table-striped my-3'>
 		
 		foreach ($workshops_list as $wid => $wk) {
 			
-			$wk->fields['other_costs'] = $wk->fields['total_costs'] - $wk->fields['teacher_pay'];
+			$wk->fields['other_costs'] = $wk->fields['total_costs'] - $wk->fields['total_pay'];
+			if ($wk->fields['other_costs'] < 0) { $wk->fields['other_costs'] = 0; }
 			
 			$teacher_key = $wk->fields['teacher_id'];
 			if ($wk->fields['co_teacher_id']) {
@@ -140,7 +140,6 @@ $table_open = "<table class='table table-striped my-3'>
 
 			echo "<tr><td width='300'>({$wk->fields['id']}) <a href='/admin-workshop/view/{$wk->fields['id']}'>{$wk->fields['title']}</a> <small>({$wk->fields['showstart']})</small></td>
 			<td>{$wk->fields['enrolled']} / {$wk->fields['capacity']}</td>
-			<td>{$wk->fields['cost']}</td>
 			<td>{$wk->fields['actual_revenue']}</td>
 			<td>".number_format($wk->fields['total_pay'])."</td>
 			<td>".number_format($wk->fields['other_costs'])."</td>
@@ -163,7 +162,7 @@ $table_open = "<table class='table table-striped my-3'>
 		echo "<tr><td colspan='6'></td></tr>\n";
 		
 		echo "<tr><td>Totals:</td>
-		<td colspan=2>&nbsp;</td>
+		<td>&nbsp;</td>
 		<td>{$totals['revenue']}</td>
 		<td>".number_format($totals['total_pay'])."</td>
 		<td>".number_format($totals['other_costs'])."</td>
@@ -183,8 +182,8 @@ function show_teacher_totals($wk, $teacher_totals) {
 	
 	// wrap up previous teacher revenue
 	echo "<tr class=\"table-info\">
-		<td>{$wk->fields['teacher_name']} sub totals:</td>
-	<td colspan=2>&nbsp;</td>
+	<td>{$wk->fields['teacher_name']} sub totals:</td>
+	<td>&nbsp;</td>
 	<td>{$teacher_totals['revenue']}</td>
 	<td>".number_format($teacher_totals['total_pay'])."</td>
 	<td>".number_format($teacher_totals['other_costs'])."</td>

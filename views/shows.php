@@ -23,14 +23,6 @@
 <a id="tuesdays"></a>
 <h3>Broadwater Tuesdays</h3>
 
-<p>Starting in Novemeber 2022, WGIS is doing shows at Broadwater Theater on Tuesday Nights. We have three shows every week:</p>
-
-<ul>
-	<li>7pm - Two teams do a set. Featuring UCB teams, WE teams and WGIS mash-up teams</li>
-	<li>8:30pm - We're currently doing a 3prov tournament in this spot. But we have plans to do other fun formats including: Play by Play (improv w/ sports commentary), all-wigs nights (WGIS WIGS), Boxing Day sets (bad British accents) and more</li>
-	<li>10pm - Open Jam. Hosted by Jim Woods, Sarah Claspell and Will Hines. Throw your name in the hat and jam.</li>
-</ul>
-
 <p><a href="https://www.thebroadwaterla.com/">Broadwater Theater</a> is at 6322 Santa Monica Blvd. Street parking. $10 optional donation. Our shows are usually in the Black Box Theatre though sometimes on the Second Stage. They're right next to each other.</p>
 
 <a id='classshows'></a>
@@ -38,13 +30,14 @@
 <p>Starting January 2023, we're moving to a new schedule with two shows a night. A class show at 7:30pm, and WGIS teams at 9pm. Team schedule will be announced in mid-December. Here's the class show schedule.</p>
 <ul>7:30pm schedule
 <li>Jan 3 - play by play</li>
-<li>Jan 10 - Level 5 </li>
-<li>Jan 17 - Level 5</li>
-<li>Jan 24 - Sarah Level 3 / Jim Level 4</li>
-<li>Jan 31 - Julie Level 1 / Will Level 2 </li>
-<li>Feb 7 - Level 5</li>
-<li>Feb 14 - Julie level 1 / Sarah Level 3</li>
+<li>Jan 10 - Joel Level 5 </li>
+<li>Jan 17 - Julie Level 5 / Sarah Level 3</li>
+<li>Jan 24 - Joel Level 5 / Jim Level 4</li>
+<li>Jan 31 - Bitness Class Shows </li>
+<li>Feb 7 - Will Level 2 / Sarah Level 3</li>
+<li>Feb 14 - Julie level 1 / Joel Level 5</li>
 <li>Feb 21 - Will Level 2  / Jim Level 4</li>
+<li>Feb 28 - Bitness Class Shows</li>
 </ul>
 
 <a id="fridays"></a>

@@ -44,8 +44,8 @@ class WorkshopsHelper extends WBHObject {
 			$row = $wk->format_times_one_level($row);
 
 			$row['total_sessions'] = $this->check_total_sessions($row['id'], $total_sessions);
-			$row['teacher'] = $this->find_teacher_in_teacher_array($row['teacher_id'], $teachers);
-			$row['co_teacher'] = $this->find_teacher_in_teacher_array($row['co_teacher_id'], $teachers);
+			$row['teacher'] = $this->find_teacher_in_teacher_array($teachers, $row['teacher_id']);
+			$row['co_teacher'] = $this->find_teacher_in_teacher_array($teachers, $row['co_teacher_id']);
 			
 			$row['teacher_name'] = $row['teacher']['nice_name'];
 			if (isset($row['co_teacher']['nice_name'])) {
@@ -63,7 +63,7 @@ class WorkshopsHelper extends WBHObject {
 	}
 
 	// used in "get sessions to come"
-	private function find_teacher_in_teacher_array(?int $id = 0, array &$teachers) {
+	private function find_teacher_in_teacher_array(array &$teachers, ?int $id) {
 		foreach ($teachers as $tid => $teach) {
 			if ($id == $teach['id']) {
 				return $teach;
