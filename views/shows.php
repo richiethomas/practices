@@ -59,93 +59,177 @@
 <p>The Clubhouse is a community improv black box theater. It's at 1607 N. Vermont Ave in a shopping center. There's a door code required which is 0279#. See above photo for the kinda hidden entrance! We're in the downstairs (main) stage.</p>
 
 <a id='teams'></a>
-<h2>Fall/Winter 2022 Teams Schedule</h2>
-
+<h2 class='mt-3'>Spring 2023 Teams Schedule</h2>
+<p>Shows are twice a week: On Broadwater Tuesdays (Tuesdays 9pm) and Clubhouse Fridays (Fridays 7pm)</p>
 
 <?php
 	
-$t1 = 'Adam Jilt';
-$t2 = 'Dearly Beloved';
-$t3 = 'Party Horses Say Hay';
-$t4 = 'The Funnies';
+$t = array(
+	'Dominic', 
+	'Mia', 
+	'Hobbs', 
+	'Shaw', 
+	'Roman', 
+	'Letty', 
+	'Tej', 
+	'Han');
+
 $schedule = array(
-	/*
-	array ('July 22, 2022', "$t1"),
-	array ('July 29, 2022', "Bitness Class Shows"),
-	array ('August 5, 2022', "$t2 / $t1"),
-	array ('August 12, 2022', "$t4 / $t2"),
-	array ('August 19, 2022', "$t3 / $t1"),
-	array ('August 26, 2022', "Bitness Class Shows"),
-	array ('September 2, 2022', "$t2 / $t4"),
-	array ('September 9, 2022', "$t4 / $t1"),
-	array ('September 16, 2022', "$t3 / $t2"),
-	array ('September 23, 2022', "$t1 / $t3"),
-	array ('September 30, 2022', "Bitness Class Shows"),
-	array ('October 7, 2022', "$t4 / $t3"),
-	array ('October 14, 2022', "$t1 / $t2"),
-	array ('October 21, 2022', "$t3 / $t4"),
-	array ('October 28, 2022', "Bitness Class Shows"),
-	array ('November 4, 2022', "$t1 / $t2"),
-	array ('November 11, 2022', "$t4 / $t3"),
-	array ('November 18, 2022', "Bitness Class Shows"),
-	array ('November 25, 2022', "Thanksgiving week - TBA"),
-	*/
-	array ('December 2, 2022', "$t4 / $t1"),
-	array ('December 9, 2022', "$t3 / $t2"),
-	array ('December 16, 2022', "Bitness Class Shows"),
-	array ('December 23, 2022', "Holiday week - TBA"),
-	array ('December 30, 2022', "Holiday week - TBA")
-	
+	array( 'broad' => array ('January 10, 2023', $t[0], $t[1]), 
+		   'club' => array ('January 13, 2023', $t[3], $t[2])),
+		
+	array( 'broad' => array ('January 17, 2023', $t[4], $t[5]), 
+   		   'club' => array ('January 20, 2023', $t[6], $t[7])),		
+
+	array(	'broad' => array ('January 24, 2023', $t[6], $t[2]), 
+			'club' => array ('January 27, 2023', $t[4], $t[0])),		
+
+	array(	'broad' => array ('January 31, 2023', $t[3], $t[7]), 
+			'club' => array ('Feb 3, 2023', $t[5], $t[1])),		
+
+	array(	'broad' => array ('Feb 7, 2023', $t[1], $t[6]), 
+			'club' => array ('Feb 10, 2023', $t[0], $t[7])),		
+
+	array(	'broad' => array ('Feb 14, 2023', $t[2], $t[4]), 
+			'club' => array ('Feb 17, 2023', $t[3], $t[5])),		
+
+	array(	'broad' => array ('Feb 21, 2023', $t[7], $t[3]), 
+			'club' => array ('Feb 24, 2023', $t[1], $t[2])),		
+
+	array(	'broad' => array ('Feb 28 , 2023', $t[5], $t[0]), 
+			'club' => array ('Mar 3, 2023', $t[4], $t[6])),		
+
+	array(	'broad' => array ('Mar 7, 2023', $t[3], $t[7]), 
+			'club' => array ('Mar 10, 2023', $t[2], $t[4])),		
+
+	array(	'broad' => array ('Mar 14, 2023', $t[0], $t[6]), 
+			'club' => array ('Mar 17, 2023', $t[5], $t[1])),		
+
+	array(	'broad' => array ('Mar 21, 2023', $t[4], $t[5]), 
+			'club' => array ('Mar 24, 2023', $t[6], $t[0])),		
+
+	array(	'broad' => array ('Mar 28, 2023', $t[1], $t[2]), 
+			'club' => array ('Mar 31, 2023', $t[3], $t[7])),		
+
+	array(	'broad' => array ('Apr 4, 2023', $t[2], $t[3]), 
+			'club' => array ('Apr 7, 2023', $t[7], $t[6])),		
+
+	array(	'broad' => array ('Apr 11, 2023', $t[5], $t[1]), 
+			'club' => array ('Apr 14, 2023', $t[0], $t[4])),		
+
+	array(	'broad' => array ('Apr 18, 2023', $t[7], $t[0]), 
+			'club' => array ('Apr 21, 2023', $t[1], $t[2])),		
+
+	array(	'broad' => array ('Apr 25, 2023', $t[6], $t[4]), 
+			'club' => array ('Apr 28, 2023', $t[3], $t[5])),		
+
+	array(	'broad' => array ('May 2, 2023', $t[7], $t[6]), 
+			'club' => array ('May 5, 2023', $t[3], $t[2])),		
+
+	array(	'broad' => array ('May 9, 2023', $t[4], $t[5]), 
+			'club' => array ('May 12, 2023', $t[1], $t[0])),		
+
+	array(	'broad' => array ('May 16, 2023', $t[3], $t[1]), 
+			'club' => array ('May 19, 2023', $t[5], $t[4])),		
+
+	array(	'broad' => array ('May 23, 2023', $t[0], $t[2]), 
+			'club' => array ('May 26, 2023', $t[6], $t[7])),		
+
+
 );
 	
+echo "
+	<div class='row m-2 p-1 fw-bold bg-light'>
+		<div class='col'><b>Broadwater Tuesdays<br>9pm</b></div>\n
+		<div class='col'><b>Clubhouse Fridays<br>7pm</b></div>\n
+	</div>\n";
+
 foreach ($schedule as $s) {
-	echo "<p><b>".date("M j", strtotime($s[0]))."</b>: {$s[1]}</p>\n";
+	echo "
+		<div class='row m-2 p-1'>
+			<div class='col'><b>".date("M j", strtotime($s['broad'][0]))."</b>: {$s['broad'][1]} / {$s['broad'][2]}</div>\n
+			<div class='col'><b>".date("M j", strtotime($s['club'][0]))."</b>: {$s['club'][1]} / {$s['club'][2]}</div>\n
+		</div>\n";
+
 }
 
 	
 ?>
 
+<h2 class='mt-3'>Spring 2023 Roster</h2>
 
-<h2>Fall/Winter 2022 Roster</h2>
-
-<p><b><?php echo $t1; ?></b>: Anna Bezahler, 
-Artin Sarkisyan, 
-DarylJim Diaz,
-Isabella Escalante, 
-Jessica Dahlgren,
-Lars Midthun, 
-Meredith Haspel-Elliott,
-Ted Asbaghi <br>
-COACH: Jim Woods</p>
-
-<p><b><?php echo $t2; ?></b>: Andrew Sproge,
-Anja Boltz,
-Bob Hsiao,
-Cassie Grilley,
-Judith Friedman,
-Matt Rubano,
-Nolan Purvis,
-Russell Carter<br>
-COACH: Will Hines</p>
-
-<p><b><?php echo $t4; ?></b>: Benedikt Sebastian,
-Isabel Galbraith,
+<p><b><?php echo $t[0]; ?></b>: Alex Maystrik,
+Andrew Sproge,
+Eli Lloyd,
+Erin Smith,
+Isabella Escalante,
+James Werner,
 Jessica Sproge,
-Justin Liu,
-Kelly Hannah,
-Nick Luciano,
-Spencer Kruse,
-Rocky Strobel<br>
-COACH: Jim Woods</p>
+Pablo Hernandez</p>
 
-<p><b><?php echo $t3; ?></b>: Amanda Bonar,
+<p><b><?php echo $t[1]; ?></b>: Aaron Singer,
+Anja Boltz,
+Brandon Waters,
+David Luong,
+Emily Ralph,
+Erik Kistel,
+Jeremy Sender,
+Sean Smith</p>
+
+<p><b><?php echo $t[2]; ?></b>: Amanda Bonar,
+Artin Sarkisyan,
 Cara Popecki,
+Duncan Young,
+John Bryant,
+Justin Liu,
+Lars Midthun, 
+Rocky Strobel</p>
+
+<p><b><?php echo $t[3]; ?></b>: Cassie Grilley,
+Derek Polka,
+Isabel Galbraith,
+Ittai Geiger,
+James Jelin,
+Oleg Trofimo,
+Sahil Desai,
+Sebastian Davis</p>
+
+<p><b><?php echo $t[4]; ?></b>: Bob Hsiao
+Jason Van Glass
+Laney Serface
+Meredith Haspel Elliott
+Mickey Woo
+Nolan Purvis
+Phil Gould
+Ted Asbaghi</p>
+
+<p><b><?php echo $t[5]; ?></b>: Anna Bezahler,
+DarylJim Diaz,
+Jeff Taylor,
+Sparky Shelton,
+Nick Luciano,
+Ray Lewis,
+Rosie Grant,
+Russell Carter</p>
+
+
+<p><b><?php echo $t[6]; ?></b>: Benedikt Sebastian,
 BJ Schwartz,
-Erik Kestel,
-Harrison Merkt,
-Phil Gould,
-Sara Keller,
-Sebastian Davis<br>
-COACH: Sarah Claspell</p>
+Hermie Castillo,
+Jack De Sanz,
+Jonathan Carr,
+Joy Regullano,
+Sam Di,
+Sara Keller</p>
+
+
+<p><b><?php echo $t[7]; ?></b>: Andrew Coppola,
+Brent Mukai,
+Christine Stemmer,
+DJ Rouse,
+Ezra Parter,
+Ian Vens,
+Judith Friedman,
+Katherine Stiegemeyer</p>
 
 
