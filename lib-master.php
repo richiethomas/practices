@@ -38,7 +38,7 @@ define('TIME_ZONE', $dateTime->format('T'));
 
 define('MYSQL_FORMAT', 'Y-m-d H:i:s');
 define('MYSQL_DATE', 'Y-m-d');
-define('LOCAL', in_array($_SERVER['SERVER_NAME'], array('localhost','127.0.0.1')) ? true : false);
+define('LOCAL', in_array($_SERVER['SERVER_NAME'], array('localhost','127.0.0.1', 'wgimprovstaging.com')) ? true : false);
 
 // to control logging levels, see lib-logger.php
 define('DEBUG_LOG', 'info.txt');
