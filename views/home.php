@@ -12,52 +12,52 @@ function format_cost_display(string $cd) {
 
 function teacher_link_minimal($tinfo) {
 
-    return "<div class='clearfix'><a href='/teachers/view/{$tinfo['id']}'><img style='width: 40px; height: 40px; border-radius: 50%' class='clearfix float-start mx-2 align-self-center' src='".\Teachers\get_teacher_photo_src($tinfo['user_id'])."' alt='".htmlspecialchars($tinfo['display_name'], ENT_QUOTES)."'></a> <a class='text-decoration-none text-muted' href='/teachers/view/{$tinfo['id']}'> {$tinfo['nice_name']}</a></div>";	
-	
-	
+    return "<div class='clearfix'><a href='/teachers/view/{$tinfo['id']}'><img style='width: 40px; height: 40px; border-radius: 50%' class='clearfix float-start mx-2 align-self-center' src='".\Teachers\get_teacher_photo_src($tinfo['user_id'])."' alt='".htmlspecialchars($tinfo['display_name'], ENT_QUOTES)."'></a> <a class='text-decoration-none text-muted' href='/teachers/view/{$tinfo['id']}'> {$tinfo['nice_name']}</a></div>";
+
+
 }
-	
+
 function class_row_minimal(Workshop $wk) {
-	
+
 	global $u;
-	
+
 	$html = "     <div class='row my-3'>\n";
-		
+
 	$html .= "          <div class='col-3'><a href='/workshop/view/". $wk->fields['id'] ."'>". $wk->fields['title'] . "</a><br><span class='text-muted'><small>{$wk->fields['time_summary']}</small></span></div>\n";
-		
+
 	$html .= "          <div class='col-3'>".teacher_link_minimal($wk->teacher);
-	if ($wk->fields['co_teacher_id']) { $html .= teacher_link_minimal($wk->coteacher); } 
+	if ($wk->fields['co_teacher_id']) { $html .= teacher_link_minimal($wk->coteacher); }
 	$html .= "</div>\n";
-	
+
 	$html .= "          <div class='col-3'>".date("D M j", strtotime($wk->fields['start_tz'])).' '.Wbhkit\friendly_time($wk->fields['start_tz'])."</div>\n";
 	$html .= "          <div class='col-3'>".format_cost_display($wk->fields['costdisplay']).($wk->fields['soldout'] ? " - <span class='text-danger'>Sold Out</span>" : '')."</div>\n";
 	$html .= "     </div>\n";
 	return $html;
 }
-	
-	
-?>	
+
+
+?>
 
 
 <main>
 
-<?php if ($link_email_sent_flag) { ?>	
+<?php if ($link_email_sent_flag) { ?>
 <script type="text/javascript">
-	
+
 document.addEventListener('DOMContentLoaded', () => {
 	const em = new bootstrap.Modal('#checkYourEmail');
 	em.show();
 });
 
-</script>	
+</script>
 <?php } ?>
 
-<?php if ($u->logged_in() && !$u->fields['display_name']) { ?>	
+<?php if ($u->logged_in() && !$u->fields['display_name']) { ?>
 		<div class="alert alert-info" role="alert">
 		<p>Please enter your first and last name:</p>
 	<?php echo $userhelper->edit_display_name($u); ?>
 		</div>
-<?php }  ?>	
+<?php }  ?>
 
 <!-- heading -->
 <div class="container-lg container-fluid mt-3" id="news">
@@ -74,20 +74,20 @@ document.addEventListener('DOMContentLoaded', () => {
 		<h2>Come Get Good</h2>
         <p class="lead">WGIS (the World's Greatest Improv School) loves long-form improv, and wants you to be the best improviser you can be. Get in the flow and find your voice.<br><br>Now featuring 6-week core courses (in-person and online) to get you to improv mastery fast.</p>
         <div class="d-grid gap-2 d-md-flex justify-content-md-start">
-			
+
 			<a class="btn btn-primary btn-lg px-4 me-md-2" href="/classes" role="button">See Classes</a>
-			
+
           <a class="btn btn-outline-secondary btn-lg px-4" href="/about-works" role="button">How It Works</a>
         </div>
       </div>
     </div>
-  </div>		
+  </div>
 </div>
 
 <!-- in person show cards -->
   <div class="container px-4 py-2" id="custom-cards">
       <h2 class="pb-2 border-bottom">In-Person Shows</h2>
-	  
+
     <div class="row row-cols-1 row-cols-lg-3 align-items-stretch g-4 py-5">
       <div class="col">
         <div class="card card-cover h-100 overflow-hidden text-bg-dark rounded-4 shadow-lg" style="background-image: url('/images/live_aj2.jpg');">
@@ -153,7 +153,7 @@ document.addEventListener('DOMContentLoaded', () => {
 <!-- class stuff -->
   <div class="container px-4 pt-5">
       <h2 class="pb-2 border-bottom">WGIS Core Classes</h2>
-	  
+
     <div class="row row-cols-1 row-cols-md-2 align-items-md-center g-5 py-5">
       <div class="d-flex flex-column align-items-start gap-2">
         <h3 class="fw-bold">6 Weeks, 2+ Shows</h3>
@@ -196,23 +196,23 @@ document.addEventListener('DOMContentLoaded', () => {
           <h4 class="fw-semibold mb-0">4: Harold</h4>
           <p class="text-muted">Learn group games and third beats to complete your knowledge of the Harold.</p>
         </div>
-		
+
       </div>
     </div>
   </div>
 
-  
+
  <a id="allclasses"></a>
   <div id="classes">
-	
+
 <?php
-	include 'unavailable_workshops.php';	
-	
+	include 'unavailable_workshops.php';
+
 	$inperson_html = '';
 	$online_html = '';
 	foreach ($upcoming_workshops as $wk) {
-		
-		if (!Wbhkit\is_future($wk->fields['start']) && 
+
+		if (!Wbhkit\is_future($wk->fields['start']) &&
 		(!strpos(strtolower($wk->fields['title']), 'glendale'))
 		) {
 			continue; // skip ones that already started
@@ -223,7 +223,7 @@ document.addEventListener('DOMContentLoaded', () => {
 		} else {
 			$online_html .= class_row_minimal($wk);
 		}
-	}	
+	}
 
 ?>
 	<div class="container-fluid classes-header container-header-banner"><h3 class="container-lg container-fluid">Upcoming Online Classes</h3></div>
@@ -241,11 +241,11 @@ document.addEventListener('DOMContentLoaded', () => {
 		<div class="container-fluid classes-header container-header-banner"><h3 class="container-lg container-fluid">Upcoming In Person Los Angeles Classes</h3></div>
 		<div class="container-lg container-fluid">
 
-		<?php 
+		<?php
 
 		echo "<div class='row m-2'><div class='col-6'>&nbsp;</div><div class='col-3 fw-bold'>Times in (".$u->fields['time_zone_friendly'].")</div><div class='col-3'>&nbsp;</div></div>";
 		echo $inperson_html ? $inperson_html : "<h3 class='m-5'>No upcoming in person Los Angeles classes right now!</h3>\n"; ?>
-		
+
 		</div>
 
 </div> <!-- end of 'classes' div -->
@@ -255,38 +255,38 @@ document.addEventListener('DOMContentLoaded', () => {
 	  <h3 class="">Mailing List</h3>
 	  <div class="row">
 		<div class="col-lg-6 col-sm-12">
-		  <p>If you want to know about classes the minute the go online, join the mailing list.</p>
+		  <p>If you want to know about classes the minute they go online, join the mailing list.</p>
 			<p>You are NOT automatically put on the mailing list when you take a workshop.</p>
 		  </div>
 		  <div class="col-lg-6 col-md-8 col-sm-12">
 			 <form action="https://willhines.us8.list-manage.com/subscribe/post?u=881f841fbb8bf66576e6e66cf&amp;id=43b29422a0" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
-				  
+
 			  <div class="form-group">
-				  
+
 				<input type="email" class="form-control" id="mce-EMAIL" name="EMAIL" placeholder="Email">
-								
+
 			  </div>
-			  
+
 			  <p>Powered by <a href="http://eepurl.com/hhR9pb" title="MailChimp - email marketing made easy and fun">MailChimp</a></p>
-			  
+
 			  <div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text" name="b_881f841fbb8bf66576e6e66cf_43b29422a0" tabindex="-1" value=""></div>
-			  
+
 			  <div class="form-group align-items-end">
 				<button type="submit" class="btn btn-primary" name="subscribe" id="mc-embedded-subscribe" >Subscribe</button>
 			  </div>
-			  
+
 			  <!-- mc spam protection i think -->
 		  	<div id="mce-responses" class="clear">
 		  		<div class="response" id="mce-error-response" style="display:none"></div>
 		  		<div class="response" id="mce-success-response" style="display:none"></div>
 		  	</div>    <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
-			  
+
 		  </form>
 			  </div>
 		  </div>
 	  </div>
 	</div>
-  
+
 
  <!-- check your email modal -->
  <div class="modal" tabindex="-1" role="dialog" id="checkYourEmail">
@@ -305,8 +305,8 @@ document.addEventListener('DOMContentLoaded', () => {
        </div>
      </div>
    </div>
- </div> 
-  
+ </div>
+
 </main>
 
 
