@@ -22,10 +22,10 @@ echo "<a class='btn btn-outline-primary' href=\"/home/lo\"><i class='bi-box-arro
 echo "</div></div> <!-- end of card -->\n";
 
 echo "</div></div> <!-- end of 6 col row -->\n";
-	
+
 echo "<div class='row mb-4'><div class='col m-3'>\n";
 echo "<h2>Your Workshops</h2>\n";
-echo $transcript; 
+echo $transcript;
 echo "</div></div> <!-- end of transcript col and row -->\n";
 
 ?>
