@@ -255,7 +255,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	  <h3 class="">Mailing List</h3>
 	  <div class="row">
 		<div class="col-lg-6 col-sm-12">
-		  <p>If you want to know about classes the minute the go online, join the mailing list.</p>
+		  <p>If you want to know about classes the minute they go online, join the mailing list.</p>
 			<p>You are NOT automatically put on the mailing list when you take a workshop.</p>
 		  </div>
 		  <div class="col-lg-6 col-md-8 col-sm-12">
