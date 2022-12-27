@@ -27,40 +27,40 @@ function pdo_query($sql, $params = null) {
 	} catch (\PDOException $e) {
 	    $logger->critical('SQL failed: ' .$e->getMessage());
 	}
-	
+
 	if (preg_match('/insert/i', $sql)) {
 		$last_insert_id = $db->lastInsertId();
 	}
-	
+
 	return $stmt;
 }
 
-function get_connection() {	
+function get_connection() {
 	global $db, $logger;
 	if ($db) {
 		return $db;
 	}
-	
-		$password = HIDDEN;  
+
+		$password = HIDDEN;
 		if (LOCAL) { // laptop
 			$dsn = 'mysql:host=localhost;dbname=NOPE';
-			$username = 'NOPE'; 
-		} else { // willhinesimprov.com
+			$username = 'NOPE';
+		} else { // wgimprovschool.com
 			$dsn = 'mysql:host=localhost;dbname=wNOPE';
-			$username = NOPE; 
+			$username = NOPE;
 		}
-		
+
 		$options = array(
 	    \PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8',
 		\PDO::ATTR_PERSISTENT => true
-	); 
+	);
 
 	try {
-		$db = new \PDO($dsn, $username, $password, $options);	
+		$db = new \PDO($dsn, $username, $password, $options);
 	} catch (\PDOException $e) {
 	    $logger->critical('DB Connection failed: ' .$e->getMessage());
 	}
-	
+
 	$db->setAttribute(\PDO::ATTR_EMULATE_PREPARES, false);
 	$db->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
 	return $db;
@@ -70,7 +70,7 @@ function get_connection() {
 function interpolateQuery($query, $params) {
     $keys = array();
 
-	
+
 	foreach ($params as $k => $p) {
 		$params[$k] = "'$p'";
 	}
@@ -90,5 +90,5 @@ function interpolateQuery($query, $params) {
 
     return $query;
 }
-	
+
 ?>

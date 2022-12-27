@@ -2,6 +2,8 @@
 //
 // routing stuff
 //
+
+
 include 'lib-master.php'; // variables, objects, includes, defaults
 
 //
@@ -19,7 +21,7 @@ $requested_controller = $params[0];
 // then check controllers
 //
 $controllers = array(
-	
+
 
 	// pages = views with no controller, set title/description here
 	"about-school" => array(0, 'about/school', 'about wgis', 'About WGIS'),
@@ -38,9 +40,9 @@ $controllers = array(
 	'payment' => array(0,'payment'),
 	'classes' => array(0,'classes'),
 	'about-catalog' => array(0,'catalog'),
-	
+
 	'user' => array(2, 'user'),
-	
+
 	'admin' => array(3, 'admin/dashboard'),
 	'admin-workshop' => array(3,'admin/workshop'),
 	'admin-messages' => array(3,'admin/messages'),
@@ -68,7 +70,7 @@ $controllers = array(
 	'admin-revbydate' => array(4, 'admin/revenue_bydate'),
 	'admin-payments' => array(4, 'admin/payments')
 
-);	
+);
 
 // synonyms for controllers
 $synonyms = array(
@@ -81,7 +83,7 @@ $synonyms = array(
 $controller_file = 'home';
 
 // check controllers
-if (array_key_exists($requested_controller, $controllers)) {	
+if (array_key_exists($requested_controller, $controllers)) {
 	$controller_file = set_controller($controllers[$requested_controller]);
 }
 
@@ -97,21 +99,21 @@ function set_controller($controller_info) {
 
 	global $u, $view;
 	$controller_file = 'home'; // default
-	
+
 	if ($controller_info[0] == 0 || $u->check_user_level($controller_info[0])) {
 		if (isset($controller_info[2]) && isset($controller_info[3])) { // view with no controller
 			$view->data['heading'] = $controller_info[2];
 			$view->data['fb_description'] = $controller_info[3];
 			$view->renderPage($controller_info[1]);
-			exit;			
+			exit;
 		} else {
-			$controller_file = $controller_info[1]; 
+			$controller_file = $controller_info[1];
 		}
 	}
 	return $controller_file;
-	
+
 }
 
-	
+
 
 
