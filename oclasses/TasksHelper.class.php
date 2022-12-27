@@ -6,7 +6,7 @@ class TasksHelper extends WBHObject {
 	public array $tasks;
 	
 	function __construct() {		
-		parent::__construct(); // load logger, lookups
+		parent::__construct(); 
 		$this->tasks = array();
 	}
 

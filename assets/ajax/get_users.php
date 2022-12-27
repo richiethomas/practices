@@ -11,7 +11,12 @@ include '../../libs/db_pdo.php';
 $db = \DB\get_connection();
 
 if(!empty($_POST["keyword"])) {
-	$query ="SELECT * FROM users WHERE email like '" . $_POST["keyword"] . "%' ORDER BY email LIMIT 0,6";
+	
+	$keyword = preg_replace("/[^A-Za-z0-9 ]/", '', $_POST['keyword']);
+	
+	$query ="SELECT * FROM users 
+		WHERE email like '{$keyword}%' or display_name like '{$keyword}%'
+	ORDER BY email LIMIT 0,8";
 	$result = $db->query($query);
 
 	if(!empty($result)) {

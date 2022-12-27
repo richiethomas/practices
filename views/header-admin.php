@@ -36,6 +36,7 @@
 		        <a class="dropdown-item nav-link" href="/admin-archives">Classes</a>
 		        <a class="dropdown-item nav-link" href="/admin-search">Students</a>
 		        <a class="dropdown-item nav-link" href="/admin-teachers">Teachers</a>
+		        <a class="dropdown-item nav-link" href="/admin-teams">Teams</a>
 		      </div>
 		    </li>
 		    <li class="nav-item dropdown">

@@ -166,7 +166,7 @@ class WBHObject
 		$stmt = \DB\pdo_query("delete from {$this->tablename} where id = :id", $params);
 		$this->message = "Deleted from {$this->tablename} {$this->fields['id']}";
 		$this->finish_delete();
-		$this->fields = array();
+		$this->__construct();
 		return true;
 	}
 	

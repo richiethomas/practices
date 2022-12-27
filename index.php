@@ -50,6 +50,7 @@ $controllers = array(
 	'admin-archives' => array(3,'admin/archives'),
 	'admin-shows' => array(3,'admin/shows'),
 	'admin-teachers' => array(3,'admin/teachers'),
+	'admin-teams' => array(3,'admin/teams'),
 	'admin-emails' => array(3,'admin/emails'),
 	'admin-bulk-status' => array(3,'admin/bulk-status'),
 	'admin-bulk-workshops' => array(3,'admin/bulk-workshops'),

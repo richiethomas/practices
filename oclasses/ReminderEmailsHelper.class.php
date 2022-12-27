@@ -4,7 +4,7 @@ class ReminderEmailsHelper extends WBHObject {
 
 
 	function __construct() {		
-		parent::__construct(); // load logger, lookups
+		parent::__construct(); 
 	}
 
 	function get_reminder_emails(?int $limit = 200) {

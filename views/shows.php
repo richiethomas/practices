@@ -139,14 +139,14 @@ $schedule = array(
 );
 	
 echo "
-	<div class='row m-2 p-1 fw-bold bg-light'>
-		<div class='col'><b>Broadwater Tuesdays<br>9pm</b></div>\n
-		<div class='col'><b>Clubhouse Fridays<br>7pm</b></div>\n
+	<div class='row m-1 p-1 fw-bold bg-light'>
+		<div class='col'><b>Broadwater Tuesdays 9pm</b></div>\n
+		<div class='col'><b>Clubhouse Fridays 7pm</b></div>\n
 	</div>\n";
 
 foreach ($schedule as $s) {
 	echo "
-		<div class='row m-2 p-1'>
+		<div class='row m-1 p-1'>
 			<div class='col'><b>".date("M j", strtotime($s['broad'][0]))."</b>: {$s['broad'][1]} / {$s['broad'][2]}</div>\n
 			<div class='col'><b>".date("M j", strtotime($s['club'][0]))."</b>: {$s['club'][1]} / {$s['club'][2]}</div>\n
 		</div>\n";

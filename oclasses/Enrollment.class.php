@@ -7,8 +7,8 @@ class Enrollment extends WBHObject {
 	
 	
 	function __construct() {		
-		parent::__construct(); // load logger, lookups
-
+		parent::__construct(); 
+		
 		$this->fields = array(
 				'id' => null,
 				'user_id' => null,

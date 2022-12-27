@@ -7,7 +7,7 @@ class WorkshopsHelper extends WBHObject {
 	public Workshop $wk;
 	
 	function __construct() {		
-		parent::__construct(); // load logger, lookups
+		parent::__construct(); 
 		$this->workshops = array();
 		$this->wk = new Workshop();
 	}

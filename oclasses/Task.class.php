@@ -6,7 +6,7 @@ class Task extends WBHObject {
 	public ReminderEmail $reminder_email;
 	
 	function __construct() {		
-		parent::__construct(); // load logger, lookups
+		parent::__construct(); 
 		
 		$this->tablename = "tasks";
 

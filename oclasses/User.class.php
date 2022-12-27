@@ -5,7 +5,7 @@ class User extends WBHObject {
 	private string $default_time_zone;
 	
 	function __construct() {		
-		parent::__construct(); // load logger, lookups
+		parent::__construct(); 
 		
 		$this->tablename = 'users';
 						

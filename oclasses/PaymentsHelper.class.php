@@ -7,7 +7,7 @@ class PaymentsHelper extends WBHObject {
 	public array $claims; // proposed payrolls
 	
 	function __construct() {		
-		parent::__construct(); // load logger, lookups
+		parent::__construct();
 		$this->payments = array();
 		$this->claims = array();
 	}

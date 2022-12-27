@@ -7,7 +7,7 @@ class ClassShow extends WBHObject {
 	
 	
 	function __construct() {		
-		parent::__construct(); // load logger, lookups
+		parent::__construct();
 		
 		$this->tablename = "shows";
 

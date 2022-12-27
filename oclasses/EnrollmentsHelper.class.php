@@ -5,7 +5,7 @@ class EnrollmentsHelper extends WBHObject {
 	public array $enrollments;
 	
 	function __construct() {		
-		parent::__construct(); // load logger, lookups
+		parent::__construct(); 
 		$this->enrollments = array();
 	}
 	

@@ -6,7 +6,7 @@ class UserHelper extends WBHObject {
 	public string $sc;
 	
 	function __construct(string $sc) {		
-		parent::__construct(); // load logger, lookups
+		parent::__construct(); 
 		$this->sc = $sc;
 		$this->u = new User();
 	}

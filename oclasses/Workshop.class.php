@@ -9,7 +9,7 @@ class Workshop extends WBHObject {
 	public array $sessions;
 	
 	function __construct() {		
-		parent::__construct(); // load logger, lookups
+		parent::__construct(); 
 		
 		$this->tablename = "workshops";
 
