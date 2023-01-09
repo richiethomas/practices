@@ -29,12 +29,11 @@
 <h4>Broadwater Tuesdays 2023 Schedule</h4>
 <p>Starting January 2023, we're moving to a new schedule with two shows a night. A class show at 7:30pm, and WGIS teams at 9pm. Team schedule will be announced in mid-December. Here's the class show schedule.</p>
 <ul>7:30pm schedule
-<li>Jan 3 - play by play</li>
-<li>Jan 10 - Joel Level 5 </li>
-<li>Jan 17 - Julie Level 5 / Sarah Level 3</li>
+<li>Jan 10 - Jam </li>
+<li>Jan 17 - Julie Level 5 / JAM</li>
 <li>Jan 24 - Joel Level 5 / Jim Level 4</li>
 <li>Jan 31 - Bitness Class Shows </li>
-<li>Feb 7 - Will Level 2 / Sarah Level 3</li>
+<li>Feb 7 - Will Level 2 / JAM</li>
 <li>Feb 14 - Julie level 1 / Joel Level 5</li>
 <li>Feb 21 - Will Level 2  / Jim Level 4</li>
 <li>Feb 28 - Bitness Class Shows</li>
@@ -65,13 +64,13 @@
 <?php
 	
 $t = array(
-	'Dominic', 
+	'Toretto', 
 	'Mia', 
 	'Hobbs', 
 	'Shaw', 
 	'Roman', 
 	'Letty', 
-	'Tej', 
+	'Ludacrisp', 
 	'Han');
 
 $schedule = array(
@@ -159,6 +158,7 @@ foreach ($schedule as $s) {
 <h2 class='mt-3'>Spring 2023 Roster</h2>
 
 <p><b><?php echo $t[0]; ?></b>: Alex Maystrik,
+Andrew Coppola,
 Andrew Sproge,
 Eli Lloyd,
 Erin Smith,
@@ -223,10 +223,11 @@ Sam Di,
 Sara Keller</p>
 
 
-<p><b><?php echo $t[7]; ?></b>: Andrew Coppola,
+<p><b><?php echo $t[7]; ?></b>: 
 Brent Mukai,
 Christine Stemmer,
 DJ Rouse,
+Elena Martinez,
 Ezra Parter,
 Ian Vens,
 Judith Friedman,

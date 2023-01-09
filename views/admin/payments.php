@@ -29,7 +29,7 @@
 $weeknav = "<p><a href='/admin-payments/view/?searchstart=$lastweekstart&searchend=$lastweekend'>last week</a> | <a href='/admin-payments/view/'>this week</a> | <a href='/admin-payments/view/?searchstart=$nextweekstart&searchend=$nextweekend'>next week</a></p>\n";
 echo $weeknav;
 
-// list payroll items with delete button
+// list payment items with delete button
 echo "<h2 class='mt-4'>Payment Items (Claimed)</h2>\n";
 if (count($payments) ==0) {
 	echo "<p>None!</p>\n";
@@ -83,7 +83,7 @@ foreach ($payments as $p) {
 	if ($p->fields['workshop_id']) {
 		
 		$wk_date = date('D M j ga', strtotime($p->wk->fields['start']));
-				
+		
 		$guts .= "{$p->fields['title']} - {$p->wk->fields['title']} ($wk_date) - {$p->fields['amount']}\n";
 	
 		echo "<div class='col-6'>{$p->fields['title']} - <a href='/admin-workshop/view/{$p->fields['workshop_id']}'>{$p->wk->fields['title']}</a> <small>($wk_date)</small></div>";

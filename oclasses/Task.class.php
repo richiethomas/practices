@@ -99,7 +99,6 @@ class Task extends WBHObject {
 			$this->error = "No id set for task.";
 			return false;
 		}
-		$stmt = \DB\pdo_query("delete from payrolls where task = 'task' and table_id = :id", array(":id" => $this->fields['id']));
 		$this->user = new User();
 		return true;
 	}

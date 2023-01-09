@@ -17,7 +17,6 @@ info.txt
 photos/*
 error_log
 *.txt
-vendor/*
 
 
 # Compiled source #
