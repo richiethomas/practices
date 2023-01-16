@@ -46,7 +46,6 @@ class Team extends WBHObject {
 					if ($u->set_by_id($row['user_id'])) {
 						$this->users[] = $u;
 					} else {
-						echo "couldn't find user {$row['user_id']}, team id: {$this->fields['id']}<br>\n";
 						$this->error = $u->error;
 					}
 				}			
