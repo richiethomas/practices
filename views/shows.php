@@ -29,11 +29,11 @@
 <h4>Broadwater Tuesdays 2023 Schedule</h4>
 <p>Starting January 2023, we're moving to a new schedule with two shows a night. A class show at 7:30pm, and WGIS teams at 9pm. Team schedule will be announced in mid-December. Here's the class show schedule.</p>
 <ul>7:30pm schedule
-<li>Jan 10 - Jam </li>
-<li>Jan 17 - Julie Level 5 / JAM</li>
+<li>Jan 10 - Play by Play </li>
+<li>Jan 17 - Julie Level 5 </li>
 <li>Jan 24 - Joel Level 5 / Jim Level 4</li>
 <li>Jan 31 - Bitness Class Shows </li>
-<li>Feb 7 - Will Level 2 / JAM</li>
+<li>Feb 7 - Will Level 2 </li>
 <li>Feb 14 - Julie level 1 / Joel Level 5</li>
 <li>Feb 21 - Will Level 2  / Jim Level 4</li>
 <li>Feb 28 - Bitness Class Shows</li>
@@ -65,13 +65,13 @@
 	
 $t = array(
 	'Toretto', 
-	'Mia', 
-	'Hobbs', 
+	'Bread Crew', 
+	'St. Bernard', 
 	'Shaw', 
-	'Roman', 
+	'Ghost Train', 
 	'Letty', 
 	'Ludacrisp', 
-	'Han');
+	'More Cow Bones');
 
 $schedule = array(
 	array( 'broad' => array ('January 10, 2023', $t[0], $t[1]), 
@@ -195,12 +195,12 @@ Sahil Desai,
 Sebastian Davis</p>
 
 <p><b><?php echo $t[4]; ?></b>: Bob Hsiao
-Jason Van Glass
-Laney Serface
-Meredith Haspel Elliott
-Mickey Woo
-Nolan Purvis
-Phil Gould
+Jason Van Glass,
+Laney Serface,
+Meredith Haspel Elliott,
+Mickey Woo,
+Nolan Purvis,
+Phil Gould,
 Ted Asbaghi</p>
 
 <p><b><?php echo $t[5]; ?></b>: Anna Bezahler,

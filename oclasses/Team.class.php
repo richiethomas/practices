@@ -42,8 +42,14 @@ class Team extends WBHObject {
 			$this->users = array(); // clear existing users
 			while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
 				$u = new User();
-				$u->set_by_id($row['user_id']);
-				$this->users[] = $u;			
+				if ($row['user_id']) {
+					if ($u->set_by_id($row['user_id'])) {
+						$this->users[] = $u;
+					} else {
+						echo "couldn't find user {$row['user_id']}, team id: {$this->fields['id']}<br>\n";
+						$this->error = $u->error;
+					}
+				}			
 			}		
 			
 			if (count($this->users) > 0) {
@@ -58,6 +64,11 @@ class Team extends WBHObject {
 	}	
 	
 	function sort_users($a, $b) {
+		if (!isset($a->fields['nice_name'])) {
+			echo "<pre>\n";
+			print_r($a);
+			die;
+		}
 		return strcasecmp($a->fields['nice_name'], $b->fields['nice_name']);
 	}
 	
