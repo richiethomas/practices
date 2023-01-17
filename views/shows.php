@@ -37,6 +37,13 @@
 <li>Feb 14 - Julie level 1 / Joel Level 5</li>
 <li>Feb 21 - Will Level 2  / Jim Level 4</li>
 <li>Feb 28 - Bitness Class Shows</li>
+<li>Mar 7  - Jim Level 4 Class Show</li>
+<li>Mar 14 - Will Level 2 / Will Level 4 Class Shows</li>
+<li>Mar 21 - Joel Level 5 Show</li>
+<li>Mar 28 - Bitness Class Shows</li>
+<li>Apr 4 - Jim Level 4 Class Show</li>
+<li>Apr 11 - Will Level 2 / Will Level 4 Class Shows</li>
+<li>Apr 18 - Joel Level 5 Show</li>
 </ul>
 
 <a id="fridays"></a>

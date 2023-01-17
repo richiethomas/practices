@@ -125,6 +125,12 @@ echo "<div class='row mt-md-3 admin-edit-workshop'>\n";
 					}
 					echo "</li></ul>\n";
 				}
+				if ($s['location_id'] && $s['location_id'] != $wk->fields['location_id']) {
+					global $lookups;
+					echo "<ul>
+						<li>{$lookups->locations[$s['location_id']]['place']}</li>
+						</ul>";
+				}
 				echo "</li>\n";
 			}
 		}

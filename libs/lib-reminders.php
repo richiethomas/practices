@@ -167,7 +167,8 @@ function get_subject(\Workshop $wk, array $xtra) {
 	$subject = "WGIS class reminder: {$wk->fields['title']} ".($xtra['id'] ? $xtra['when'] : $wk->fields['when']);
 
 	if ($wk->fields['location_id'] != ONLINE_LOCATION_ID) {
-		$subject .= " at {$wk->location['place']}";	
+		$location = get_location_info($wk, $xtra);
+		$subject .= " at {$location['place']}";	
 	}
 	
 	return $subject;
@@ -214,11 +215,13 @@ $link</p>\n";
 https://www.twitch.tv/wgimprovschool</p>\n";
 		}
 	} else {
-		$note .= "<p>LOCATION:<br>\n---------<br>\n{$wk->location['place']}<br>\n{$wk->location['address']}<br>\n{$wk->location['city']}, {$wk->location['state']} {$wk->location['zip']}";
 		
-		if ($wk->location['notes']) { $note.= "<br>{$wk->location['notes']}"; }
+		$location = get_location_info($wk, $xtra);
 		
+		$note .= "<p>LOCATION:<br>\n---------<br>\n{$location['place']}<br>\n{$location['address']}<br>\n{$location['city']}, {$location['state']} {$location['zip']}";
 		
+		if ($location['notes']) { $note.= "<br>{$location['notes']}"; }
+
 		$note .= "</p>\n";
 		
 	}	
@@ -241,5 +244,16 @@ function remind_teacher(\Workshop $wk, $xtra, $teacher_info) {
 		$note .= \Emails\get_workshop_summary($wk);
 	}
 	\Emails\centralized_email($teacher_info['email'], $subject, $note);
+	
+}
+
+
+function get_location_info(\Workshop $wk, array $xtra) {
+	$location = $wk->location;
+	if (isset($xtra['id']) && $xtra['id'] && $xtra['location_id'] && $xtra['location_id'] != $wk->fields['location_id']) {
+		global $lookups;
+		$location = $lookups->locations[$xtra['location_id']];
+	}
+	return $location;
 	
 }

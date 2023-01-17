@@ -47,30 +47,38 @@ function empty_xtra_session() {
 		'class_show' => 0,
 		'rank' => null,
 		'online_url' => null,
-		'reminder_sent' => null
+		'reminder_sent' => null,
+		'location_id' => null
 	);
 }
 
 function xtra_session_fields() {
 	
+	global $lookups;
+	
+	$location_opts = $lookups->locations_drop();
+	$locaiton_opts[0] = '';
+	
 	return
 	\Wbhkit\texty('start_xtra', null, null, null, null, 'Required', ' required ').
 	\Wbhkit\texty('end_xtra', null, null, null, null, 'Required', ' required ').
 	\Wbhkit\textarea('online_url_xtra').
+	\Wbhkit\drop('location_id', $location_opts).
 	\Wbhkit\checkbox('class_show', 1);
 	
 }
 
-function add_xtra_session(int $workshop_id, string $start, string $end, ?string $online_url = null, ?int $class_show = 0) {
+function add_xtra_session(int $workshop_id, string $start, string $end, ?string $online_url = null, ?int $class_show = 0, ?int $location_id = 0) {
 	
 	
-	$stmt = \DB\pdo_query("insert into xtra_sessions (workshop_id, start, end, online_url, class_show)
-	VALUES (:wid, :start, :end, :url, :class_show)",
+	$stmt = \DB\pdo_query("insert into xtra_sessions (workshop_id, start, end, online_url, class_show, location_id)
+	VALUES (:wid, :start, :end, :url, :class_show, :location_id)",
 	array(':wid' => $workshop_id, 
 	':start' => date(MYSQL_FORMAT, strtotime($start)), 
 	':end' => date(MYSQL_FORMAT, strtotime($end)),
 	':url' => $online_url,
-	':class_show' => $class_show));
+	':class_show' => $class_show,
+	':location_id' => $location_id));
 	update_ranks($workshop_id);
 	
 }
@@ -108,7 +116,7 @@ function delete_xtra_session(int $xtra_session_id) {
 	
 }
 
-function add_a_week(\Workshop $wk, ?int $class_show = 0) {
+function add_a_week(\Workshop $wk, ?int $class_show = 0, ?int $location_id = 0) {
 	//function add_xtra_session($workshop_id, $start, $end, $online_url = null) {
 
 	$start = $wk->fields['start'];
@@ -121,7 +129,7 @@ function add_a_week(\Workshop $wk, ?int $class_show = 0) {
 	$start = date(MYSQL_FORMAT, strtotime("+1 week", strtotime($start)));
 	$end = date(MYSQL_FORMAT, strtotime("+1 week", strtotime($end)));
 	
-	add_xtra_session($wk->fields['id'], $start, $end, $class_show);
+	add_xtra_session($wk->fields['id'], $start, $end, $class_show, $location_id);
 	$wk->finish_setup();
 	return $wk;
 

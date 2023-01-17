@@ -11,7 +11,7 @@ if ($action != 'ad') {
 	$wk->set_by_id($wid);
 }
 
-$wk_vars = array('title', 'notes', 'start', 'end', 'lid', 'online_url', 'cost', 'capacity', 'notes', 'when_public', 'email', 'con', 'guest_id', 'reminder_sent', 'teacher_id', 'co_teacher_id', 'application',  'hidden', 'start_xtra', 'end_xtra', 'online_url_xtra', 'hideconpay', 'class_show', 'tags');
+$wk_vars = array('title', 'notes', 'start', 'end', 'lid', 'online_url', 'cost', 'capacity', 'notes', 'when_public', 'email', 'con', 'guest_id', 'reminder_sent', 'teacher_id', 'co_teacher_id', 'application',  'hidden', 'start_xtra', 'end_xtra', 'online_url_xtra', 'hideconpay', 'class_show', 'tags', 'location_id');
 Wbhkit\set_vars($wk_vars);
 
 
@@ -105,7 +105,7 @@ switch ($action) {
 	
 		$class_show = (int)$class_show;
 	
-		XtraSessions\add_xtra_session($wid, $start_xtra, $end_xtra, $online_url_xtra, $class_show);
+		XtraSessions\add_xtra_session($wid, $start_xtra, $end_xtra, $online_url_xtra, $class_show, $location_id);
 		$wk->finish_setup();
 		$message = "Added xtra session.";
 		break;

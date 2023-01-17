@@ -203,16 +203,25 @@ class Workshop extends WBHObject {
 		// drill down into xtra_sessions
 		if (!empty($this->sessions)) {
 			foreach ($this->sessions as $id => $s) {
+				global $lookups;
+				
 				if (!isset($s['time_zone_used']) || $s['time_zone_used'] != $tz) {
 					$this->sessions[$id] = $s = $this->format_times_one_level($s, $tz); // change row array
 				}
+				
+				if ($s['location_id'] && $s['location_id'] != $this->fields['location_id']) {
+					$location = ' ('.$lookups->locations[$s['location_id']]['place'].')';
+				} else {
+					$location = null;
+				}
+				
 				$this->fields['full_when'] .= "<br>\n".
 					($s['class_show'] == 1 ? '&nbsp;&nbsp;&nbsp;Show: ' : '').
-					"{$s['when_no_tz']}\n";
+					"{$s['when_no_tz']}{$location}\n";
 			
 				$this->fields['full_when_cali'] .= "<br>\n".
 					($s['class_show'] == 1 ? '&nbsp;&nbsp;&nbsp;Show: ' : '').
-					"{$s['when_cali_no_tz']}\n";
+					"{$s['when_cali_no_tz']}{$location}\n";
 			}
 		}	
 		return true;	
@@ -368,10 +377,18 @@ class Workshop extends WBHObject {
 		$class_dates = $this->fields['when']."\n";
 		if (!empty($this->sessions)) {
 			foreach ($this->sessions as $s) {
+				
+				$location = null;
+				if ($s['location_id'] && $s['location_id'] != $this->fields['location_id']) {
+					global $lookups;
+					$location = ' ('.$lookups->locations[$s['location_id']]['place'].')';
+				}
+				
 				$class_dates .= 
 				($s['class_show'] ? 'Show: ' : '').	
 				"{$s['when']}".
-				($s['online_url'] ? " - {$s['online_url']}" : '')."\n";
+				($s['online_url'] ? " - {$s['online_url']}" : '').
+				$location."\n";
 			}
 		}
 		if ($class_dates) {
