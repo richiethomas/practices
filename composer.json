@@ -1,4 +1,7 @@
 {
+    "autoload": {
+        "classmap": ["oclasses/"]
+    },
     "require": {
         "monolog/monolog": "^2.2",
         "phpmailer/phpmailer": "^6.5"

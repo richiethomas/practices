@@ -14,11 +14,6 @@ session_start();
 require "vendor/autoload.php"; // i barely understand this; might not have enough classes to justify it
 
 ini_set("include_path", '/home/wgimrenl/php:' . ini_get("include_path") ); // wgimprovschool.com
-spl_autoload_register(function ($className) {
-        $className = str_replace('\\', DIRECTORY_SEPARATOR, $className); // for subdirectories in 'oclasses'
-        $file = __DIR__.DIRECTORY_SEPARATOR."oclasses".DIRECTORY_SEPARATOR."{$className}.class.php";
-        if (is_readable($file)) require_once $file;
-});
 
 //
 // constants and variables
@@ -27,7 +22,6 @@ $error = '';
 $message = '';
 $body = '';
 $last_insert_id = null;
-
 
 define('DEFAULT_TIME_ZONE', 'America/Los_Angeles');
 date_default_timezone_set ( DEFAULT_TIME_ZONE );
