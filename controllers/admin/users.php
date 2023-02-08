@@ -13,6 +13,14 @@ $guest = new User();
 $guest->set_by_id($guest_id);
 
 
+if  (isset($params[4]) && $params[4] == 'text') {
+	$table_mode = false;
+} else {
+	$table_mode = true;
+}
+
+
+
 // to link back to search page
 $needle = (string) ($params[3] ?? null); // URL $needle takes precedence over $_POST $needle
 $needle = trim($needle);
@@ -140,7 +148,7 @@ if (!$guest->logged_in()) {
 	$view->data['key'] = $guest->get_key(); 
 	$view->data['guest'] = $guest; // user profile of user we are modifying
 	$view->data['needle'] = trim($needle);
-	$view->data['transcripts'] = $eh->get_transcript_tabled($guest, true, $hideconpay);
+	$view->data['transcripts'] = $eh->get_transcript_html($guest, true, $hideconpay, $table_mode);
 	$view->data['userhelper'] = new UserHelper('/admin-users');
 	$view->data['lookups'] = $lookups;
 	$view->data['close_transcript'] = $close_transcript;

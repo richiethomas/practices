@@ -36,9 +36,35 @@ if ($admin) {
 	echo Wbhkit\checkbox('hideconpay', 1, $label = 'no confirm payment', $hideconpay == 1);
 }
 
+
+if ($admin) {
+	
+	echo "
+	<div class='row'>
+		<div class='col'>Class</div>
+		<div class='col'>When</div>
+		<div class='col'>Teacher</div>
+		<div class='col'>Where</div>
+		<div class='col'>Status</div>
+	</div>\n";
+	
+} else {
+	echo "
+	<div class='row'>
+		<div class='col'>Class</div>
+		<div class='col'>When</div>
+		<div class='col'>Teacher</div>
+		<div class='col'>Where</div>
+	</div>\n";
+}
 		
 	foreach ($rows as $t) {
 		$cl = '';
+		
+		if (!$admin && $t['status_id'] != ENROLLED) {
+			continue; // only enrolleds for public transcripts
+		}
+		
 		if ($t['status_id'] == ENROLLED) {
 			$cl .= 'success';
 		} elseif (strtotime($t['start']) < strtotime("now") ) {
@@ -47,7 +73,7 @@ if ($admin) {
 			$cl .= 'warning';
 		}	
 		
-		echo "<div class='row workshop-row workshop-$cl mt-3 mx-1 pt-3 border-top'>\n"; // workshop row start
+		echo "<div class='row workshop-row workshop-$cl mt-3 pt-3 border-top'>\n"; // workshop row start
 				
 			echo "	<div class='col-sm'>";
 			if ($admin) {
@@ -58,32 +84,34 @@ if ($admin) {
 			} else {
 				echo "<a href=\"/workshop/view/{$t['workshop_id']}\">{$t['title']}</a>";
 			}
-			echo "</div>\n";  // title cell
+			echo "</div>\n";  // title col
 			
 		
 			echo "	<div class='col-sm'>";
-			echo $admin ? $t['showstart_cali'] : $t['showstart'];
+			if ($admin) {
+				echo "{$t['showstart_cali']}<br>\n".$t['costdisplay'];
+			} else {
+				echo "{$t['showstart']}";
+			}
+			echo "</div>\n"; // when col
 			
-			echo "<br>
-				<small>Instructor: <a href=\"/teachers/view/{$t['teacher_id']}\">{$t['teacher']['nice_name']}</a>";
+			echo "<div class='col-sm'><a href=\"/teachers/view/{$t['teacher_id']}\">{$t['teacher']['nice_name']}</a>";
 			
 			if ($t['co_teacher_id']) {
 				echo ", <a href=\"/teachers/view/{$t['co_teacher_id']}\">{$t['co_teacher']['nice_name']}</a>";
 			}
-			
-			if ($admin) {
-				echo "<br>\n".$t['costdisplay'];
+			echo "</div>\n"; // teacher col	
+
+			echo "	<div class='col-sm my-2'>{$t['place']}</div>\n";  // where col
+
+			if ($admin) { 
+				echo "	<div class='col-sm'>{$statuses[$t['status_id']]}</div>\n"; // status col
 			}
-			
-			echo "</small></div>\n"; // when col	
-			if ($admin) { echo "<div class='col-sm my-2'>{$t['place']}</div>\n"; } // where col
-			echo "	<div class='col-sm'>{$statuses[$t['status_id']]}";
-			echo "</div>\n"; // status col
 			echo "</div>\n\n"; // end of row
 			
 			if ($admin) {
 				
-				echo "<div class='row workshop-$cl mx-1'><div class='col-md-2'>".
+				echo "<div class='row workshop-$cl'><div class='col-md-2'>".
 					\Wbhkit\texty("amount_{$t['enrollment_id']}", $t['pay_amount'], 0, '$').
 				"</div><div class='col-md-2'>".
 					\Wbhkit\texty("when_{$t['enrollment_id']}", $t['pay_when'], 0, 'when').

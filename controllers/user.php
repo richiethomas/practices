@@ -22,7 +22,7 @@ $eh = new EnrollmentsHelper();
 
 $view->data['admin'] = 0;
 $view->data['guest'] = $guest;
-$view->data['transcript'] = $eh->get_transcript_tabled($guest, 0); 
+$view->data['transcript'] = $eh->get_transcript_html($guest, false, 0, true); 
 $view->data['heading'] = $view->data['fb_title'] = $guest->fields['nice_name'];
 $view->data['fb_description'] = "Transcript and profile info for ".$guest->fields['nice_name'];
 $view->renderPage('user');

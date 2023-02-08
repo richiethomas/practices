@@ -113,7 +113,7 @@ class EnrollmentsHelper extends WBHObject {
 		return $stds;
 	}
 
-	function get_transcript_tabled(User $u, bool $admin = false, $hideconpay = 0) {
+	function get_transcript_html(User $u, bool $admin = false, $hideconpay = 0, $table = true) {
 		global $view, $lookups;
 		
 		if (!$u->logged_in() || !isset($u->fields['id'])) {
@@ -158,7 +158,11 @@ class EnrollmentsHelper extends WBHObject {
 		$view->data['admin'] = $admin;
 		$view->data['rows'] = $past_classes;
 		$view->data['hideconpay'] = $hideconpay;
-		return $view->renderSnippet('transcript');
+		if ($table) {
+			return $view->renderSnippet('transcript');
+		} else {
+			return $view->renderSnippet('transcript_text');
+		}
 	}	
 
 }
