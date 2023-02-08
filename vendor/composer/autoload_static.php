@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInitad4c15712d8752feee0b3ed863063b20
+class ComposerStaticInitb1f8cf2816a66a3211bc9cd693ad0c78
 {
     public static $files = array (
         '6124b4c8570aa390c21fafd04a26c69f' => __DIR__ . '/..' . '/myclabs/deep-copy/src/DeepCopy/deep_copy.php',
@@ -57,7 +57,11 @@ class ComposerStaticInitad4c15712d8752feee0b3ed863063b20
     );
 
     public static $classMap = array (
+        'ClassShow' => __DIR__ . '/../..' . '/oclasses/ClassShow.class.php',
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
+        'Enrollment' => __DIR__ . '/../..' . '/oclasses/Enrollment.class.php',
+        'EnrollmentsHelper' => __DIR__ . '/../..' . '/oclasses/EnrollmentsHelper.class.php',
+        'Lookups' => __DIR__ . '/../..' . '/oclasses/Lookups.class.php',
         'PHPUnit\\Exception' => __DIR__ . '/..' . '/phpunit/phpunit/src/Exception.php',
         'PHPUnit\\Framework\\ActualValueIsNotAnObjectException' => __DIR__ . '/..' . '/phpunit/phpunit/src/Framework/Exception/ActualValueIsNotAnObjectException.php',
         'PHPUnit\\Framework\\Assert' => __DIR__ . '/..' . '/phpunit/phpunit/src/Framework/Assert.php',
@@ -406,6 +410,10 @@ class ComposerStaticInitad4c15712d8752feee0b3ed863063b20
         'PHPUnit\\Util\\Xml\\SuccessfulSchemaDetectionResult' => __DIR__ . '/..' . '/phpunit/phpunit/src/Util/Xml/SuccessfulSchemaDetectionResult.php',
         'PHPUnit\\Util\\Xml\\ValidationResult' => __DIR__ . '/..' . '/phpunit/phpunit/src/Util/Xml/ValidationResult.php',
         'PHPUnit\\Util\\Xml\\Validator' => __DIR__ . '/..' . '/phpunit/phpunit/src/Util/Xml/Validator.php',
+        'Payment' => __DIR__ . '/../..' . '/oclasses/Payment.class.php',
+        'PaymentsHelper' => __DIR__ . '/../..' . '/oclasses/PaymentsHelper.class.php',
+        'Payroll' => __DIR__ . '/../..' . '/oclasses/Payroll.class.php',
+        'PayrollsHelper' => __DIR__ . '/../..' . '/oclasses/PayrollsHelper.class.php',
         'PharIo\\Manifest\\Application' => __DIR__ . '/..' . '/phar-io/manifest/src/values/Application.php',
         'PharIo\\Manifest\\ApplicationName' => __DIR__ . '/..' . '/phar-io/manifest/src/values/ApplicationName.php',
         'PharIo\\Manifest\\Author' => __DIR__ . '/..' . '/phar-io/manifest/src/values/Author.php',
@@ -477,6 +485,8 @@ class ComposerStaticInitad4c15712d8752feee0b3ed863063b20
         'PharIo\\Version\\VersionConstraintParser' => __DIR__ . '/..' . '/phar-io/version/src/VersionConstraintParser.php',
         'PharIo\\Version\\VersionConstraintValue' => __DIR__ . '/..' . '/phar-io/version/src/VersionConstraintValue.php',
         'PharIo\\Version\\VersionNumber' => __DIR__ . '/..' . '/phar-io/version/src/VersionNumber.php',
+        'ReminderEmail' => __DIR__ . '/../..' . '/oclasses/ReminderEmail.class.php',
+        'ReminderEmailsHelper' => __DIR__ . '/../..' . '/oclasses/ReminderEmailsHelper.class.php',
         'SebastianBergmann\\CliParser\\AmbiguousOptionException' => __DIR__ . '/..' . '/sebastian/cli-parser/src/exceptions/AmbiguousOptionException.php',
         'SebastianBergmann\\CliParser\\Exception' => __DIR__ . '/..' . '/sebastian/cli-parser/src/exceptions/Exception.php',
         'SebastianBergmann\\CliParser\\OptionDoesNotAllowArgumentException' => __DIR__ . '/..' . '/sebastian/cli-parser/src/exceptions/OptionDoesNotAllowArgumentException.php',
@@ -677,6 +687,10 @@ class ComposerStaticInitad4c15712d8752feee0b3ed863063b20
         'SebastianBergmann\\Type\\UnknownType' => __DIR__ . '/..' . '/sebastian/type/src/type/UnknownType.php',
         'SebastianBergmann\\Type\\VoidType' => __DIR__ . '/..' . '/sebastian/type/src/type/VoidType.php',
         'SebastianBergmann\\Version' => __DIR__ . '/..' . '/sebastian/version/src/Version.php',
+        'Task' => __DIR__ . '/../..' . '/oclasses/Task.class.php',
+        'TasksHelper' => __DIR__ . '/../..' . '/oclasses/TasksHelper.class.php',
+        'Team' => __DIR__ . '/../..' . '/oclasses/Team.class.php',
+        'TeamsHelper' => __DIR__ . '/../..' . '/oclasses/TeamsHelper.class.php',
         'TheSeer\\Tokenizer\\Exception' => __DIR__ . '/..' . '/theseer/tokenizer/src/Exception.php',
         'TheSeer\\Tokenizer\\NamespaceUri' => __DIR__ . '/..' . '/theseer/tokenizer/src/NamespaceUri.php',
         'TheSeer\\Tokenizer\\NamespaceUriException' => __DIR__ . '/..' . '/theseer/tokenizer/src/NamespaceUriException.php',
@@ -685,14 +699,20 @@ class ComposerStaticInitad4c15712d8752feee0b3ed863063b20
         'TheSeer\\Tokenizer\\TokenCollectionException' => __DIR__ . '/..' . '/theseer/tokenizer/src/TokenCollectionException.php',
         'TheSeer\\Tokenizer\\Tokenizer' => __DIR__ . '/..' . '/theseer/tokenizer/src/Tokenizer.php',
         'TheSeer\\Tokenizer\\XMLSerializer' => __DIR__ . '/..' . '/theseer/tokenizer/src/XMLSerializer.php',
+        'User' => __DIR__ . '/../..' . '/oclasses/User.class.php',
+        'UserHelper' => __DIR__ . '/../..' . '/oclasses/UserHelper.class.php',
+        'View' => __DIR__ . '/../..' . '/oclasses/View.class.php',
+        'WBHObject' => __DIR__ . '/../..' . '/oclasses/WBHObject.class.php',
+        'Workshop' => __DIR__ . '/../..' . '/oclasses/Workshop.class.php',
+        'WorkshopsHelper' => __DIR__ . '/../..' . '/oclasses/WorkshopsHelper.class.php',
     );
 
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInitad4c15712d8752feee0b3ed863063b20::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInitad4c15712d8752feee0b3ed863063b20::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInitad4c15712d8752feee0b3ed863063b20::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInitb1f8cf2816a66a3211bc9cd693ad0c78::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInitb1f8cf2816a66a3211bc9cd693ad0c78::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInitb1f8cf2816a66a3211bc9cd693ad0c78::$classMap;
 
         }, null, ClassLoader::class);
     }
