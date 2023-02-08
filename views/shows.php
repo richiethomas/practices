@@ -94,7 +94,7 @@ $schedule = array(
 			'club' => array ('Feb 3, 2023', $t[5], $t[1])),		
 
 	array(	'broad' => array ('Feb 7, 2023', $t[1], $t[6]), 
-			'club' => array ('Feb 10, 2023', $t[0], $t[7])),		
+			'club' => array ('Feb 10, 2023', $t[7], $t[0])),		
 
 	array(	'broad' => array ('Feb 14, 2023', $t[2], $t[4]), 
 			'club' => array ('Feb 17, 2023', $t[3], $t[5])),		
