@@ -63,7 +63,9 @@ foreach ($unavailable_workshops as $wk) {
 	$upc_html .= "<p class='m-1 p-0 fs-6 lh-base'>{$wk->fields['classpage_start']} - <a class='text-decoration-none' href='/workshop/view/{$wk->fields['id']}'>{$wk->fields['title']}</a>, {$wk->fields['teacher_name']}, <small>{$wk->fields['time_summary']}</small>, {$wk->fields['costdisplay']}";
 	
 	if (in_array('inperson', $wk->fields['tags_array'])) {
-		$upc_html .= " <b>(in person, Los Angeles)</b>";
+		$upc_html .= " - <i>in person</i>, Los Angeles";
+	} else {
+		$upc_html .= " - <i>online</i>";
 	}
 	
 	$upc_html .= "</p>";

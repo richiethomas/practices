@@ -169,6 +169,10 @@ class Enrollment extends WBHObject {
 			return "No open spot available.";
 		}
 		
+		if (strtotime($wk->fields['start']) < strtotime("now")) {
+			return "Class has already started";
+		}
+		
 		// retrieve waiting list
 		$eh = new EnrollmentsHelper();
 		$stds1 = $eh->get_students($wk->fields['id'], WAITING);

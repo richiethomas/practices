@@ -34,7 +34,7 @@
 <li>Jan 24 - Joel Level 5 / Jim Level 4</li>
 <li>Jan 31 - Bitness Class Shows </li>
 <li>Feb 7 - Will Level 2 </li>
-<li>Feb 14 - Julie level 1 / Joel Level 5</li>
+<li>Feb 14 - Julie level 5 / Joel Level 5</li>
 <li>Feb 21 - Will Level 2  / Jim Level 4</li>
 <li>Feb 28 - Bitness Class Shows</li>
 <li>Mar 7  - Jim Level 4 Class Show</li>
@@ -111,10 +111,10 @@ $schedule = array(
 	array(	'broad' => array ('Mar 14, 2023', $t[0], $t[6]), 
 			'club' => array ('Mar 17, 2023', $t[5], $t[1])),		
 
-	array(	'broad' => array ('Mar 21, 2023', $t[4], $t[5]), 
+	array(	'broad' => array ('Mar 21, 2023', $t[1], $t[5]), 
 			'club' => array ('Mar 24, 2023', $t[6], $t[0])),		
 
-	array(	'broad' => array ('Mar 28, 2023', $t[1], $t[2]), 
+	array(	'broad' => array ('Mar 28, 2023', $t[4], $t[2]), 
 			'club' => array ('Mar 31, 2023', $t[3], $t[7])),		
 
 	array(	'broad' => array ('Apr 4, 2023', $t[2], $t[3]), 

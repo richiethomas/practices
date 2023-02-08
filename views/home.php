@@ -112,7 +112,7 @@ document.addEventListener('DOMContentLoaded', () => {
         <div class="card card-cover h-100 overflow-hidden text-bg-dark rounded-4 shadow-lg" style="background-image: url('/images/live_playbyplay2.jpg');">
           <div class="d-flex flex-column h-100 p-5 pb-3 text-white text-shadow-1">
             <h3 class="pt-5 mt-5 mb-4 display-6 lh-1 fw-bold"><a href='/shows#tuesdays' class='link-light text-decoration-none'>Broad Water Tuesdays</a></h3>
-			<h4>Teams, Tourneys, Jams</h4>
+			<h4>Class Shows, Teams</h4>
             <ul class="d-flex list-unstyled mt-auto">
               <li class="d-flex align-items-center me-3">
 				  <i class="bi-geo-fill me-2"></i>
@@ -120,7 +120,7 @@ document.addEventListener('DOMContentLoaded', () => {
               </li>
               <li class="d-flex align-items-center">
 				  <i class="bi-calendar3 me-2"></i>
-                <small>7, 8:30, 10pm Tuesdays</small>
+                <small>7:30pm, 9pm Tuesdays</small>
               </li>
             </ul>
           </div>
@@ -156,8 +156,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     <div class="row row-cols-1 row-cols-md-2 align-items-md-center g-5 py-5">
       <div class="d-flex flex-column align-items-start gap-2">
-        <h3 class="fw-bold">6 Weeks, 2+ Shows</h3>
-        <p class="text-muted">Our four level program gets you to improv expertise fast. Each level is now 6 weeks, plus (for in-person classes) at least 2 shows. Get on your feet and get good. Prices range from $240-300, pending on how many class shows.</p>
+        <h3 class="fw-bold">6 Weeks plus a show(s)</h3>
+        <p class="text-muted">Our four level program gets you to improv expertise fast. Each level is now 6 weeks, plus (for in-person classes) class shows! Get on your feet and get good. Prices range from $240-300, pending on how many sessions.</p>
         <a href="/classes" class="btn btn-primary btn-lg">See upcoming classes</a>
       </div>
       <div class="row row-cols-1 row-cols-sm-2 g-4">

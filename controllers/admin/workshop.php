@@ -105,6 +105,7 @@ switch ($action) {
 	
 		$class_show = (int)$class_show;
 	
+		if (!$location_id) { $location_id = 0; }
 		XtraSessions\add_xtra_session($wid, $start_xtra, $end_xtra, $online_url_xtra, $class_show, $location_id);
 		$wk->finish_setup();
 		$message = "Added xtra session.";

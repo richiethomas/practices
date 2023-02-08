@@ -251,7 +251,11 @@ class User extends WBHObject {
 			
 			//<p>(Sent: ".date('D M n, Y g:ia').")</p>
 			
-			$body .= "<p>SET YOUR TIME ZONE:<br>\n--------------------<br>\nSet your time zone (and change display name, email) at: ".URL."you</p>";
+			$body .= "<p>SET YOUR TIME ZONE:<br>\n-------------------------<br>\nSet your time zone (and change display name, email) at: ".URL."you</p>";
+
+			$body .= "<p>STAY UP ON WGIS NEWS:<br>\n-------------------------<br>\nJoin our Facebook Group: https://www.facebook.com/groups/wgimprovschool<br>\n
+Or our Discord server: https://discord.gg/GXbP3wgbrc</p>";
+
 			
 			$body .= \Emails\email_footer();
 
