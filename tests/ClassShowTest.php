@@ -25,4 +25,21 @@ final class ClassShowTest extends TestCase
         $this->assertEquals($classShow->tablename, 'shows');
     }
 
+    public function testCanBePersistedToDB(): void
+    {
+        $classShow = new ClassShow();
+        $fields = array(
+          'id' => null,
+          'start' => 1000,
+          'end' => 1001,
+          'teacher_id' => 1,
+          'online_url' => null,
+          'reminder_sent' => 0);
+        $classShow->fields = $fields;
+        $classShow->cols = $fields;
+        $result = $classShow->save_data();
+
+        $this->assertTrue($result);
+    }
+
 }

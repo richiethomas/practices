@@ -34,7 +34,7 @@ class ClassShow extends WBHObject {
 		
 		
 		$row = array('online_url' => $this->fields['online_url']);
-		$row = \Workshops\parse_online_url($row);
+		$row = (new Workshop())->parse_online_url($row['online_url']);
 		$this->set_into_fields($row);
 			
 	}	
