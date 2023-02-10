@@ -4,7 +4,6 @@ use PHPUnit\Framework\TestCase;
 
 final class WBHObjectTest extends TestCase
 {
-
     public function testSetError() : void
     {
       $wbho = new WBHObject();
@@ -66,7 +65,18 @@ final class WBHObjectTest extends TestCase
       $this->assertEquals($wbho->fields['created_at'], '2023-01-01');
     }
 
-    // public function testDbFunctionsWhereLoaded() : void
-    // {}
+    public function testSaveData() : void
+    {
+      $user = new User();
+      $fields = [
+        'email' => 'elefante@wgis.com',
+        'time_zone' => 'America/Los_Angeles',
+        'joined' => '2020/01/01',
+      ];
+      \DB\pdo_query("insert into users(email, time_zone, joined) values (:email, :time_zone, :joined)", $fields);
 
+      $user_dup = new User();
+      $user_dup->set_by_id(1);
+      $this->assertEquals($user_dup->fields['email'], 'elefante@wgis.com');
+    }
 }

@@ -6,20 +6,20 @@ class WBHObject
 {
 	public ?string $error = null;
 	public ?string $message = null;
-	
+
 	public array $fields = array();
 	public array $cols = array();
-		
+
 	public ?string $tablename = null;
 
 	public function __construct() {
 	}
-	
+
 	public function setError($error) {
 		$this->error .= $error;
 		return $this->error;
 	}
-	
+
 	public function setMessage($message) {
 		$this->message .= $message;
 		return $this->message;
@@ -32,12 +32,12 @@ class WBHObject
 		}
 		return true;
 	}
-	
+
 	function replace_fields(array $row) {
 		$this->fields = array();
 		$this->set_into_fields($row);
 	}
-	
+
 	function set_mysql_datetime_field(string $fn, ?string $ts = null) {
 		if ($ts) {
 			$this->fields[$fn] = date(MYSQL_FORMAT, strtotime($ts));
@@ -52,16 +52,19 @@ class WBHObject
 			$this->fields[$fn] = null;
 		}
 	}
-	
+
 	function set_by_id(int $id) {
-		
+    // Probably don't need this error-handling, since PHP throws a 'too few arguments' error
+    // before we reach the below 'if' check.
 		if (!$id) {
 			$this->error = "No id set ({$id}), cannot get rows from '{$this->tablename}'";
 			return false;
 		}
-	
+
 		$stmt = \DB\pdo_query("select * from {$this->tablename} where id = :id", array(':id' => $id));
 
+    // If we replace 'fields' with individual attributes, we can use 'PDO::FETCH_CLASS'
+    // to return an actual instance of the class instead of an associated array
 		while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
 			$this->set_into_fields($row);
 			$this->finish_setup();
@@ -71,11 +74,11 @@ class WBHObject
 		return false;
 
 	}
-	
+
 	function finish_setup() {
 		return true;
 	}
-	
+
 	function finish_delete() {
 		return true;
 	}
@@ -84,30 +87,27 @@ class WBHObject
 	function save_data() {
 		// make sure datetime fields are formatted for mysql
 		$this->finish_setup();
-		
+
 		$params = $this->make_params();
 		//print_r($params);
-		
+
 		//insert or update
 		if ($this->fields['id']) {
 			$params[':id'] = $this->fields['id'];
-			
+
 			$sql = "update {$this->tablename} set ".$this->get_update_sql($this->cols)." where id = :id";
-			//echo $sql."<br>\n";
-			//echo "query will be: ".\DB\interpolateQuery($sql, $params)."<br>\n";
-			
+
 			$stmt = \DB\pdo_query($sql, $params);
 			return true;
 		} else {
 			$query = "insert into {$this->tablename} ".$this->get_insert_sql($this->cols);
-			//echo $query;
-			
+
 			$db = \DB\get_connection();
 			$stmt = $db->prepare($query);
-			
+
 			foreach ($this->cols as $f => $v) {
 				if (is_numeric($f) || $f == 'id') { continue; }
-				
+
 				if ($this->fields[$f] !== null) {
 					$stmt->bindParam(":{$f}", $this->fields[$f]);
 				} else {
@@ -119,7 +119,7 @@ class WBHObject
 				return false;
 			}
 			$this->fields['id'] = $db->lastInsertId();
-			return true;	
+			return true;
 		}
 		return false;
 	}
@@ -133,7 +133,7 @@ class WBHObject
 	}
 
 	function get_update_sql($params) {
-		
+
 		$sql = null;
 		foreach ($params as $p => $v) {
 			if ($p == 'id' || is_numeric($p)) { continue; }
@@ -142,11 +142,11 @@ class WBHObject
 		}
 		return $sql;
 	}
-	
+
 	function get_insert_sql($params) {
 		$sql1 = null;
 		$sql2 = null;
-		
+
 		foreach ($params as $p => $v) {
 			if ($p == 'id' || is_numeric($p)) { continue; }
 			if ($sql1) {   $sql1 .= ', ';  }
@@ -154,9 +154,9 @@ class WBHObject
 			if ($sql2) { $sql2 .= ', '; }
 			$sql2 .= ":$p";
 		}
-		return "($sql1) VALUES ($sql2)";	
+		return "($sql1) VALUES ($sql2)";
 	}
-	
+
 	function delete_row() {
 		if (!$this->fields['id']) {
 			$this->error = "No id set for '{$this->tablename}'!";
@@ -169,6 +169,6 @@ class WBHObject
 		$this->__construct();
 		return true;
 	}
-	
+
 }
-	
+

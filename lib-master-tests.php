@@ -36,9 +36,9 @@ if (php_sapi_name() === 'cli') {
     $_REQUEST = [];
 }
 
-//
+
 // constants and variables
-//
+
 $error = '';
 $message = '';
 $body = '';
@@ -53,7 +53,8 @@ define('TIME_ZONE', $dateTime->format('T'));
 
 define('MYSQL_FORMAT', 'Y-m-d H:i:s');
 define('MYSQL_DATE', 'Y-m-d');
-define('LOCAL', in_array($_SERVER['SERVER_NAME'], array('localhost', '127.0.0.1', 'wgimprovstaging.com')) ? true : false);
+// define('LOCAL', in_array($_SERVER['SERVER_NAME'], array('localhost', '127.0.0.1', 'wgimprovstaging.com')) ? true : false);
+define('LOCAL', true);
 
 // to control logging levels, see lib-logger.php
 define('DEBUG_LOG', 'info.txt');
@@ -83,4 +84,6 @@ define('LEVEL1ICON', 'emoji-smile');
 define('LEVEL2ICON', 'controller');
 define('LEVEL3ICON', 'translate');
 define('LEVEL4ICON', 'flower2');
+
+$environment = 'test';
 
